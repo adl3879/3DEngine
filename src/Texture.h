@@ -6,14 +6,14 @@
 
 class Texture
 {
-public:
-	Texture() = default;
-	Texture(const std::string& src);
-	virtual ~Texture();
+  public:
+    Texture() = default;
+    Texture(const std::string &src);
+    virtual ~Texture();
 
-	void Bind() const;
-	void Unbind() const;
+    void Bind() const;
+    void Unbind() const;
 
-private:
-	unsigned int m_Texture;
+  private:
+    unsigned int m_Texture;
 };

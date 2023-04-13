@@ -4,13 +4,13 @@
 
 class VertexArray
 {
-public:
-	VertexArray();
-	virtual ~VertexArray();
+  public:
+    VertexArray();
+    virtual ~VertexArray();
 
-	void Bind() const;
-	void Unbind() const;
+    void Bind() const;
+    void Unbind() const;
 
-private:
-	unsigned int m_VertexArray;
+  private:
+    unsigned int m_VertexArray;
 };

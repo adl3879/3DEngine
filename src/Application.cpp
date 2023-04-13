@@ -1,5 +1,10 @@
 #include "Application.h"
+#include "GLFW/glfw3.h"
+#include "Input/InputDevice.h"
+#include "Input/InputKey.h"
+#include "Input/InputManager.h"
 
+#include <functional>
 #include <iostream>
 
 float lastFrame = 0.0f;
@@ -8,86 +13,56 @@ glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
 glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
 glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
 
-Application::Application()
-	: m_IsRunning(true)
+Application::Application() : m_IsRunning(true)
 {
-	glfwInit();
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-	glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
+    glfwInit();
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 
-	m_Window = glfwCreateWindow(windowWidth, windowHeight, "LearnOpenGL", nullptr, nullptr);
-	if (m_Window == nullptr)
-	{
-		std::cout << "Failed to create a GLFW window" << std::endl;
-		glfwTerminate();
-	}
-	glfwMakeContextCurrent(m_Window);
-	//glfwSetKeyCallback(window, keyCallback);
+    m_Window = glfwCreateWindow(windowWidth, windowHeight, "LearnOpenGL", nullptr, nullptr);
+    if (m_Window == nullptr)
+    {
+        std::cout << "Failed to create a GLFW window" << std::endl;
+        glfwTerminate();
+    }
+    glfwMakeContextCurrent(m_Window);
 
-	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
-	{
-		std::cout << "Failed to initialize GLAD" << std::endl;
-	}
+    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+    {
+        std::cout << "Failed to initialize GLAD" << std::endl;
+    }
 
-	// Define the viewport dimensions
-	int width, height;
-	glfwGetFramebufferSize(m_Window, &width, &height);
-	glViewport(0, 0, width, height);
+    SetupInputSystem();
 
-	// Setup OpenGL options
-	glEnable(GL_DEPTH_TEST);
+    // Define the viewport dimensions
+    int width, height;
+    glfwGetFramebufferSize(m_Window, &width, &height);
+    glViewport(0, 0, width, height);
 
-	m_Shader = std::make_unique<Shader>("../res/shaders/vertex.glsl", "../res/shaders/fragment.glsl");
-	m_Texture = std::make_unique<Texture>("../res/textures/wall.jpg");
+    // Setup OpenGL options
+    glEnable(GL_DEPTH_TEST);
+
+    m_Shader = std::make_unique<Shader>("../res/shaders/vertex.glsl", "../res/shaders/fragment.glsl");
+    m_Texture = std::make_unique<Texture>("../res/textures/wall.jpg");
 
     float vertices[] = {
-        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-         0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
-         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-         0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-         0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-         0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-        -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-
-        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-        -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-
-         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-         0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-         0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-         0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-         0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
-         0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-         0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-
-        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-        -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
-        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
-    };
+        -0.5f, -0.5f, -0.5f, 0.0f, 0.0f, 0.5f,  -0.5f, -0.5f, 1.0f, 0.0f, 0.5f,  0.5f,  -0.5f, 1.0f, 1.0f,
+        0.5f,  0.5f,  -0.5f, 1.0f, 1.0f, -0.5f, 0.5f,  -0.5f, 0.0f, 1.0f, -0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
+        -0.5f, -0.5f, 0.5f,  0.0f, 0.0f, 0.5f,  -0.5f, 0.5f,  1.0f, 0.0f, 0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+        0.5f,  0.5f,  0.5f,  1.0f, 1.0f, -0.5f, 0.5f,  0.5f,  0.0f, 1.0f, -0.5f, -0.5f, 0.5f,  0.0f, 0.0f,
+        -0.5f, 0.5f,  0.5f,  1.0f, 0.0f, -0.5f, 0.5f,  -0.5f, 1.0f, 1.0f, -0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f, 0.0f, 1.0f, -0.5f, -0.5f, 0.5f,  0.0f, 0.0f, -0.5f, 0.5f,  0.5f,  1.0f, 0.0f,
+        0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 0.5f,  0.5f,  -0.5f, 1.0f, 1.0f, 0.5f,  -0.5f, -0.5f, 0.0f, 1.0f,
+        0.5f,  -0.5f, -0.5f, 0.0f, 1.0f, 0.5f,  -0.5f, 0.5f,  0.0f, 0.0f, 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+        -0.5f, -0.5f, -0.5f, 0.0f, 1.0f, 0.5f,  -0.5f, -0.5f, 1.0f, 1.0f, 0.5f,  -0.5f, 0.5f,  1.0f, 0.0f,
+        0.5f,  -0.5f, 0.5f,  1.0f, 0.0f, -0.5f, -0.5f, 0.5f,  0.0f, 0.0f, -0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
+        -0.5f, 0.5f,  -0.5f, 0.0f, 1.0f, 0.5f,  0.5f,  -0.5f, 1.0f, 1.0f, 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+        0.5f,  0.5f,  0.5f,  1.0f, 0.0f, -0.5f, 0.5f,  0.5f,  0.0f, 0.0f, -0.5f, 0.5f,  -0.5f, 0.0f, 1.0f};
     GLuint indices[] = {
-       0, 1, 3, // First Triangle
-       1, 2, 3  // Second Triangle
+        0, 1, 3, // First Triangle
+        1, 2, 3  // Second Triangle
     };
 
     m_VAO = std::make_unique<VertexArray>();
@@ -95,27 +70,100 @@ Application::Application()
     m_EBO = std::make_unique<IndexBuffer>(indices, sizeof(indices));
 
     // Position attribute
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid *)0);
     glEnableVertexAttribArray(0);
 
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid *)(3 * sizeof(GLfloat)));
     glEnableVertexAttribArray(2);
 
     m_VAO->Unbind();
 }
 
-Application& Application::Instance()
+Application &Application::Instance()
 {
-	static Application app;
-	return app;
+    static Application app;
+    return app;
+}
+
+int num = 0;
+
+void Application::SetupInputSystem()
+{
+    InputManager::Instance().MapInputToAction(InputKey::Escape, InputAction{.ActionName = "quit", .Scale = 1.0f});
+    InputManager::Instance().MapInputToAction(InputKey::A, InputAction{.ActionName = "strafe", .Scale = -1.0f});
+    InputManager::Instance().MapInputToAction(InputKey::D, InputAction{.ActionName = "strafe", .Scale = 1.0f});
+
+    InputManager::Instance().RegisterActionCallback(
+        "quit", InputManager::ActionCallback{.Ref = "quit",
+                                             .Func = [this](InputSource source, int index, float value)
+                                             {
+                                                 m_IsRunning = false;
+                                                 return true;
+                                             }});
+
+    InputManager::Instance().RegisterActionCallback(
+        "strafe", InputManager::ActionCallback{.Ref = "strafe",
+                                               .Func = [](InputSource source, int index, float value)
+                                               {
+                                                   num++;
+                                                   std::string direction{"none"};
+                                                   if (value == 1.0f)
+                                                       direction = "right";
+                                                   else if (value == -1.0f)
+                                                       direction = "left";
+                                                   std::cout << "Strafe: " << direction << num << std::endl;
+                                                   return true;
+                                               }});
+
+    glfwSetWindowUserPointer(m_Window, &m_Input);
+    auto keyCallback = [](GLFWwindow *window, int key, int scancode, int action, int mods)
+    {
+        Input *input = static_cast<Input *>(glfwGetWindowUserPointer(window));
+        float value = 0.0f;
+        switch (action)
+        {
+        case GLFW_PRESS:
+        case GLFW_REPEAT:
+            value = 1.0f;
+            break;
+        default:
+            value = 0.0f;
+            break;
+        };
+        input->UpdateKeyboardState(key, value);
+    };
+    glfwSetKeyCallback(m_Window, keyCallback);
+
+    auto mouseCallback = [](GLFWwindow *window, int button, int action, int mods)
+    {
+        Input *input = static_cast<Input *>(glfwGetWindowUserPointer(window));
+        if (input)
+        {
+            input->UpdateMouseState(button, action == GLFW_PRESS ? 1.0f : 0.0f);
+        }
+    };
+    glfwSetMouseButtonCallback(m_Window, mouseCallback);
+
+    // Register input manager
+    InputManager::Instance().RegisterDevice(InputDevice{
+        .Type = InputDeviceType::Keyboard,
+        .Index = 0,
+        .StateFunc = std::bind(&Input::GetKeyboardState, &m_Input, std::placeholders::_1),
+    });
+    InputManager::Instance().RegisterDevice(InputDevice{
+        .Type = InputDeviceType::Mouse,
+        .Index = 0,
+        .StateFunc = std::bind(&Input::GetMouseState, &m_Input, std::placeholders::_1),
+    });
 }
 
 void Application::Run()
 {
-	while (m_IsRunning)
-	{
+    while (m_IsRunning && !glfwWindowShouldClose(m_Window))
+    {
         glfwPollEvents();
-        //doMovement();
+        // doMovement();
+        InputManager::Instance().ProcessInput();
 
         // delta time
         float currentFrame = glfwGetTime();
@@ -128,13 +176,12 @@ void Application::Run()
         m_Texture->Bind();
         m_Shader->Use();
         // coordinate systems
-        glm::mat4 model{ 1.0f };
-        glm::mat4 view{ 1.0f };
-        glm::mat4 projection{ 1.0f };
-        model = glm::rotate(model, (GLfloat)glfwGetTime() * 2.0f, glm::vec3(0.5f,
-            1.0f, 0.0f));
+        glm::mat4 model{1.0f};
+        glm::mat4 view{1.0f};
+        glm::mat4 projection{1.0f};
+        model = glm::rotate(model, (GLfloat)glfwGetTime() * 2.0f, glm::vec3(0.5f, 1.0f, 0.0f));
 
-        //view = glm::translate(view, glm::vec3(0.0f, 0.0f, -2.0f));
+        // view = glm::translate(view, glm::vec3(0.0f, 0.0f, -2.0f));
         view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
 
         projection = glm::perspective(45.0f, (GLfloat)windowWidth / (GLfloat)windowHeight, 0.1f, 100.0f);
@@ -149,10 +196,7 @@ void Application::Run()
 
         // Swap the screen buffers
         glfwSwapBuffers(m_Window);
-	}
+    }
 }
 
-Application::~Application()
-{
-    glfwTerminate();
-}
+Application::~Application() { glfwTerminate(); }
