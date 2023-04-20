@@ -9,10 +9,6 @@
 
 float lastFrame = 0.0f;
 
-glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
-glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
-glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
-
 Application::Application() : m_IsRunning(true)
 {
     glfwInit();
@@ -89,31 +85,21 @@ int num = 0;
 
 void Application::SetupInputSystem()
 {
-    InputManager::Instance().MapInputToAction(InputKey::Escape, InputAction{.ActionName = "quit", .Scale = 1.0f});
-    InputManager::Instance().MapInputToAction(InputKey::A, InputAction{.ActionName = "strafe", .Scale = -1.0f});
-    InputManager::Instance().MapInputToAction(InputKey::D, InputAction{.ActionName = "strafe", .Scale = 1.0f});
+    InputManager::Instance().RegisterKeyboardCallback(
+        [](InputKey key, float isRepeat)
+        {
+            if (key == InputKey::Space)
+                std::cout << "Hello form Space :)\n";
+        });
 
+    InputManager::Instance().MapInputToAction(InputKey::Escape, InputAction{.ActionName = "quit", .Scale = 1.0f});
     InputManager::Instance().RegisterActionCallback(
         "quit", InputManager::ActionCallback{.Ref = "quit",
-                                             .Func = [this](InputSource source, int index, float value)
+                                             .Func = [this](InputSource source, int value, float scale)
                                              {
                                                  m_IsRunning = false;
                                                  return true;
                                              }});
-
-    InputManager::Instance().RegisterActionCallback(
-        "strafe", InputManager::ActionCallback{.Ref = "strafe",
-                                               .Func = [](InputSource source, int index, float value)
-                                               {
-                                                   num++;
-                                                   std::string direction{"none"};
-                                                   if (value == 1.0f)
-                                                       direction = "right";
-                                                   else if (value == -1.0f)
-                                                       direction = "left";
-                                                   std::cout << "Strafe: " << direction << num << std::endl;
-                                                   return true;
-                                               }});
 
     glfwSetWindowUserPointer(m_Window, &m_Input);
     auto keyCallback = [](GLFWwindow *window, int key, int scancode, int action, int mods)
@@ -144,6 +130,13 @@ void Application::SetupInputSystem()
     };
     glfwSetMouseButtonCallback(m_Window, mouseCallback);
 
+    auto cursorPositionCallback = [](GLFWwindow *window, double xpos, double ypos)
+    {
+        Input *input = static_cast<Input *>(glfwGetWindowUserPointer(window));
+        input->UpdateCursorPosition(xpos, ypos);
+    };
+    glfwSetCursorPosCallback(m_Window, cursorPositionCallback);
+
     // Register input manager
     InputManager::Instance().RegisterDevice(InputDevice{
         .Type = InputDeviceType::Keyboard,
@@ -155,6 +148,11 @@ void Application::SetupInputSystem()
         .Index = 0,
         .StateFunc = std::bind(&Input::GetMouseState, &m_Input, std::placeholders::_1),
     });
+    InputManager::Instance().RegisterDevice(InputDevice{
+        .Type = InputDeviceType::MouseMove,
+        .Index = 0,
+        .CursorStateFunc = std::bind(&Input::GetCursorPosition, &m_Input, std::placeholders::_1),
+    });
 }
 
 void Application::Run()
@@ -165,9 +163,11 @@ void Application::Run()
         // doMovement();
         InputManager::Instance().ProcessInput();
 
+        m_CameraController.OnUpdate(m_DeltaTime);
+
         // delta time
         float currentFrame = glfwGetTime();
-        m_DeltaTime = 9.0f;
+        m_DeltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
 
         glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
@@ -177,17 +177,13 @@ void Application::Run()
         m_Shader->Use();
         // coordinate systems
         glm::mat4 model{1.0f};
-        glm::mat4 view{1.0f};
         glm::mat4 projection{1.0f};
-        model = glm::rotate(model, (GLfloat)glfwGetTime() * 2.0f, glm::vec3(0.5f, 1.0f, 0.0f));
 
-        // view = glm::translate(view, glm::vec3(0.0f, 0.0f, -2.0f));
-        view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
-
+        model = glm::rotate(model, 2.0f, glm::vec3(0.5f, 1.0f, 0.0f));
         projection = glm::perspective(45.0f, (GLfloat)windowWidth / (GLfloat)windowHeight, 0.1f, 100.0f);
 
         m_Shader->SetUniformMatrix4fv("model", model);
-        m_Shader->SetUniformMatrix4fv("view", view);
+        m_Shader->SetUniformMatrix4fv("view", m_Camera.GetViewMatrix());
         m_Shader->SetUniformMatrix4fv("projection", projection);
 
         m_VAO->Bind();

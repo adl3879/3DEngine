@@ -9,7 +9,14 @@ enum class InputDeviceType
 {
     Keyboard,
     Mouse,
+    MouseMove,
     Gamepad
+};
+
+struct CursorPosition
+{
+    double X{0.0f}, Y{0.0f};
+    double LastPositionX{0.0f}, LastPositionY{0.0f};
 };
 
 struct InputDeviceState
@@ -18,6 +25,7 @@ struct InputDeviceState
 };
 
 using InputDeviceStateCallbackFunc = std::function<std::unordered_map<InputKey, InputDeviceState>(int)>;
+using CursorPositionCallbackFunc = std::function<CursorPosition(int)>;
 
 struct InputDevice
 {
@@ -25,4 +33,5 @@ struct InputDevice
     int Index;
     std::unordered_map<InputKey, InputDeviceState> CurrentState;
     InputDeviceStateCallbackFunc StateFunc;
+    CursorPositionCallbackFunc CursorStateFunc;
 };

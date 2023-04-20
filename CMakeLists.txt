@@ -18,6 +18,7 @@ file(GLOB_RECURSE SOURCES
 )
 
 include_directories(
+    "src/*"
     "vendor/stb_image"
     "vendor/glad/include"
 )

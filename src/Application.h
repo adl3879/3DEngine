@@ -5,6 +5,7 @@
 
 #include <memory>
 
+#include "CameraController.h"
 #include "Buffer.h"
 #include "Input/Input.h"
 #include "Shader.h"
@@ -28,6 +29,8 @@ class Application
     bool IsRunning() const { return m_IsRunning; }
     float GetDeltaTime() const { return m_DeltaTime; }
 
+    GLFWwindow *GetWindow() const { return m_Window; }
+
   private:
     Application();
     void SetupInputSystem();
@@ -44,4 +47,7 @@ class Application
     std::unique_ptr<VertexArray> m_VAO;
     std::unique_ptr<VertexBuffer> m_VBO;
     std::unique_ptr<IndexBuffer> m_EBO;
+
+    Camera m_Camera{};
+    CameraController m_CameraController{m_Camera, 0.1f, 2.5f};
 };

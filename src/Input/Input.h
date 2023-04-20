@@ -11,10 +11,13 @@ class Input
 
     std::unordered_map<InputKey, InputDeviceState> GetKeyboardState(int index) { return m_KeyboardState; }
     std::unordered_map<InputKey, InputDeviceState> GetMouseState(int index) { return m_MouseState; }
+    CursorPosition GetCursorPosition(int index) { return m_CursorPosition; }
 
     void UpdateKeyboardState(int key, float value);
     void UpdateMouseState(int key, float value);
+    void UpdateCursorPosition(double xpos, double ypos);
 
+  public:
   private:
     static InputKey KeyToInputKey(int key);
     static InputKey ButtonToInputKey(int key);
@@ -22,4 +25,5 @@ class Input
   private:
     std::unordered_map<InputKey, InputDeviceState> m_KeyboardState;
     std::unordered_map<InputKey, InputDeviceState> m_MouseState;
+    CursorPosition m_CursorPosition{};
 };
