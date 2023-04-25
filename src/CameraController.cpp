@@ -1,4 +1,5 @@
 #include "CameraController.h"
+
 #include <iostream>
 
 CameraController::CameraController(Camera &camera, float sensitivity, float movementSpeed)

@@ -1,3 +1,10 @@
 {
-    "editor.tabSize": 4
+    "editor.bracketPairColorization.enabled": false,
+    "editor.tabSize": 4,
+    "editor.indentSize": 4,
+"editor.detectIndentation": false,
+    "cSpell.words": [
+        "GLFW",
+        "OPENGL"
+    ]
 }

@@ -1,4 +1,5 @@
 #include "Application.h"
+#include "Buffer.h"
 #include "GLFW/glfw3.h"
 #include "Input/InputDevice.h"
 #include "Input/InputKey.h"
@@ -6,8 +7,54 @@
 
 #include <functional>
 #include <iostream>
+#include <memory>
 
 float lastFrame = 0.0f;
+
+// clang-format off
+Vertex cubeVertices[] =
+{ //               COORDINATES           /            COLORS          /           NORMALS         /       TEXTURE COORDINATES    //
+	Vertex{glm::vec3(-1.0f, 0.0f,  1.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 0.0f, 1.0f), glm::vec2(0.0f, 0.0f)},
+	Vertex{glm::vec3(-1.0f, 0.0f, -1.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 0.0f, 1.0f), glm::vec2(0.0f, 1.0f)},
+	Vertex{glm::vec3( 1.0f, 0.0f, -1.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 0.0f, 1.0f), glm::vec2(1.0f, 1.0f)},
+	Vertex{glm::vec3( 1.0f, 0.0f,  1.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 0.0f, 1.0f), glm::vec2(1.0f, 0.0f)}
+};
+
+// Indices for vertices order
+GLuint cubeIndices[] =
+{
+	0, 1, 2,
+	0, 2, 3
+};
+
+Vertex lightVertices[] =
+{ //     COORDINATES     //
+	Vertex{glm::vec3(-0.1f, -0.1f,  0.1f)},
+	Vertex{glm::vec3(-0.1f, -0.1f, -0.1f)},
+	Vertex{glm::vec3(0.1f, -0.1f, -0.1f)},
+	Vertex{glm::vec3(0.1f, -0.1f,  0.1f)},
+	Vertex{glm::vec3(-0.1f,  0.1f,  0.1f)},
+	Vertex{glm::vec3(-0.1f,  0.1f, -0.1f)},
+	Vertex{glm::vec3(0.1f,  0.1f, -0.1f)},
+	Vertex{glm::vec3(0.1f,  0.1f,  0.1f)}
+};
+
+GLuint lightIndices[] =
+{
+	0, 1, 2,
+	0, 2, 3,
+	0, 4, 7,
+	0, 7, 3,
+	3, 7, 6,
+	3, 6, 2,
+	2, 6, 5,
+	2, 5, 1,
+	1, 5, 4,
+	1, 4, 0,
+	4, 5, 6,
+	4, 6, 7
+};
+// clang-format on
 
 Application::Application() : m_IsRunning(true)
 {
@@ -41,38 +88,31 @@ Application::Application() : m_IsRunning(true)
     glEnable(GL_DEPTH_TEST);
 
     m_Shader = std::make_unique<Shader>("../res/shaders/vertex.glsl", "../res/shaders/fragment.glsl");
+    m_LightShader = std::make_unique<Shader>("../res/shaders/light.vert.glsl", "../res/shaders/light.frag.glsl");
+
     m_Texture = std::make_unique<Texture>("../res/textures/wall.jpg");
 
-    float vertices[] = {
-        -0.5f, -0.5f, -0.5f, 0.0f, 0.0f, 0.5f,  -0.5f, -0.5f, 1.0f, 0.0f, 0.5f,  0.5f,  -0.5f, 1.0f, 1.0f,
-        0.5f,  0.5f,  -0.5f, 1.0f, 1.0f, -0.5f, 0.5f,  -0.5f, 0.0f, 1.0f, -0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
-        -0.5f, -0.5f, 0.5f,  0.0f, 0.0f, 0.5f,  -0.5f, 0.5f,  1.0f, 0.0f, 0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-        0.5f,  0.5f,  0.5f,  1.0f, 1.0f, -0.5f, 0.5f,  0.5f,  0.0f, 1.0f, -0.5f, -0.5f, 0.5f,  0.0f, 0.0f,
-        -0.5f, 0.5f,  0.5f,  1.0f, 0.0f, -0.5f, 0.5f,  -0.5f, 1.0f, 1.0f, -0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
-        -0.5f, -0.5f, -0.5f, 0.0f, 1.0f, -0.5f, -0.5f, 0.5f,  0.0f, 0.0f, -0.5f, 0.5f,  0.5f,  1.0f, 0.0f,
-        0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 0.5f,  0.5f,  -0.5f, 1.0f, 1.0f, 0.5f,  -0.5f, -0.5f, 0.0f, 1.0f,
-        0.5f,  -0.5f, -0.5f, 0.0f, 1.0f, 0.5f,  -0.5f, 0.5f,  0.0f, 0.0f, 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-        -0.5f, -0.5f, -0.5f, 0.0f, 1.0f, 0.5f,  -0.5f, -0.5f, 1.0f, 1.0f, 0.5f,  -0.5f, 0.5f,  1.0f, 0.0f,
-        0.5f,  -0.5f, 0.5f,  1.0f, 0.0f, -0.5f, -0.5f, 0.5f,  0.0f, 0.0f, -0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
-        -0.5f, 0.5f,  -0.5f, 0.0f, 1.0f, 0.5f,  0.5f,  -0.5f, 1.0f, 1.0f, 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-        0.5f,  0.5f,  0.5f,  1.0f, 0.0f, -0.5f, 0.5f,  0.5f,  0.0f, 0.0f, -0.5f, 0.5f,  -0.5f, 0.0f, 1.0f};
-    GLuint indices[] = {
-        0, 1, 3, // First Triangle
-        1, 2, 3  // Second Triangle
-    };
+    std::vector<Vertex> verts(cubeVertices, cubeVertices + sizeof(cubeVertices) / sizeof(Vertex));
+    std::vector<GLuint> ind(cubeIndices, cubeIndices + sizeof(cubeIndices) / sizeof(GLuint));
+    m_Mesh = std::make_unique<Mesh>(verts, ind);
 
-    m_VAO = std::make_unique<VertexArray>();
-    m_VBO = std::make_unique<VertexBuffer>(vertices, sizeof(vertices));
-    m_EBO = std::make_unique<IndexBuffer>(indices, sizeof(indices));
+    std::vector<Vertex> lightVerts(lightVertices, lightVertices + sizeof(lightVertices) / sizeof(Vertex));
+    std::vector<GLuint> lightInd(lightIndices, lightIndices + sizeof(lightIndices) / sizeof(GLuint));
+    m_LightMesh = std::make_unique<Mesh>(lightVerts, lightInd);
 
-    // Position attribute
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid *)0);
-    glEnableVertexAttribArray(0);
+    m_LightShader->Use();
+    m_LightShader->SetUniform4f("lightColor", glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+    // coordinate systems
+    glm::mat4 model{1.0f};
+    glm::vec3 lightPos = glm::vec3(0.5f, 1.0f, 0.5f);
+    model = glm::translate(model, lightPos);
 
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid *)(3 * sizeof(GLfloat)));
-    glEnableVertexAttribArray(2);
+    // model = glm::rotate(model, 2.0f, glm::vec3(0.5f, 1.0f, 0.0f));
+    m_LightShader->SetUniformMatrix4fv("model", model);
 
-    m_VAO->Unbind();
+    m_Shader->Use();
+    glm::mat4 model2{1.0f};
+    m_Shader->SetUniformMatrix4fv("model", model2);
 }
 
 Application &Application::Instance()
@@ -82,6 +122,33 @@ Application &Application::Instance()
 }
 
 int num = 0;
+
+void Application::Run()
+{
+    while (m_IsRunning && !glfwWindowShouldClose(m_Window))
+    {
+        glfwPollEvents();
+        // doMovement();
+        InputManager::Instance().ProcessInput();
+
+        m_CameraController.OnUpdate(m_DeltaTime);
+
+        // delta time
+        float currentFrame = glfwGetTime();
+        m_DeltaTime = currentFrame - lastFrame;
+        lastFrame = currentFrame;
+
+        glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        m_Mesh->Draw(*m_Shader, m_Camera, *m_Texture);
+
+        m_LightMesh->Draw(*m_LightShader, m_Camera, *m_Texture);
+
+        // Swap the screen buffers
+        glfwSwapBuffers(m_Window);
+    }
+}
 
 void Application::SetupInputSystem()
 {
@@ -153,46 +220,6 @@ void Application::SetupInputSystem()
         .Index = 0,
         .CursorStateFunc = std::bind(&Input::GetCursorPosition, &m_Input, std::placeholders::_1),
     });
-}
-
-void Application::Run()
-{
-    while (m_IsRunning && !glfwWindowShouldClose(m_Window))
-    {
-        glfwPollEvents();
-        // doMovement();
-        InputManager::Instance().ProcessInput();
-
-        m_CameraController.OnUpdate(m_DeltaTime);
-
-        // delta time
-        float currentFrame = glfwGetTime();
-        m_DeltaTime = currentFrame - lastFrame;
-        lastFrame = currentFrame;
-
-        glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        m_Texture->Bind();
-        m_Shader->Use();
-        // coordinate systems
-        glm::mat4 model{1.0f};
-        glm::mat4 projection{1.0f};
-
-        model = glm::rotate(model, 2.0f, glm::vec3(0.5f, 1.0f, 0.0f));
-        projection = glm::perspective(45.0f, (GLfloat)windowWidth / (GLfloat)windowHeight, 0.1f, 100.0f);
-
-        m_Shader->SetUniformMatrix4fv("model", model);
-        m_Shader->SetUniformMatrix4fv("view", m_Camera.GetViewMatrix());
-        m_Shader->SetUniformMatrix4fv("projection", projection);
-
-        m_VAO->Bind();
-        glDrawArrays(GL_TRIANGLES, 0, 36);
-        m_VAO->Unbind();
-
-        // Swap the screen buffers
-        glfwSwapBuffers(m_Window);
-    }
 }
 
 Application::~Application() { glfwTerminate(); }

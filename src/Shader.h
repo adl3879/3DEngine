@@ -1,5 +1,6 @@
 #pragma once
 
+#include "glm/fwd.hpp"
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -17,8 +18,10 @@ class Shader
 
     void SetUniform4f(std::string id, float x, float y, float w, float h);
     void SetUniformMatrix4fv(std::string id, glm::mat4 matrix);
+    void SetUniform3f(std::string id, glm::vec3 vector);
+    void SetUniform4f(std::string id, glm::vec4 vector);
 
-    unsigned int getProgram() const { return m_Program; }
+    unsigned int GetProgram() const { return m_Program; }
 
   private:
     std::string ParseShader(const std::string &sourcePath);

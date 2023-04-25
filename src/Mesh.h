@@ -1,0 +1,25 @@
+#pragma once
+
+#include <glm/glm.hpp>
+#include <vector>
+
+#include "Camera.h"
+#include "Texture.h"
+#include "VertexArray.h"
+#include "Shader.h"
+
+class Mesh
+{
+  public:
+    Mesh() = default;
+    Mesh(std::vector<Vertex> &vertices, std::vector<unsigned int> &indices);
+    ~Mesh() = default;
+
+    void Draw(Shader &shader, Camera &camera, Texture &texture);
+
+  private:
+    std::vector<Vertex> m_Vertices;
+    std::vector<unsigned int> m_Indices;
+
+    VertexArray m_VAO;
+};

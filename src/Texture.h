@@ -16,4 +16,5 @@ class Texture
 
   private:
     unsigned int m_Texture;
+    const char *m_Type;
 };

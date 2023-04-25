@@ -1,6 +1,7 @@
-#include "Camera.h"
 #include "Input/InputKey.h"
 #include "Input/InputManager.h"
+
+#include "Camera.h"
 
 class CameraController
 {

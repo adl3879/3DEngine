@@ -6,6 +6,7 @@
 #include <memory>
 
 #include "CameraController.h"
+#include "Mesh.h"
 #include "Buffer.h"
 #include "Input/Input.h"
 #include "Shader.h"
@@ -42,11 +43,17 @@ class Application
     Input m_Input{};
 
     std::unique_ptr<Shader> m_Shader;
+    std::unique_ptr<Shader> m_LightShader;
+
     std::unique_ptr<Texture> m_Texture;
 
-    std::unique_ptr<VertexArray> m_VAO;
-    std::unique_ptr<VertexBuffer> m_VBO;
-    std::unique_ptr<IndexBuffer> m_EBO;
+    // std::unique_ptr<VertexArray> m_VAO;
+
+    // std::unique_ptr<VertexBuffer> m_VBO;
+    // std::unique_ptr<IndexBuffer> m_EBO;
+
+    std::unique_ptr<Mesh> m_Mesh;
+    std::unique_ptr<Mesh> m_LightMesh;
 
     Camera m_Camera{};
     CameraController m_CameraController{m_Camera, 0.1f, 2.5f};
