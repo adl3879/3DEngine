@@ -7,10 +7,10 @@ class VertexArray
 {
   public:
     VertexArray();
-    virtual ~VertexArray();
 
     void Bind() const;
     void Unbind() const;
+    void Delete() const { glDeleteVertexArrays(1, &m_VertexArray); }
 
     void AddBuffer(const VertexBuffer &vb, const VertexBufferLayout &layout);
 

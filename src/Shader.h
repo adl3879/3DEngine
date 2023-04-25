@@ -12,9 +12,9 @@ class Shader
   public:
     Shader() = default;
     Shader(const std::string &vertexSourcePath, const std::string &fragmentSourcePath);
-    virtual ~Shader();
 
     void Use() const;
+    void Delete() const { glDeleteProgram(m_Program); }
 
     void SetUniform4f(std::string id, float x, float y, float w, float h);
     void SetUniformMatrix4fv(std::string id, glm::mat4 matrix);

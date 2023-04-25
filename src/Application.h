@@ -46,11 +46,7 @@ class Application
     std::unique_ptr<Shader> m_LightShader;
 
     std::unique_ptr<Texture> m_Texture;
-
-    // std::unique_ptr<VertexArray> m_VAO;
-
-    // std::unique_ptr<VertexBuffer> m_VBO;
-    // std::unique_ptr<IndexBuffer> m_EBO;
+    std::unique_ptr<Texture> m_PlankSpecTex;
 
     std::unique_ptr<Mesh> m_Mesh;
     std::unique_ptr<Mesh> m_LightMesh;

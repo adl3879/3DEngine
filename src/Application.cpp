@@ -88,17 +88,24 @@ Application::Application() : m_IsRunning(true)
     glEnable(GL_DEPTH_TEST);
 
     m_Shader = std::make_unique<Shader>("../res/shaders/vertex.glsl", "../res/shaders/fragment.glsl");
-    m_LightShader = std::make_unique<Shader>("../res/shaders/light.vert.glsl", "../res/shaders/light.frag.glsl");
+    m_LightShader = std::make_unique<Shader>("../res/shaders/light.vert", "../res/shaders/light.frag");
 
-    m_Texture = std::make_unique<Texture>("../res/textures/wall.jpg");
+    // m_Texture = std::make_unique<Texture>("../res/textures/planks.png", "diffuse", 0, GL_RGBA);
+    // m_PlankSpecTex = std::make_unique<Texture>("../res/textures/planksSpec.png", "specular", 1, GL_RED);
+
+    Texture textures[]{
+        Texture("../res/textures/planks.png", "diffuse", 0, GL_RGBA),
+        Texture("../res/textures/planksSpec.png", "specular", 1, GL_RED),
+    };
 
     std::vector<Vertex> verts(cubeVertices, cubeVertices + sizeof(cubeVertices) / sizeof(Vertex));
     std::vector<GLuint> ind(cubeIndices, cubeIndices + sizeof(cubeIndices) / sizeof(GLuint));
-    m_Mesh = std::make_unique<Mesh>(verts, ind);
+    std::vector<Texture> tex(textures, textures + sizeof(textures) / sizeof(Texture));
+    m_Mesh = std::make_unique<Mesh>(verts, ind, tex);
 
     std::vector<Vertex> lightVerts(lightVertices, lightVertices + sizeof(lightVertices) / sizeof(Vertex));
     std::vector<GLuint> lightInd(lightIndices, lightIndices + sizeof(lightIndices) / sizeof(GLuint));
-    m_LightMesh = std::make_unique<Mesh>(lightVerts, lightInd);
+    m_LightMesh = std::make_unique<Mesh>(lightVerts, lightInd, tex);
 
     m_LightShader->Use();
     m_LightShader->SetUniform4f("lightColor", glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
@@ -113,6 +120,9 @@ Application::Application() : m_IsRunning(true)
     m_Shader->Use();
     glm::mat4 model2{1.0f};
     m_Shader->SetUniformMatrix4fv("model", model2);
+    m_Shader->SetUniform4f("lightColor", glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+    m_Shader->SetUniform3f("lightPos", lightPos);
+    m_Shader->SetUniform3f("cameraPos", m_Camera.GetPosition());
 }
 
 Application &Application::Instance()
@@ -141,9 +151,9 @@ void Application::Run()
         glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        m_Mesh->Draw(*m_Shader, m_Camera, *m_Texture);
+        m_Mesh->Draw(*m_Shader, m_Camera);
 
-        m_LightMesh->Draw(*m_LightShader, m_Camera, *m_Texture);
+        m_LightMesh->Draw(*m_LightShader, m_Camera);
 
         // Swap the screen buffers
         glfwSwapBuffers(m_Window);

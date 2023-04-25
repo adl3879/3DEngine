@@ -2,9 +2,10 @@
     "editor.bracketPairColorization.enabled": false,
     "editor.tabSize": 4,
     "editor.indentSize": 4,
-"editor.detectIndentation": false,
+    "editor.detectIndentation": false,
     "cSpell.words": [
         "GLFW",
         "OPENGL"
-    ]
+    ],
+    "workbench.colorTheme": "Visual Studio Dark - C++"
 }
