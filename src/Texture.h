@@ -7,7 +7,7 @@
 class Texture
 {
   public:
-    Texture(const std::string &src, const std::string &type, unsigned int slot, GLenum format);
+    Texture(const std::string &src, const std::string &type, unsigned int slot);
 
     void TextureUnit(Shader &shader, const char *uniform, unsigned int unit);
     const std::string &GetType() const { return m_Type; }

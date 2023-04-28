@@ -89,13 +89,11 @@ Application::Application() : m_IsRunning(true)
 
     m_Shader = std::make_unique<Shader>("../res/shaders/vertex.glsl", "../res/shaders/fragment.glsl");
     m_LightShader = std::make_unique<Shader>("../res/shaders/light.vert", "../res/shaders/light.frag");
-
-    // m_Texture = std::make_unique<Texture>("../res/textures/planks.png", "diffuse", 0, GL_RGBA);
-    // m_PlankSpecTex = std::make_unique<Texture>("../res/textures/planksSpec.png", "specular", 1, GL_RED);
+    m_ModelShader = std::make_unique<Shader>("../res/shaders/model.vert", "../res/shaders/model.frag");
 
     Texture textures[]{
-        Texture("../res/textures/planks.png", "diffuse", 0, GL_RGBA),
-        Texture("../res/textures/planksSpec.png", "specular", 1, GL_RED),
+        Texture("../res/textures/planks.png", "diffuse", 0),
+        Texture("../res/textures/planksSpec.png", "specular", 1),
     };
 
     std::vector<Vertex> verts(cubeVertices, cubeVertices + sizeof(cubeVertices) / sizeof(Vertex));
@@ -111,10 +109,9 @@ Application::Application() : m_IsRunning(true)
     m_LightShader->SetUniform4f("lightColor", glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
     // coordinate systems
     glm::mat4 model{1.0f};
-    glm::vec3 lightPos = glm::vec3(0.5f, 1.0f, 0.5f);
+    glm::vec3 lightPos = glm::vec3(0.0f, 0.6f, 0.0f);
     model = glm::translate(model, lightPos);
-
-    // model = glm::rotate(model, 2.0f, glm::vec3(0.5f, 1.0f, 0.0f));
+    model = glm::scale(model, glm::vec3(0.8f));
     m_LightShader->SetUniformMatrix4fv("model", model);
 
     m_Shader->Use();
@@ -123,6 +120,15 @@ Application::Application() : m_IsRunning(true)
     m_Shader->SetUniform4f("lightColor", glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
     m_Shader->SetUniform3f("lightPos", lightPos);
     m_Shader->SetUniform3f("cameraPos", m_Camera.GetPosition());
+
+    m_ModelShader->Use();
+    glm::mat4 model3{1.0f};
+    m_ModelShader->SetUniformMatrix4fv("model", model3);
+    m_ModelShader->SetUniform4f("lightColor", glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+    m_ModelShader->SetUniform3f("lightPos", lightPos);
+    m_ModelShader->SetUniform3f("cameraPos", m_Camera.GetPosition());
+
+    m_Model = std::make_unique<Model>("../res/models/sword/scene.gltf");
 }
 
 Application &Application::Instance()
@@ -151,9 +157,11 @@ void Application::Run()
         glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        m_Mesh->Draw(*m_Shader, m_Camera);
+        m_Mesh->LDraw(*m_Shader, m_Camera);
 
-        m_LightMesh->Draw(*m_LightShader, m_Camera);
+        m_LightMesh->LDraw(*m_LightShader, m_Camera);
+
+        m_Model->Draw(*m_ModelShader, m_Camera);
 
         // Swap the screen buffers
         glfwSwapBuffers(m_Window);

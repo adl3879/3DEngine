@@ -12,6 +12,7 @@
 #include "Shader.h"
 #include "Texture.h"
 #include "VertexArray.h"
+#include "Model.h"
 
 constexpr int windowWidth = 1000;
 constexpr int windowHeight = 800;
@@ -44,12 +45,12 @@ class Application
 
     std::unique_ptr<Shader> m_Shader;
     std::unique_ptr<Shader> m_LightShader;
-
-    std::unique_ptr<Texture> m_Texture;
-    std::unique_ptr<Texture> m_PlankSpecTex;
+    std::unique_ptr<Shader> m_ModelShader;
 
     std::unique_ptr<Mesh> m_Mesh;
     std::unique_ptr<Mesh> m_LightMesh;
+
+    std::unique_ptr<Model> m_Model;
 
     Camera m_Camera{};
     CameraController m_CameraController{m_Camera, 0.1f, 2.5f};

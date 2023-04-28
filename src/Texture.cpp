@@ -1,6 +1,8 @@
 #include "Texture.h"
 
-Texture::Texture(const std::string &src, const std::string &type, unsigned int slot, GLenum format)
+#include <stdexcept>
+
+Texture::Texture(const std::string &src, const std::string &type, unsigned int slot)
     : m_Texture(0), m_Type(type), m_Slot(slot)
 {
     // load image
@@ -24,7 +26,17 @@ Texture::Texture(const std::string &src, const std::string &type, unsigned int s
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, format, GL_UNSIGNED_BYTE, image);
+    // Check what type of color channels the texture has and load it accordingly
+    if (channels == 4)
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
+    else if (channels == 3)
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+    else if (channels == 1)
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RED, GL_UNSIGNED_BYTE, image);
+    else
+        throw std::invalid_argument("Automatic Texture type recognition failed");
+
+    // Generate MipMaps
     glGenerateMipmap(GL_TEXTURE_2D);
 
     stbi_image_free(image);

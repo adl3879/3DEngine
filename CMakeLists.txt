@@ -5,8 +5,6 @@ project(3DEngine)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-set(PCH_FILE "../src/stdafx.h")
-
 # exterrnal libraries
 add_subdirectory(vendor/glfw)
 add_subdirectory(vendor/glm)
@@ -21,6 +19,7 @@ include_directories(
     "src/*"
     "vendor/stb_image"
     "vendor/glad/include"
+    "vendor/json"
 )
 
 add_executable(${PROJECT_NAME} ${SOURCES})

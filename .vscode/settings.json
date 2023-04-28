@@ -5,7 +5,8 @@
     "editor.detectIndentation": false,
     "cSpell.words": [
         "GLFW",
-        "OPENGL"
+        "OPENGL",
+        "Parameteri"
     ],
-    "workbench.colorTheme": "Visual Studio Dark - C++"
+    // "workbench.colorTheme": "Visual Studio Dark - C++"
 }
