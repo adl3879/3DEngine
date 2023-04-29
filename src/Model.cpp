@@ -306,9 +306,9 @@ void Model::TraverseNode(unsigned int nextNode, glm::mat4 matrix)
     }
 
     // Initialize matrices
-    glm::mat4 trans = glm::mat4(1.0f);
-    glm::mat4 rot = glm::mat4(1.0f);
-    glm::mat4 sca = glm::mat4(1.0f);
+    glm::mat4 trans = glm::mat4{1.0f};
+    glm::mat4 rot = glm::mat4{1.0f};
+    glm::mat4 sca = glm::mat4{1.0f};
 
     // Use translation, rotation, and scale to change the initialized matrices
     trans = glm::translate(trans, translation);
