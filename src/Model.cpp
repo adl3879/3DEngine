@@ -88,9 +88,9 @@ std::vector<float> Model::GetFloats(json accessor)
     // Go over all the bytes in the data at the correct place using the properties from above
     unsigned int beginningOfData = byteOffset + accByteOffset;
     unsigned int lengthOfData = count * 4 * numPerVert;
-    for (unsigned int i = beginningOfData; i < beginningOfData + lengthOfData; i++)
+    for (unsigned int i = beginningOfData; i < beginningOfData + lengthOfData; i)
     {
-        unsigned char bytes[] = {m_Data[i], m_Data[i], m_Data[i++], m_Data[i]};
+        unsigned char bytes[] = {m_Data[i++], m_Data[i++], m_Data[i++], m_Data[i++]};
         float value;
         std::memcpy(&value, bytes, sizeof(float));
         floatVec.push_back(value);
@@ -117,9 +117,9 @@ std::vector<unsigned int> Model::GetIndices(json accessor)
     unsigned int beginningOfData = byteOffset + accByteOffset;
     if (componentType == 5125)
     {
-        for (unsigned int i = beginningOfData; i < byteOffset + accByteOffset + count * 4; i++)
+        for (unsigned int i = beginningOfData; i < byteOffset + accByteOffset + count * 4; i)
         {
-            unsigned char bytes[] = {m_Data[i], m_Data[i], m_Data[i], m_Data[i]};
+            unsigned char bytes[] = {m_Data[i++], m_Data[i++], m_Data[i++], m_Data[i++]};
             unsigned int value;
             std::memcpy(&value, bytes, sizeof(unsigned int));
             indices.push_back((GLuint)value);
@@ -127,9 +127,9 @@ std::vector<unsigned int> Model::GetIndices(json accessor)
     }
     else if (componentType == 5123)
     {
-        for (unsigned int i = beginningOfData; i < byteOffset + accByteOffset + count * 2; i++)
+        for (unsigned int i = beginningOfData; i < byteOffset + accByteOffset + count * 2; i)
         {
-            unsigned char bytes[] = {m_Data[i], m_Data[i]};
+            unsigned char bytes[] = {m_Data[i++], m_Data[i++]};
             unsigned short value;
             std::memcpy(&value, bytes, sizeof(unsigned short));
             indices.push_back((GLuint)value);
@@ -137,9 +137,9 @@ std::vector<unsigned int> Model::GetIndices(json accessor)
     }
     else if (componentType == 5122)
     {
-        for (unsigned int i = beginningOfData; i < byteOffset + accByteOffset + count * 2; i++)
+        for (unsigned int i = beginningOfData; i < byteOffset + accByteOffset + count * 2; i)
         {
-            unsigned char bytes[] = {m_Data[i], m_Data[i]};
+            unsigned char bytes[] = {m_Data[i++], m_Data[i++]};
             short value;
             std::memcpy(&value, bytes, sizeof(short));
             indices.push_back((GLuint)value);
