@@ -205,7 +205,9 @@ std::vector<Vertex> Model::AssembleVertices(std::vector<glm::vec3> positions, st
     std::vector<Vertex> vertices;
     for (int i = 0; i < positions.size(); i++)
     {
-        vertices.push_back(Vertex{positions[i], normals[i], glm::vec3(1.0f, 1.0f, 1.0f), texUVs[i]});
+        auto vertex = Vertex{
+            .Position = positions[i], .Normal = normals[i], .Color = glm::vec3(1.0f, 1.0f, 1.0f), .Texture = texUVs[i]};
+        vertices.push_back(vertex);
     }
     return vertices;
 }

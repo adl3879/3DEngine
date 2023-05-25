@@ -112,6 +112,4 @@ void Mesh::Draw(Shader &shader, Camera &camera, glm::mat4 matrix, glm::vec3 tran
 
     // Draw the actual mesh
     glDrawElements(GL_TRIANGLES, m_Indices.size(), GL_UNSIGNED_INT, 0);
-
-    m_VAO.Unbind();
 }

@@ -12,48 +12,48 @@
 float lastFrame = 0.0f;
 
 // clang-format off
-// Vertex cubeVertices[] =
-// { //               COORDINATES           /            COLORS          /           NORMALS         /       TEXTURE COORDINATES    //
-// 	Vertex{glm::vec3(-1.0f, 0.0f,  1.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 0.0f, 1.0f), glm::vec2(0.0f, 0.0f)},
-// 	Vertex{glm::vec3(-1.0f, 0.0f, -1.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 0.0f, 1.0f), glm::vec2(0.0f, 1.0f)},
-// 	Vertex{glm::vec3( 1.0f, 0.0f, -1.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 0.0f, 1.0f), glm::vec2(1.0f, 1.0f)},
-// 	Vertex{glm::vec3( 1.0f, 0.0f,  1.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 0.0f, 1.0f), glm::vec2(1.0f, 0.0f)}
-// };
+Vertex cubeVertices[] =
+{ //               COORDINATES           /            COLORS          /           NORMALS         /       TEXTURE COORDINATES    //
+	Vertex{glm::vec3(-1.0f, 0.0f,  1.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 0.0f, 1.0f), glm::vec2(0.0f, 0.0f)},
+	Vertex{glm::vec3(-1.0f, 0.0f, -1.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 0.0f, 1.0f), glm::vec2(0.0f, 1.0f)},
+	Vertex{glm::vec3( 1.0f, 0.0f, -1.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 0.0f, 1.0f), glm::vec2(1.0f, 1.0f)},
+	Vertex{glm::vec3( 1.0f, 0.0f,  1.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 0.0f, 1.0f), glm::vec2(1.0f, 0.0f)}
+};
 
-// // Indices for vertices order
-// GLuint cubeIndices[] =
-// {
-// 	0, 1, 2,
-// 	0, 2, 3
-// };
+// Indices for vertices order
+GLuint cubeIndices[] =
+{
+	0, 1, 2,
+	0, 2, 3
+};
 
-// Vertex lightVertices[] =
-// { //     COORDINATES     //
-// 	Vertex{glm::vec3(-0.1f, -0.1f,  0.1f)},
-// 	Vertex{glm::vec3(-0.1f, -0.1f, -0.1f)},
-// 	Vertex{glm::vec3(0.1f, -0.1f, -0.1f)},
-// 	Vertex{glm::vec3(0.1f, -0.1f,  0.1f)},
-// 	Vertex{glm::vec3(-0.1f,  0.1f,  0.1f)},
-// 	Vertex{glm::vec3(-0.1f,  0.1f, -0.1f)},
-// 	Vertex{glm::vec3(0.1f,  0.1f, -0.1f)},
-// 	Vertex{glm::vec3(0.1f,  0.1f,  0.1f)}
-// };
+Vertex lightVertices[] =
+{ //     COORDINATES     //
+	Vertex{glm::vec3(-0.1f, -0.1f,  0.1f)},
+	Vertex{glm::vec3(-0.1f, -0.1f, -0.1f)},
+	Vertex{glm::vec3(0.1f, -0.1f, -0.1f)},
+	Vertex{glm::vec3(0.1f, -0.1f,  0.1f)},
+	Vertex{glm::vec3(-0.1f,  0.1f,  0.1f)},
+	Vertex{glm::vec3(-0.1f,  0.1f, -0.1f)},
+	Vertex{glm::vec3(0.1f,  0.1f, -0.1f)},
+	Vertex{glm::vec3(0.1f,  0.1f,  0.1f)}
+};
 
-// GLuint lightIndices[] =
-// {
-// 	0, 1, 2,
-// 	0, 2, 3,
-// 	0, 4, 7,
-// 	0, 7, 3,
-// 	3, 7, 6,
-// 	3, 6, 2,
-// 	2, 6, 5,
-// 	2, 5, 1,
-// 	1, 5, 4,
-// 	1, 4, 0,
-// 	4, 5, 6,
-// 	4, 6, 7
-// };
+GLuint lightIndices[] =
+{
+	0, 1, 2,
+	0, 2, 3,
+	0, 4, 7,
+	0, 7, 3,
+	3, 7, 6,
+	3, 6, 2,
+	2, 6, 5,
+	2, 5, 1,
+	1, 5, 4,
+	1, 4, 0,
+	4, 5, 6,
+	4, 6, 7
+};
 // clang-format on
 
 Application::Application() : m_IsRunning(true)
@@ -124,8 +124,8 @@ Application::Application() : m_IsRunning(true)
     m_ModelShader->Use();
     glm::mat4 model3{1.0f};
     m_ModelShader->SetUniformMatrix4fv("model", model3);
-    m_ModelShader->SetUniform4f("lightColor", glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
-    m_ModelShader->SetUniform3f("lightPos", glm::vec3(0.0f, 0.6f, 0.0f));
+    // m_ModelShader->SetUniform4f("lightColor", glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+    // m_ModelShader->SetUniform3f("lightPos", glm::vec3(0.0f, 0.6f, 0.0f));
     m_ModelShader->SetUniform3f("cameraPos", m_Camera.GetPosition());
 
     m_Model = std::make_unique<Model>("../res/models/sword/scene.gltf");
@@ -147,12 +147,12 @@ void Application::Run()
         // doMovement();
         InputManager::Instance().ProcessInput();
 
-        m_CameraController.OnUpdate(m_DeltaTime);
-
         // delta time
         float currentFrame = glfwGetTime();
         m_DeltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
+
+        m_CameraController.OnUpdate(m_DeltaTime);
 
         glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

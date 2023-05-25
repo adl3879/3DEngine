@@ -23,6 +23,6 @@ void main()
     gl_Position = CurrentPos;
 
 	Color = aColor;
-	TexCoord = mat2(0.0, -1.0, 1.0, 0.0) * aTex;
+	TexCoord = aTex;
 	Normal = aNormal;
 }

@@ -7,6 +7,7 @@
 class Texture
 {
   public:
+    Texture() = default;
     Texture(const std::string &src, const std::string &type, unsigned int slot);
 
     void TextureUnit(Shader &shader, const char *uniform, unsigned int unit);
