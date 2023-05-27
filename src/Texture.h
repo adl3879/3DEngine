@@ -12,6 +12,7 @@ class Texture
 
     void TextureUnit(Shader &shader, const char *uniform, unsigned int unit);
     const std::string &GetType() const { return m_Type; }
+    const std::string &GetPath() const { return m_Path; }
 
     void Bind() const;
     void Unbind() const;
@@ -20,5 +21,6 @@ class Texture
   private:
     unsigned int m_Texture;
     std::string m_Type;
+    std::string m_Path;
     unsigned int m_Slot;
 };

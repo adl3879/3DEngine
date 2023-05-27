@@ -3,7 +3,7 @@
 #include <stdexcept>
 
 Texture::Texture(const std::string &src, const std::string &type, unsigned int slot)
-    : m_Texture(0), m_Type(type), m_Slot(slot)
+    : m_Texture(0), m_Type(type), m_Slot(slot), m_Path(src)
 {
     // load image
     int width, height, channels;

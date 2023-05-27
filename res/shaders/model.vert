@@ -13,16 +13,13 @@ out vec4 CurrentPos;
 uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
-uniform mat4 translation;
-uniform mat4 rotation;
-uniform mat4 scale;
 
 void main()
 {
-	CurrentPos = projection * view * model * translation * -rotation * scale * vec4(aPos, 1.0f);
+	CurrentPos = projection * view * model * vec4(aPos, 1.0f);
     gl_Position = CurrentPos;
 
-	Color = aColor;
+	Color = vec3(1.0f, 1.0f, 1.0f);
 	TexCoord = aTex;
 	Normal = aNormal;
 }

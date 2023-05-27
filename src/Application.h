@@ -43,12 +43,8 @@ class Application
     float m_DeltaTime = 0.0f;
     Input m_Input{};
 
-    // std::unique_ptr<Shader> m_Shader;
-    // std::unique_ptr<Shader> m_LightShader;
+    std::unique_ptr<Shader> m_LightShader;
     std::unique_ptr<Shader> m_ModelShader;
-
-    // std::unique_ptr<Mesh> m_Mesh;
-    // std::unique_ptr<Mesh> m_LightMesh;
 
     std::unique_ptr<Model> m_Model;
 
