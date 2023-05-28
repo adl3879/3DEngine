@@ -1,14 +1,8 @@
 {
-    "editor.bracketPairColorization.enabled": false,
-    "editor.tabSize": 4,
-    "editor.indentSize": 4,
-    "editor.detectIndentation": false,
-    "cSpell.words": [
-        "Assimp",
-        "GLFW",
-        "gltf",
-        "OPENGL",
-        "Parameteri"
-    ],
-    "workbench.colorTheme": "GitHub Dark Dimmed"
+  "editor.bracketPairColorization.enabled": false,
+  "editor.tabSize": 4,
+  "editor.indentSize": 4,
+  "editor.detectIndentation": false,
+  "cSpell.words": ["Assimp", "GLFW", "gltf", "OPENGL", "Parameteri"],
+  "workbench.colorTheme": "Panda Syntax"
 }

@@ -16,6 +16,8 @@ void Input::UpdateMouseState(int key, float value)
 
 void Input::UpdateCursorPosition(double xpos, double ypos) { m_CursorPosition = CursorPosition{.X = xpos, .Y = ypos}; }
 
+void Input::UpdateWindowState(WindowState state) { m_WindowState = state; }
+
 InputKey Input::KeyToInputKey(int key)
 {
     switch (key)

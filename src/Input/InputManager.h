@@ -16,7 +16,8 @@ class InputManager
   public:
     using ActionCallbackFunc = std::function<bool(InputSource, int, float)>;
     using KeyboardCallbackFunc = std::function<void(InputKey key, bool isRepeat)>;
-    using CursorCallbackFunc = std::function<void(double xpos, double ypos)>;
+    using CursorCallbackFunc = std::function<void(double xPos, double yPos)>;
+    using WindowEventFunc = std::function<void(WindowState)>;
 
     struct ActionCallback
     {
@@ -61,6 +62,7 @@ class InputManager
     void RegisterCursorCallback(CursorCallbackFunc callback);
 
     bool IsKeyPressed(InputKey key);
+    WindowState GetWindowState();
 
   private:
     bool m_Action{false};

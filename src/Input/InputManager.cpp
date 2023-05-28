@@ -75,11 +75,7 @@ InputSource GetInputSourceFromKey(InputKey key)
     }
 }
 
-InputManager::InputManager()
-{
-    m_Action = true;
-    std::cout << "InputManager Initialized" << std::endl;
-}
+InputManager::InputManager() { m_Action = true; }
 
 InputManager::~InputManager() { m_Action = false; }
 
@@ -123,6 +119,7 @@ void InputManager::ProcessInput()
 {
     std::vector<ActionEvent> events{};
     CursorPosition cursorState{};
+    WindowState windowState{};
 
     struct KeyboardCallbackParams
     {
@@ -137,6 +134,11 @@ void InputManager::ProcessInput()
         {
             // cursor position callback
             cursorState = device.CursorStateFunc(device.Index);
+        }
+        else if (device.Type == InputDeviceType::Window)
+        {
+            // window event callback
+            windowState = device.WindowStateFunc(device.Index);
         }
         else
         {
@@ -224,4 +226,14 @@ bool InputManager::IsKeyPressed(InputKey key)
         }
     }
     return false;
+}
+
+WindowState InputManager::GetWindowState()
+{
+    for (auto &device : m_Devices)
+    {
+        if (device.Type == InputDeviceType::Window)
+            return device.WindowStateFunc(device.Index);
+    }
+    return WindowState{};
 }

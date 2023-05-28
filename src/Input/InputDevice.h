@@ -10,7 +10,18 @@ enum class InputDeviceType
     Keyboard,
     Mouse,
     MouseMove,
-    Gamepad
+    Gamepad,
+    Window
+};
+
+enum class WindowEventState
+{
+    None = 0,
+    Close,
+    Resize,
+    Focus,
+    LostFocus,
+    Moved
 };
 
 struct CursorPosition
@@ -24,8 +35,16 @@ struct InputDeviceState
     int Value;
 };
 
+struct WindowState
+{
+    WindowEventState EventState;
+    int Width = 1600;
+    int Height = 900;
+};
+
 using InputDeviceStateCallbackFunc = std::function<std::unordered_map<InputKey, InputDeviceState>(int)>;
 using CursorPositionCallbackFunc = std::function<CursorPosition(int)>;
+using WindowStateCallbackFunc = std::function<WindowState(int)>;
 
 struct InputDevice
 {
@@ -34,4 +53,5 @@ struct InputDevice
     std::unordered_map<InputKey, InputDeviceState> CurrentState;
     InputDeviceStateCallbackFunc StateFunc;
     CursorPositionCallbackFunc CursorStateFunc;
+    WindowStateCallbackFunc WindowStateFunc;
 };

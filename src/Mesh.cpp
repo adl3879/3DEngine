@@ -50,8 +50,9 @@ void Mesh::Draw(Shader &shader, Camera &camera)
     }
 
     glm::mat4 projection{1.0f};
-    projection =
-        glm::perspective(45.0f, static_cast<float>(windowWidth) / static_cast<float>(windowHeight), 0.1f, 100.0f);
+    auto windowState = InputManager::Instance().GetWindowState();
+    projection = glm::perspective(45.0f, static_cast<float>(windowState.Width) / static_cast<float>(windowState.Height),
+                                  0.1f, 100.0f);
 
     shader.SetUniformMatrix4fv("projection", projection);
     shader.SetUniformMatrix4fv("view", camera.GetViewMatrix());
