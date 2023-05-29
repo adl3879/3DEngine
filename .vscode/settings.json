@@ -12,5 +12,8 @@
     "Parameteri"
 ],
   "workbench.colorTheme": "Panda Syntax",
-  "editor.fontSize": 13.5
+"editor.fontSize": 13.5,
+"files.associations": {
+    "functional": "cpp"
+}
 }

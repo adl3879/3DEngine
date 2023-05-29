@@ -1,5 +1,7 @@
 #include "AppLayer.h"
 
+#include <iostream>
+
 AppLayer::AppLayer() {}
 
 void AppLayer::OnAttach()
@@ -24,4 +26,15 @@ void AppLayer::OnUpdate(float deltaTime)
 {
     m_CameraController.OnUpdate(deltaTime);
     m_Model->Draw(*m_ModelShader, m_Camera);
+}
+
+void AppLayer::OnKeyPressed(InputKey key, bool isRepeat)
+{
+    if (key == InputKey::A)
+        std::cout << "A" << std::endl;
+}
+
+void AppLayer::OnMouseMoved(double xPos, double yPos)
+{
+    // std::cout << "Mouse moved: " << xPos << ", " << yPos << std::endl;
 }

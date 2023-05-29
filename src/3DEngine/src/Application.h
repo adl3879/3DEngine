@@ -3,14 +3,16 @@
 #include <memory>
 
 #include "Window.h"
-#include "Input.h"
 #include "LayerStack.h"
 
 #include "ImGuiLayer.h"
 
+int main(int argc, char **argv);
+
 class Application
 {
   public:
+    Application();
     Application(Application const &app) = delete;
     Application &operator=(Application const &app) = delete;
     virtual ~Application();
@@ -18,8 +20,6 @@ class Application
     void PushLayer(Layer *layer);
     void PushOverlay(Layer *layer);
 
-    static Application &Instance();
-    void Run();
     void Close() { m_IsRunning = false; }
 
     bool IsRunning() const { return m_IsRunning; }
@@ -29,7 +29,7 @@ class Application
     const std::shared_ptr<Window> &GetWindow() const { return m_Window; }
 
   private:
-    Application();
+    void Run();
     void SetupInputSystem();
 
   private:
@@ -40,4 +40,10 @@ class Application
 
     LayerStack m_LayerStack{};
     ImGuiLayer *m_ImGuiLayer;
+
+  private:
+    friend int ::main(int argc, char **argv);
 };
+
+// To be defined in CLIENT
+Application *CreateApplication();

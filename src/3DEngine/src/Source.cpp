@@ -1,7 +1,10 @@
-// #include "Application.h"
+#include "Application.h"
 
-// int main()
-// {
-//     Application::Instance().Run();
-//     return 0;
-// }
+extern Application *CreateApplication();
+
+int main(int argc, char **argv)
+{
+    auto app = CreateApplication();
+    app->Run();
+    delete app;
+}

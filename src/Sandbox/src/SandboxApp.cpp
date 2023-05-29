@@ -3,13 +3,12 @@
 #include "Application.h"
 #include "AppLayer.h"
 
-int main()
+class Sandbox : public Application
 {
-    std::cout << "Hello World!\n";
+  public:
+    Sandbox() { PushLayer(new AppLayer()); }
 
-    Layer *appLayer = new AppLayer();
-    Application::Instance().PushLayer(appLayer);
+    ~Sandbox() = default;
+};
 
-    Application::Instance().Run();
-    return 0;
-}
+Application *CreateApplication() { return new Sandbox(); }

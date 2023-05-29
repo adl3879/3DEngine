@@ -18,6 +18,9 @@ class AppLayer : public Layer
     virtual void OnDetach() override;
     virtual void OnUpdate(float deltaTime) override;
 
+    virtual void OnKeyPressed(InputKey key, bool isRepeat) override;
+    virtual void OnMouseMoved(double xPos, double yPos) override;
+
   private:
     std::unique_ptr<Shader> m_ModelShader;
     std::unique_ptr<Model> m_Model;

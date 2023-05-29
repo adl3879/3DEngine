@@ -1,5 +1,4 @@
 #include "Application.h"
-#include "Buffer.h"
 #include "InputDevice.h"
 #include "InputKey.h"
 #include "InputManager.h"
@@ -7,6 +6,7 @@
 #include <functional>
 #include <iostream>
 #include <memory>
+#include <algorithm>
 
 float lastFrame = 0.0f;
 
@@ -26,12 +26,6 @@ Application::Application() : m_IsRunning(true)
 
     m_ImGuiLayer = new ImGuiLayer();
     PushOverlay(m_ImGuiLayer);
-}
-
-Application &Application::Instance()
-{
-    static Application app;
-    return app;
 }
 
 void Application::Run()
@@ -80,10 +74,19 @@ void Application::PushLayer(Layer *layer)
 {
     m_LayerStack.PushLayer(layer);
     layer->OnAttach();
+
+    InputManager::Instance().RegisterCursorCallback(
+        std::bind(&Layer::OnMouseMoved, layer, std::placeholders::_1, std::placeholders::_2));
+    InputManager::Instance().RegisterKeyboardCallback(
+        std::bind(&Layer::OnKeyPressed, layer, std::placeholders::_1, std::placeholders::_2));
 }
 
 void Application::PushOverlay(Layer *layer)
 {
     m_LayerStack.PushOverlay(layer);
     layer->OnAttach();
+    InputManager::Instance().RegisterCursorCallback(
+        std::bind(&Layer::OnMouseMoved, layer, std::placeholders::_1, std::placeholders::_2));
+    InputManager::Instance().RegisterKeyboardCallback(
+        std::bind(&Layer::OnKeyPressed, layer, std::placeholders::_1, std::placeholders::_2));
 }
