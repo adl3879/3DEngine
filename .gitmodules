@@ -7,3 +7,6 @@
 [submodule "vendor/assimp"]
 	path = vendor/assimp
 	url = https://github.com/assimp/assimp.git
+[submodule "vendor/imgui"]
+	path = vendor/imgui
+	url = https://github.com/adl3879/imgui

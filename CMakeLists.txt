@@ -1,38 +1,7 @@
 cmake_minimum_required(VERSION 3.17)
 
-project(3DEngine)
-
+project(3DEngineApplication VERSION 0.1.0 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-# exterrnal libraries
-add_subdirectory(vendor/glfw)
-add_subdirectory(vendor/glm)
-add_subdirectory(vendor/assimp)
-
-file(GLOB_RECURSE SOURCES 
-    "src/*.cpp"
-    "vendor/glad/src/glad.c"
-    "vendor/stb_image/stb_image.cpp"
-)
-
-include_directories(
-    "src/*"
-    "vendor/stb_image"
-    "vendor/glad/include"
-    "vendor/json"
-    "vendor/assimp/include"
-)
-
-add_executable(${PROJECT_NAME} ${SOURCES})
-
-target_include_directories(${PROJECT_NAME}
-    PRIVATE
-        $<INSTALL_INTERFACE:include>
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-        glm glfw assimp
-)
-
-target_link_libraries(${PROJECT_NAME} 
-    PRIVATE glm glfw assimp
-)
+add_subdirectory(src/Sandbox)
+add_subdirectory(src/3DEngine)

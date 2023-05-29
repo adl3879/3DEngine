@@ -3,6 +3,14 @@
   "editor.tabSize": 4,
   "editor.indentSize": 4,
   "editor.detectIndentation": false,
-  "cSpell.words": ["Assimp", "GLFW", "gltf", "OPENGL", "Parameteri"],
-  "workbench.colorTheme": "Panda Syntax"
+  "cSpell.words": [
+    "Assimp",
+    "Gamepad",
+    "GLFW",
+    "gltf",
+    "OPENGL",
+    "Parameteri"
+],
+  "workbench.colorTheme": "Panda Syntax",
+  "editor.fontSize": 13.5
 }
