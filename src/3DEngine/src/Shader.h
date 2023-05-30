@@ -8,6 +8,8 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <string>
 
+namespace Engine
+{
 class Shader
 {
   public:
@@ -30,3 +32,4 @@ class Shader
   private:
     unsigned int m_Program;
 };
+}

@@ -3,6 +3,8 @@
 #include "Shader.h"
 #include <vector>
 
+namespace Engine
+{
 struct VertexBufferElement
 {
   public:
@@ -98,3 +100,4 @@ class IndexBuffer
   private:
     unsigned int m_IndexBuffer;
 };
+}

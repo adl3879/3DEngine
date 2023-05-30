@@ -11,6 +11,8 @@
 #include "Buffer.h"
 #include "Mesh.h"
 
+namespace Engine
+{
 class Model
 {
   public:
@@ -35,3 +37,4 @@ class Model
     bool m_HasTexture = false;
     std::vector<Texture> m_TexturesLoaded;
 };
+}

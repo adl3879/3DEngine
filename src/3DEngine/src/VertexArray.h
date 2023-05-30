@@ -4,6 +4,8 @@
 
 #include "Buffer.h"
 
+namespace Engine
+{
 class VertexArray
 {
   public:
@@ -18,3 +20,4 @@ class VertexArray
   private:
     unsigned int m_VertexArray;
 };
+}

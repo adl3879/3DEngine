@@ -1,5 +1,7 @@
 #include "Camera.h"
 
+namespace Engine
+{
 Camera::Camera()
     : m_Position(glm::vec3(0.0f, 0.0f, 0.3f)), m_Front(0.0f, 0.0f, -1.0f), m_WorldUp(0.0f, 1.0f, 0.0f), m_Yaw(-90.0f),
       m_Pitch(0.0f)
@@ -25,4 +27,5 @@ void Camera::RecalculateViewMatrix()
     m_Up = glm::normalize(glm::cross(m_Right, m_Front));
 
     m_ViewMatrix = glm::lookAt(m_Position, m_Position + m_Front, m_Up);
+}
 }

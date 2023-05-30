@@ -5,6 +5,8 @@
 #include <iostream>
 #include <unordered_set>
 
+namespace Engine
+{
 InputSource GetInputSourceFromKey(InputKey key)
 {
     switch (key)
@@ -236,4 +238,5 @@ WindowState InputManager::GetWindowState()
             return device.WindowStateFunc(device.Index);
     }
     return WindowState{};
+}
 }

@@ -3,6 +3,8 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
+namespace Engine
+{
 class Camera
 {
   public:
@@ -52,3 +54,4 @@ class Camera
 
     glm::mat4 m_ViewMatrix;
 };
+}

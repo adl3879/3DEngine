@@ -1,5 +1,7 @@
 #include "Buffer.h"
 
+namespace Engine
+{
 VertexBuffer::VertexBuffer(float *vertices, uint32_t size)
 {
     glGenBuffers(1, &m_VertexBuffer);
@@ -39,3 +41,4 @@ IndexBuffer::~IndexBuffer() { glDeleteBuffers(1, &m_IndexBuffer); }
 void IndexBuffer::Bind() const { glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_IndexBuffer); }
 
 void IndexBuffer::Unbind() const { glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0); }
+}

@@ -9,6 +9,8 @@
 
 int main(int argc, char **argv);
 
+namespace Engine
+{
 class Application
 {
   public:
@@ -47,3 +49,4 @@ class Application
 
 // To be defined in CLIENT
 Application *CreateApplication();
+}

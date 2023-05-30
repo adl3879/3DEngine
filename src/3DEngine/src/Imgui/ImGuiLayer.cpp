@@ -3,6 +3,8 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 
+namespace Engine
+{
 ImGuiLayer::ImGuiLayer() {}
 
 ImGuiLayer::~ImGuiLayer() {}
@@ -52,3 +54,4 @@ void ImGuiLayer::OnUpdate(float deltaTime)
 void ImGuiLayer::Begin() {}
 
 void ImGuiLayer::End() {}
+}

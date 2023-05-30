@@ -2,6 +2,8 @@
 
 #include <iostream>
 
+namespace Engine
+{
 CameraController::CameraController(Camera &camera, float sensitivity, float movementSpeed)
     : m_Camera(camera), m_Sensitivity(sensitivity), m_MovementSpeed(movementSpeed)
 {
@@ -37,4 +39,5 @@ void CameraController::OnMouseMove(double xPos, double yPos)
 
     m_Camera.SetYaw(m_Camera.GetYaw() + xOffset);
     m_Camera.SetPitch(m_Camera.GetPitch() + yOffset);
+}
 }

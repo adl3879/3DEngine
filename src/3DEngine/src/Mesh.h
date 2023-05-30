@@ -8,6 +8,8 @@
 #include "VertexArray.h"
 #include "Shader.h"
 
+namespace Engine
+{
 class Mesh
 {
   public:
@@ -23,3 +25,4 @@ class Mesh
 
     VertexArray m_VAO;
 };
+}

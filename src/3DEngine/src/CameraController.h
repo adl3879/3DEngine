@@ -3,6 +3,8 @@
 
 #include "Camera.h"
 
+namespace Engine
+{
 class CameraController
 {
   public:
@@ -19,3 +21,4 @@ class CameraController
     float m_Sensitivity;
     float m_MovementSpeed;
 };
+}

@@ -4,6 +4,8 @@
 
 #include "Layer.h"
 
+namespace Engine
+{
 class LayerStack
 {
   public:
@@ -29,3 +31,4 @@ class LayerStack
     std::vector<Layer *> m_Layers;
     unsigned int m_LayerInsertIndex = 0;
 };
+} 

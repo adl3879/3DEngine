@@ -4,6 +4,8 @@
 #include <iostream>
 #include <sstream>
 
+namespace Engine
+{
 Model::Model(const char *file) : m_File(file)
 {
     Assimp::Importer importer;
@@ -132,4 +134,5 @@ void Model::LoadMesh()
 
         m_Meshes.push_back(Mesh{vertices, indices, textures});
     }
+}
 }

@@ -3,7 +3,7 @@
 #include "Application.h"
 #include "AppLayer.h"
 
-class Sandbox : public Application
+class Sandbox : public Engine::Application
 {
   public:
     Sandbox() { PushLayer(new AppLayer()); }
@@ -11,4 +11,4 @@ class Sandbox : public Application
     ~Sandbox() = default;
 };
 
-Application *CreateApplication() { return new Sandbox(); }
+Engine::Application *Engine::CreateApplication() { return new Sandbox(); }

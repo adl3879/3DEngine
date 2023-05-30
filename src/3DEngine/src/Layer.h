@@ -3,6 +3,8 @@
 #include <string>
 #include "InputKey.h"
 
+namespace Engine
+{
 class Layer
 {
   public:
@@ -22,3 +24,4 @@ class Layer
   protected:
     std::string m_DebugName;
 };
+}

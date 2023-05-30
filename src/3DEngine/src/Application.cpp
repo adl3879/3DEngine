@@ -10,6 +10,8 @@
 
 float lastFrame = 0.0f;
 
+namespace Engine
+{
 Application::Application() : m_IsRunning(true)
 {
 
@@ -89,4 +91,5 @@ void Application::PushOverlay(Layer *layer)
         std::bind(&Layer::OnMouseMoved, layer, std::placeholders::_1, std::placeholders::_2));
     InputManager::Instance().RegisterKeyboardCallback(
         std::bind(&Layer::OnKeyPressed, layer, std::placeholders::_1, std::placeholders::_2));
+}
 }

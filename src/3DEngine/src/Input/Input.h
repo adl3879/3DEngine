@@ -4,6 +4,8 @@
 #include "InputKey.h"
 #include <unordered_map>
 
+namespace Engine
+{
 class Input
 {
   public:
@@ -30,3 +32,4 @@ class Input
     WindowState m_WindowState{};
     CursorPosition m_CursorPosition{};
 };
+}

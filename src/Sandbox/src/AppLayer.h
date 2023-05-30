@@ -1,14 +1,10 @@
 #pragma once
 
-#include "Shader.h"
-#include "Layer.h"
-#include "CameraController.h"
-#include "Model.h"
-#include "Camera.h"
+#include "Engine.h"
 
 #include <memory>
 
-class AppLayer : public Layer
+class AppLayer : public Engine::Layer
 {
   public:
     AppLayer();
@@ -18,13 +14,13 @@ class AppLayer : public Layer
     virtual void OnDetach() override;
     virtual void OnUpdate(float deltaTime) override;
 
-    virtual void OnKeyPressed(InputKey key, bool isRepeat) override;
+    virtual void OnKeyPressed(Engine::InputKey key, bool isRepeat) override;
     virtual void OnMouseMoved(double xPos, double yPos) override;
 
   private:
-    std::unique_ptr<Shader> m_ModelShader;
-    std::unique_ptr<Model> m_Model;
+    std::unique_ptr<Engine::Shader> m_ModelShader;
+    std::unique_ptr<Engine::Model> m_Model;
 
-    Camera m_Camera{};
-    CameraController m_CameraController{m_Camera, 0.1f, 2.5f};
+    Engine::Camera m_Camera{};
+    Engine::CameraController m_CameraController{m_Camera, 0.1f, 2.5f};
 };

@@ -2,6 +2,8 @@
 
 #include <string>
 
+namespace Engine
+{
 enum class InputKey
 {
     Unknown,
@@ -80,3 +82,4 @@ struct InputAction
 };
 
 InputSource GetInputSourceFromKey(InputKey key);
+}

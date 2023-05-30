@@ -2,6 +2,8 @@
 
 #include <algorithm>
 
+namespace Engine
+{
 LayerStack::~LayerStack() {}
 
 void LayerStack::PushLayer(Layer *layer)
@@ -31,4 +33,5 @@ void LayerStack::PopOverlay(Layer *overlay)
         overlay->OnDetach();
         m_Layers.erase(it);
     }
+}
 }

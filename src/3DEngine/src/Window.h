@@ -7,6 +7,8 @@
 
 #include "Input/Input.h"
 
+namespace Engine
+{
 struct WindowProps
 {
     std::string Title;
@@ -43,3 +45,4 @@ class Window
     WindowProps m_WindowProps;
     Input m_Input{};
 };
+} 

@@ -7,6 +7,8 @@
 #include "Layer.h"
 #include "InputManager.h"
 
+namespace Engine
+{
 class ImGuiLayer : public Layer
 {
   public:
@@ -23,3 +25,4 @@ class ImGuiLayer : public Layer
   private:
     float m_Time = 0.0f;
 };
+}

@@ -2,6 +2,8 @@
 #include "Buffer.h"
 #include <iostream>
 
+namespace Engine
+{
 VertexArray::VertexArray()
 {
     glGenVertexArrays(1, &m_VertexArray);
@@ -29,3 +31,4 @@ void VertexArray::AddBuffer(const VertexBuffer &vb, const VertexBufferLayout &la
     }
     vb.Unbind();
 }
+} 

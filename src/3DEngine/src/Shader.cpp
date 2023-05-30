@@ -4,6 +4,8 @@
 #include <iostream>
 #include <sstream>
 
+namespace Engine
+{
 Shader::Shader(const std::string &vertexSourcePath, const std::string &fragmentSourcePath)
 {
     auto vertexShader = ParseShader(vertexSourcePath);
@@ -97,4 +99,5 @@ void Shader::SetUniform3f(std::string id, glm::vec3 vector)
 {
     GLint location = glGetUniformLocation(m_Program, id.c_str());
     glUniform3f(location, vector.x, vector.y, vector.z);
+}
 }

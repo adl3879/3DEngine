@@ -4,6 +4,8 @@
 
 #include <iostream>
 
+namespace Engine
+{
 Mesh::Mesh(std::vector<Vertex> &vertices, std::vector<unsigned int> &indices, std::vector<Texture> &textures)
     : m_Vertices(vertices), m_Indices(indices), m_Textures(textures)
 {
@@ -60,4 +62,5 @@ void Mesh::Draw(Shader &shader, Camera &camera)
     glDrawElements(GL_TRIANGLES, m_Indices.size(), GL_UNSIGNED_INT, 0);
 
     m_VAO.Unbind();
+}
 }

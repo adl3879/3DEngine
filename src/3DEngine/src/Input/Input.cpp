@@ -2,6 +2,8 @@
 #include "GLFW/glfw3.h"
 #include "InputKey.h"
 
+namespace Engine
+{
 void Input::UpdateKeyboardState(int key, float value)
 {
     InputKey inputKey = KeyToInputKey(key);
@@ -139,4 +141,5 @@ InputKey Input::ButtonToInputKey(int key)
     default:
         return InputKey::Unknown;
     }
+}
 }

@@ -2,6 +2,8 @@
 
 #include <stdexcept>
 
+namespace Engine
+{
 Texture::Texture(const std::string &src, const std::string &type, unsigned int slot)
     : m_Texture(0), m_Type(type), m_Slot(slot), m_Path(src)
 {
@@ -58,3 +60,4 @@ void Texture::Bind() const
 }
 
 void Texture::Unbind() const { glBindTexture(GL_TEXTURE_2D, 0); }
+}

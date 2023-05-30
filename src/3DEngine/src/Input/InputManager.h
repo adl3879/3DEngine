@@ -11,6 +11,8 @@
 #include <vector>
 #include <string>
 
+namespace Engine
+{
 class InputManager
 {
   public:
@@ -78,3 +80,4 @@ class InputManager
     double m_LastMousePosX{0.0f};
     double m_LastMousePosY{0.0f};
 };
+}

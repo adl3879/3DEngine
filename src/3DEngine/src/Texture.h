@@ -4,6 +4,8 @@
 
 #include "Shader.h"
 
+namespace Engine
+{
 class Texture
 {
   public:
@@ -24,3 +26,4 @@ class Texture
     std::string m_Path;
     unsigned int m_Slot;
 };
+}

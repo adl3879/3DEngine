@@ -5,6 +5,8 @@
 #include <functional>
 #include <unordered_map>
 
+namespace Engine
+{
 enum class InputDeviceType
 {
     Keyboard,
@@ -55,3 +57,4 @@ struct InputDevice
     CursorPositionCallbackFunc CursorStateFunc;
     WindowStateCallbackFunc WindowStateFunc;
 };
+} // namespace Engine
