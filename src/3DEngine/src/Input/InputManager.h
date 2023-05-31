@@ -18,6 +18,7 @@ class InputManager
   public:
     using ActionCallbackFunc = std::function<bool(InputSource, int, float)>;
     using KeyboardCallbackFunc = std::function<void(InputKey key, bool isRepeat)>;
+    using MousePressCallbackFunc = std::function<void(MouseButton key)>;
     using CursorCallbackFunc = std::function<void(double xPos, double yPos)>;
     using WindowEventFunc = std::function<void(WindowState)>;
 
@@ -61,6 +62,7 @@ class InputManager
     void UnregisterDevice(InputDeviceType source, int inputIndex);
 
     void RegisterKeyboardCallback(KeyboardCallbackFunc callback);
+    void RegisterMousePressedCallback(MousePressCallbackFunc callback);
     void RegisterCursorCallback(CursorCallbackFunc callback);
 
     bool IsKeyPressed(InputKey key);
@@ -73,6 +75,7 @@ class InputManager
     std::unordered_map<std::string, std::vector<ActionCallback>> m_ActionCallbacks{};
 
     std::vector<KeyboardCallbackFunc> m_KeyboardCallbacks{};
+    std::vector<MousePressCallbackFunc> m_MousePressedCallbacks{};
     std::vector<CursorCallbackFunc> m_CursorCallbacks{};
 
     std::vector<InputDevice> m_Devices{};

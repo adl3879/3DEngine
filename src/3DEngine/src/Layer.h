@@ -18,7 +18,7 @@ class Layer
 
     virtual void OnKeyPressed(InputKey key, bool isRepeat) {}
     virtual void OnKeyReleased(InputKey key) {}
-    virtual void OnMouseButtonPressed(InputKey key) {}
+    virtual void OnMouseButtonPressed(MouseButton button) {}
     virtual void OnMouseMoved(double xPos, double yPos) {}
 
   protected:

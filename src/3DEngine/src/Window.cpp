@@ -14,12 +14,12 @@ Window::Window(const WindowProps &props) : m_WindowProps(props)
     InputManager::Instance().RegisterDevice(InputDevice{
         .Type = InputDeviceType::Keyboard,
         .Index = 0,
-        .StateFunc = std::bind(&Input::GetKeyboardState, &m_Input, std::placeholders::_1),
+        .KeyboardStateFunc = std::bind(&Input::GetKeyboardState, &m_Input, std::placeholders::_1),
     });
     InputManager::Instance().RegisterDevice(InputDevice{
         .Type = InputDeviceType::Mouse,
         .Index = 0,
-        .StateFunc = std::bind(&Input::GetMouseState, &m_Input, std::placeholders::_1),
+        .MousePressStateFunc = std::bind(&Input::GetMousePressState, &m_Input, std::placeholders::_1),
     });
     InputManager::Instance().RegisterDevice(InputDevice{
         .Type = InputDeviceType::MouseMove,
@@ -93,7 +93,7 @@ void Window::SetInputEventCallbacks()
         Input *input = static_cast<Input *>(glfwGetWindowUserPointer(window));
         if (input)
         {
-            input->UpdateMouseState(button, action == GLFW_PRESS ? 1.0f : 0.0f);
+            input->UpdateMousePressState(button, action == GLFW_PRESS ? 1.0f : 0.0f);
         }
     };
     glfwSetMouseButtonCallback(m_Window, mouseCallback);

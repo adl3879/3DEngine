@@ -16,6 +16,7 @@ class AppLayer : public Engine::Layer
 
     virtual void OnKeyPressed(Engine::InputKey key, bool isRepeat) override;
     virtual void OnMouseMoved(double xPos, double yPos) override;
+    virtual void OnMouseButtonPressed(Engine::MouseButton button) override;
 
   private:
     std::unique_ptr<Engine::Shader> m_ModelShader;

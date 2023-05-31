@@ -47,14 +47,17 @@ struct WindowState
 using InputDeviceStateCallbackFunc = std::function<std::unordered_map<InputKey, InputDeviceState>(int)>;
 using CursorPositionCallbackFunc = std::function<CursorPosition(int)>;
 using WindowStateCallbackFunc = std::function<WindowState(int)>;
+using MousePressCallbackFunc = std::function<std::unordered_map<MouseButton, InputDeviceState>(int)>;
 
 struct InputDevice
 {
     InputDeviceType Type;
     int Index;
     std::unordered_map<InputKey, InputDeviceState> CurrentState;
-    InputDeviceStateCallbackFunc StateFunc;
+
+    InputDeviceStateCallbackFunc KeyboardStateFunc;
     CursorPositionCallbackFunc CursorStateFunc;
     WindowStateCallbackFunc WindowStateFunc;
+    MousePressCallbackFunc MousePressStateFunc;
 };
 } // namespace Engine

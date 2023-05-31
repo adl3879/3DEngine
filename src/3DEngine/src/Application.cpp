@@ -81,6 +81,8 @@ void Application::PushLayer(Layer *layer)
         std::bind(&Layer::OnMouseMoved, layer, std::placeholders::_1, std::placeholders::_2));
     InputManager::Instance().RegisterKeyboardCallback(
         std::bind(&Layer::OnKeyPressed, layer, std::placeholders::_1, std::placeholders::_2));
+    InputManager::Instance().RegisterMousePressedCallback(
+        std::bind(&Layer::OnMouseButtonPressed, layer, std::placeholders::_1));
 }
 
 void Application::PushOverlay(Layer *layer)
@@ -91,5 +93,7 @@ void Application::PushOverlay(Layer *layer)
         std::bind(&Layer::OnMouseMoved, layer, std::placeholders::_1, std::placeholders::_2));
     InputManager::Instance().RegisterKeyboardCallback(
         std::bind(&Layer::OnKeyPressed, layer, std::placeholders::_1, std::placeholders::_2));
+    InputManager::Instance().RegisterMousePressedCallback(
+        std::bind(&Layer::OnMouseButtonPressed, layer, std::placeholders::_1));
 }
-}
+} // namespace Engine

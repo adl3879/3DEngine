@@ -17,7 +17,6 @@ void AppLayer::OnAttach()
     m_ModelShader->SetUniform3f("lightPos", glm::vec3(0.3f, 0.6f, 0.0f));
     m_ModelShader->SetUniform3f("cameraPos", m_Camera.GetPosition());
 
-    // m_Model = std::make_unique<Model>("../res/models/boxTextured/scene.gltf");
     m_Model =
         std::make_unique<Engine::Model>("/home/adeleye/Source/3DEngine/src/Sandbox/res/models/suzanne/scene.gltf");
 }
@@ -39,4 +38,10 @@ void AppLayer::OnKeyPressed(Engine::InputKey key, bool isRepeat)
 void AppLayer::OnMouseMoved(double xPos, double yPos)
 {
     // std::cout << "Mouse moved: " << xPos << ", " << yPos << std::endl;
+}
+
+void AppLayer::OnMouseButtonPressed(Engine::MouseButton button)
+{
+    if (button == Engine::MouseButton::Right)
+        std::cout << "hello from right\n";
 }

@@ -57,21 +57,28 @@ enum class InputKey
     PageDown,
     Home,
     End,
+};
 
-    MOUSE_POS_X,
-    MOUSE_POS_Y,
-    MOUSE_MOVE_X,
-    MOUSE_MOVE_Y,
-    MOUSE_MOVE_Z,
-    MOUSE_BUTTON_LEFT,
-    MOUSE_BUTTON_RIGHT,
-    MOUSE_BUTTON_MIDDLE,
+enum class MouseButton
+{
+    Unknown,
+
+    Left,
+    Right,
+    Middle,
+};
+
+enum class MouseMovedState
+{
+    X,
+    Y,
 };
 
 enum class InputSource
 {
     Keyboard,
-    Mouse,
+    MouseButton,
+    MouseMoved,
     Unknown
 };
 
@@ -80,6 +87,4 @@ struct InputAction
     std::string ActionName{""};
     float Scale{1.0f};
 };
-
-InputSource GetInputSourceFromKey(InputKey key);
-}
+} // namespace Engine

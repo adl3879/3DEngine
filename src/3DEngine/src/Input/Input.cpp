@@ -10,10 +10,10 @@ void Input::UpdateKeyboardState(int key, float value)
     m_KeyboardState[inputKey].Value = value;
 }
 
-void Input::UpdateMouseState(int key, float value)
+void Input::UpdateMousePressState(int key, float value)
 {
-    InputKey inputKey = ButtonToInputKey(key);
-    m_MouseState[inputKey].Value = value;
+    MouseButton mouseButton = ButtonToMouseButton(key);
+    m_MouseButtonState[mouseButton].Value = value;
 }
 
 void Input::UpdateCursorPosition(double xpos, double ypos) { m_CursorPosition = CursorPosition{.X = xpos, .Y = ypos}; }
@@ -127,19 +127,18 @@ InputKey Input::KeyToInputKey(int key)
     }
 }
 
-InputKey Input::ButtonToInputKey(int key)
+MouseButton Input::ButtonToMouseButton(int key)
 {
     switch (key)
     {
     case GLFW_MOUSE_BUTTON_LEFT:
-        return InputKey::MOUSE_BUTTON_LEFT;
+        return MouseButton::Left;
     case GLFW_MOUSE_BUTTON_RIGHT:
-        return InputKey::MOUSE_BUTTON_RIGHT;
+        return MouseButton::Right;
     case GLFW_MOUSE_BUTTON_MIDDLE:
-        return InputKey::MOUSE_BUTTON_MIDDLE;
-
+        return MouseButton::Middle;
     default:
-        return InputKey::Unknown;
+        return MouseButton::Unknown;
     }
 }
 }

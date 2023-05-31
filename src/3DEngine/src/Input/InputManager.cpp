@@ -7,76 +7,6 @@
 
 namespace Engine
 {
-InputSource GetInputSourceFromKey(InputKey key)
-{
-    switch (key)
-    {
-    case InputKey::A:
-    case InputKey::B:
-    case InputKey::C:
-    case InputKey::D:
-    case InputKey::E:
-    case InputKey::F:
-    case InputKey::G:
-    case InputKey::H:
-    case InputKey::I:
-    case InputKey::J:
-    case InputKey::K:
-    case InputKey::L:
-    case InputKey::M:
-    case InputKey::N:
-    case InputKey::O:
-    case InputKey::P:
-    case InputKey::Q:
-    case InputKey::R:
-    case InputKey::S:
-    case InputKey::T:
-    case InputKey::U:
-    case InputKey::V:
-    case InputKey::W:
-    case InputKey::X:
-    case InputKey::Y:
-    case InputKey::Z:
-
-    case InputKey::Space:
-    case InputKey::Escape:
-    case InputKey::Enter:
-    case InputKey::Left:
-    case InputKey::Right:
-    case InputKey::Up:
-    case InputKey::Down:
-    case InputKey::LeftShift:
-    case InputKey::RightShift:
-    case InputKey::LeftControl:
-    case InputKey::RightControl:
-
-    case InputKey::LeftAlt:
-    case InputKey::RightAlt:
-    case InputKey::LeftSuper:
-    case InputKey::RightSuper:
-    case InputKey::Tab:
-    case InputKey::Backspace:
-    case InputKey::Insert:
-    case InputKey::Delete:
-    case InputKey::PageUp:
-    case InputKey::PageDown:
-    case InputKey::Home:
-    case InputKey::End:
-        return InputSource::Keyboard;
-
-    case InputKey::MOUSE_MOVE_X:
-    case InputKey::MOUSE_MOVE_Y:
-    case InputKey::MOUSE_MOVE_Z:
-    case InputKey::MOUSE_BUTTON_LEFT:
-    case InputKey::MOUSE_BUTTON_RIGHT:
-    case InputKey::MOUSE_BUTTON_MIDDLE:
-        return InputSource::Mouse;
-
-    default:
-        return InputSource::Unknown;
-    }
-}
-
 InputManager::InputManager() { m_Action = true; }
 
 InputManager::~InputManager() { m_Action = false; }
@@ -115,6 +45,11 @@ void InputManager::RegisterKeyboardCallback(KeyboardCallbackFunc callback)
     m_KeyboardCallbacks.emplace_back(callback);
 }
 
+void InputManager::RegisterMousePressedCallback(MousePressCallbackFunc callback)
+{
+    m_MousePressedCallbacks.emplace_back(callback);
+}
+
 void InputManager::RegisterCursorCallback(CursorCallbackFunc callback) { m_CursorCallbacks.emplace_back(callback); }
 
 void InputManager::ProcessInput()
@@ -129,6 +64,11 @@ void InputManager::ProcessInput()
         float isRepeat;
     };
     KeyboardCallbackParams keyCallbackParams{};
+    struct MousePressCallbackParams
+    {
+        MouseButton Button;
+    };
+    MousePressCallbackParams mousePressCallbackParams{};
 
     for (auto &device : m_Devices)
     {
@@ -142,9 +82,20 @@ void InputManager::ProcessInput()
             // window event callback
             windowState = device.WindowStateFunc(device.Index);
         }
-        else
+        else if (device.Type == InputDeviceType::Mouse)
         {
-            auto newState = device.StateFunc(device.Index);
+            auto newState = device.MousePressStateFunc(device.Index);
+            for (auto &mouseState : newState)
+            {
+                if (mouseState.second.Value > 0.0f)
+                {
+                    mousePressCallbackParams = MousePressCallbackParams{.Button = mouseState.first};
+                }
+            }
+        }
+        else if (device.Type == InputDeviceType::Keyboard)
+        {
+            auto newState = device.KeyboardStateFunc(device.Index);
             // compare to old state for changes
             for (auto &keyState : newState)
             {
@@ -155,11 +106,15 @@ void InputManager::ProcessInput()
                     // save new state Value
                     device.CurrentState[keyState.first].Value = keyState.second.Value;
                 }
-                if (device.Type == InputDeviceType::Keyboard && keyState.second.Value > 0.0f)
+                if (keyState.second.Value > 0.0f)
                 {
                     keyCallbackParams = KeyboardCallbackParams{.Key = keyState.first, .isRepeat = false};
                 }
             }
+        }
+        else
+        {
+            return;
         }
     }
 
@@ -175,6 +130,13 @@ void InputManager::ProcessInput()
         callback(keyCallbackParams.Key, keyCallbackParams.isRepeat);
     }
 
+    // mouse press callbacks
+    for (auto &callback : m_MousePressedCallbacks)
+    {
+        callback(mousePressCallbackParams.Button);
+    }
+
+    // mouse move callbacks
     for (auto &callback : m_CursorCallbacks)
     {
         callback(cursorState.X, cursorState.Y);
@@ -194,13 +156,12 @@ std::vector<InputManager::ActionEvent> InputManager::GenerateActionEvent(int dev
 {
     std::vector<ActionEvent> events{};
     auto &actions = m_InputActionMapping[key];
-    InputSource source = GetInputSourceFromKey(key);
 
     for (auto &action : actions)
     {
         events.emplace_back(ActionEvent{
             .ActionName = action.ActionName,
-            .Source = source,
+            .Source = InputSource::Keyboard,
             .SourceIndex = deviceIndex,
             .Value = newVal * action.Scale,
         });
@@ -222,7 +183,7 @@ bool InputManager::IsKeyPressed(InputKey key)
     {
         if (device.Type == InputDeviceType::Keyboard)
         {
-            auto state = device.StateFunc(device.Index);
+            auto state = device.KeyboardStateFunc(device.Index);
             if (state.find(key) != state.end())
                 return state[key].Value > 0.0f;
         }
@@ -239,4 +200,4 @@ WindowState InputManager::GetWindowState()
     }
     return WindowState{};
 }
-}
+} // namespace Engine
