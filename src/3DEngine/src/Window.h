@@ -9,6 +9,9 @@
 
 namespace Engine
 {
+constexpr uint32_t WINDOW_WIDTH = 1600;
+constexpr uint32_t WINDOW_HEIGHT = 900;
+
 struct WindowProps
 {
     std::string Title;
@@ -16,7 +19,7 @@ struct WindowProps
     uint32_t Height;
     WindowEventState EventState;
 
-    WindowProps(const std::string &title = "3D Engine", uint32_t width = 1600, uint32_t height = 900)
+    WindowProps(const std::string &title = "3D Engine", uint32_t width = WINDOW_WIDTH, uint32_t height = WINDOW_HEIGHT)
         : Title(title), Width(width), Height(height), EventState(WindowEventState::None)
     {
     }

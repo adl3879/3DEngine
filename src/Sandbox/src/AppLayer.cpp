@@ -35,13 +35,18 @@ void AppLayer::OnKeyPressed(Engine::InputKey key, bool isRepeat)
         std::cout << "A" << std::endl;
 }
 
-void AppLayer::OnMouseMoved(double xPos, double yPos)
+void AppLayer::OnMouseMoved(double xPos, double yPos, double xOffset, double yOffset)
 {
-    // std::cout << "Mouse moved: " << xPos << ", " << yPos << std::endl;
+    std::cout << "Mouse moved: " << xOffset << ", " << yOffset << std::endl;
 }
 
 void AppLayer::OnMouseButtonPressed(Engine::MouseButton button)
 {
     if (button == Engine::MouseButton::Right)
         std::cout << "hello from right\n";
+}
+
+void AppLayer::OnWindowResize(int width, int height)
+{
+    std::cout << "Window resized: " << width << ", " << height << std::endl;
 }

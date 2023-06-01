@@ -7,6 +7,7 @@ namespace Engine
 enum class InputKey
 {
     Unknown,
+    None,
 
     A,
     B,
@@ -62,6 +63,7 @@ enum class InputKey
 enum class MouseButton
 {
     Unknown,
+    None,
 
     Left,
     Right,

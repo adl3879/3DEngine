@@ -18,9 +18,11 @@ class InputManager
   public:
     using ActionCallbackFunc = std::function<bool(InputSource, int, float)>;
     using KeyboardCallbackFunc = std::function<void(InputKey key, bool isRepeat)>;
+    using KeyReleasedCallbackFunc = std::function<void(InputKey key)>;
     using MousePressCallbackFunc = std::function<void(MouseButton key)>;
-    using CursorCallbackFunc = std::function<void(double xPos, double yPos)>;
-    using WindowEventFunc = std::function<void(WindowState)>;
+    using MouseMovedCallbackFunc = std::function<void(double xPos, double yPos, double xOffset, double yOffset)>;
+    using WindowResizeCallbackFunc = std::function<void(int width, int height)>;
+    using MouseScrollCallbackFunc = std::function<void(double xOffset, double yOffset)>;
 
     struct ActionCallback
     {
@@ -39,7 +41,7 @@ class InputManager
 
   private:
     InputManager();
-    ~InputManager();
+    virtual ~InputManager();
 
   private:
     friend class Application;
@@ -47,7 +49,7 @@ class InputManager
     void ProcessInput();
     std::vector<ActionEvent> GenerateActionEvent(int deviceIndex, InputKey key, float newVal);
     void PropagateActionEvent(const ActionEvent &event);
-    void PropagateKeyboardEvent(InputKey key, float isRepeat = false);
+    // void PropagateKeyboardEvent(InputKey key, float isRepeat = false);
 
   public:
     static InputManager &Instance();
@@ -61,9 +63,13 @@ class InputManager
     void RegisterDevice(InputDevice device);
     void UnregisterDevice(InputDeviceType source, int inputIndex);
 
+    // event callbacks
     void RegisterKeyboardCallback(KeyboardCallbackFunc callback);
+    void RegisterKeyReleasedCallback(KeyReleasedCallbackFunc callback);
     void RegisterMousePressedCallback(MousePressCallbackFunc callback);
-    void RegisterCursorCallback(CursorCallbackFunc callback);
+    void RegisterMouseMovedCallback(MouseMovedCallbackFunc callback);
+    void RegisterWindowResizeCallback(WindowResizeCallbackFunc callback);
+    void RegisterMouseScrollCallback(MouseScrollCallbackFunc callback);
 
     bool IsKeyPressed(InputKey key);
     WindowState GetWindowState();
@@ -75,8 +81,11 @@ class InputManager
     std::unordered_map<std::string, std::vector<ActionCallback>> m_ActionCallbacks{};
 
     std::vector<KeyboardCallbackFunc> m_KeyboardCallbacks{};
+    std::vector<KeyReleasedCallbackFunc> m_KeyReleasedCallbacks{};
     std::vector<MousePressCallbackFunc> m_MousePressedCallbacks{};
-    std::vector<CursorCallbackFunc> m_CursorCallbacks{};
+    std::vector<MouseMovedCallbackFunc> m_MouseMovedCallbacks{};
+    std::vector<WindowResizeCallbackFunc> m_WindowResizeCallbacks{};
+    std::vector<MouseScrollCallbackFunc> m_MouseScrollCallbacks{};
 
     std::vector<InputDevice> m_Devices{};
 

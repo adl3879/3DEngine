@@ -14,7 +14,7 @@ class CameraController
     void OnUpdate(float deltaTime);
 
   private:
-    void OnMouseMove(double xoffset, double yoffset);
+    void OnMouseMove(double xPos, double yPos, double xOffset, double yOffset);
 
   private:
     Camera &m_Camera;

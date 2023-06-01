@@ -29,7 +29,6 @@ enum class WindowEventState
 struct CursorPosition
 {
     double X{0.0f}, Y{0.0f};
-    double LastPositionX{0.0f}, LastPositionY{0.0f};
 };
 
 struct InputDeviceState
@@ -53,7 +52,9 @@ struct InputDevice
 {
     InputDeviceType Type;
     int Index;
-    std::unordered_map<InputKey, InputDeviceState> CurrentState;
+    std::unordered_map<InputKey, InputDeviceState> CurrentKeyboardState;
+    WindowState CurrentWindowState = WindowState{.EventState = WindowEventState::None};
+    CursorPosition CurrentCursorPosition;
 
     InputDeviceStateCallbackFunc KeyboardStateFunc;
     CursorPositionCallbackFunc CursorStateFunc;

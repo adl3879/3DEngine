@@ -45,28 +45,56 @@ void InputManager::RegisterKeyboardCallback(KeyboardCallbackFunc callback)
     m_KeyboardCallbacks.emplace_back(callback);
 }
 
+void InputManager::RegisterKeyReleasedCallback(KeyReleasedCallbackFunc callback)
+{
+    m_KeyReleasedCallbacks.emplace_back(callback);
+}
+
 void InputManager::RegisterMousePressedCallback(MousePressCallbackFunc callback)
 {
     m_MousePressedCallbacks.emplace_back(callback);
 }
 
-void InputManager::RegisterCursorCallback(CursorCallbackFunc callback) { m_CursorCallbacks.emplace_back(callback); }
+void InputManager::RegisterMouseMovedCallback(MouseMovedCallbackFunc callback)
+{
+    m_MouseMovedCallbacks.emplace_back(callback);
+}
+
+void InputManager::RegisterWindowResizeCallback(WindowResizeCallbackFunc callback)
+{
+    m_WindowResizeCallbacks.emplace_back(callback);
+}
+
+void InputManager::RegisterMouseScrollCallback(MouseScrollCallbackFunc callback)
+{
+    m_MouseScrollCallbacks.emplace_back(callback);
+}
 
 void InputManager::ProcessInput()
 {
     std::vector<ActionEvent> events{};
-    CursorPosition cursorState{};
-    WindowState windowState{};
-
+    struct MouseMovedCallbackParams
+    {
+        CursorPosition Position;
+        CursorPosition Offset;
+        bool IsMoved = false;
+    };
+    MouseMovedCallbackParams mouseMovedCallbackParams;
+    struct WindowCallbackParams
+    {
+        WindowState State = WindowState{.EventState = WindowEventState::None};
+        bool IsResized = false;
+    };
+    WindowCallbackParams windowCallbackParams;
     struct KeyboardCallbackParams
     {
-        InputKey Key;
-        float isRepeat;
+        InputKey Key = InputKey::None;
+        float IsRepeat;
     };
     KeyboardCallbackParams keyCallbackParams{};
     struct MousePressCallbackParams
     {
-        MouseButton Button;
+        MouseButton Button = MouseButton::None;
     };
     MousePressCallbackParams mousePressCallbackParams{};
 
@@ -75,12 +103,27 @@ void InputManager::ProcessInput()
         if (device.Type == InputDeviceType::MouseMove)
         {
             // cursor position callback
-            cursorState = device.CursorStateFunc(device.Index);
+            auto newState = device.CursorStateFunc(device.Index);
+            auto currentPosition = device.CurrentCursorPosition;
+            if (newState.X != currentPosition.X || newState.Y != currentPosition.Y)
+            {
+                mouseMovedCallbackParams = MouseMovedCallbackParams{
+                    .Position = newState,
+                    .Offset = CursorPosition{.X = newState.X - currentPosition.X, .Y = newState.Y - currentPosition.Y},
+                    .IsMoved = true};
+                device.CurrentCursorPosition = newState;
+            }
         }
         else if (device.Type == InputDeviceType::Window)
         {
             // window event callback
-            windowState = device.WindowStateFunc(device.Index);
+            auto newState = device.WindowStateFunc(device.Index);
+            if (newState.Width != device.CurrentWindowState.Width ||
+                newState.Height != device.CurrentWindowState.Height)
+            {
+                windowCallbackParams = WindowCallbackParams{.State = newState, .IsResized = true};
+                device.CurrentWindowState = newState;
+            }
         }
         else if (device.Type == InputDeviceType::Mouse)
         {
@@ -88,9 +131,7 @@ void InputManager::ProcessInput()
             for (auto &mouseState : newState)
             {
                 if (mouseState.second.Value > 0.0f)
-                {
                     mousePressCallbackParams = MousePressCallbackParams{.Button = mouseState.first};
-                }
             }
         }
         else if (device.Type == InputDeviceType::Keyboard)
@@ -99,17 +140,15 @@ void InputManager::ProcessInput()
             // compare to old state for changes
             for (auto &keyState : newState)
             {
-                if (device.CurrentState[keyState.first].Value != keyState.second.Value)
+                if (device.CurrentKeyboardState[keyState.first].Value != keyState.second.Value)
                 {
                     auto generatedEvents = GenerateActionEvent(device.Index, keyState.first, keyState.second.Value);
                     events.insert(events.end(), generatedEvents.begin(), generatedEvents.end());
                     // save new state Value
-                    device.CurrentState[keyState.first].Value = keyState.second.Value;
+                    device.CurrentKeyboardState[keyState.first].Value = keyState.second.Value;
                 }
                 if (keyState.second.Value > 0.0f)
-                {
-                    keyCallbackParams = KeyboardCallbackParams{.Key = keyState.first, .isRepeat = false};
-                }
+                    keyCallbackParams = KeyboardCallbackParams{.Key = keyState.first, .IsRepeat = false};
             }
         }
         else
@@ -120,27 +159,28 @@ void InputManager::ProcessInput()
 
     // propagate action events
     for (auto &event : events)
-    {
         PropagateActionEvent(event);
-    }
 
     // keyboard callbacks
     for (auto &callback : m_KeyboardCallbacks)
-    {
-        callback(keyCallbackParams.Key, keyCallbackParams.isRepeat);
-    }
+        if (keyCallbackParams.Key != InputKey::None)
+            callback(keyCallbackParams.Key, keyCallbackParams.IsRepeat);
 
     // mouse press callbacks
     for (auto &callback : m_MousePressedCallbacks)
-    {
-        callback(mousePressCallbackParams.Button);
-    }
+        if (mousePressCallbackParams.Button != MouseButton::None)
+            callback(mousePressCallbackParams.Button);
 
     // mouse move callbacks
-    for (auto &callback : m_CursorCallbacks)
-    {
-        callback(cursorState.X, cursorState.Y);
-    }
+    for (auto &callback : m_MouseMovedCallbacks)
+        if (mouseMovedCallbackParams.IsMoved)
+            callback(mouseMovedCallbackParams.Position.X, mouseMovedCallbackParams.Position.Y,
+                     mouseMovedCallbackParams.Offset.X, mouseMovedCallbackParams.Offset.Y);
+
+    // window resize callbacks
+    for (auto &callback : m_WindowResizeCallbacks)
+        if (windowCallbackParams.State.EventState != WindowEventState::None || windowCallbackParams.IsResized)
+            callback(windowCallbackParams.State.Width, windowCallbackParams.State.Height);
 }
 
 void InputManager::PropagateActionEvent(const ActionEvent &event)

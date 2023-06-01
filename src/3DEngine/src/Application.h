@@ -33,6 +33,7 @@ class Application
   private:
     void Run();
     void SetupInputSystem();
+    void RegisterLayerEventCallbacks(Layer *layer);
 
   private:
     std::shared_ptr<Window> m_Window;
@@ -49,4 +50,4 @@ class Application
 
 // To be defined in CLIENT
 Application *CreateApplication();
-}
+} // namespace Engine

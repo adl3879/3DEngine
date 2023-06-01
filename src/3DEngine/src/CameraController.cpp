@@ -7,8 +7,9 @@ namespace Engine
 CameraController::CameraController(Camera &camera, float sensitivity, float movementSpeed)
     : m_Camera(camera), m_Sensitivity(sensitivity), m_MovementSpeed(movementSpeed)
 {
-    InputManager::Instance().RegisterCursorCallback(
-        std::bind(&CameraController::OnMouseMove, this, std::placeholders::_1, std::placeholders::_2));
+    InputManager::Instance().RegisterMouseMovedCallback(std::bind(&CameraController::OnMouseMove, this,
+                                                                  std::placeholders::_1, std::placeholders::_2,
+                                                                  std::placeholders::_3, std::placeholders::_4));
 }
 
 void CameraController::OnUpdate(float deltaTime)
@@ -25,19 +26,9 @@ void CameraController::OnUpdate(float deltaTime)
         m_Camera.SetPosition(m_Camera.GetPosition() + m_Camera.GetRight() * velocity);
 }
 
-double lastX = 0, lastY = 0;
-
-void CameraController::OnMouseMove(double xPos, double yPos)
+void CameraController::OnMouseMove(double xPos, double yPos, double xOffset, double yOffset)
 {
-    double xOffset = xPos - lastX;
-    double yOffset = lastY - yPos;
-    lastX = xPos;
-    lastY = yPos;
-
-    xOffset *= m_Sensitivity;
-    yOffset *= m_Sensitivity;
-
-    m_Camera.SetYaw(m_Camera.GetYaw() + xOffset);
-    m_Camera.SetPitch(m_Camera.GetPitch() + yOffset);
+    m_Camera.SetYaw(m_Camera.GetYaw() + (xOffset * m_Sensitivity));
+    m_Camera.SetPitch(m_Camera.GetPitch() + (yOffset * m_Sensitivity));
 }
-}
+} // namespace Engine

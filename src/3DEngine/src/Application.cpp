@@ -1,4 +1,5 @@
 #include "Application.h"
+
 #include "InputDevice.h"
 #include "InputKey.h"
 #include "InputManager.h"
@@ -70,30 +71,32 @@ void Application::SetupInputSystem()
                                              }});
 }
 
+void Application::RegisterLayerEventCallbacks(Layer *layer)
+{
+    InputManager::Instance().RegisterMouseMovedCallback(std::bind(&Layer::OnMouseMoved, layer, std::placeholders::_1,
+                                                                  std::placeholders::_2, std::placeholders::_3,
+                                                                  std::placeholders::_4));
+    InputManager::Instance().RegisterKeyboardCallback(
+        std::bind(&Layer::OnKeyPressed, layer, std::placeholders::_1, std::placeholders::_2));
+    InputManager::Instance().RegisterMousePressedCallback(
+        std::bind(&Layer::OnMouseButtonPressed, layer, std::placeholders::_1));
+    InputManager::Instance().RegisterWindowResizeCallback(
+        std::bind(&Layer::OnWindowResize, layer, std::placeholders::_1, std::placeholders::_2));
+}
+
 Application::~Application() { glfwTerminate(); }
 
 void Application::PushLayer(Layer *layer)
 {
     m_LayerStack.PushLayer(layer);
     layer->OnAttach();
-
-    InputManager::Instance().RegisterCursorCallback(
-        std::bind(&Layer::OnMouseMoved, layer, std::placeholders::_1, std::placeholders::_2));
-    InputManager::Instance().RegisterKeyboardCallback(
-        std::bind(&Layer::OnKeyPressed, layer, std::placeholders::_1, std::placeholders::_2));
-    InputManager::Instance().RegisterMousePressedCallback(
-        std::bind(&Layer::OnMouseButtonPressed, layer, std::placeholders::_1));
+    RegisterLayerEventCallbacks(layer);
 }
 
 void Application::PushOverlay(Layer *layer)
 {
     m_LayerStack.PushOverlay(layer);
     layer->OnAttach();
-    InputManager::Instance().RegisterCursorCallback(
-        std::bind(&Layer::OnMouseMoved, layer, std::placeholders::_1, std::placeholders::_2));
-    InputManager::Instance().RegisterKeyboardCallback(
-        std::bind(&Layer::OnKeyPressed, layer, std::placeholders::_1, std::placeholders::_2));
-    InputManager::Instance().RegisterMousePressedCallback(
-        std::bind(&Layer::OnMouseButtonPressed, layer, std::placeholders::_1));
+    RegisterLayerEventCallbacks(layer);
 }
 } // namespace Engine
