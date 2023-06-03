@@ -77,15 +77,18 @@ void Window::SetInputEventCallbacks()
     auto keyCallback = [](GLFWwindow *window, int key, int scancode, int action, int mods)
     {
         Input *input = static_cast<Input *>(glfwGetWindowUserPointer(window));
+
         float value = 0.0f;
         switch (action)
         {
         case GLFW_PRESS:
-        case GLFW_REPEAT:
             value = 1.0f;
             break;
-        default:
-            value = 0.0f;
+        case GLFW_RELEASE:
+            value = -1.0f;
+            break;
+        case GLFW_REPEAT:
+            value = 2.0f;
             break;
         };
         input->UpdateKeyboardState(key, value);
@@ -95,21 +98,18 @@ void Window::SetInputEventCallbacks()
     auto mouseCallback = [](GLFWwindow *window, int button, int action, int mods)
     {
         Input *input = static_cast<Input *>(glfwGetWindowUserPointer(window));
-        if (input)
+
+        float value = 0.0f;
+        switch (action)
         {
-            float value = 0.0f;
-            switch (action)
-            {
-            case GLFW_PRESS:
-            case GLFW_REPEAT:
-                value = 1.0f;
-                break;
-            default:
-                value = 0.0f;
-                break;
-            };
-            input->UpdateMousePressState(button, value);
-        }
+        case GLFW_PRESS:
+            value = 1.0f;
+            break;
+        case GLFW_RELEASE:
+            value = -1.0f;
+            break;
+        };
+        input->UpdateMousePressState(button, value);
     };
     glfwSetMouseButtonCallback(m_Window, mouseCallback);
 

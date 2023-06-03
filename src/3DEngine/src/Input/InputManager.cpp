@@ -101,7 +101,6 @@ void InputManager::ProcessInput()
     struct MousePressCallbackParams
     {
         MouseButton Button = MouseButton::None;
-        bool IsPressed = false;
     };
     MousePressCallbackParams mousePressCallbackParams{};
     struct MouseScrollCallbackParams
@@ -110,6 +109,7 @@ void InputManager::ProcessInput()
         bool IsScrolled = false;
     };
     MouseScrollCallbackParams mouseScrollCallbackParams{};
+    MouseButton currentMouseState{};
 
     for (auto &device : m_Devices)
     {
@@ -120,10 +120,12 @@ void InputManager::ProcessInput()
             auto newState = device.MousePressStateFunc(device.Index);
             for (auto &mouseState : newState)
             {
+                currentMouseState = device.CurrentMouseButtonState;
                 if (mouseState.second.Value > 0.0f)
-                    mousePressCallbackParams = MousePressCallbackParams{.Button = mouseState.first, .IsPressed = true};
-                else
-                    mousePressCallbackParams = MousePressCallbackParams{.Button = mouseState.first, .IsPressed = false};
+                {
+                    mousePressCallbackParams = MousePressCallbackParams{.Button = mouseState.first};
+                    device.CurrentMouseButtonState = mouseState.first;
+                }
             }
         }
         break;
@@ -179,11 +181,10 @@ void InputManager::ProcessInput()
                     device.CurrentKeyboardState[keyState.first].Value = keyState.second.Value;
                 }
                 if (keyState.second.Value > 0.0f)
-                    keyCallbackParams =
-                        KeyboardCallbackParams{.Key = keyState.first, .IsRepeat = false, .IsPressed = true};
-                else
-                    keyCallbackParams =
-                        KeyboardCallbackParams{.Key = keyState.first, .IsRepeat = false, .IsPressed = false};
+                    keyCallbackParams = KeyboardCallbackParams{.Key = keyState.first, .IsRepeat = false};
+                else if (keyState.second.Value == 0.0f)
+                    keyCallbackParams = KeyboardCallbackParams{.Key = keyState.first, .IsRepeat = true};
+                device.CurrentKeyboardState[keyState.first].Value = keyState.second.Value;
             }
         }
         break;
@@ -202,7 +203,7 @@ void InputManager::ProcessInput()
             callback(keyCallbackParams.Key, keyCallbackParams.IsRepeat);
 
     for (auto &callback : m_KeyReleasedCallbacks)
-        if (keyCallbackParams.Key != InputKey::None && !keyCallbackParams.IsPressed)
+        if (keyCallbackParams.Key != InputKey::None)
             callback(keyCallbackParams.Key);
 
     // mouse press callbacks
@@ -212,8 +213,8 @@ void InputManager::ProcessInput()
 
     // mouse release callbacks
     for (auto &callback : m_MouseReleasedCallbacks)
-        if (mousePressCallbackParams.Button != MouseButton::None && !mousePressCallbackParams.IsPressed)
-            callback(mousePressCallbackParams.Button);
+        if (mousePressCallbackParams.Button == MouseButton::None)
+            callback(currentMouseState);
 
     // mouse move callbacks
     for (auto &callback : m_MouseMovedCallbacks)

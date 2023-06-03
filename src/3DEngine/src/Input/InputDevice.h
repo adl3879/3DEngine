@@ -63,6 +63,7 @@ struct InputDevice
     WindowState CurrentWindowState = WindowState{.EventState = WindowEventState::None};
     CursorPosition CurrentCursorPosition;
     MouseScrollState CurrentMouseScrollState;
+    MouseButton CurrentMouseButtonState;
 
     InputDeviceStateCallbackFunc KeyboardStateFunc;
     CursorPositionCallbackFunc CursorStateFunc;

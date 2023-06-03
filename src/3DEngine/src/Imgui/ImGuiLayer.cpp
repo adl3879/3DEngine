@@ -36,7 +36,7 @@ void ImGuiLayer::OnUpdate(float deltaTime)
     (void)io;
     auto windowState = InputManager::Instance().GetWindowState();
     io.DisplaySize = ImVec2(windowState.Width, windowState.Height);
-    io.FontGlobalScale = 1.5f;
+    io.FontGlobalScale = 1.8f;
 
     float time = (float)glfwGetTime();
     io.DeltaTime = m_Time > 0.0f ? (time - m_Time) : (1.0f / 60.0f);
@@ -64,8 +64,8 @@ void ImGuiLayer::OnMouseButtonPressed(MouseButton button)
 
 void ImGuiLayer::OnMouseButtonReleased(MouseButton button)
 {
-    // ImGuiIO &io = ImGui::GetIO();
-    // io.MouseDown[static_cast<int>(button)] = false;
+    ImGuiIO &io = ImGui::GetIO();
+    io.MouseDown[static_cast<int>(button)] = false;
 }
 
 void ImGuiLayer::OnMouseMoved(double xPos, double yPos, double xOffset, double yOffset)
