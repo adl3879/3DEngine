@@ -18,6 +18,11 @@ void Input::UpdateMousePressState(int key, float value)
 
 void Input::UpdateCursorPosition(double xpos, double ypos) { m_CursorPosition = CursorPosition{.X = xpos, .Y = ypos}; }
 
+void Input::UpdateMouseScrollState(double xOffset, double yOffset)
+{
+    m_MouseScrollState = MouseScrollState{.XOffset = xOffset, .YOffset = yOffset};
+}
+
 void Input::UpdateWindowState(WindowState state) { m_WindowState = state; }
 
 InputKey Input::KeyToInputKey(int key)
@@ -141,4 +146,4 @@ MouseButton Input::ButtonToMouseButton(int key)
         return MouseButton::Unknown;
     }
 }
-}
+} // namespace Engine

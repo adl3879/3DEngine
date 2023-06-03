@@ -7,7 +7,6 @@ namespace Engine
 {
 Window::Window(const WindowProps &props) : m_WindowProps(props)
 {
-    //
     Init(props);
 
     // Register input manager
@@ -31,6 +30,11 @@ Window::Window(const WindowProps &props) : m_WindowProps(props)
         .Index = 0,
         .WindowStateFunc = std::bind(&Input::GetWindowState, &m_Input, std::placeholders::_1),
     });
+    InputManager::Instance().RegisterDevice(InputDevice{
+        .Type = InputDeviceType::MouseScroll,
+        .Index = 0,
+        .MouseScrollStateFunc = std::bind(&Input::GetMouseScrollState, &m_Input, std::placeholders::_1),
+    });
 }
 
 Window::~Window() { Shutdown(); }
@@ -42,7 +46,7 @@ void Window::OnUpdate()
     glViewport(0, 0, windowState.Width, windowState.Height);
     glfwPollEvents();
 
-    glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+    glClearColor(0.27f, 0.7f, 0.88f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
@@ -93,7 +97,18 @@ void Window::SetInputEventCallbacks()
         Input *input = static_cast<Input *>(glfwGetWindowUserPointer(window));
         if (input)
         {
-            input->UpdateMousePressState(button, action == GLFW_PRESS ? 1.0f : 0.0f);
+            float value = 0.0f;
+            switch (action)
+            {
+            case GLFW_PRESS:
+            case GLFW_REPEAT:
+                value = 1.0f;
+                break;
+            default:
+                value = 0.0f;
+                break;
+            };
+            input->UpdateMousePressState(button, value);
         }
     };
     glfwSetMouseButtonCallback(m_Window, mouseCallback);
@@ -104,6 +119,13 @@ void Window::SetInputEventCallbacks()
         input->UpdateCursorPosition(xPos, yPos);
     };
     glfwSetCursorPosCallback(m_Window, cursorPositionCallback);
+
+    auto scrollCallback = [](GLFWwindow *window, double xOffset, double yOffset)
+    {
+        Input *input = static_cast<Input *>(glfwGetWindowUserPointer(window));
+        input->UpdateMouseScrollState(xOffset, yOffset);
+    };
+    glfwSetScrollCallback(m_Window, scrollCallback);
 }
 
 void Window::SetWindowEventCallbacks()
@@ -136,4 +158,4 @@ void Window::Shutdown()
     glfwDestroyWindow(m_Window);
     glfwTerminate();
 }
-}
+} // namespace Engine

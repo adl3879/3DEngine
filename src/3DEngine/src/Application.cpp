@@ -9,10 +9,10 @@
 #include <memory>
 #include <algorithm>
 
-float lastFrame = 0.0f;
-
 namespace Engine
 {
+float lastFrame = 0.0f;
+
 Application::Application() : m_IsRunning(true)
 {
 
@@ -73,15 +73,21 @@ void Application::SetupInputSystem()
 
 void Application::RegisterLayerEventCallbacks(Layer *layer)
 {
+    InputManager::Instance().RegisterKeyboardCallback(
+        std::bind(&Layer::OnKeyPressed, layer, std::placeholders::_1, std::placeholders::_2));
+    InputManager::Instance().RegisterKeyReleasedCallback(
+        std::bind(&Layer::OnKeyReleased, layer, std::placeholders::_1));
+    InputManager::Instance().RegisterMousePressedCallback(
+        std::bind(&Layer::OnMouseButtonPressed, layer, std::placeholders::_1));
+    InputManager::Instance().RegisterMouseReleasedCallback(
+        std::bind(&Layer::OnMouseButtonReleased, layer, std::placeholders::_1));
+    InputManager::Instance().RegisterWindowResizeCallback(
+        std::bind(&Layer::OnWindowResize, layer, std::placeholders::_1, std::placeholders::_2));
+    InputManager::Instance().RegisterMouseScrollCallback(
+        std::bind(&Layer::OnMouseScrolled, layer, std::placeholders::_1, std::placeholders::_2));
     InputManager::Instance().RegisterMouseMovedCallback(std::bind(&Layer::OnMouseMoved, layer, std::placeholders::_1,
                                                                   std::placeholders::_2, std::placeholders::_3,
                                                                   std::placeholders::_4));
-    InputManager::Instance().RegisterKeyboardCallback(
-        std::bind(&Layer::OnKeyPressed, layer, std::placeholders::_1, std::placeholders::_2));
-    InputManager::Instance().RegisterMousePressedCallback(
-        std::bind(&Layer::OnMouseButtonPressed, layer, std::placeholders::_1));
-    InputManager::Instance().RegisterWindowResizeCallback(
-        std::bind(&Layer::OnWindowResize, layer, std::placeholders::_1, std::placeholders::_2));
 }
 
 Application::~Application() { glfwTerminate(); }

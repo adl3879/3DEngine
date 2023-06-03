@@ -19,10 +19,18 @@ class ImGuiLayer : public Layer
     virtual void OnDetach() override;
     virtual void OnUpdate(float deltaTime) override;
 
+    virtual void OnKeyPressed(InputKey key, bool isRepeat) override;
+    virtual void OnKeyReleased(InputKey key) override;
+    virtual void OnMouseButtonPressed(MouseButton button) override;
+    virtual void OnMouseButtonReleased(MouseButton button) override;
+    virtual void OnMouseMoved(double xPos, double yPos, double xOffset, double yOffset) override;
+    virtual void OnMouseScrolled(double xOffset, double yOffset) override;
+    virtual void OnWindowResize(int width, int height) override;
+
     void Begin();
     void End();
 
   private:
     float m_Time = 0.0f;
 };
-}
+} // namespace Engine

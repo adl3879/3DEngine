@@ -15,10 +15,12 @@ class Input
     std::unordered_map<MouseButton, InputDeviceState> GetMousePressState(int index) { return m_MouseButtonState; }
     CursorPosition GetCursorPosition(int index) { return m_CursorPosition; }
     WindowState GetWindowState(int index) { return m_WindowState; }
+    MouseScrollState GetMouseScrollState(int index) { return m_MouseScrollState; }
 
     void UpdateKeyboardState(int key, float value);
     void UpdateMousePressState(int key, float value);
-    void UpdateCursorPosition(double xpos, double ypos);
+    void UpdateCursorPosition(double xPos, double yPos);
+    void UpdateMouseScrollState(double xOffset, double yOffset);
     void UpdateWindowState(WindowState state);
 
   private:
@@ -30,5 +32,6 @@ class Input
     std::unordered_map<MouseButton, InputDeviceState> m_MouseButtonState;
     WindowState m_WindowState{};
     CursorPosition m_CursorPosition{};
+    MouseScrollState m_MouseScrollState{};
 };
 }

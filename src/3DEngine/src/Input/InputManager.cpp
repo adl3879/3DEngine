@@ -55,6 +55,11 @@ void InputManager::RegisterMousePressedCallback(MousePressCallbackFunc callback)
     m_MousePressedCallbacks.emplace_back(callback);
 }
 
+void InputManager::RegisterMouseReleasedCallback(MouseReleasedCallbackFunc callback)
+{
+    m_MouseReleasedCallbacks.emplace_back(callback);
+}
+
 void InputManager::RegisterMouseMovedCallback(MouseMovedCallbackFunc callback)
 {
     m_MouseMovedCallbacks.emplace_back(callback);
@@ -90,17 +95,62 @@ void InputManager::ProcessInput()
     {
         InputKey Key = InputKey::None;
         float IsRepeat;
+        bool IsPressed = false;
     };
     KeyboardCallbackParams keyCallbackParams{};
     struct MousePressCallbackParams
     {
         MouseButton Button = MouseButton::None;
+        bool IsPressed = false;
     };
     MousePressCallbackParams mousePressCallbackParams{};
+    struct MouseScrollCallbackParams
+    {
+        MouseScrollState State;
+        bool IsScrolled = false;
+    };
+    MouseScrollCallbackParams mouseScrollCallbackParams{};
 
     for (auto &device : m_Devices)
     {
-        if (device.Type == InputDeviceType::MouseMove)
+        switch (device.Type)
+        {
+        case InputDeviceType::Mouse:
+        {
+            auto newState = device.MousePressStateFunc(device.Index);
+            for (auto &mouseState : newState)
+            {
+                if (mouseState.second.Value > 0.0f)
+                    mousePressCallbackParams = MousePressCallbackParams{.Button = mouseState.first, .IsPressed = true};
+                else
+                    mousePressCallbackParams = MousePressCallbackParams{.Button = mouseState.first, .IsPressed = false};
+            }
+        }
+        break;
+        case InputDeviceType::MouseScroll:
+        {
+            auto newState = device.MouseScrollStateFunc(device.Index);
+            auto currentScrollOffset = device.CurrentMouseScrollState;
+            if (newState.XOffset != currentScrollOffset.XOffset || newState.YOffset != currentScrollOffset.YOffset)
+            {
+                mouseScrollCallbackParams = MouseScrollCallbackParams{.State = newState, .IsScrolled = true};
+                device.CurrentMouseScrollState = newState;
+            }
+        }
+        break;
+        case InputDeviceType::Window:
+        {
+            // window event callback
+            auto newState = device.WindowStateFunc(device.Index);
+            if (newState.Width != device.CurrentWindowState.Width ||
+                newState.Height != device.CurrentWindowState.Height)
+            {
+                windowCallbackParams = WindowCallbackParams{.State = newState, .IsResized = true};
+                device.CurrentWindowState = newState;
+            }
+        }
+        break;
+        case InputDeviceType::MouseMove:
         {
             // cursor position callback
             auto newState = device.CursorStateFunc(device.Index);
@@ -114,27 +164,8 @@ void InputManager::ProcessInput()
                 device.CurrentCursorPosition = newState;
             }
         }
-        else if (device.Type == InputDeviceType::Window)
-        {
-            // window event callback
-            auto newState = device.WindowStateFunc(device.Index);
-            if (newState.Width != device.CurrentWindowState.Width ||
-                newState.Height != device.CurrentWindowState.Height)
-            {
-                windowCallbackParams = WindowCallbackParams{.State = newState, .IsResized = true};
-                device.CurrentWindowState = newState;
-            }
-        }
-        else if (device.Type == InputDeviceType::Mouse)
-        {
-            auto newState = device.MousePressStateFunc(device.Index);
-            for (auto &mouseState : newState)
-            {
-                if (mouseState.second.Value > 0.0f)
-                    mousePressCallbackParams = MousePressCallbackParams{.Button = mouseState.first};
-            }
-        }
-        else if (device.Type == InputDeviceType::Keyboard)
+        break;
+        case InputDeviceType::Keyboard:
         {
             auto newState = device.KeyboardStateFunc(device.Index);
             // compare to old state for changes
@@ -148,12 +179,16 @@ void InputManager::ProcessInput()
                     device.CurrentKeyboardState[keyState.first].Value = keyState.second.Value;
                 }
                 if (keyState.second.Value > 0.0f)
-                    keyCallbackParams = KeyboardCallbackParams{.Key = keyState.first, .IsRepeat = false};
+                    keyCallbackParams =
+                        KeyboardCallbackParams{.Key = keyState.first, .IsRepeat = false, .IsPressed = true};
+                else
+                    keyCallbackParams =
+                        KeyboardCallbackParams{.Key = keyState.first, .IsRepeat = false, .IsPressed = false};
             }
         }
-        else
-        {
-            return;
+        break;
+        case InputDeviceType::Gamepad:
+            break;
         }
     }
 
@@ -166,9 +201,18 @@ void InputManager::ProcessInput()
         if (keyCallbackParams.Key != InputKey::None)
             callback(keyCallbackParams.Key, keyCallbackParams.IsRepeat);
 
+    for (auto &callback : m_KeyReleasedCallbacks)
+        if (keyCallbackParams.Key != InputKey::None && !keyCallbackParams.IsPressed)
+            callback(keyCallbackParams.Key);
+
     // mouse press callbacks
     for (auto &callback : m_MousePressedCallbacks)
         if (mousePressCallbackParams.Button != MouseButton::None)
+            callback(mousePressCallbackParams.Button);
+
+    // mouse release callbacks
+    for (auto &callback : m_MouseReleasedCallbacks)
+        if (mousePressCallbackParams.Button != MouseButton::None && !mousePressCallbackParams.IsPressed)
             callback(mousePressCallbackParams.Button);
 
     // mouse move callbacks
@@ -176,6 +220,11 @@ void InputManager::ProcessInput()
         if (mouseMovedCallbackParams.IsMoved)
             callback(mouseMovedCallbackParams.Position.X, mouseMovedCallbackParams.Position.Y,
                      mouseMovedCallbackParams.Offset.X, mouseMovedCallbackParams.Offset.Y);
+
+    // mouse scroll callbacks
+    for (auto &callback : m_MouseScrollCallbacks)
+        if (mouseScrollCallbackParams.IsScrolled)
+            callback(mouseScrollCallbackParams.State.XOffset, mouseScrollCallbackParams.State.YOffset);
 
     // window resize callbacks
     for (auto &callback : m_WindowResizeCallbacks)

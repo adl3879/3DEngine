@@ -6,9 +6,6 @@ namespace Engine
 {
 enum class InputKey
 {
-    Unknown,
-    None,
-
     A,
     B,
     C,
@@ -58,16 +55,18 @@ enum class InputKey
     PageDown,
     Home,
     End,
+
+    Unknown,
+    None,
 };
 
 enum class MouseButton
 {
-    Unknown,
-    None,
-
     Left,
     Right,
     Middle,
+    Unknown,
+    None,
 };
 
 enum class MouseMovedState
