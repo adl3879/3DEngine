@@ -13,6 +13,7 @@ class AppLayer : public Engine::Layer
     virtual void OnAttach() override;
     virtual void OnDetach() override;
     virtual void OnUpdate(float deltaTime) override;
+    virtual void OnImGuiRender() override;
 
     virtual void OnKeyPressed(Engine::InputKey key, bool isRepeat) override;
     virtual void OnMouseMoved(double xPos, double yPos, double xOffset, double yOffset) override;

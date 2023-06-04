@@ -2,6 +2,8 @@
 
 #include <iostream>
 
+#include <imgui.h>
+
 AppLayer::AppLayer() {}
 
 void AppLayer::OnAttach()
@@ -27,6 +29,14 @@ void AppLayer::OnUpdate(float deltaTime)
 {
     m_CameraController.OnUpdate(deltaTime);
     m_Model->Draw(*m_ModelShader, m_Camera);
+}
+
+void AppLayer::OnImGuiRender()
+{
+    ImGui::Begin("Camera");
+    ImGui::Text("Camera Position: (%f, %f, %f)", m_Camera.GetPosition().x, m_Camera.GetPosition().y,
+                m_Camera.GetPosition().z);
+    ImGui::End();
 }
 
 void AppLayer::OnKeyPressed(Engine::InputKey key, bool isRepeat) {}

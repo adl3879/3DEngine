@@ -41,15 +41,6 @@ void ImGuiLayer::OnUpdate(float deltaTime)
     float time = (float)glfwGetTime();
     io.DeltaTime = m_Time > 0.0f ? (time - m_Time) : (1.0f / 60.0f);
     m_Time = time;
-
-    ImGui_ImplOpenGL3_NewFrame();
-    ImGui::NewFrame();
-
-    static bool show = true;
-    ImGui::ShowDemoWindow(&show);
-
-    ImGui::Render();
-    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
 void ImGuiLayer::OnKeyPressed(InputKey key, bool isRepeat) {}
@@ -88,7 +79,15 @@ void ImGuiLayer::OnWindowResize(int width, int height)
     io.DisplayFramebufferScale = ImVec2(1.0f, 1.0f);
 }
 
-void ImGuiLayer::Begin() {}
+void ImGuiLayer::Begin()
+{
+    ImGui_ImplOpenGL3_NewFrame();
+    ImGui::NewFrame();
+}
 
-void ImGuiLayer::End() {}
+void ImGuiLayer::End()
+{
+    ImGui::Render();
+    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+}
 } // namespace Engine
