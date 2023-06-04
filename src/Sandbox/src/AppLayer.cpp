@@ -18,7 +18,7 @@ void AppLayer::OnAttach()
     m_ModelShader->SetUniform3f("cameraPos", m_Camera.GetPosition());
 
     m_Model =
-        std::make_unique<Engine::Model>("/home/adeleye/Source/3DEngine/src/Sandbox/res/models/suzanne/scene.gltf");
+        std::make_unique<Engine::Model>("/home/adeleye/Source/3DEngine/src/Sandbox/res/models/boxTextured/scene.gltf");
 }
 
 void AppLayer::OnDetach() {}

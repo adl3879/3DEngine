@@ -29,6 +29,6 @@ void CameraController::OnUpdate(float deltaTime)
 void CameraController::OnMouseMove(double xPos, double yPos, double xOffset, double yOffset)
 {
     m_Camera.SetYaw(m_Camera.GetYaw() + (xOffset * m_Sensitivity));
-    m_Camera.SetPitch(m_Camera.GetPitch() + (yOffset * m_Sensitivity));
+    m_Camera.SetPitch(m_Camera.GetPitch() + (-yOffset * m_Sensitivity));
 }
 } // namespace Engine
