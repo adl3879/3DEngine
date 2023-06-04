@@ -1,7 +1,5 @@
 #pragma once
 
-#include <glad/glad.h>
-
 #include <glm/fwd.hpp>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -32,4 +30,4 @@ class Shader
   private:
     unsigned int m_Program;
 };
-}
+} // namespace Engine

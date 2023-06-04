@@ -1,5 +1,7 @@
 #include "Shader.h"
 
+#include <glad/glad.h>
+
 #include <fstream>
 #include <iostream>
 #include <sstream>
@@ -100,4 +102,4 @@ void Shader::SetUniform3f(std::string id, glm::vec3 vector)
     GLint location = glGetUniformLocation(m_Program, id.c_str());
     glUniform3f(location, vector.x, vector.y, vector.z);
 }
-}
+} // namespace Engine

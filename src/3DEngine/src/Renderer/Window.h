@@ -2,10 +2,9 @@
 
 #include <string>
 
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
+#include "Input.h"
 
-#include "Input/Input.h"
+struct GLFWwindow;
 
 namespace Engine
 {
@@ -48,4 +47,4 @@ class Window
     WindowProps m_WindowProps;
     Input m_Input{};
 };
-} 
+} // namespace Engine

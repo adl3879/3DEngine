@@ -1,30 +1,73 @@
 #pragma once
 
-#include "Shader.h"
 #include <vector>
+
+#include <glm/fwd.hpp>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 namespace Engine
 {
+enum class ShaderDataType
+{
+    None = 0,
+    Float,
+    Float2,
+    Float3,
+    Float4,
+    Mat3,
+    Mat4,
+    Int,
+    Int2,
+    Int3,
+    Int4,
+    Bool
+};
+
+static unsigned int GetSizeOfType(ShaderDataType type)
+{
+    switch (type)
+    {
+        case ShaderDataType::Float: return 4;
+        case ShaderDataType::Float2: return 4 * 2;
+        case ShaderDataType::Float3: return 4 * 3;
+        case ShaderDataType::Float4: return 4 * 4;
+        case ShaderDataType::Mat3: return 4 * 3 * 3;
+        case ShaderDataType::Mat4: return 4 * 4 * 4;
+        case ShaderDataType::Int: return 4;
+        case ShaderDataType::Int2: return 4 * 2;
+        case ShaderDataType::Int3: return 4 * 3;
+        case ShaderDataType::Int4: return 4 * 4;
+        case ShaderDataType::Bool: return 1;
+        case ShaderDataType::None: return 0;
+    }
+}
+
 struct VertexBufferElement
 {
   public:
-    unsigned int Type;
+    ShaderDataType Type;
     unsigned int Count;
     size_t Offset;
     unsigned char Normalized;
 
-    static unsigned int GetSizeOfType(unsigned int type)
+    uint32_t GetComponentCount() const
     {
-        switch (type)
+        switch (Type)
         {
-        case GL_FLOAT:
-            return 4;
-        case GL_UNSIGNED_INT:
-            return 4;
-        case GL_UNSIGNED_BYTE:
-            return 1;
-        default:
-            return 0;
+            case ShaderDataType::Float: return 1;
+            case ShaderDataType::Float2: return 2;
+            case ShaderDataType::Float3: return 3;
+            case ShaderDataType::Float4: return 4;
+            case ShaderDataType::Mat3: return 3; // 3* float3
+            case ShaderDataType::Mat4: return 4; // 4* float4
+            case ShaderDataType::Int: return 1;
+            case ShaderDataType::Int2: return 2;
+            case ShaderDataType::Int3: return 3;
+            case ShaderDataType::Int4: return 4;
+            case ShaderDataType::Bool: return 1;
+            case ShaderDataType::None: return 0;
         }
     }
 };
@@ -100,4 +143,4 @@ class IndexBuffer
   private:
     unsigned int m_IndexBuffer;
 };
-}
+} // namespace Engine

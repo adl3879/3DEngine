@@ -1,5 +1,7 @@
 #include "Texture.h"
 
+#include <glad/glad.h>
+
 #include <stdexcept>
 
 namespace Engine
@@ -60,4 +62,6 @@ void Texture::Bind() const
 }
 
 void Texture::Unbind() const { glBindTexture(GL_TEXTURE_2D, 0); }
-}
+
+void Texture::Delete() const { glDeleteTextures(1, &m_Texture); }
+} // namespace Engine

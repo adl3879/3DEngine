@@ -1,6 +1,9 @@
 #include "Mesh.h"
+
+#include <glad/glad.h>
+
 #include "Buffer.h"
-#include "Application.h"
+#include "InputManager.h"
 
 #include <iostream>
 
@@ -13,10 +16,10 @@ Mesh::Mesh(std::vector<Vertex> &vertices, std::vector<unsigned int> &indices, st
     IndexBuffer ebo{m_Indices};
 
     VertexBufferLayout layout{
-        VertexBufferElement{.Type = GL_FLOAT, .Count = 3, .Normalized = GL_FALSE}, // Position
-        VertexBufferElement{.Type = GL_FLOAT, .Count = 3, .Normalized = GL_FALSE}, // Normal
-        VertexBufferElement{.Type = GL_FLOAT, .Count = 3, .Normalized = GL_FALSE}, // Color
-        VertexBufferElement{.Type = GL_FLOAT, .Count = 2, .Normalized = GL_FALSE}, // Texture
+        VertexBufferElement{.Type = ShaderDataType::Float4, .Count = 3, .Normalized = GL_FALSE}, // Position
+        VertexBufferElement{.Type = ShaderDataType::Float4, .Count = 3, .Normalized = GL_FALSE}, // Normal
+        VertexBufferElement{.Type = ShaderDataType::Float4, .Count = 3, .Normalized = GL_FALSE}, // Color
+        VertexBufferElement{.Type = ShaderDataType::Float4, .Count = 2, .Normalized = GL_FALSE}, // Texture
     };
     m_VAO.AddBuffer(vbo, layout);
 
@@ -63,4 +66,4 @@ void Mesh::Draw(Shader &shader, Camera &camera)
 
     m_VAO.Unbind();
 }
-}
+} // namespace Engine

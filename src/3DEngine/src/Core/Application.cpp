@@ -1,7 +1,5 @@
 #include "Application.h"
 
-#include "InputDevice.h"
-#include "InputKey.h"
 #include "InputManager.h"
 
 #include <functional>
@@ -13,17 +11,12 @@ namespace Engine
 {
 float lastFrame = 0.0f;
 
+std::shared_ptr<Window> Application::m_Window = nullptr;
+
 Application::Application() : m_IsRunning(true)
 {
 
     m_Window = std::make_shared<Window>(WindowProps());
-
-    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
-    {
-        std::cout << "Failed to initialize GLAD" << std::endl;
-    }
-    // Setup OpenGL options
-    glEnable(GL_DEPTH_TEST);
 
     SetupInputSystem();
 

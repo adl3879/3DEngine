@@ -18,7 +18,7 @@ class Texture
 
     void Bind() const;
     void Unbind() const;
-    void Delete() const { glDeleteTextures(1, &m_Texture); }
+    void Delete() const;
 
   private:
     unsigned int m_Texture;
@@ -26,4 +26,4 @@ class Texture
     std::string m_Path;
     unsigned int m_Slot;
 };
-}
+} // namespace Engine

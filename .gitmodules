@@ -1,12 +1,15 @@
 [submodule "src/3DEngine/vendor/imgui"]
 	path = src/3DEngine/vendor/imgui
 	url = git@github.com:ocornut/imgui.git
+
 [submodule "src/3DEngine/vendor/glfw"]
 	path = src/3DEngine/vendor/glfw
 	url = https://github.com/glfw/glfw
+
 [submodule "src/3DEngine/vendor/glm"]
 	path = src/3DEngine/vendor/glm
 	url = https://github.com/g-truc/glm
+
 [submodule "src/3DEngine/vendor/assimp"]
 	path = src/3DEngine/vendor/assimp
 	url = https://github.com/assimp/assimp.git

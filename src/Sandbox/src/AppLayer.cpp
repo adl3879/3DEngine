@@ -37,6 +37,8 @@ void AppLayer::OnImGuiRender()
     ImGui::Text("Camera Position: (%f, %f, %f)", m_Camera.GetPosition().x, m_Camera.GetPosition().y,
                 m_Camera.GetPosition().z);
     ImGui::End();
+
+    ImGui::ShowDemoWindow();
 }
 
 void AppLayer::OnKeyPressed(Engine::InputKey key, bool isRepeat) {}

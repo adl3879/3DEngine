@@ -1,6 +1,9 @@
 #include "Window.h"
-#include "InputManager.h"
 
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
+
+#include "InputManager.h"
 #include <iostream>
 
 namespace Engine
@@ -68,6 +71,13 @@ void Window::Init(const WindowProps &props)
 
     SetWindowEventCallbacks();
     SetInputEventCallbacks();
+
+    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+    {
+        std::cout << "Failed to initialize GLAD" << std::endl;
+    }
+    // Setup OpenGL options
+    glEnable(GL_DEPTH_TEST);
 }
 
 void Window::SetInputEventCallbacks()
