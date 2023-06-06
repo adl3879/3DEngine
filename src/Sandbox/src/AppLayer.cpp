@@ -1,8 +1,7 @@
 #include "AppLayer.h"
 
-#include <iostream>
-
 #include <imgui.h>
+#include <iostream>
 
 AppLayer::AppLayer() {}
 

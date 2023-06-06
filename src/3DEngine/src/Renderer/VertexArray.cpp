@@ -22,8 +22,8 @@ static GLenum ShaderDataTypeToOpenGLBaseType(ShaderDataType type)
         case ShaderDataType::Int3: return GL_INT;
         case ShaderDataType::Int4: return GL_INT;
         case ShaderDataType::Bool: return GL_BOOL;
+        case ShaderDataType::None: return 0;
     }
-
     return 0;
 }
 
