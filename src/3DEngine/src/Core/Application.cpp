@@ -15,7 +15,6 @@ std::shared_ptr<Window> Application::m_Window = nullptr;
 
 Application::Application() : m_IsRunning(true)
 {
-
     m_Window = std::make_shared<Window>(WindowProps());
 
     SetupInputSystem();
