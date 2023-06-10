@@ -55,6 +55,8 @@ Shader::Shader(const std::string &vertexSourcePath, const std::string &fragmentS
     // can be deleted because they are already linked to program
     glDeleteShader(vertex);
     glDeleteShader(fragment);
+
+    Use();
 }
 
 std::string Shader::ParseShader(const std::string &sourcePath)

@@ -27,7 +27,7 @@ enum class WindowEventState
     Moved
 };
 
-struct CursorPosition
+struct MouseMovedPosition
 {
     double X{0.0f}, Y{0.0f};
 };
@@ -50,7 +50,7 @@ struct WindowState
 };
 
 using InputDeviceStateCallbackFunc = std::function<std::unordered_map<InputKey, InputDeviceState>(int)>;
-using CursorPositionCallbackFunc = std::function<CursorPosition(int)>;
+using CursorPositionCallbackFunc = std::function<MouseMovedPosition(int)>;
 using WindowStateCallbackFunc = std::function<WindowState(int)>;
 using MousePressCallbackFunc = std::function<std::unordered_map<MouseButton, InputDeviceState>(int)>;
 using MouseScrollCallbackFunc = std::function<MouseScrollState(int)>;
@@ -61,7 +61,7 @@ struct InputDevice
     int Index;
     std::unordered_map<InputKey, InputDeviceState> CurrentKeyboardState;
     WindowState CurrentWindowState = WindowState{.EventState = WindowEventState::None};
-    CursorPosition CurrentCursorPosition;
+    MouseMovedPosition CurrentCursorPosition;
     MouseScrollState CurrentMouseScrollState;
     MouseButton CurrentMouseButtonState;
 

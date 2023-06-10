@@ -49,7 +49,7 @@ void Window::OnUpdate()
     glViewport(0, 0, windowState.Width, windowState.Height);
     glfwPollEvents();
 
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
@@ -91,15 +91,9 @@ void Window::SetInputEventCallbacks()
         float value = 0.0f;
         switch (action)
         {
-        case GLFW_PRESS:
-            value = 1.0f;
-            break;
-        case GLFW_RELEASE:
-            value = -1.0f;
-            break;
-        case GLFW_REPEAT:
-            value = 2.0f;
-            break;
+            case GLFW_PRESS: value = 1.0f; break;
+            case GLFW_RELEASE: value = -1.0f; break;
+            case GLFW_REPEAT: value = 2.0f; break;
         };
         input->UpdateKeyboardState(key, value);
     };
@@ -112,12 +106,8 @@ void Window::SetInputEventCallbacks()
         float value = 0.0f;
         switch (action)
         {
-        case GLFW_PRESS:
-            value = 1.0f;
-            break;
-        case GLFW_RELEASE:
-            value = -1.0f;
-            break;
+            case GLFW_PRESS: value = 1.0f; break;
+            case GLFW_RELEASE: value = -1.0f; break;
         };
         input->UpdateMousePressState(button, value);
     };

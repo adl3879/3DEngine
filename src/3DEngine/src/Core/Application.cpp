@@ -12,8 +12,9 @@ namespace Engine
 float lastFrame = 0.0f;
 
 std::shared_ptr<Window> Application::m_Window = nullptr;
+bool Application::m_IsRunning = true;
 
-Application::Application() : m_IsRunning(true)
+Application::Application()
 {
     m_Window = std::make_shared<Window>(WindowProps());
 
@@ -51,17 +52,7 @@ void Application::Run()
     }
 }
 
-void Application::SetupInputSystem()
-{
-    InputManager::Instance().MapInputToAction(InputKey::Escape, InputAction{.ActionName = "quit", .Scale = 1.0f});
-    InputManager::Instance().RegisterActionCallback(
-        "quit", InputManager::ActionCallback{.Ref = "quit",
-                                             .Func = [this](InputSource source, int value, float scale)
-                                             {
-                                                 m_IsRunning = false;
-                                                 return true;
-                                             }});
-}
+void Application::SetupInputSystem() {}
 
 void Application::RegisterLayerEventCallbacks(Layer *layer)
 {

@@ -80,8 +80,8 @@ void InputManager::ProcessInput()
     std::vector<ActionEvent> events{};
     struct MouseMovedCallbackParams
     {
-        CursorPosition Position;
-        CursorPosition Offset;
+        MouseMovedPosition Position;
+        MouseMovedPosition Offset;
         bool IsMoved = false;
     };
     MouseMovedCallbackParams mouseMovedCallbackParams;
@@ -115,81 +115,81 @@ void InputManager::ProcessInput()
     {
         switch (device.Type)
         {
-        case InputDeviceType::Mouse:
-        {
-            auto newState = device.MousePressStateFunc(device.Index);
-            for (auto &mouseState : newState)
+            case InputDeviceType::Mouse:
             {
-                currentMouseState = device.CurrentMouseButtonState;
-                if (mouseState.second.Value > 0.0f)
+                auto newState = device.MousePressStateFunc(device.Index);
+                for (auto &mouseState : newState)
                 {
-                    mousePressCallbackParams = MousePressCallbackParams{.Button = mouseState.first};
-                    device.CurrentMouseButtonState = mouseState.first;
+                    currentMouseState = device.CurrentMouseButtonState;
+                    if (mouseState.second.Value > 0.0f)
+                    {
+                        mousePressCallbackParams = MousePressCallbackParams{.Button = mouseState.first};
+                        device.CurrentMouseButtonState = mouseState.first;
+                    }
                 }
             }
-        }
-        break;
-        case InputDeviceType::MouseScroll:
-        {
-            auto newState = device.MouseScrollStateFunc(device.Index);
-            auto currentScrollOffset = device.CurrentMouseScrollState;
-            if (newState.XOffset != currentScrollOffset.XOffset || newState.YOffset != currentScrollOffset.YOffset)
+            break;
+            case InputDeviceType::MouseScroll:
             {
-                mouseScrollCallbackParams = MouseScrollCallbackParams{.State = newState, .IsScrolled = true};
-                device.CurrentMouseScrollState = newState;
-            }
-        }
-        break;
-        case InputDeviceType::Window:
-        {
-            // window event callback
-            auto newState = device.WindowStateFunc(device.Index);
-            if (newState.Width != device.CurrentWindowState.Width ||
-                newState.Height != device.CurrentWindowState.Height)
-            {
-                windowCallbackParams = WindowCallbackParams{.State = newState, .IsResized = true};
-                device.CurrentWindowState = newState;
-            }
-        }
-        break;
-        case InputDeviceType::MouseMove:
-        {
-            // cursor position callback
-            auto newState = device.CursorStateFunc(device.Index);
-            auto currentPosition = device.CurrentCursorPosition;
-            if (newState.X != currentPosition.X || newState.Y != currentPosition.Y)
-            {
-                mouseMovedCallbackParams = MouseMovedCallbackParams{
-                    .Position = newState,
-                    .Offset = CursorPosition{.X = newState.X - currentPosition.X, .Y = newState.Y - currentPosition.Y},
-                    .IsMoved = true};
-                device.CurrentCursorPosition = newState;
-            }
-        }
-        break;
-        case InputDeviceType::Keyboard:
-        {
-            auto newState = device.KeyboardStateFunc(device.Index);
-            // compare to old state for changes
-            for (auto &keyState : newState)
-            {
-                if (device.CurrentKeyboardState[keyState.first].Value != keyState.second.Value)
+                auto newState = device.MouseScrollStateFunc(device.Index);
+                auto currentScrollOffset = device.CurrentMouseScrollState;
+                if (newState.XOffset != currentScrollOffset.XOffset || newState.YOffset != currentScrollOffset.YOffset)
                 {
-                    auto generatedEvents = GenerateActionEvent(device.Index, keyState.first, keyState.second.Value);
-                    events.insert(events.end(), generatedEvents.begin(), generatedEvents.end());
-                    // save new state Value
+                    mouseScrollCallbackParams = MouseScrollCallbackParams{.State = newState, .IsScrolled = true};
+                    device.CurrentMouseScrollState = newState;
+                }
+            }
+            break;
+            case InputDeviceType::Window:
+            {
+                // window event callback
+                auto newState = device.WindowStateFunc(device.Index);
+                if (newState.Width != device.CurrentWindowState.Width ||
+                    newState.Height != device.CurrentWindowState.Height)
+                {
+                    windowCallbackParams = WindowCallbackParams{.State = newState, .IsResized = true};
+                    device.CurrentWindowState = newState;
+                }
+            }
+            break;
+            case InputDeviceType::MouseMove:
+            {
+                // cursor position callback
+                auto newState = device.CursorStateFunc(device.Index);
+                auto currentPosition = device.CurrentCursorPosition;
+                if (newState.X != currentPosition.X || newState.Y != currentPosition.Y)
+                {
+                    mouseMovedCallbackParams =
+                        MouseMovedCallbackParams{.Position = newState,
+                                                 .Offset = MouseMovedPosition{.X = newState.X - currentPosition.X,
+                                                                              .Y = newState.Y - currentPosition.Y},
+                                                 .IsMoved = true};
+                    device.CurrentCursorPosition = newState;
+                }
+            }
+            break;
+            case InputDeviceType::Keyboard:
+            {
+                auto newState = device.KeyboardStateFunc(device.Index);
+                // compare to old state for changes
+                for (auto &keyState : newState)
+                {
+                    if (device.CurrentKeyboardState[keyState.first].Value != keyState.second.Value)
+                    {
+                        auto generatedEvents = GenerateActionEvent(device.Index, keyState.first, keyState.second.Value);
+                        events.insert(events.end(), generatedEvents.begin(), generatedEvents.end());
+                        // save new state Value
+                        device.CurrentKeyboardState[keyState.first].Value = keyState.second.Value;
+                    }
+                    if (keyState.second.Value > 0.0f)
+                        keyCallbackParams = KeyboardCallbackParams{.Key = keyState.first, .IsRepeat = false};
+                    else if (keyState.second.Value == 0.0f)
+                        keyCallbackParams = KeyboardCallbackParams{.Key = keyState.first, .IsRepeat = true};
                     device.CurrentKeyboardState[keyState.first].Value = keyState.second.Value;
                 }
-                if (keyState.second.Value > 0.0f)
-                    keyCallbackParams = KeyboardCallbackParams{.Key = keyState.first, .IsRepeat = false};
-                else if (keyState.second.Value == 0.0f)
-                    keyCallbackParams = KeyboardCallbackParams{.Key = keyState.first, .IsRepeat = true};
-                device.CurrentKeyboardState[keyState.first].Value = keyState.second.Value;
             }
-        }
-        break;
-        case InputDeviceType::Gamepad:
             break;
+            case InputDeviceType::Gamepad: break;
         }
     }
 
@@ -279,6 +279,16 @@ bool InputManager::IsKeyPressed(InputKey key)
         }
     }
     return false;
+}
+
+MouseMovedPosition InputManager::GetMouseMovedPosition()
+{
+    for (auto &device : m_Devices)
+    {
+        if (device.Type == InputDeviceType::MouseMove)
+            return device.CursorStateFunc(device.Index);
+    }
+    return MouseMovedPosition{};
 }
 
 WindowState InputManager::GetWindowState()

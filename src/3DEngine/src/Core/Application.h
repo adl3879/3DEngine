@@ -21,7 +21,7 @@ class Application
     void PushLayer(Layer *layer);
     void PushOverlay(Layer *layer);
 
-    void Close() { m_IsRunning = false; }
+    static void Close() { m_IsRunning = false; }
 
     bool IsRunning() const { return m_IsRunning; }
     float GetDeltaTime() const { return m_DeltaTime; }
@@ -37,7 +37,7 @@ class Application
   private:
     static std::shared_ptr<Window> m_Window;
 
-    bool m_IsRunning;
+    static bool m_IsRunning;
     float m_DeltaTime = 0.0f;
 
     LayerStack m_LayerStack{};
