@@ -11,12 +11,11 @@ out vec3 Normal;
 out vec4 CurrentPos;
 
 uniform mat4 model;
-uniform mat4 view;
-uniform mat4 projection;
+uniform mat4 projectionViewMatrix;
 
 void main()
 {
-	CurrentPos = projection * view * model * vec4(aPos, 1.0f);
+	CurrentPos = projectionViewMatrix * model * vec4(aPos, 1.0f);
     gl_Position = CurrentPos;
 
 	Color = vec3(1.0f, 1.0f, 1.0f);

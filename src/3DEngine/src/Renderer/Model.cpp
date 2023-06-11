@@ -22,9 +22,37 @@ Model::Model(const char *file) : m_File(file)
 void Model::Draw(Shader &shader, Camera &camera)
 {
     for (unsigned int i = 0; i < m_Meshes.size(); i++)
-    {
-        m_Meshes[i].Mesh::Draw(shader, camera);
-    }
+        m_Meshes[i].Mesh::Draw(shader, camera, m_ModelMatrix);
+}
+
+void Model::SetPosition(const glm::vec3 &position)
+{
+    m_Position = position;
+    RecalculateModelMatrix();
+}
+
+void Model::SetRotation(const glm::vec3 &rotation)
+{
+    m_Rotation = rotation;
+    RecalculateModelMatrix();
+}
+
+void Model::SetScale(const glm::vec3 &scale)
+{
+    m_Scale = scale;
+    RecalculateModelMatrix();
+}
+
+void Model::RecalculateModelMatrix()
+{
+    auto transform = glm::mat4(1.0f);
+    transform = glm::translate(transform, m_Position);
+    transform = glm::rotate(transform, glm::radians(m_Rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
+    transform = glm::rotate(transform, glm::radians(m_Rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
+    transform = glm::rotate(transform, glm::radians(m_Rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
+    transform = glm::scale(transform, m_Scale);
+
+    m_ModelMatrix = transform;
 }
 
 std::vector<unsigned int> Model::GetIndices(const aiMesh *mesh)
@@ -135,4 +163,4 @@ void Model::LoadMesh()
         m_Meshes.push_back(Mesh{vertices, indices, textures});
     }
 }
-}
+} // namespace Engine

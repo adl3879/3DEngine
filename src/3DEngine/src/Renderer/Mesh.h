@@ -17,7 +17,7 @@ class Mesh
     Mesh(std::vector<Vertex> &vertices, std::vector<unsigned int> &indices, std::vector<Texture> &textures);
     ~Mesh() = default;
 
-    void Draw(Shader &shader, Camera &camera);
+    void Draw(Shader &shader, Camera &camera, const glm::mat4 &modelMatrix = glm::mat4{1.0f});
 
     std::vector<Vertex> m_Vertices;
     std::vector<unsigned int> m_Indices;

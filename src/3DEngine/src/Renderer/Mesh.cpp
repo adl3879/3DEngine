@@ -28,7 +28,7 @@ Mesh::Mesh(std::vector<Vertex> &vertices, std::vector<unsigned int> &indices, st
     ebo.Unbind();
 }
 
-void Mesh::Draw(Shader &shader, Camera &camera)
+void Mesh::Draw(Shader &shader, Camera &camera, const glm::mat4 &modelMatrix)
 {
     shader.Use();
     m_VAO.Bind();
@@ -54,13 +54,8 @@ void Mesh::Draw(Shader &shader, Camera &camera)
         texture.Bind();
     }
 
-    glm::mat4 projection{1.0f};
-    auto windowState = InputManager::Instance().GetWindowState();
-    projection = glm::perspective(45.0f, static_cast<float>(windowState.Width) / static_cast<float>(windowState.Height),
-                                  0.1f, 100.0f);
-
-    shader.SetUniformMatrix4fv("projection", projection);
-    shader.SetUniformMatrix4fv("view", camera.GetViewMatrix());
+    shader.SetUniformMatrix4fv("model", modelMatrix);
+    shader.SetUniformMatrix4fv("projectionViewMatrix", camera.GetProjectionViewMatrix());
 
     glDrawElements(GL_TRIANGLES, m_Indices.size(), GL_UNSIGNED_INT, 0);
 

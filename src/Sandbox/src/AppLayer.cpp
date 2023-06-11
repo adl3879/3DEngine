@@ -13,31 +13,31 @@ void AppLayer::OnAttach()
         std::make_unique<Engine::Shader>("/home/adeleye/Source/3DEngine/src/Sandbox/res/shaders/model.vert",
                                          "/home/adeleye/Source/3DEngine/src/Sandbox/res/shaders/model.frag");
 
-    glm::mat4 model3{1.0f};
-    m_ModelShader->SetUniformMatrix4fv("model", model3);
     m_ModelShader->SetUniform4f("lightColor", glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
-    m_ModelShader->SetUniform3f("lightPos", glm::vec3(0.3f, 0.6f, 0.0f));
-    m_ModelShader->SetUniform3f("cameraPos", m_Camera.GetPosition());
+    m_ModelShader->SetUniform3f("lightPos", glm::vec3(0.3f, 0.6f, 1.0f));
 
     m_Model =
         std::make_unique<Engine::Model>("/home/adeleye/Source/3DEngine/src/Sandbox/res/models/suzanne/scene.gltf");
 
     m_Framebuffer = std::make_shared<Engine::Framebuffer>(windowState.Width, windowState.Height);
+
+    m_Camera.SetFieldOfView(80.0f);
 }
 
 void AppLayer::OnDetach() {}
 
 void AppLayer::OnUpdate(float deltaTime)
 {
-    if (m_ViewportFocused)
-        m_CameraController.OnUpdate(deltaTime);
     {
         m_Framebuffer->Bind();
         Engine::RendererCommand::SetClearColor({0.1f, 0.1f, 0.1f, 1.0f});
         Engine::RendererCommand::Clear();
     }
+    // m_Model->Draw(*m_ModelShader, m_Camera);
+    Engine::Renderer3D::BeginScene(m_Camera);
+    Engine::Renderer3D::DrawModel(*m_Model, *m_ModelShader);
+    Engine::Renderer3D::EndScene();
 
-    m_Model->Draw(*m_ModelShader, m_Camera);
     m_Framebuffer->Unbind();
 }
 
@@ -102,7 +102,34 @@ void AppLayer::OnImGuiRender()
     ImGui::Begin("Camera");
     ImGui::Text("Camera Position: (%f, %f, %f)", m_Camera.GetPosition().x, m_Camera.GetPosition().y,
                 m_Camera.GetPosition().z);
-    ImGui::Text("Testing.....");
+    // control camera properties
+    float position = m_Camera.GetPosition().x;
+    if (ImGui::SliderFloat("X", &position, -10.0f, 10.0f))
+        m_Camera.SetPosition({position, m_Camera.GetPosition().y, m_Camera.GetPosition().z});
+    position = m_Camera.GetPosition().y;
+    if (ImGui::SliderFloat("Y", &position, -10.0f, 10.0f))
+        m_Camera.SetPosition({m_Camera.GetPosition().x, position, m_Camera.GetPosition().z});
+    position = m_Camera.GetPosition().z;
+    if (ImGui::SliderFloat("Z", &position, -10.0f, 10.0f))
+        m_Camera.SetPosition({m_Camera.GetPosition().x, m_Camera.GetPosition().y, position});
+    float yaw = m_Camera.GetYaw();
+    if (ImGui::SliderFloat("Yaw", &yaw, -180.0f, 180.0f))
+        m_Camera.SetYaw(yaw);
+    float pitch = m_Camera.GetPitch();
+    if (ImGui::SliderFloat("Pitch", &pitch, -89.0f, 89.0f))
+        m_Camera.SetPitch(pitch);
+    ImGui::End();
+
+    ImGui::Begin("Model");
+    position = m_Model->GetPosition().x;
+    if (ImGui::SliderFloat("X", &position, -10.0f, 10.0f))
+        m_Model->SetPosition({position, m_Model->GetPosition().y, m_Model->GetPosition().z});
+    position = m_Model->GetPosition().y;
+    if (ImGui::SliderFloat("Y", &position, -10.0f, 10.0f))
+        m_Model->SetPosition({m_Model->GetPosition().x, position, m_Model->GetPosition().z});
+    position = m_Model->GetPosition().z;
+    if (ImGui::SliderFloat("Z", &position, -10.0f, 10.0f))
+        m_Model->SetPosition({m_Model->GetPosition().x, m_Model->GetPosition().y, position});
     ImGui::End();
 
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{0, 0});

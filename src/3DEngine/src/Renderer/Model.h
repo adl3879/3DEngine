@@ -21,6 +21,17 @@ class Model
 
     void Draw(Shader &shader, Camera &camera);
 
+    void SetPosition(const glm::vec3 &position);
+    void SetRotation(const glm::vec3 &rotation);
+    void SetScale(const glm::vec3 &scale);
+
+    const glm::vec3 &GetPosition() const { return m_Position; }
+    const glm::vec3 &GetRotation() const { return m_Rotation; }
+    const glm::vec3 &GetScale() const { return m_Scale; }
+
+  private:
+    void RecalculateModelMatrix();
+
   private:
     std::vector<unsigned int> GetIndices(const aiMesh *mesh);
     std::vector<Vertex> AssembleVertices(const aiMesh *mesh);
@@ -36,5 +47,11 @@ class Model
     std::vector<Mesh> m_Meshes;
     bool m_HasTexture = false;
     std::vector<Texture> m_TexturesLoaded;
+
+  private:
+    glm::vec3 m_Position = glm::vec3(0.0f);
+    glm::vec3 m_Rotation = glm::vec3(0.0f);
+    glm::vec3 m_Scale = glm::vec3(1.0f);
+    glm::mat4 m_ModelMatrix{};
 };
-}
+} // namespace Engine
