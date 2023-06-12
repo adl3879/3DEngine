@@ -5,7 +5,7 @@
 namespace Engine
 {
 Camera::Camera()
-    : m_Position(glm::vec3(0.0f, 0.0f, 0.3f)), m_Front(0.0f, 0.0f, -1.0f), m_WorldUp(0.0f, 1.0f, 0.0f), m_Yaw(-90.0f),
+    : m_Position(glm::vec3(0.0f, 0.0f, -0.3f)), m_Front(0.0f, 0.0f, -1.0f), m_WorldUp(0.0f, 1.0f, 0.0f), m_Yaw(-90.0f),
       m_Pitch(0.0f), m_FieldOfView(45.0f), m_AspectRatio(16.0f / 9.0f), m_NearPlane(0.1f), m_FarPlane(100.0f)
 {
     RecalculateProjectionViewMatrix();

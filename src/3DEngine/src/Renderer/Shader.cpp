@@ -93,6 +93,18 @@ void Shader::SetUniform4f(std::string id, glm::vec4 vector)
     glUniform4f(location, vector.x, vector.y, vector.z, vector.w);
 }
 
+void Shader::SetUniform1f(std::string id, float value)
+{
+    GLint location = glGetUniformLocation(m_Program, id.c_str());
+    glUniform1f(location, value);
+}
+
+void Shader::SetUniform1i(std::string id, int value)
+{
+    GLint location = glGetUniformLocation(m_Program, id.c_str());
+    glUniform1i(location, value);
+}
+
 void Shader::SetUniformMatrix4fv(std::string id, glm::mat4 matrix)
 {
     GLint location = glGetUniformLocation(m_Program, id.c_str());

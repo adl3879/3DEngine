@@ -6,3 +6,4 @@
 #include "Framebuffer.h"
 #include "Renderer.h"
 #include "Application.h"
+#include "Light.h"

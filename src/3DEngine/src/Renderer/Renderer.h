@@ -3,6 +3,7 @@
 #include <glm/glm.hpp>
 
 #include "Camera.h"
+#include "Light.h"
 #include "Model.h"
 
 namespace Engine
@@ -19,6 +20,7 @@ class Renderer3D
   public:
     static void BeginScene(); // default camera
     static void BeginScene(const Camera &camera);
+    static void BeginScene(const Camera &camera, const Light &light);
     static void EndScene();
 
     static void DrawModel(Model &model, Shader &shader);

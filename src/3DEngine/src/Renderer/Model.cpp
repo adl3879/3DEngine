@@ -17,12 +17,19 @@ Model::Model(const char *file) : m_File(file)
         return;
     }
     LoadMesh();
+    RecalculateModelMatrix();
 }
 
 void Model::Draw(Shader &shader, Camera &camera)
 {
     for (unsigned int i = 0; i < m_Meshes.size(); i++)
         m_Meshes[i].Mesh::Draw(shader, camera, m_ModelMatrix);
+}
+
+void Model::Draw(Shader &shader, Camera &camera, Light &light)
+{
+    for (unsigned int i = 0; i < m_Meshes.size(); i++)
+        m_Meshes[i].Mesh::Draw(shader, camera, light, m_ModelMatrix);
 }
 
 void Model::SetPosition(const glm::vec3 &position)

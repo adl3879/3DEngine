@@ -61,4 +61,39 @@ void Mesh::Draw(Shader &shader, Camera &camera, const glm::mat4 &modelMatrix)
 
     m_VAO.Unbind();
 }
+void Mesh::Draw(Shader &shader, Camera &camera, Light &light, const glm::mat4 &modelMatrix)
+{
+    shader.Use();
+    m_VAO.Bind();
+
+    // Keep track of how many of each type of textures we have
+    unsigned int numDiffuse = 0;
+    unsigned int numSpecular = 0;
+
+    for (unsigned int i = 0; i < m_Textures.size(); i++)
+    {
+        auto texture = m_Textures[i];
+        std::string num;
+        std::string type = texture.GetType();
+        if (type == "diffuse")
+        {
+            num = std::to_string(numDiffuse++);
+        }
+        else if (type == "specular")
+        {
+            num = std::to_string(numSpecular++);
+        }
+        texture.TextureUnit(shader, (type + num).c_str(), i);
+        texture.Bind();
+    }
+
+    shader.SetUniformMatrix4fv("model", modelMatrix);
+    shader.SetUniformMatrix4fv("projectionViewMatrix", camera.GetProjectionViewMatrix());
+    shader.SetUniform3f("cameraPos", camera.GetPosition());
+    light.SetLightUniforms(shader);
+
+    glDrawElements(GL_TRIANGLES, m_Indices.size(), GL_UNSIGNED_INT, 0);
+
+    m_VAO.Unbind();
+}
 } // namespace Engine

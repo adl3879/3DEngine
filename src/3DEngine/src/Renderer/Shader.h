@@ -21,6 +21,8 @@ class Shader
     void SetUniformMatrix4fv(std::string id, glm::mat4 matrix);
     void SetUniform3f(std::string id, glm::vec3 vector);
     void SetUniform4f(std::string id, glm::vec4 vector);
+    void SetUniform1f(std::string id, float value);
+    void SetUniform1i(std::string id, int value);
 
     unsigned int GetProgram() const { return m_Program; }
 

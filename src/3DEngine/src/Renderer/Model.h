@@ -10,6 +10,7 @@
 #include "Texture.h"
 #include "Buffer.h"
 #include "Mesh.h"
+#include "Light.h"
 
 namespace Engine
 {
@@ -20,6 +21,7 @@ class Model
     Model(const char *file);
 
     void Draw(Shader &shader, Camera &camera);
+    void Draw(Shader &shader, Camera &camera, Light &light);
 
     void SetPosition(const glm::vec3 &position);
     void SetRotation(const glm::vec3 &rotation);
@@ -49,7 +51,7 @@ class Model
     std::vector<Texture> m_TexturesLoaded;
 
   private:
-    glm::vec3 m_Position = glm::vec3(0.0f);
+    glm::vec3 m_Position = glm::vec3(0.0f, 0.0f, -1.8f);
     glm::vec3 m_Rotation = glm::vec3(0.0f);
     glm::vec3 m_Scale = glm::vec3(1.0f);
     glm::mat4 m_ModelMatrix{};

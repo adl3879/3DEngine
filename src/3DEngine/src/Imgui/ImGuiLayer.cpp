@@ -24,7 +24,12 @@ void ImGuiLayer::OnAttach()
 
     auto windowState = InputManager::Instance().GetWindowState();
     io.DisplaySize = ImVec2(windowState.Width, windowState.Height);
-    io.FontGlobalScale = 1.8f;
+
+    float fontSize = 22.0f;
+    io.Fonts->AddFontFromFileTTF(
+        "/home/adeleye/Source/3DEngine/src/Sandbox/res/fonts/IBM_Plex_Sans/IBMPlexSans-Bold.ttf", fontSize);
+    io.FontDefault = io.Fonts->AddFontFromFileTTF(
+        "/home/adeleye/Source/3DEngine/src/Sandbox/res/fonts/IBM_Plex_Sans/IBMPlexSans-Regular.ttf", fontSize);
 
     ImGui::StyleColorsDark();
     // ImGui::StyleColorsClassic();

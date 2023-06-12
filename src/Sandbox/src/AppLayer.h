@@ -24,6 +24,7 @@ class AppLayer : public Engine::Layer
     std::unique_ptr<Engine::Shader> m_ModelShader;
     std::unique_ptr<Engine::Model> m_Model;
     std::shared_ptr<Engine::Framebuffer> m_Framebuffer;
+    std::shared_ptr<Engine::Light> m_Light;
 
     Engine::Camera m_Camera{};
     Engine::CameraController m_CameraController{m_Camera, 0.05f, 2.5f};
