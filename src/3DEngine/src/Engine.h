@@ -7,3 +7,5 @@
 #include "Renderer.h"
 #include "Application.h"
 #include "Light.h"
+#include "Scene.h"
+#include "Entity.h"

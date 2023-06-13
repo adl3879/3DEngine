@@ -75,6 +75,7 @@ void Mesh::Draw(Shader &shader, Camera &camera, const glm::mat4 &modelMatrix)
 
     m_VAO.Unbind();
 }
+
 void Mesh::Draw(Shader &shader, Camera &camera, Light &light, const glm::mat4 &modelMatrix)
 {
     shader.Use();

@@ -18,6 +18,7 @@ file(GLOB_RECURSE SOURCES
 file(GLOB_RECURSE HEADERS
     "src/*.h"
     "vendor/stb_image/stb_image.h"
+    "vendor/entt/include/entt.hpp"
 )
 
 include_directories(
@@ -26,6 +27,7 @@ include_directories(
     "vendor/json"
     "vendor/assimp/include"
     "vendor/imgui"
+    "vendor/entt/include"
 )
 
 set (INCLUDE_DIRS "")
@@ -45,12 +47,9 @@ target_include_directories(${PROJECT_NAME}
     PRIVATE
 )
 
-
 target_link_libraries(${PROJECT_NAME} 
     PUBLIC
-        glm
-        assimp
-        imgui
+        glm assimp imgui
     PRIVATE 
         glfw
 )
