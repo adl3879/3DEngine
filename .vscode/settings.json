@@ -11,7 +11,8 @@
         "GLFW",
         "gltf",
         "OPENGL",
-        "Parameteri"
+        "Parameteri",
+        "Skybox"
     ],
     "workbench.colorTheme": "Panda Syntax",
     "editor.fontSize": 13.5,

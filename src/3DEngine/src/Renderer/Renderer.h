@@ -18,6 +18,9 @@ class RendererCommand
 class Renderer3D
 {
   public:
+    static void Init();
+    static void Shutdown();
+
     static void BeginScene(); // default camera
     static void BeginScene(const Camera &camera);
     static void BeginScene(const Camera &camera, const Light &light);
@@ -26,5 +29,8 @@ class Renderer3D
     static void DrawModel(Model &model, Shader &shader);
     static void DrawModel(Model &model, Shader &shader, const glm::vec3 &position,
                           const glm::vec3 &rotation = glm::vec3(0.0f), const glm::vec3 &scale = glm::vec3(1.0f));
+    static void DrawFloor(const glm::vec3 &position, const glm::vec3 &rotation = glm::vec3(0.0f),
+                          const glm::vec3 &scale = glm::vec3(1.0f));
+    static void DrawSkybox();
 };
 } // namespace Engine

@@ -58,7 +58,7 @@ struct VertexBufferElement
         {
             case ShaderDataType::Float: return 1;
             case ShaderDataType::Float2: return 2;
-            case ShaderDataType::Float3: return 3;
+            case ShaderDataType::Float3: return 4;
             case ShaderDataType::Float4: return 4;
             case ShaderDataType::Mat3: return 3; // 3* float3
             case ShaderDataType::Mat4: return 4; // 4* float4
@@ -108,7 +108,7 @@ struct Vertex
 {
     glm::vec3 Position;
     glm::vec3 Normal;
-    glm::vec3 Color;
+    glm::vec3 Color = glm::vec3(1.0f);
     glm::vec2 Texture;
 };
 

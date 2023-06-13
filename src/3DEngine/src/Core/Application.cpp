@@ -1,6 +1,7 @@
 #include "Application.h"
 
 #include "InputManager.h"
+#include "Renderer.h"
 
 #include <functional>
 #include <iostream>
@@ -22,6 +23,8 @@ Application::Application()
 
     m_ImGuiLayer = new ImGuiLayer();
     PushOverlay(m_ImGuiLayer);
+
+    Renderer3D::Init();
 }
 
 void Application::Run()

@@ -64,4 +64,43 @@ void Texture::Bind() const
 void Texture::Unbind() const { glBindTexture(GL_TEXTURE_2D, 0); }
 
 void Texture::Delete() const { glDeleteTextures(1, &m_Texture); }
+
+Texture3D::Texture3D(const std::vector<std::string> &faces)
+{
+    glGenTextures(1, &m_Texture);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, m_Texture);
+
+    // load images
+    int width, height, channels;
+    for (unsigned int i = 0; i < faces.size(); i++)
+    {
+        unsigned char *image = stbi_load(faces[i].c_str(), &width, &height, &channels, 0);
+        if (image)
+        {
+            glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE,
+                         image);
+            stbi_image_free(image);
+        }
+        else
+        {
+            stbi_image_free(image);
+            throw std::invalid_argument("Failed to load cubemap texture");
+        }
+    }
+
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+}
+
+void Texture3D::Bind() const
+{
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, m_Texture);
+}
+
+void Texture3D::Unbind() const { glBindTexture(GL_TEXTURE_CUBE_MAP, 0); }
+
 } // namespace Engine

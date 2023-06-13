@@ -51,7 +51,7 @@ class Model
     std::vector<Texture> m_TexturesLoaded;
 
   private:
-    glm::vec3 m_Position = glm::vec3(0.0f, 0.0f, -1.8f);
+    glm::vec3 m_Position = glm::vec3(0.0f, 2.093f, 0.5f);
     glm::vec3 m_Rotation = glm::vec3(0.0f);
     glm::vec3 m_Scale = glm::vec3(1.0f);
     glm::mat4 m_ModelMatrix{};

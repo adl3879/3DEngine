@@ -20,9 +20,13 @@ void AppLayer::OnAttach()
 
     m_Framebuffer = std::make_shared<Engine::Framebuffer>(windowState.Width, windowState.Height);
 
-    m_Camera.SetFieldOfView(80.0f);
+    m_Camera.SetYaw(-90.0f);
+    m_Camera.SetPosition({0.0f, 5.8f, 10.0f});
 
-    m_Light->SetPosition(glm::vec3(0.3f, 0.6f, 1.0f));
+    m_Model->SetScale({1.5f, 1.5f, 1.5f});
+
+    m_Light->DirectionalLightProps.Direction = glm::vec3(0.023f, 0.116f, 0.34f);
+    m_Light->DirectionalLightProps.Ambient = 0.34f;
 }
 
 void AppLayer::OnDetach() {}
@@ -36,6 +40,8 @@ void AppLayer::OnUpdate(float deltaTime)
     }
     Engine::Renderer3D::BeginScene(m_Camera, *m_Light);
     Engine::Renderer3D::DrawModel(*m_Model, *m_ModelShader);
+    Engine::Renderer3D::DrawFloor(glm::vec3(0.0f, 0.0f, 0.0f));
+    Engine::Renderer3D::DrawSkybox();
     Engine::Renderer3D::EndScene();
 
     m_Framebuffer->Unbind();
@@ -104,7 +110,7 @@ void AppLayer::OnImGuiRender()
                 m_Camera.GetPosition().z);
     // control camera properties
     auto position = m_Camera.GetPosition();
-    if (ImGui::SliderFloat3("Position", (float *)&position, -10.0f, 10.0f))
+    if (ImGui::SliderFloat3("Position", (float *)&position, -10.0f, 20.0f))
         m_Camera.SetPosition(position);
     float yaw = m_Camera.GetYaw();
     if (ImGui::SliderFloat("Yaw", &yaw, -180.0f, 180.0f))
@@ -135,7 +141,7 @@ void AppLayer::OnImGuiRender()
     ImGui::Begin("Lighting");
     // select light type
     const char *lightTypes[] = {"Point", "Spot", "Directional", "None"};
-    static int lightType = 0;
+    static int lightType = 2;
     if (ImGui::BeginCombo("Light Type", lightTypes[lightType]))
     {
         for (int i = 0; i < 3; i++)

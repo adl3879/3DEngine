@@ -1,6 +1,7 @@
 #pragma once
 
 #include <stb_image.h>
+#include <vector>
 
 #include "Shader.h"
 
@@ -25,5 +26,18 @@ class Texture
     std::string m_Type;
     std::string m_Path;
     unsigned int m_Slot;
+};
+
+class Texture3D
+{
+  public:
+    Texture3D() = default;
+    Texture3D(const std::vector<std::string> &faces);
+
+    void Bind() const;
+    void Unbind() const;
+
+  private:
+    unsigned int m_Texture;
 };
 } // namespace Engine
