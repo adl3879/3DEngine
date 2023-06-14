@@ -20,16 +20,16 @@ Model::Model(const char *file) : m_File(file)
     RecalculateModelMatrix();
 }
 
-void Model::Draw(Shader &shader, Camera &camera)
+void Model::Draw(Shader &shader, Camera &camera, const glm::mat4 &transform)
 {
     for (unsigned int i = 0; i < m_Meshes.size(); i++)
-        m_Meshes[i].Mesh::Draw(shader, camera, m_ModelMatrix);
+        m_Meshes[i].Mesh::Draw(shader, camera, transform);
 }
 
-void Model::Draw(Shader &shader, Camera &camera, Light &light)
+void Model::Draw(Shader &shader, Camera &camera, Light &light, const glm::mat4 &transform)
 {
     for (unsigned int i = 0; i < m_Meshes.size(); i++)
-        m_Meshes[i].Mesh::Draw(shader, camera, light, m_ModelMatrix);
+        m_Meshes[i].Mesh::Draw(shader, camera, light, transform);
 }
 
 void Model::SetPosition(const glm::vec3 &position)

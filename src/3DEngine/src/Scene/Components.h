@@ -6,6 +6,9 @@
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/quaternion.hpp>
 
+#include "Camera.h"
+#include "Model.h"
+
 namespace Engine
 {
 
@@ -37,10 +40,31 @@ struct TransformComponent
 
 struct ModelComponent
 {
-    std::string ModelPath;
+    std::string Path;
+    Engine::Model Model{};
 
     ModelComponent() = default;
     ModelComponent(const ModelComponent &) = default;
-    ModelComponent(const std::string &modelPath) : ModelPath(modelPath) {}
+    ModelComponent(const std::string &modelPath) : Path(modelPath) { Model = Engine::Model(modelPath.c_str()); }
+};
+
+struct CameraComponent
+{
+    Engine::Camera Camera;
+    bool Primary = true;
+
+    CameraComponent() = default;
+    CameraComponent(const CameraComponent &) = default;
+    CameraComponent(const Engine::Camera &camera) : Camera(camera) {}
+};
+
+struct LightComponent
+{
+    Engine::Light Light{LightType::Directional};
+    LightType Type;
+
+    LightComponent() = default;
+    LightComponent(const LightComponent &) = default;
+    LightComponent(LightType type) : Type(type) { Light = Engine::Light(type); }
 };
 } // namespace Engine

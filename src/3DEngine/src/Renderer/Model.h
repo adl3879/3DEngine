@@ -3,6 +3,7 @@
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
+#include <glm/glm.hpp>
 #include <vector>
 
 #include "Shader.h"
@@ -20,8 +21,8 @@ class Model
     Model() = default;
     Model(const char *file);
 
-    void Draw(Shader &shader, Camera &camera);
-    void Draw(Shader &shader, Camera &camera, Light &light);
+    void Draw(Shader &shader, Camera &camera, const glm::mat4 &transform = glm::mat4(1.0f));
+    void Draw(Shader &shader, Camera &camera, Light &light, const glm::mat4 &transform = glm::mat4(1.0f));
 
     void SetPosition(const glm::vec3 &position);
     void SetRotation(const glm::vec3 &rotation);

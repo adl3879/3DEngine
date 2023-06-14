@@ -10,74 +10,58 @@ namespace Engine
 class Camera
 {
   public:
-    Camera(glm::vec3 position, glm::vec3 direction, glm::vec3 worldUp, float yaw, float pitch, float fieldOfView,
-           float aspectRatio, float nearPlane, float farPlane);
+    enum class ProjectionType
+    {
+        Perspective = 0,
+        Orthographic = 1
+    };
+
+  public:
     Camera();
     ~Camera() = default;
 
-    const glm::mat4 &GetProjectionViewMatrix() const { return m_ProjectionViewMatrix; }
+    ProjectionType GetProjectionType() const { return m_ProjectionType; }
+    void SetProjectionType(ProjectionType projectionType) { m_ProjectionType = projectionType; }
 
-    inline void SetPosition(const glm::vec3 &position)
-    {
-        m_Position = position;
-        RecalculateProjectionViewMatrix();
-    }
+    glm::mat4 GetProjectionViewMatrix();
+
+    inline void SetPosition(const glm::vec3 &position) { m_Position = position; }
     const glm::vec3 &GetPosition() const { return m_Position; }
 
-    inline void SetYaw(float yaw)
-    {
-        m_Yaw = yaw;
-        RecalculateProjectionViewMatrix();
-    }
+    inline void SetYaw(float yaw) { m_Yaw = yaw; }
     float GetYaw() const { return m_Yaw; }
 
-    inline void SetPitch(float pitch)
-    {
-        m_Pitch = pitch;
-        RecalculateProjectionViewMatrix();
-    }
+    inline void SetPitch(float pitch) { m_Pitch = pitch; }
     float GetPitch() const { return m_Pitch; }
 
-    inline void SetFieldOfView(float fieldOfView)
-    {
-        m_FieldOfView = fieldOfView;
-        RecalculateProjectionViewMatrix();
-    }
-    float GetFieldOfView() const { return m_FieldOfView; }
+    void SetPerspective(float verticalFov, float aspectRatio, float nearClip, float farClip);
+    void SetOrthographic(float size, float nearClip, float farClip);
 
-    inline void SetAspectRatio(float aspectRatio)
-    {
-        m_AspectRatio = aspectRatio;
-        RecalculateProjectionViewMatrix();
-    }
-    float GetAspectRatio() const { return m_AspectRatio; }
+    float GetPerspectiveVerticalFOV() const { return m_PerspectiveVerticalFOV; }
+    void SetPerspectiveVerticalFOV(float verticalFov) { m_PerspectiveVerticalFOV = verticalFov; }
+    float GetPerspectiveNearClip() const { return m_PerspectiveNearClip; }
+    void SetPerspectiveNearClip(float nearClip) { m_PerspectiveNearClip = nearClip; }
+    float GetPerspectiveFarClip() const { return m_PerspectiveFarClip; }
+    void SetPerspectiveFarClip(float farClip) { m_PerspectiveFarClip = farClip; }
 
-    inline void SetNearPlane(float nearPlane)
-    {
-        m_NearPlane = nearPlane;
-        RecalculateProjectionViewMatrix();
-    }
-    float GetNearPlane() const { return m_NearPlane; }
-
-    inline void SetFarPlane(float farPlane)
-    {
-        m_FarPlane = farPlane;
-        RecalculateProjectionViewMatrix();
-    }
-    float GetFarPlane() const { return m_FarPlane; }
-
-    const glm::vec3 &GetFront() const { return m_Front; }
-    const glm::vec3 &GetUp() const { return m_Up; }
-    const glm::vec3 &GetRight() const { return m_Right; }
-
-  private:
-    void RecalculateProjectionViewMatrix();
+    float GetOrthographicSize() const { return m_OrthographicSize; }
+    void SetOrthographicSize(float size) { m_OrthographicSize = size; }
+    float GetOrthographicNearClip() const { return m_OrthographicNearClip; }
+    void SetOrthographicNearClip(float nearClip) { m_OrthographicNearClip = nearClip; }
+    float GetOrthographicFarClip() const { return m_OrthographicFarClip; }
+    void SetOrthographicFarClip(float farClip) { m_OrthographicFarClip = farClip; }
 
   private:
     glm::vec3 m_Position, m_Front, m_Up, m_Right, m_WorldUp;
     float m_Yaw, m_Pitch;
     float m_FieldOfView, m_AspectRatio, m_NearPlane, m_FarPlane;
 
-    glm::mat4 m_ProjectionViewMatrix;
+    float m_PerspectiveVerticalFOV = glm::radians(280.0f);
+    float m_PerspectiveNearClip = 0.01f, m_PerspectiveFarClip = 100.0f;
+
+    float m_OrthographicSize = 1.0f;
+    float m_OrthographicNearClip = -1.0f, m_OrthographicFarClip = 1.0f;
+
+    ProjectionType m_ProjectionType = ProjectionType::Perspective;
 };
 } // namespace Engine

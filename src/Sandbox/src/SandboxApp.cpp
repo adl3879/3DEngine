@@ -6,7 +6,7 @@
 class Sandbox : public Engine::Application
 {
   public:
-    Sandbox() { PushLayer(new AppLayer()); }
+    Sandbox() { PushLayer(new Engine::AppLayer()); }
 
     ~Sandbox() = default;
 };

@@ -1,3 +1,5 @@
+#pragma once
+
 #include "InputKey.h"
 #include "InputManager.h"
 

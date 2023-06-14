@@ -1,10 +1,13 @@
 #pragma once
 
 #include "Engine.h"
+#include "SceneHierarchyPanel.h"
 
 #include <memory>
 
-class AppLayer : public Engine::Layer
+namespace Engine
+{
+class AppLayer : public Layer
 {
   public:
     AppLayer();
@@ -15,19 +18,27 @@ class AppLayer : public Engine::Layer
     virtual void OnUpdate(float deltaTime) override;
     virtual void OnImGuiRender() override;
 
-    virtual void OnKeyPressed(Engine::InputKey key, bool isRepeat) override;
+    virtual void OnKeyPressed(InputKey key, bool isRepeat) override;
     virtual void OnMouseMoved(double xPos, double yPos, double xOffset, double yOffset) override;
-    virtual void OnMouseButtonPressed(Engine::MouseButton button) override;
+    virtual void OnMouseButtonPressed(MouseButton button) override;
     virtual void OnWindowResize(int width, int height) override;
 
   private:
-    std::unique_ptr<Engine::Shader> m_ModelShader;
-    std::unique_ptr<Engine::Model> m_Model;
-    std::shared_ptr<Engine::Framebuffer> m_Framebuffer;
-    std::shared_ptr<Engine::Light> m_Light;
+    std::shared_ptr<Framebuffer> m_Framebuffer;
+    std::shared_ptr<Light> m_Light;
 
-    Engine::Camera m_Camera{};
-    Engine::CameraController m_CameraController{m_Camera, 0.05f, 2.5f};
+    Camera m_Camera{};
+    CameraController m_CameraController{m_Camera, 0.05f, 2.5f};
     glm::vec2 m_ViewportSize;
     bool m_ViewportFocused = false;
+
+    // scene
+    std::shared_ptr<Scene> m_Scene;
+    Entity m_ModelEntity;
+    Entity m_FloorEntity;
+    Entity m_CameraEntity;
+
+    // panels
+    SceneHierarchyPanel m_SceneHierarchyPanel;
 };
+}

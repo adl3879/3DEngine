@@ -24,8 +24,8 @@ struct Renderer3DData
     CameraClass Camera{};
     Light Light{LightType::Directional};
 
-    std::shared_ptr<Model> FloorModel;
-    std::shared_ptr<Shader> FloorShader;
+    // model
+    std::shared_ptr<Shader> ModelShader;
 
     // skybox
     std::shared_ptr<Shader> SkyboxShader;
@@ -36,12 +36,12 @@ static Renderer3DData s_Renderer3DData;
 
 void Renderer3D::Init()
 {
-    s_Renderer3DData.FloorShader =
-        std::make_shared<Engine::Shader>("/home/adeleye/Source/3DEngine/src/Sandbox/res/shaders/model.vert",
+    // model
+    s_Renderer3DData.ModelShader =
+        std::make_unique<Engine::Shader>("/home/adeleye/Source/3DEngine/src/Sandbox/res/shaders/model.vert",
                                          "/home/adeleye/Source/3DEngine/src/Sandbox/res/shaders/model.frag");
-    s_Renderer3DData.FloorModel =
-        std::make_shared<Engine::Model>("/home/adeleye/Source/3DEngine/src/Sandbox/res/models/boxTextured/scene.gltf");
 
+    // skybox
     std::vector<float> skyboxVertices = {
         -1.0f, 1.0f,  -1.0f, -1.0f, -1.0f, -1.0f, 1.0f,  -1.0f, -1.0f, 1.0f,  -1.0f, -1.0f, 1.0f,  1.0f,  -1.0f, -1.0f,
         1.0f,  -1.0f, -1.0f, -1.0f, 1.0f,  -1.0f, -1.0f, -1.0f, -1.0f, 1.0f,  -1.0f, -1.0f, 1.0f,  -1.0f, -1.0f, 1.0f,
@@ -82,28 +82,19 @@ void Renderer3D::EndScene()
     s_Renderer3DData.Light = Light{LightType::Directional};
 }
 
+void Renderer3D::DrawModel(Model &model)
+{
+    model.Draw(*s_Renderer3DData.ModelShader, s_Renderer3DData.Camera, s_Renderer3DData.Light);
+}
+
+void Renderer3D::DrawModel(Model &model, const glm::mat4 &transform)
+{
+    model.Draw(*s_Renderer3DData.ModelShader, s_Renderer3DData.Camera, s_Renderer3DData.Light, transform);
+}
+
 void Renderer3D::DrawModel(Model &model, Shader &shader)
 {
     model.Draw(shader, s_Renderer3DData.Camera, s_Renderer3DData.Light);
-}
-
-void Renderer3D::DrawModel(Model &model, Shader &shader, const glm::vec3 &position, const glm::vec3 &rotation,
-                           const glm::vec3 &scale)
-{
-    model.SetPosition(position);
-    model.SetRotation(rotation);
-    model.SetScale(scale);
-
-    model.Draw(shader, s_Renderer3DData.Camera, s_Renderer3DData.Light);
-}
-
-void Renderer3D::DrawFloor(const glm::vec3 &position, const glm::vec3 &rotation, const glm::vec3 &scale)
-{
-    s_Renderer3DData.FloorModel->SetPosition(position);
-    s_Renderer3DData.FloorModel->SetRotation(rotation);
-    s_Renderer3DData.FloorModel->SetScale({20.0f, 1.0f, 10.0f});
-
-    s_Renderer3DData.FloorModel->Draw(*s_Renderer3DData.FloorShader, s_Renderer3DData.Camera, s_Renderer3DData.Light);
 }
 
 void Renderer3D::DrawSkybox()

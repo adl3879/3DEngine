@@ -15,8 +15,7 @@
         "Parameteri",
         "Skybox"
     ],
-    "workbench.colorTheme": "Panda Syntax",
-    "editor.fontSize": 13.5,
+    "workbench.colorTheme": "Winter is Coming (Dark Blue)",
     "files.associations": {
     "functional": "cpp"
 },
