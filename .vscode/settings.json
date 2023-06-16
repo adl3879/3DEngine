@@ -3,6 +3,7 @@
     "editor.tabSize": 4,
     "editor.indentSize": 4,
     "editor.detectIndentation": false,
+  
     "cSpell.words": [
         "Assimp",
         "dockspace",
@@ -15,8 +16,25 @@
         "Parameteri",
         "Skybox"
     ],
-    "workbench.colorTheme": "Winter is Coming (Dark Blue)",
     "files.associations": {
-    "functional": "cpp"
-},
+        "functional": "cpp",
+    },
+    "workbench.colorCustomizations": {
+        "editor.background": "#0e1a25",
+        "sideBar.background": "#0e1a25",
+        "sideBarSectionHeader.background": "#0e1a25",
+        "activityBar.background": "#0e1a25",
+        "activityBar.border": "#363e45",
+        "statusBar.background": "#0e1a25",
+        "tab.activeBorder": "#007acc",
+        "tab.inactiveBackground": "#0e1a25",
+        "tab.hoverBackground": "#0e1a25",
+        "editorGroupHeader.tabsBackground": "#0e1a25",
+        "panel.background": "#0e1a25",
+        "dropdown.background": "#0e1a25",
+        "input.background": "#0e1a25",
+        "selection.background": "#0e1a25",
+        "editor.lineHighlightBackground": "#363e45",
+        "editorSuggestWidget.background": "#0e1a25",
+    }
 }
