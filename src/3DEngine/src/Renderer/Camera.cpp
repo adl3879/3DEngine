@@ -5,8 +5,8 @@
 namespace Engine
 {
 Camera::Camera()
-    : m_Position(glm::vec3(0.0f, 5.0f, 8.0f)), m_Front(0.0f, 0.0f, -1.0f), m_WorldUp(0.0f, 1.0f, 0.0f), m_Yaw(-90.0f),
-      m_Pitch(0.0f), m_FieldOfView(80.0f), m_AspectRatio(16.0f / 9.0f), m_NearPlane(0.1f), m_FarPlane(100.0f)
+    : m_Position(glm::vec3(0.0f, 0.0f, 4.0f)), m_Front(0.0f, 0.0f, -1.0f), m_WorldUp(0.0f, 1.0f, 0.0f),
+      m_FieldOfView(80.0f), m_AspectRatio(16.0f / 9.0f), m_NearPlane(0.1f), m_FarPlane(100.0f)
 {
 }
 
@@ -23,7 +23,7 @@ glm::mat4 Camera::GetProjectionViewMatrix()
         float orthoTop = m_OrthographicSize * 0.5f;
 
         glm::mat4 transform = glm::translate(glm::mat4(1.0f), m_Position) *
-                              glm::rotate(glm::mat4(1.0f), glm::radians(0.0f), glm::vec3(0, 0, 1));
+                              glm::rotate(glm::mat4(1.0f), glm::radians(m_Rotation.x), glm::vec3(0, 0, 1));
         auto viewMatrix = glm::inverse(transform);
 
         auto projection =
@@ -36,9 +36,10 @@ glm::mat4 Camera::GetProjectionViewMatrix()
     else if (m_ProjectionType == ProjectionType::Perspective)
     {
         glm::vec3 front;
-        front.x = cos(glm::radians(m_Yaw)) * cos(glm::radians(m_Pitch));
-        front.y = sin(glm::radians(m_Pitch));
-        front.z = sin(glm::radians(m_Yaw)) * cos(glm::radians(m_Pitch));
+        // calculate the front vector from the Camera's (updated) Euler Angles
+        front.x = cos(glm::radians(m_Rotation.x)) * cos(glm::radians(m_Rotation.y));
+        front.y = sin(glm::radians(m_Rotation.y));
+        front.z = sin(glm::radians(m_Rotation.x)) * cos(glm::radians(m_Rotation.y));
 
         m_Front = glm::normalize(front);
         m_Right = glm::normalize(glm::cross(m_Front, m_WorldUp));

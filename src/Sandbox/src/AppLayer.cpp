@@ -15,16 +15,13 @@ void AppLayer::OnAttach()
 
     m_Scene = std::make_shared<Scene>();
 
+    m_CameraEntity = m_Scene->CreateEntity("Camera");
+    m_CameraEntity.AddComponent<CameraComponent>();
+
     m_ModelEntity = m_Scene->CreateEntity("Suzanne");
     m_ModelEntity.AddComponent<ModelComponent>(
         "/home/adeleye/Source/3DEngine/src/Sandbox/res/models/suzanne/scene.gltf");
     m_ModelEntity.AddComponent<LightComponent>();
-    m_ModelEntity.AddComponent<CameraComponent>();
-
-    m_FloorEntity = m_Scene->CreateEntity("Floor");
-    m_FloorEntity.AddComponent<ModelComponent>(
-        "/home/adeleye/Source/3DEngine/src/Sandbox/res/models/boxTextured/scene.gltf");
-    m_FloorEntity.AddComponent<CameraComponent>();
 
     m_ModelEntity.GetComponent<LightComponent>().Light.DirectionalLightProps.Ambient = 0.34f;
     m_ModelEntity.GetComponent<LightComponent>().Light.DirectionalLightProps.Direction =
@@ -43,8 +40,7 @@ void AppLayer::OnUpdate(float deltaTime)
         RendererCommand::Clear();
     }
 
-    auto camera = m_FloorEntity.GetComponent<CameraComponent>().Camera;
-    Renderer3D::BeginScene(camera);
+    Renderer3D::BeginScene(*m_Scene->GetSceneCamera());
     Renderer3D::DrawSkybox();
     Renderer3D::EndScene();
 

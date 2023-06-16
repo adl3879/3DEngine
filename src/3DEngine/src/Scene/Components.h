@@ -40,10 +40,10 @@ struct TransformComponent
 
 struct ModelComponent
 {
-    std::string Path;
+    std::string Path = "/home/adeleye/Source/3DEngine/src/Sandbox/res/models/box/scene.gltf";
     Engine::Model Model{};
 
-    ModelComponent() = default;
+    ModelComponent() { Model = Engine::Model(Path.c_str()); }
     ModelComponent(const ModelComponent &) = default;
     ModelComponent(const std::string &modelPath) : Path(modelPath) { Model = Engine::Model(modelPath.c_str()); }
 };
@@ -51,7 +51,7 @@ struct ModelComponent
 struct CameraComponent
 {
     Engine::Camera Camera;
-    bool Primary = true;
+    bool Primary = false;
 
     CameraComponent() = default;
     CameraComponent(const CameraComponent &) = default;

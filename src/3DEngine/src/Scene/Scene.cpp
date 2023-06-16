@@ -7,6 +7,13 @@
 
 namespace Engine
 {
+Scene::Scene()
+{
+    m_EditorCamera = std::make_shared<Camera>();
+    m_EditorCamera->SetPerspective(45.0f, 1.778f, 0.1f, 100.0f);
+    m_SceneCamera = m_EditorCamera;
+}
+
 Scene::~Scene() {}
 
 Entity Scene::CreateEntity(const std::string &name)
@@ -19,6 +26,8 @@ Entity Scene::CreateEntity(const std::string &name)
 
     return entity;
 }
+
+void Scene::DestroyEntity(Entity entity) { m_Registry.destroy(entity); }
 
 void Scene::OnUpdate(float dt)
 {
@@ -38,14 +47,24 @@ void Scene::OnUpdate(float dt)
         auto view = m_Registry.view<TransformComponent, CameraComponent>();
         for (auto entity : view)
         {
-            auto &cameraComponent = view.get<CameraComponent>(entity);
-            mainCamera = &cameraComponent.Camera;
+            auto [cameraComponent, transformComponent] = view.get<CameraComponent, TransformComponent>(entity);
+            if (cameraComponent.Primary)
+            {
+                cameraComponent.Camera.SetPosition(transformComponent.Translation);
+                cameraComponent.Camera.SetRotation(transformComponent.Rotation);
+
+                mainCamera = &cameraComponent.Camera;
+            }
             cameraTransform = view.get<TransformComponent>(entity).GetTransform();
         }
     }
     if (mainCamera)
+        m_SceneCamera = std::make_shared<Camera>(*mainCamera);
+    else
+        m_SceneCamera = m_EditorCamera;
+
     {
-        Renderer3D::BeginScene(*mainCamera, *mainLight);
+        Renderer3D::BeginScene(*m_SceneCamera, *mainLight);
         {
             auto view = m_Registry.view<TransformComponent, ModelComponent>();
             for (auto entity : view)

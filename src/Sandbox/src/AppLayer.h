@@ -35,7 +35,6 @@ class AppLayer : public Layer
     // scene
     std::shared_ptr<Scene> m_Scene;
     Entity m_ModelEntity;
-    Entity m_FloorEntity;
     Entity m_CameraEntity;
 
     // panels
