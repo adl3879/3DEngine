@@ -13,3 +13,6 @@
 [submodule "src/3DEngine/vendor/assimp"]
 	path = src/3DEngine/vendor/assimp
 	url = https://github.com/assimp/assimp.git
+[submodule "src/3DEngine/vendor/LuaBridge"]
+	path = src/3DEngine/vendor/LuaBridge
+	url = git@github.com:vinniefalco/LuaBridge.git

@@ -6,8 +6,7 @@
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/quaternion.hpp>
 
-#include "Camera.h"
-#include "Model.h"
+#include "Engine.h"
 
 namespace Engine
 {
@@ -66,5 +65,42 @@ struct LightComponent
     LightComponent() = default;
     LightComponent(const LightComponent &) = default;
     LightComponent(LightType type) : Type(type) { Light = Engine::Light(type); }
+};
+
+struct NativeScriptComponent
+{
+    ScriptableEntity *Instance = nullptr;
+
+    ScriptableEntity *(*InstantiateScript)();
+    void (*DestroyScript)(NativeScriptComponent *);
+
+    template <typename T> void Bind()
+    {
+        InstantiateScript = []() { return static_cast<ScriptableEntity *>(new T()); };
+        DestroyScript = [](NativeScriptComponent *nsc)
+        {
+            delete nsc->Instance;
+            nsc->Instance = nullptr;
+        };
+    }
+};
+
+struct LuaScriptComponent
+{
+    LuaScriptableEntity *Instance = nullptr;
+
+    LuaScriptableEntity *(*InstantiateScript)(const std::string &, const std::string &);
+    void (*DestroyScript)(LuaScriptComponent *);
+
+    void Bind(const std::string &filepath, const std::string &name)
+    {
+        InstantiateScript = [](const std::string &filepath, const std::string &name)
+        { return new LuaScriptableEntity("/home/adeleye/Source/3DEngine/src/Sandbox/res/scripts/main.lua", "ww"); };
+        DestroyScript = [](LuaScriptComponent *lsc)
+        {
+            delete lsc->Instance;
+            lsc->Instance = nullptr;
+        };
+    }
 };
 } // namespace Engine

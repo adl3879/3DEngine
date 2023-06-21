@@ -9,6 +9,7 @@ add_subdirectory(vendor/glfw)
 add_subdirectory(vendor/glm)
 add_subdirectory(vendor/assimp)
 add_subdirectory(vendor/imgui)
+add_subdirectory(vendor/LuaBridge)
 
 file(GLOB_RECURSE SOURCES 
     "src/*.cpp"
@@ -28,6 +29,8 @@ include_directories(
     "vendor/assimp/include"
     "vendor/imgui"
     "vendor/entt/include"
+    "vendor/lua542/include"
+    "vendor/LuaBridge/Source"
 )
 
 set (INCLUDE_DIRS "")
@@ -37,19 +40,20 @@ foreach (_headerFile ${HEADERS})
 endforeach()
 list (REMOVE_DUPLICATES INCLUDE_DIRS)
 
-
 add_library(${PROJECT_NAME} STATIC ${SOURCES})
 
 target_include_directories(${PROJECT_NAME}
     PUBLIC
         ${INCLUDE_DIRS}
         glfw assimp imgui glm
+        LuaBridge
     PRIVATE
 )
 
 target_link_libraries(${PROJECT_NAME} 
     PUBLIC
         glm assimp imgui
+        "${CMAKE_CURRENT_SOURCE_DIR}/vendor/lua542/liblua54.a"
     PRIVATE 
         glfw
 )

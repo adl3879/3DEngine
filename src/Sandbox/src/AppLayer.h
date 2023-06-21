@@ -28,7 +28,6 @@ class AppLayer : public Layer
     std::shared_ptr<Light> m_Light;
 
     Camera m_Camera{};
-    CameraController m_CameraController{m_Camera, 0.05f, 2.5f};
     glm::vec2 m_ViewportSize;
     bool m_ViewportFocused = false;
 

@@ -28,6 +28,28 @@ void AppLayer::OnAttach()
         glm::vec3(0.023f, 0.116f, 0.34f);
 
     m_SceneHierarchyPanel.SetContext(m_Scene);
+
+    // class CameraController : public ScriptableEntity
+    // {
+    //   public:
+    //     void OnUpdate(float dt)
+    //     {
+    //         auto &transform = GetComponent<TransformComponent>();
+    //         float speed = 5.0;
+
+    //         if (InputManager::Instance().IsKeyPressed(InputKey::W))
+    //             transform.Translation.z -= speed * dt;
+    //         if (InputManager::Instance().IsKeyPressed(InputKey::S))
+    //             transform.Translation.z += speed * dt;
+    //         if (InputManager::Instance().IsKeyPressed(InputKey::A))
+    //             transform.Translation.x -= speed * dt;
+    //         if (InputManager::Instance().IsKeyPressed(InputKey::D))
+    //             transform.Translation.x += speed * dt;
+    //     }
+    // };
+    // m_CameraEntity.AddComponent<NativeScriptComponent>().Bind<CameraController>();
+    m_CameraEntity.AddComponent<LuaScriptComponent>().Bind(
+        "/home/adeleye/Source/3DEngine/src/Sandbox/res/scripts/main.lua", "Camera");
 }
 
 void AppLayer::OnDetach() {}

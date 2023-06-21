@@ -31,6 +31,33 @@ void Scene::DestroyEntity(Entity entity) { m_Registry.destroy(entity); }
 
 void Scene::OnUpdate(float dt)
 {
+    // update scripts
+    {
+        m_Registry.view<NativeScriptComponent>().each(
+            [=](auto entity, auto &nsc)
+            {
+                if (!nsc.Instance)
+                {
+                    nsc.Instance = nsc.InstantiateScript();
+                    nsc.Instance->m_Entity = Entity{entity, this};
+                    nsc.Instance->OnCreate();
+                }
+                nsc.Instance->OnUpdate(dt);
+            });
+
+        m_Registry.view<LuaScriptComponent>().each(
+            [=](auto entity, auto &lsc)
+            {
+                if (!lsc.Instance)
+                {
+                    lsc.Instance = lsc.InstantiateScript(lsc.Instance->m_Filepath, lsc.Instance->m_Name);
+                    lsc.Instance->m_Entity = Entity{entity, this};
+                    lsc.Instance->OnCreate();
+                }
+                lsc.Instance->OnUpdate(dt);
+            });
+    }
+
     Light *mainLight = nullptr;
     {
         auto view = m_Registry.view<TransformComponent, LightComponent>();

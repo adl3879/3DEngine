@@ -1,6 +1,5 @@
 #include "Shader.h"
 #include "Layer.h"
-#include "CameraController.h"
 #include "Model.h"
 #include "Camera.h"
 #include "Framebuffer.h"
@@ -10,3 +9,5 @@
 #include "Scene.h"
 #include "Entity.h"
 #include "Components.h"
+#include "ScriptableEntity.h"
+#include "LuaScriptEngine.h"
