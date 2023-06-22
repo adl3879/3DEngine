@@ -10,4 +10,4 @@
 #include "Entity.h"
 #include "Components.h"
 #include "ScriptableEntity.h"
-#include "LuaScriptEngine.h"
+#include "LuaScripting.h"

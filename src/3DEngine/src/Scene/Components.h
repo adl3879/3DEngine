@@ -7,6 +7,7 @@
 #include <glm/gtx/quaternion.hpp>
 
 #include "Engine.h"
+#include <iostream>
 
 namespace Engine
 {
@@ -89,13 +90,12 @@ struct LuaScriptComponent
 {
     LuaScriptableEntity *Instance = nullptr;
 
-    LuaScriptableEntity *(*InstantiateScript)(const std::string &, const std::string &);
+    std::function<LuaScriptableEntity *(void)> InstantiateScript;
     void (*DestroyScript)(LuaScriptComponent *);
 
     void Bind(const std::string &filepath, const std::string &name)
     {
-        InstantiateScript = [](const std::string &filepath, const std::string &name)
-        { return new LuaScriptableEntity("/home/adeleye/Source/3DEngine/src/Sandbox/res/scripts/main.lua", "ww"); };
+        InstantiateScript = [filepath, name]() { return new LuaScriptableEntity(filepath, name); };
         DestroyScript = [](LuaScriptComponent *lsc)
         {
             delete lsc->Instance;

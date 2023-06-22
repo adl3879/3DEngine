@@ -194,27 +194,22 @@ void InputManager::ProcessInput()
     }
 
     // propagate action events
-    for (auto &event : events)
-        PropagateActionEvent(event);
+    for (auto &event : events) PropagateActionEvent(event);
 
     // keyboard callbacks
     for (auto &callback : m_KeyboardCallbacks)
-        if (keyCallbackParams.Key != InputKey::None)
-            callback(keyCallbackParams.Key, keyCallbackParams.IsRepeat);
+        if (keyCallbackParams.Key != InputKey::None) callback(keyCallbackParams.Key, keyCallbackParams.IsRepeat);
 
     for (auto &callback : m_KeyReleasedCallbacks)
-        if (keyCallbackParams.Key != InputKey::None)
-            callback(keyCallbackParams.Key);
+        if (keyCallbackParams.Key != InputKey::None) callback(keyCallbackParams.Key);
 
     // mouse press callbacks
     for (auto &callback : m_MousePressedCallbacks)
-        if (mousePressCallbackParams.Button != MouseButton::None)
-            callback(mousePressCallbackParams.Button);
+        if (mousePressCallbackParams.Button != MouseButton::None) callback(mousePressCallbackParams.Button);
 
     // mouse release callbacks
     for (auto &callback : m_MouseReleasedCallbacks)
-        if (mousePressCallbackParams.Button == MouseButton::None)
-            callback(currentMouseState);
+        if (mousePressCallbackParams.Button == MouseButton::None) callback(currentMouseState);
 
     // mouse move callbacks
     for (auto &callback : m_MouseMovedCallbacks)
@@ -237,8 +232,7 @@ void InputManager::PropagateActionEvent(const ActionEvent &event)
 {
     for (auto it = m_ActionCallbacks[event.ActionName].rbegin(); it != m_ActionCallbacks[event.ActionName].rend(); ++it)
     {
-        if (it->Func(event.Source, event.SourceIndex, event.Value))
-            break;
+        if (it->Func(event.Source, event.SourceIndex, event.Value)) break;
     }
 }
 
@@ -274,8 +268,20 @@ bool InputManager::IsKeyPressed(InputKey key)
         if (device.Type == InputDeviceType::Keyboard)
         {
             auto state = device.KeyboardStateFunc(device.Index);
-            if (state.find(key) != state.end())
-                return state[key].Value > 0.0f;
+            if (state.find(key) != state.end()) return state[key].Value > 0.0f;
+        }
+    }
+    return false;
+}
+
+bool InputManager::IsMouseButtonPressed(MouseButton button)
+{
+    for (auto &device : m_Devices)
+    {
+        if (device.Type == InputDeviceType::Mouse)
+        {
+            auto state = device.MousePressStateFunc(device.Index);
+            if (state.find(button) != state.end()) return state[button].Value > 0.0f;
         }
     }
     return false;
@@ -285,8 +291,7 @@ MouseMovedPosition InputManager::GetMouseMovedPosition()
 {
     for (auto &device : m_Devices)
     {
-        if (device.Type == InputDeviceType::MouseMove)
-            return device.CursorStateFunc(device.Index);
+        if (device.Type == InputDeviceType::MouseMove) return device.CursorStateFunc(device.Index);
     }
     return MouseMovedPosition{};
 }
@@ -295,8 +300,7 @@ WindowState InputManager::GetWindowState()
 {
     for (auto &device : m_Devices)
     {
-        if (device.Type == InputDeviceType::Window)
-            return device.WindowStateFunc(device.Index);
+        if (device.Type == InputDeviceType::Window) return device.WindowStateFunc(device.Index);
     }
     return WindowState{};
 }

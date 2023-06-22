@@ -1,11 +1,5 @@
 #include "Application.h"
 
-// extern "C"
-// {
-// #include "lua.h"
-// #include "lualib.h"
-// #include "lauxlib.h"
-// }
 #include <iostream>
 
 extern Engine::Application *CreateApplication();

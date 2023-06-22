@@ -74,6 +74,7 @@ class InputManager
     void RegisterMouseScrollCallback(MouseScrollCallbackFunc callback);
 
     bool IsKeyPressed(InputKey key);
+    bool IsMouseButtonPressed(MouseButton button);
     MouseMovedPosition GetMouseMovedPosition();
     WindowState GetWindowState();
 

@@ -1,15 +1,16 @@
 #pragma once
 
 #include <string>
-#include <unordered_map>
-#include <any>
-#include <InputManager.h>
+#include "InputManager.h"
 
-struct lua_State;
+namespace sol
+{
+class state;
+} // namespace sol
 
 namespace Engine
 {
-struct CallFunctions
+struct LuaCallbackFunctions
 {
     std::function<void()> OnCreate = []() {};
     std::function<void()> OnDestroy = []() {};
@@ -24,23 +25,22 @@ struct CallFunctions
     std::function<void(double xOffset, double yOffset)> OnMouseScrolled = [](double xOffset, double yOffset) {};
 };
 
-class LuaScriptEngine
+class LuaScriptInstance
 {
   public:
-    static CallFunctions LoadScript(const std::string &filepath, const std::string &name);
-    static void UnloadScript(const std::string &name);
+    LuaScriptInstance(const std::string &filepath, const std::string &name);
+    ~LuaScriptInstance();
 
-    template <class ReturnType, class... Params>
-    static void RegisterFunction(const std::string &name, ReturnType (*fp)(Params...))
-    {
-        s_Functions[name] = fp;
-    }
+  public:
+    sol::state *GetLuaState() { return m_LuaState; }
+    const LuaCallbackFunctions &GetCallbackFunctions() const { return m_CallbackFunctions; }
 
-  private:
-    static bool CheckLua(int r);
+    void RegisterFunction1S(const std::string &name, std::function<void(const std::string &)> function);
 
   private:
-    static std::unordered_map<std::string, std::any> s_Functions;
+    sol::state *m_LuaState = nullptr;
+    LuaCallbackFunctions m_CallbackFunctions;
+
+    friend class LuaScriptableEntity;
 };
-
 } // namespace Engine

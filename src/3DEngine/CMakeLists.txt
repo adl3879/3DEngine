@@ -9,7 +9,6 @@ add_subdirectory(vendor/glfw)
 add_subdirectory(vendor/glm)
 add_subdirectory(vendor/assimp)
 add_subdirectory(vendor/imgui)
-add_subdirectory(vendor/LuaBridge)
 
 file(GLOB_RECURSE SOURCES 
     "src/*.cpp"
@@ -20,6 +19,7 @@ file(GLOB_RECURSE HEADERS
     "src/*.h"
     "vendor/stb_image/stb_image.h"
     "vendor/entt/include/entt.hpp"
+    "vendor/sol3/sol/sol.hpp"
 )
 
 include_directories(
@@ -30,7 +30,7 @@ include_directories(
     "vendor/imgui"
     "vendor/entt/include"
     "vendor/lua542/include"
-    "vendor/LuaBridge/Source"
+    "vendor/sol3"
 )
 
 set (INCLUDE_DIRS "")
@@ -46,7 +46,6 @@ target_include_directories(${PROJECT_NAME}
     PUBLIC
         ${INCLUDE_DIRS}
         glfw assimp imgui glm
-        LuaBridge
     PRIVATE
 )
 

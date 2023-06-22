@@ -50,11 +50,11 @@ void Scene::OnUpdate(float dt)
             {
                 if (!lsc.Instance)
                 {
-                    lsc.Instance = lsc.InstantiateScript(lsc.Instance->m_Filepath, lsc.Instance->m_Name);
+                    lsc.Instance = lsc.InstantiateScript();
                     lsc.Instance->m_Entity = Entity{entity, this};
-                    lsc.Instance->OnCreate();
+                    lsc.Instance->m_Script->GetCallbackFunctions().OnCreate();
                 }
-                lsc.Instance->OnUpdate(dt);
+                lsc.Instance->m_Script->GetCallbackFunctions().OnUpdate(dt);
             });
     }
 

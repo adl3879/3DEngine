@@ -8,3 +8,4 @@ AllowShortCaseLabelsOnASingleLine: true
 AllowShortEnumsOnASingleLine: true
 IndentCaseLabels: true
 AllowShortIfStatementsOnASingleLine : true
+AllowShortLoopsOnASingleLine : true
