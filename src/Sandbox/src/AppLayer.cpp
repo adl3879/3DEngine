@@ -29,25 +29,6 @@ void AppLayer::OnAttach()
 
     m_SceneHierarchyPanel.SetContext(m_Scene);
 
-    // class CameraController : public ScriptableEntity
-    // {
-    //   public:
-    //     void OnUpdate(float dt)
-    //     {
-    //         auto &transform = GetComponent<TransformComponent>();
-    //         float speed = 5.0;
-
-    //         if (InputManager::Instance().IsKeyPressed(InputKey::W))
-    //             transform.Translation.z -= speed * dt;
-    //         if (InputManager::Instance().IsKeyPressed(InputKey::S))
-    //             transform.Translation.z += speed * dt;
-    //         if (InputManager::Instance().IsKeyPressed(InputKey::A))
-    //             transform.Translation.x -= speed * dt;
-    //         if (InputManager::Instance().IsKeyPressed(InputKey::D))
-    //             transform.Translation.x += speed * dt;
-    //     }
-    // };
-    // m_CameraEntity.AddComponent<NativeScriptComponent>().Bind<CameraController>();
     m_CameraEntity.AddComponent<LuaScriptComponent>().Bind(
         "/home/adeleye/Source/3DEngine/src/Sandbox/res/scripts/main.lua", "Camera");
 }
@@ -98,17 +79,13 @@ void AppLayer::OnImGuiRender()
 
     // When using ImGuiDockNodeFlags_PassthruCentralNode, DockSpace() will render our background
     // and handle the pass-thru hole, so we ask Begin() to not render a background.
-    if (dockspace_flags & ImGuiDockNodeFlags_PassthruCentralNode)
-        window_flags |= ImGuiWindowFlags_NoBackground;
+    if (dockspace_flags & ImGuiDockNodeFlags_PassthruCentralNode) window_flags |= ImGuiWindowFlags_NoBackground;
 
-    if (!opt_padding)
-        ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
+    if (!opt_padding) ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
     ImGui::Begin("DockSpace Demo", &dockspace_open, window_flags);
-    if (!opt_padding)
-        ImGui::PopStyleVar();
+    if (!opt_padding) ImGui::PopStyleVar();
 
-    if (opt_fullscreen)
-        ImGui::PopStyleVar(2);
+    if (opt_fullscreen) ImGui::PopStyleVar(2);
 
     // Submit the DockSpace
     ImGuiIO &io = ImGui::GetIO();
@@ -122,8 +99,7 @@ void AppLayer::OnImGuiRender()
     {
         if (ImGui::BeginMenu("File"))
         {
-            if (ImGui::MenuItem("Exit", ""))
-                Application::Close();
+            if (ImGui::MenuItem("Exit", "")) Application::Close();
             ImGui::EndMenu();
         }
         ImGui::EndMenuBar();

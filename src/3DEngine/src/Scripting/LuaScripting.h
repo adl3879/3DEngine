@@ -1,7 +1,11 @@
 #pragma once
 
 #include <string>
+#include <iostream>
+#include <any>
+
 #include "InputManager.h"
+#include "Entity.h"
 
 namespace sol
 {
@@ -31,11 +35,10 @@ class LuaScriptInstance
     LuaScriptInstance(const std::string &filepath, const std::string &name);
     ~LuaScriptInstance();
 
-  public:
-    sol::state *GetLuaState() { return m_LuaState; }
-    const LuaCallbackFunctions &GetCallbackFunctions() const { return m_CallbackFunctions; }
+    void Setup();
 
-    void RegisterFunction1S(const std::string &name, std::function<void(const std::string &)> function);
+  public:
+    const LuaCallbackFunctions &GetCallbackFunctions() const { return m_CallbackFunctions; }
 
   private:
     sol::state *m_LuaState = nullptr;

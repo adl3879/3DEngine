@@ -52,6 +52,7 @@ void Scene::OnUpdate(float dt)
                 {
                     lsc.Instance = lsc.InstantiateScript();
                     lsc.Instance->m_Entity = Entity{entity, this};
+                    lsc.Instance->Setup();
                     lsc.Instance->m_Script->GetCallbackFunctions().OnCreate();
                 }
                 lsc.Instance->m_Script->GetCallbackFunctions().OnUpdate(dt);

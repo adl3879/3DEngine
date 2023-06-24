@@ -8,7 +8,6 @@
 
 namespace Engine
 {
-
 class ScriptableEntity
 {
   public:
@@ -31,6 +30,9 @@ class LuaScriptableEntity
   public:
     LuaScriptableEntity(const std::string &filepath, const std::string &name);
     virtual ~LuaScriptableEntity() = default;
+
+  private:
+    void Setup();
 
   private:
     std::shared_ptr<LuaScriptInstance> m_Script;

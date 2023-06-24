@@ -74,4 +74,8 @@
             }
         ]
     },
+    "Lua.diagnostics.globals": [
+        "entity",
+        "Input"
+    ],
 }

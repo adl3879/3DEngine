@@ -2,6 +2,7 @@
 
 #define SOL_ALL_SAFETIES_ON 1
 #include <sol/sol.hpp>
+#include "Components.h"
 
 #include <map>
 
@@ -37,7 +38,24 @@ LuaScriptInstance::LuaScriptInstance(const std::string &filepath, const std::str
 
     // open file
     m_LuaState->script_file(filepath);
+}
 
+static void AddInputFunctions(sol::state &luaState)
+{
+    auto inputTable = luaState.create_table("Input");
+
+    inputTable.set_function(
+        "IsKeyPressed",
+        [](std::string key) -> bool
+        { return InputManager::Instance().IsKeyPressed(static_cast<InputKey>(s_KeyboardInputMap[key])); });
+    inputTable.set_function(
+        "IsMouseButtonPressed",
+        [](std::string button) -> bool
+        { return InputManager::Instance().IsMouseButtonPressed(static_cast<MouseButton>(s_MouseButtonsMap[button])); });
+}
+
+void LuaScriptInstance::Setup()
+{
     // add functions to the Input namespace
     AddInputFunctions(*m_LuaState);
 
@@ -71,32 +89,9 @@ LuaScriptInstance::LuaScriptInstance(const std::string &filepath, const std::str
     m_CallbackFunctions.OnMouseScrolled = m_LuaState->get<sol::function>("OnMouseScrolled");
 }
 
-static void AddInputFunctions(sol::state &luaState)
-{
-    struct InputTable
-    {
-        bool IsKeyPressed(std::string key)
-        {
-            return InputManager::Instance().IsKeyPressed(static_cast<InputKey>(s_KeyboardInputMap[key]));
-        }
-        bool IsMouseButtonPressed(std::string button)
-        {
-            return InputManager::Instance().IsMouseButtonPressed(static_cast<MouseButton>(s_MouseButtonsMap[button]));
-        }
-    };
-    auto inputTable = luaState.create_table("Input");
-
-    inputTable.set_function("IsKeyPressed", &InputTable::IsKeyPressed, InputTable());
-    inputTable.set_function("IsMouseButtonPressed", &InputTable::IsMouseButtonPressed, InputTable());
-}
-
 LuaScriptInstance::~LuaScriptInstance()
 {
     delete m_LuaState;
     m_LuaState = nullptr;
-}
-void LuaScriptInstance::RegisterFunction1S(const std::string &name, std::function<void(const std::string &)> function)
-{
-    m_LuaState->set_function(name, function);
 }
 } // namespace Engine
