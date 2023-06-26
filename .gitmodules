@@ -16,3 +16,9 @@
 [submodule "src/3DEngine/vendor/LuaBridge"]
 	path = src/3DEngine/vendor/LuaBridge
 	url = git@github.com:vinniefalco/LuaBridge.git
+[submodule "src/3DEngine/vendor/spdlog"]
+	path = src/3DEngine/vendor/spdlog
+	url = git@github.com:gabime/spdlog.git
+[submodule "src/3DEngine/vendor/yaml-cpp"]
+	path = src/3DEngine/vendor/yaml-cpp
+	url = git@github.com:jbeder/yaml-cpp.git
