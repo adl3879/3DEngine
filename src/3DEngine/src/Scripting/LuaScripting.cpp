@@ -8,6 +8,7 @@
 
 namespace Engine
 {
+
 static void AddInputFunctions(sol::state &luaState);
 
 // clang-format off
@@ -30,7 +31,7 @@ static std::map<std::string, int> s_KeyboardInputMap = {
 static const char *s_MouseButtons[] = {"Left", "Right", "Middle"};
 static std::map<std::string, int> s_MouseButtonsMap = {{"Left", 0}, {"Right", 1}, {"Middle", 2}};
 
-LuaScriptInstance::LuaScriptInstance(const std::string &filepath, const std::string &name)
+LuaScriptInstance::LuaScriptInstance(const std::string &filepath, const std::string &name) : m_Filepath(filepath)
 {
     m_LuaState = new sol::state();
     m_LuaState->open_libraries(sol::lib::base, sol::lib::package, sol::lib::math, sol::lib::string, sol::lib::table,
@@ -38,26 +39,6 @@ LuaScriptInstance::LuaScriptInstance(const std::string &filepath, const std::str
 
     // open file
     m_LuaState->script_file(filepath);
-}
-
-static void AddInputFunctions(sol::state &luaState)
-{
-    auto inputTable = luaState.create_table("Input");
-
-    inputTable.set_function(
-        "IsKeyPressed",
-        [](std::string key) -> bool
-        { return InputManager::Instance().IsKeyPressed(static_cast<InputKey>(s_KeyboardInputMap[key])); });
-    inputTable.set_function(
-        "IsMouseButtonPressed",
-        [](std::string button) -> bool
-        { return InputManager::Instance().IsMouseButtonPressed(static_cast<MouseButton>(s_MouseButtonsMap[button])); });
-}
-
-void LuaScriptInstance::Setup()
-{
-    // add functions to the Input namespace
-    AddInputFunctions(*m_LuaState);
 
     // get callback functions
     m_CallbackFunctions.OnCreate = m_LuaState->get<sol::function>("OnCreate");
@@ -87,6 +68,37 @@ void LuaScriptInstance::Setup()
     };
     m_CallbackFunctions.OnMouseMoved = m_LuaState->get<sol::function>("OnMouseMoved");
     m_CallbackFunctions.OnMouseScrolled = m_LuaState->get<sol::function>("OnMouseScrolled");
+}
+
+static void AddInputFunctions(sol::state &luaState)
+{
+    auto inputTable = luaState.create_table("Input");
+
+    inputTable.set_function(
+        "IsKeyPressed",
+        [](std::string key) -> bool
+        { return InputManager::Instance().IsKeyPressed(static_cast<InputKey>(s_KeyboardInputMap[key])); });
+    inputTable.set_function(
+        "IsMouseButtonPressed",
+        [](std::string button) -> bool
+        { return InputManager::Instance().IsMouseButtonPressed(static_cast<MouseButton>(s_MouseButtonsMap[button])); });
+}
+
+void LuaScriptInstance::Setup()
+{
+    // add functions to the Input namespace
+    AddInputFunctions(*m_LuaState);
+}
+
+void LuaScriptInstance::ReloadScriptIfModified()
+{
+    fs::file_time_type currentWriteTime = fs::last_write_time(m_Filepath);
+    if (currentWriteTime != m_LastWriteTime)
+    {
+        m_LastWriteTime = currentWriteTime;
+        m_LuaState->script_file(m_Filepath);
+        Setup();
+    }
 }
 
 LuaScriptInstance::~LuaScriptInstance()

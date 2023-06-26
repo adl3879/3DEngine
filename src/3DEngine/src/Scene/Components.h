@@ -88,6 +88,7 @@ struct NativeScriptComponent
 
 struct LuaScriptComponent
 {
+    std::vector<std::string> Paths, Names;
     LuaScriptableEntity *Instance = nullptr;
 
     std::function<LuaScriptableEntity *(void)> InstantiateScript;
@@ -95,6 +96,8 @@ struct LuaScriptComponent
 
     void Bind(const std::string &filepath, const std::string &name)
     {
+        Paths.push_back(filepath);
+        Names.push_back(name);
         InstantiateScript = [filepath, name]() { return new LuaScriptableEntity(filepath, name); };
         DestroyScript = [](LuaScriptComponent *lsc)
         {

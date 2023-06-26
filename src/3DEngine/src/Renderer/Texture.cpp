@@ -4,6 +4,8 @@
 
 #include <stdexcept>
 
+#include "Log.h"
+
 namespace Engine
 {
 Texture::Texture(const std::string &src, const std::string &type, unsigned int slot)
@@ -84,7 +86,7 @@ Texture3D::Texture3D(const std::vector<std::string> &faces)
         else
         {
             stbi_image_free(image);
-            throw std::invalid_argument("Failed to load cubemap texture");
+            LOG_CORE_ERROR("Cubemap texture failed to load at path: {0}", faces[i]);
         }
     }
 

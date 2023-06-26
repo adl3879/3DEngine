@@ -1,0 +1,31 @@
+Scene: Untitled
+Entities:
+  - Entity: 123456789
+    TagComponent:
+      Tag: Suzanne
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    ModelComponent:
+      ModelPath: /home/adeleye/Source/3DEngine/src/Sandbox/res/models/suzanne/scene.gltf
+  - Entity: 123456789
+    TagComponent:
+      Tag: Camera
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    CameraComponent:
+      Camera:
+        ProjectionType: 0
+        PerspectiveFOV: 4.88692188
+        PerspectiveNear: 0.00999999978
+        PerspectiveFar: 100
+        OrthographicSize: 1
+        OrthographicNear: -1
+        OrthographicFar: 1
+      Primary: false
+    LuaScriptComponent:
+      Paths: [/home/adeleye/Source/3DEngine/src/Sandbox/res/scripts/main.lua]
+      Names: [Camera]

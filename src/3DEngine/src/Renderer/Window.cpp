@@ -4,6 +4,7 @@
 #include <GLFW/glfw3.h>
 
 #include "InputManager.h"
+#include "Log.h"
 #include <iostream>
 
 namespace Engine
@@ -64,7 +65,7 @@ void Window::Init(const WindowProps &props)
     m_Window = glfwCreateWindow(props.Width, props.Height, props.Title.c_str(), nullptr, nullptr);
     if (m_Window == nullptr)
     {
-        std::cout << "Failed to create a GLFW window" << std::endl;
+        LOG_CORE_ERROR("Failed to create a GLFW window");
         glfwTerminate();
     }
     glfwMakeContextCurrent(m_Window);
@@ -74,7 +75,7 @@ void Window::Init(const WindowProps &props)
 
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
     {
-        std::cout << "Failed to initialize GLAD" << std::endl;
+        LOG_CORE_ERROR("Failed to initialize GLAD");
     }
     // Setup OpenGL options
     glEnable(GL_DEPTH_TEST);

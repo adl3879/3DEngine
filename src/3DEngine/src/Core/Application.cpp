@@ -2,6 +2,8 @@
 
 #include "InputManager.h"
 #include "Renderer.h"
+#include "Log.h"
+#include "PlatformUtils.h"
 
 #include <functional>
 #include <iostream>
@@ -17,6 +19,7 @@ bool Application::m_IsRunning = true;
 
 Application::Application()
 {
+    Log::Init();
     m_Window = std::make_shared<Window>(WindowProps());
 
     SetupInputSystem();
@@ -25,6 +28,8 @@ Application::Application()
     PushOverlay(m_ImGuiLayer);
 
     Renderer3D::Init();
+
+    LOG_CORE_TRACE("Engine Initialized");
 }
 
 void Application::Run()
@@ -40,13 +45,11 @@ void Application::Run()
         m_DeltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
 
-        for (Layer *layer : m_LayerStack)
-            layer->OnUpdate(m_DeltaTime);
+        for (Layer *layer : m_LayerStack) layer->OnUpdate(m_DeltaTime);
 
         m_ImGuiLayer->Begin();
         {
-            for (Layer *layer : m_LayerStack)
-                layer->OnImGuiRender();
+            for (Layer *layer : m_LayerStack) layer->OnImGuiRender();
         }
         m_ImGuiLayer->End();
 

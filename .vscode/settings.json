@@ -7,6 +7,7 @@
         "Assimp",
         "dockspace",
         "entt",
+        "fout",
         "Framebuffer",
         "Gamepad",
         "GLFW",
@@ -15,10 +16,14 @@
         "OPENGL",
         "Parameteri",
         "Scriptable",
-        "Skybox"
+        "Skybox",
+        "spdlog",
+        "tinyfd"
     ],
     "files.associations": {
+        "*.scene": "yaml",
         "functional": "cpp",
+        "iostream": "cpp"
     },
     "workbench.colorTheme": "Visual Studio 2017 Dark - C++",
     "workbench.colorCustomizations": {

@@ -6,6 +6,8 @@
 #include <iostream>
 #include <sstream>
 
+#include "Log.h"
+
 namespace Engine
 {
 Shader::Shader(const std::string &vertexSourcePath, const std::string &fragmentSourcePath)
@@ -28,7 +30,7 @@ Shader::Shader(const std::string &vertexSourcePath, const std::string &fragmentS
     if (!success)
     {
         glGetShaderInfoLog(vertex, 512, NULL, infoLog);
-        std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
+        LOG_CORE_ERROR("SHADER::VERTEX::COMPILATION_FAILED: {0}", infoLog);
     }
 
     fragment = glCreateShader(GL_FRAGMENT_SHADER);
@@ -38,7 +40,7 @@ Shader::Shader(const std::string &vertexSourcePath, const std::string &fragmentS
     if (!success)
     {
         glGetShaderInfoLog(vertex, 512, NULL, infoLog);
-        std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
+        LOG_CORE_ERROR("SHADER::FRAGMENT::COMPILATION_FAILED: {0}", infoLog);
     }
 
     m_Program = glCreateProgram();
@@ -49,7 +51,7 @@ Shader::Shader(const std::string &vertexSourcePath, const std::string &fragmentS
     if (!success)
     {
         glGetProgramInfoLog(m_Program, 512, NULL, infoLog);
-        std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
+        LOG_CORE_ERROR("SHADER::PROGRAM::LINKING_FAILED: {0}", infoLog);
     }
 
     // can be deleted because they are already linked to program
@@ -71,7 +73,7 @@ std::string Shader::ParseShader(const std::string &sourcePath)
     }
     else
     {
-        std::cout << "Failed to open file" << std::endl;
+        LOG_CORE_ERROR("Unable to open shader file: {0}", sourcePath);
     }
     shaderFile.close();
     return shader;

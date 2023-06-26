@@ -7,6 +7,10 @@
 #include "InputManager.h"
 #include "Entity.h"
 
+#include <filesystem>
+
+namespace fs = std::filesystem;
+
 namespace sol
 {
 class state;
@@ -36,6 +40,7 @@ class LuaScriptInstance
     ~LuaScriptInstance();
 
     void Setup();
+    void ReloadScriptIfModified();
 
   public:
     const LuaCallbackFunctions &GetCallbackFunctions() const { return m_CallbackFunctions; }
@@ -45,5 +50,9 @@ class LuaScriptInstance
     LuaCallbackFunctions m_CallbackFunctions;
 
     friend class LuaScriptableEntity;
+
+  private:
+    std::string m_Filepath;
+    fs::file_time_type m_LastWriteTime;
 };
 } // namespace Engine

@@ -55,19 +55,20 @@ void Scene::OnUpdate(float dt)
                     lsc.Instance->Setup();
                     lsc.Instance->m_Script->GetCallbackFunctions().OnCreate();
                 }
+                lsc.Instance->m_Script->ReloadScriptIfModified();
                 lsc.Instance->m_Script->GetCallbackFunctions().OnUpdate(dt);
             });
     }
 
-    Light *mainLight = nullptr;
-    {
-        auto view = m_Registry.view<TransformComponent, LightComponent>();
-        for (auto entity : view)
-        {
-            auto &lightComponent = view.get<LightComponent>(entity);
-            mainLight = &lightComponent.Light;
-        }
-    }
+    // Light *mainLight = nullptr;
+    // {
+    //     auto view = m_Registry.view<TransformComponent, LightComponent>();
+    //     for (auto entity : view)
+    //     {
+    //         auto &lightComponent = view.get<LightComponent>(entity);
+    //         mainLight = &lightComponent.Light;
+    //     }
+    // }
 
     Camera *mainCamera = nullptr;
     glm::mat4 cameraTransform;
@@ -92,7 +93,7 @@ void Scene::OnUpdate(float dt)
         m_SceneCamera = m_EditorCamera;
 
     {
-        Renderer3D::BeginScene(*m_SceneCamera, *mainLight);
+        Renderer3D::BeginScene(*m_SceneCamera);
         {
             auto view = m_Registry.view<TransformComponent, ModelComponent>();
             for (auto entity : view)

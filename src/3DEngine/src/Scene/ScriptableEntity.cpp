@@ -62,7 +62,6 @@ void LuaScriptableEntity::Setup()
         else if (type == "Scale") transform.Scale = {x, y, z};
     });
 
-
     m_Script->Setup();
 }
 } // namespace Engine

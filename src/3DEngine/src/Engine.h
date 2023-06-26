@@ -11,3 +11,6 @@
 #include "Components.h"
 #include "ScriptableEntity.h"
 #include "LuaScripting.h"
+#include "Log.h"
+#include "SceneSerializer.h"
+#include "PlatformUtils.h"

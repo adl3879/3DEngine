@@ -14,23 +14,9 @@ void AppLayer::OnAttach()
     m_Framebuffer = std::make_shared<Engine::Framebuffer>(windowState.Width, windowState.Height);
 
     m_Scene = std::make_shared<Scene>();
-
-    m_CameraEntity = m_Scene->CreateEntity("Camera");
-    m_CameraEntity.AddComponent<CameraComponent>();
-
-    m_ModelEntity = m_Scene->CreateEntity("Suzanne");
-    m_ModelEntity.AddComponent<ModelComponent>(
-        "/home/adeleye/Source/3DEngine/src/Sandbox/res/models/suzanne/scene.gltf");
-    m_ModelEntity.AddComponent<LightComponent>();
-
-    m_ModelEntity.GetComponent<LightComponent>().Light.DirectionalLightProps.Ambient = 0.34f;
-    m_ModelEntity.GetComponent<LightComponent>().Light.DirectionalLightProps.Direction =
-        glm::vec3(0.023f, 0.116f, 0.34f);
-
     m_SceneHierarchyPanel.SetContext(m_Scene);
 
-    m_CameraEntity.AddComponent<LuaScriptComponent>().Bind(
-        "/home/adeleye/Source/3DEngine/src/Sandbox/res/scripts/main.lua", "Camera");
+    LOG_INFO("AppLayer Attached");
 }
 
 void AppLayer::OnDetach() {}
@@ -99,10 +85,48 @@ void AppLayer::OnImGuiRender()
     {
         if (ImGui::BeginMenu("File"))
         {
+            if (ImGui::MenuItem("New", "Ctrl+N"))
+            {
+                m_Scene = std::make_unique<Scene>();
+                m_SceneHierarchyPanel.SetContext(m_Scene);
+            }
+            if (ImGui::MenuItem("Open...", "Ctrl+O"))
+            {
+                Utils::FileDialogs::OpenFile(Utils::FileDialogParams{
+                    .DefaultPathAndFile = "/home/adeleye/Source/3DEngine/src/Sandbox/res/scenes/scene1.scene",
+                    .SingleFilterDescription = "Scene Files (*.scene)\0*.scene\0"});
+            }
+            if (ImGui::MenuItem("Save As...", "Ctrl+Shift+S"))
+            {
+                Utils::FileDialogs::SaveFile(Utils::FileDialogParams{
+                    .DefaultPathAndFile = "/home/adeleye/Source/3DEngine/src/Sandbox/res/scenes/scene1.scene",
+                    .SingleFilterDescription = "Scene Files (*.scene)\0*.scene\0"});
+            }
             if (ImGui::MenuItem("Exit", "")) Application::Close();
+
             ImGui::EndMenu();
         }
         ImGui::EndMenuBar();
+    }
+
+    if (Utils::FileDialogs::FileIsOpened())
+    {
+        // serialize the scene
+        LOG_INFO("Serializing Scene");
+        m_Scene = std::make_unique<Scene>();
+        m_SceneHierarchyPanel.SetContext(m_Scene);
+
+        SceneSerializer serializer(m_Scene);
+        serializer.Deserialize(Utils::FileDialogs::m_SelectedFile);
+    }
+
+    if (Utils::FileDialogs::FileIsSaved())
+    {
+        // serialize the scene
+        LOG_INFO("Serializing Scene");
+
+        SceneSerializer serializer(m_Scene);
+        serializer.Serialize(Utils::FileDialogs::m_SavedFile);
     }
 
     m_SceneHierarchyPanel.OnImGuiRender();

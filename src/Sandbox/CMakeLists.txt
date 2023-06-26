@@ -10,5 +10,5 @@ file(GLOB_RECURSE SOURCES
 add_executable(${PROJECT_NAME} ${SOURCES})
 
 include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/3DEngine/src "src/Panels")
-target_link_libraries(${PROJECT_NAME} 3DEngine)
-target_include_directories(${PROJECT_NAME} PRIVATE 3DEngine)
+target_link_libraries(${PROJECT_NAME}  3DEngine)
+target_include_directories(${PROJECT_NAME}  PRIVATE 3DEngine)
