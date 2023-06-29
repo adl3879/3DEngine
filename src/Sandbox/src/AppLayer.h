@@ -25,7 +25,6 @@ class AppLayer : public Layer
 
   private:
     std::shared_ptr<Framebuffer> m_Framebuffer;
-    std::shared_ptr<Light> m_Light;
 
     Camera m_Camera{};
     glm::vec2 m_ViewportSize;
@@ -33,8 +32,7 @@ class AppLayer : public Layer
 
     // scene
     std::shared_ptr<Scene> m_Scene;
-    Entity m_ModelEntity;
-    Entity m_CameraEntity;
+    Entity m_LightEntity;
 
     // panels
     SceneHierarchyPanel m_SceneHierarchyPanel;

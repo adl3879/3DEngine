@@ -9,6 +9,7 @@ out vec3 Color;
 out vec2 TexCoord;
 out vec3 Normal;
 out vec4 CurrentPos;
+out vec3 LocalPos;
 
 uniform mat4 model;
 uniform mat4 projectionViewMatrix;
@@ -21,4 +22,5 @@ void main()
 	Color = vec3(1.0f, 1.0f, 1.0f);
 	TexCoord = aTex;
 	Normal = aNormal;
+    LocalPos = aPos;
 }

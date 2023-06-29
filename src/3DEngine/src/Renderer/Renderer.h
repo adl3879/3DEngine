@@ -23,7 +23,6 @@ class Renderer3D
 
     static void BeginScene(); // default camera
     static void BeginScene(const Camera &camera);
-    static void BeginScene(const Camera &camera, const Light &light);
     static void EndScene();
 
     static void DrawModel(Model &model);

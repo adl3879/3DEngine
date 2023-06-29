@@ -60,16 +60,6 @@ void Scene::OnUpdate(float dt)
             });
     }
 
-    // Light *mainLight = nullptr;
-    // {
-    //     auto view = m_Registry.view<TransformComponent, LightComponent>();
-    //     for (auto entity : view)
-    //     {
-    //         auto &lightComponent = view.get<LightComponent>(entity);
-    //         mainLight = &lightComponent.Light;
-    //     }
-    // }
-
     Camera *mainCamera = nullptr;
     glm::mat4 cameraTransform;
     {

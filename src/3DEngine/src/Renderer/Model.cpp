@@ -4,12 +4,17 @@
 #include <iostream>
 #include <sstream>
 
+#include "PlatformUtils.h"
+#include "Log.h"
+
 namespace Engine
 {
 Model::Model(const char *file) : m_File(file)
 {
+    auto path = Utils::Path::GetAbsolute(file);
+
     Assimp::Importer importer;
-    m_Scene = importer.ReadFile(file, aiProcess_Triangulate | aiProcess_FlipUVs);
+    m_Scene = importer.ReadFile(path.c_str(), aiProcess_Triangulate | aiProcess_FlipUVs);
 
     if (!m_Scene || m_Scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !m_Scene->mRootNode)
     {
@@ -17,49 +22,11 @@ Model::Model(const char *file) : m_File(file)
         return;
     }
     LoadMesh();
-    RecalculateModelMatrix();
 }
 
 void Model::Draw(Shader &shader, Camera &camera, const glm::mat4 &transform)
 {
-    for (unsigned int i = 0; i < m_Meshes.size(); i++)
-        m_Meshes[i].Mesh::Draw(shader, camera, transform);
-}
-
-void Model::Draw(Shader &shader, Camera &camera, Light &light, const glm::mat4 &transform)
-{
-    for (unsigned int i = 0; i < m_Meshes.size(); i++)
-        m_Meshes[i].Mesh::Draw(shader, camera, light, transform);
-}
-
-void Model::SetPosition(const glm::vec3 &position)
-{
-    m_Position = position;
-    RecalculateModelMatrix();
-}
-
-void Model::SetRotation(const glm::vec3 &rotation)
-{
-    m_Rotation = rotation;
-    RecalculateModelMatrix();
-}
-
-void Model::SetScale(const glm::vec3 &scale)
-{
-    m_Scale = scale;
-    RecalculateModelMatrix();
-}
-
-void Model::RecalculateModelMatrix()
-{
-    auto transform = glm::mat4(1.0f);
-    transform = glm::translate(transform, m_Position);
-    transform = glm::rotate(transform, glm::radians(m_Rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
-    transform = glm::rotate(transform, glm::radians(m_Rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
-    transform = glm::rotate(transform, glm::radians(m_Rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
-    transform = glm::scale(transform, m_Scale);
-
-    m_ModelMatrix = transform;
+    for (unsigned int i = 0; i < m_Meshes.size(); i++) m_Meshes[i].Mesh::Draw(shader, camera, transform);
 }
 
 std::vector<unsigned int> Model::GetIndices(const aiMesh *mesh)
@@ -70,8 +37,7 @@ std::vector<unsigned int> Model::GetIndices(const aiMesh *mesh)
     {
         const aiFace &face = mesh->mFaces[j];
 
-        for (size_t k = 0; k < face.mNumIndices; ++k)
-            indices.push_back(face.mIndices[k]);
+        for (size_t k = 0; k < face.mNumIndices; ++k) indices.push_back(face.mIndices[k]);
     }
 
     return indices;
@@ -138,6 +104,28 @@ std::vector<Texture> Model::GetTextures()
     return textures;
 }
 
+Material Model::GetMaterial()
+{
+    Material mat;
+    for (size_t i = 0; i < m_Scene->mNumMaterials; ++i)
+    {
+        const aiMaterial *material = m_Scene->mMaterials[i];
+
+        aiColor3D ambientColor;
+        if (material->Get(AI_MATKEY_COLOR_AMBIENT, ambientColor) == AI_SUCCESS)
+            mat.AmbientColor = glm::vec3{ambientColor.r, ambientColor.g, ambientColor.b};
+
+        aiColor3D diffuseColor;
+        if (material->Get(AI_MATKEY_COLOR_DIFFUSE, diffuseColor) == AI_SUCCESS)
+            mat.DiffuseColor = glm::vec3{diffuseColor.r, diffuseColor.g, diffuseColor.b};
+
+        aiColor3D specularColor;
+        if (material->Get(AI_MATKEY_COLOR_SPECULAR, specularColor) == AI_SUCCESS)
+            mat.SpecularColor = glm::vec3{specularColor.r, specularColor.g, specularColor.b};
+    }
+    return mat;
+}
+
 std::vector<Vertex> Model::AssembleVertices(const aiMesh *mesh)
 {
     std::vector<Vertex> vertices;
@@ -166,6 +154,7 @@ void Model::LoadMesh()
         auto textures = GetTextures();
         auto vertices = AssembleVertices(mesh);
         auto indices = GetIndices(mesh);
+        auto material = GetMaterial();
 
         m_Meshes.push_back(Mesh{vertices, indices, textures});
     }

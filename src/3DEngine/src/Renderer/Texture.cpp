@@ -5,15 +5,20 @@
 #include <stdexcept>
 
 #include "Log.h"
+#include "PlatformUtils.h"
+
+namespace fs = std::filesystem;
 
 namespace Engine
 {
 Texture::Texture(const std::string &src, const std::string &type, unsigned int slot)
     : m_Texture(0), m_Type(type), m_Slot(slot), m_Path(src)
 {
+    auto path = Utils::Path::GetAbsolute(src);
+
     // load image
     int width, height, channels;
-    unsigned char *image = stbi_load(src.c_str(), &width, &height, &channels, 0);
+    unsigned char *image = stbi_load(path.c_str(), &width, &height, &channels, 0);
 
     // generate texture
     glGenTextures(1, &m_Texture);
@@ -76,7 +81,8 @@ Texture3D::Texture3D(const std::vector<std::string> &faces)
     int width, height, channels;
     for (unsigned int i = 0; i < faces.size(); i++)
     {
-        unsigned char *image = stbi_load(faces[i].c_str(), &width, &height, &channels, 0);
+        auto path = Utils::Path::GetAbsolute(faces[i]);
+        unsigned char *image = stbi_load(path.c_str(), &width, &height, &channels, 0);
         if (image)
         {
             glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE,

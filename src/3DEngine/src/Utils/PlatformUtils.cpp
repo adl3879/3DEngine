@@ -2,8 +2,11 @@
 
 #include "Log.h"
 #include <iostream>
+#include <filesystem>
 
 #include <tinyfiledialogs.h>
+
+namespace fs = std::filesystem;
 
 namespace Engine
 {
@@ -80,6 +83,21 @@ void FileDialogs::SaveFile(FileDialogParams params)
     Reset();
 
     m_Thread = std::thread(std::bind(saveFileDialogOperation, params));
+}
+std::string Path::GetAbsolute(const std::string &path)
+{
+    auto cwd = fs::current_path().string();
+    std::string buildSegment = "/build/";
+    std::size_t found = cwd.find(buildSegment);
+    std::string result = "";
+
+    if (found != std::string::npos)
+    {
+        // Remove the build segment and the trailing slash
+        result = cwd.substr(0, found) + cwd.substr(found + buildSegment.length() - 1);
+    }
+
+    return result + path;
 }
 } // namespace Utils
 } // namespace Engine

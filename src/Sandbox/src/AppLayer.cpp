@@ -2,6 +2,7 @@
 
 #include <imgui.h>
 #include <iostream>
+#include <filesystem>
 
 namespace Engine
 {
@@ -15,6 +16,9 @@ void AppLayer::OnAttach()
 
     m_Scene = std::make_shared<Scene>();
     m_SceneHierarchyPanel.SetContext(m_Scene);
+
+    SceneSerializer serializer(m_Scene);
+    serializer.Deserialize("/home/adeleye/Source/3DEngine/src/Sandbox/res/scenes/scene1.scene");
 
     LOG_INFO("AppLayer Attached");
 }

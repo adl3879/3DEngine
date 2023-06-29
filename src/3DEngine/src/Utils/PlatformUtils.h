@@ -38,5 +38,11 @@ class FileDialogs
   public:
     static std::string m_SelectedFile, m_SavedFile;
 };
+
+class Path
+{
+  public:
+    static std::string GetAbsolute(const std::string &path);
+};
 } // namespace Utils
 } // namespace Engine

@@ -8,7 +8,7 @@ Entities:
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
     ModelComponent:
-      ModelPath: /home/adeleye/Source/3DEngine/src/Sandbox/res/models/suzanne/scene.gltf
+      ModelPath: /res/models/suzanne/scene.gltf
   - Entity: 123456789
     TagComponent:
       Tag: Camera
@@ -27,5 +27,5 @@ Entities:
         OrthographicFar: 1
       Primary: false
     LuaScriptComponent:
-      Paths: [/home/adeleye/Source/3DEngine/src/Sandbox/res/scripts/main.lua]
+      Paths: [/res/scripts/main.lua]
       Names: [Camera]

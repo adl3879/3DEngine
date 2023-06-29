@@ -8,7 +8,7 @@ Entities:
       Rotation: [0, 0, 0]
       Scale: [1, -0.300000012, 1]
     ModelComponent:
-      ModelPath: /home/adeleye/Source/3DEngine/src/Sandbox/res/models/box/scene.gltf
+      ModelPath: /res/models/box/scene.gltf
   - Entity: 123456789
     TagComponent:
       Tag: Box2
@@ -17,7 +17,7 @@ Entities:
       Rotation: [0, 1, 0]
       Scale: [1, 2.9000001, 1]
     ModelComponent:
-      ModelPath: /home/adeleye/Source/3DEngine/src/Sandbox/res/models/box/scene.gltf
+      ModelPath: /res/models/box/scene.gltf
   - Entity: 123456789
     TagComponent:
       Tag: Box1
@@ -26,4 +26,4 @@ Entities:
       Rotation: [0, 1.20000005, 0]
       Scale: [1, 1, 1]
     ModelComponent:
-      ModelPath: /home/adeleye/Source/3DEngine/src/Sandbox/res/models/box/scene.gltf
+      ModelPath: /res/models/box/scene.gltf

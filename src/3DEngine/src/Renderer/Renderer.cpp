@@ -22,7 +22,6 @@ void RendererCommand::Clear() { glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BI
 struct Renderer3DData
 {
     CameraClass Camera{};
-    Light Light{LightType::Directional};
 
     // model
     std::shared_ptr<Shader> ModelShader;
@@ -38,8 +37,7 @@ void Renderer3D::Init()
 {
     // model
     s_Renderer3DData.ModelShader =
-        std::make_unique<Engine::Shader>("/home/adeleye/Source/3DEngine/src/Sandbox/res/shaders/model.vert",
-                                         "/home/adeleye/Source/3DEngine/src/Sandbox/res/shaders/model.frag");
+        std::make_unique<Engine::Shader>("/res/shaders/model.vert", "/res/shaders/lighting.frag");
 
     // skybox
     std::vector<float> skyboxVertices = {
@@ -52,17 +50,16 @@ void Renderer3D::Init()
         1.0f,  -1.0f, -1.0f, 1.0f,  -1.0f, -1.0f, -1.0f, -1.0f, 1.0f,  1.0f,  -1.0f, 1.0f};
     std::vector<unsigned int> skyboxIndices = {};
     Texture3D skyboxTexture({
-        "/home/adeleye/Source/3DEngine/src/Sandbox/res/textures/skybox/right.jpg",
-        "/home/adeleye/Source/3DEngine/src/Sandbox/res/textures/skybox/left.jpg",
-        "/home/adeleye/Source/3DEngine/src/Sandbox/res/textures/skybox/top.jpg",
-        "/home/adeleye/Source/3DEngine/src/Sandbox/res/textures/skybox/bottom.jpg",
-        "/home/adeleye/Source/3DEngine/src/Sandbox/res/textures/skybox/front.jpg",
-        "/home/adeleye/Source/3DEngine/src/Sandbox/res/textures/skybox/back.jpg",
+        "/res/textures/skybox/right.jpg",
+        "/res/textures/skybox/left.jpg",
+        "/res/textures/skybox/top.jpg",
+        "/res/textures/skybox/bottom.jpg",
+        "/res/textures/skybox/front.jpg",
+        "/res/textures/skybox/back.jpg",
     });
 
     s_Renderer3DData.SkyboxShader =
-        std::make_shared<Engine::Shader>("/home/adeleye/Source/3DEngine/src/Sandbox/res/shaders/cubeMap.vert",
-                                         "/home/adeleye/Source/3DEngine/src/Sandbox/res/shaders/cubeMap.frag");
+        std::make_shared<Engine::Shader>("/res/shaders/cubeMap.vert", "/res/shaders/cubeMap.frag");
     s_Renderer3DData.SkyboxMesh = std::make_shared<Mesh>(skyboxVertices, skyboxTexture);
 }
 
@@ -70,32 +67,16 @@ void Renderer3D::BeginScene() {}
 
 void Renderer3D::BeginScene(const Camera &camera) { s_Renderer3DData.Camera = camera; }
 
-void Renderer3D::BeginScene(const Camera &camera, const Light &light)
-{
-    BeginScene(camera);
-    s_Renderer3DData.Light = light;
-}
+void Renderer3D::EndScene() { s_Renderer3DData.Camera = Camera{}; }
 
-void Renderer3D::EndScene()
-{
-    s_Renderer3DData.Camera = Camera{};
-    s_Renderer3DData.Light = Light{LightType::Directional};
-}
-
-void Renderer3D::DrawModel(Model &model)
-{
-    model.Draw(*s_Renderer3DData.ModelShader, s_Renderer3DData.Camera, s_Renderer3DData.Light);
-}
+void Renderer3D::DrawModel(Model &model) { model.Draw(*s_Renderer3DData.ModelShader, s_Renderer3DData.Camera); }
 
 void Renderer3D::DrawModel(Model &model, const glm::mat4 &transform)
 {
-    model.Draw(*s_Renderer3DData.ModelShader, s_Renderer3DData.Camera, s_Renderer3DData.Light, transform);
+    model.Draw(*s_Renderer3DData.ModelShader, s_Renderer3DData.Camera, transform);
 }
 
-void Renderer3D::DrawModel(Model &model, Shader &shader)
-{
-    model.Draw(shader, s_Renderer3DData.Camera, s_Renderer3DData.Light);
-}
+void Renderer3D::DrawModel(Model &model, Shader &shader) { model.Draw(shader, s_Renderer3DData.Camera); }
 
 void Renderer3D::DrawSkybox()
 {

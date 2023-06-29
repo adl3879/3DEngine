@@ -58,16 +58,6 @@ struct CameraComponent
     CameraComponent(const Engine::Camera &camera) : Camera(camera) {}
 };
 
-struct LightComponent
-{
-    Engine::Light Light{LightType::Directional};
-    LightType Type;
-
-    LightComponent() = default;
-    LightComponent(const LightComponent &) = default;
-    LightComponent(LightType type) : Type(type) { Light = Engine::Light(type); }
-};
-
 struct NativeScriptComponent
 {
     ScriptableEntity *Instance = nullptr;
@@ -104,6 +94,51 @@ struct LuaScriptComponent
             delete lsc->Instance;
             lsc->Instance = nullptr;
         };
+    }
+};
+
+struct DirectionalLightComponent
+{
+    glm::vec3 Direction = {0.0f, 0.0f, 0.0f};
+    glm::vec3 Color = {1.0f, 1.0f, 1.0f};
+    float Intensity = 1.0f;
+
+    DirectionalLightComponent() = default;
+    DirectionalLightComponent(const DirectionalLightComponent &) = default;
+    DirectionalLightComponent(const glm::vec3 &direction, const glm::vec3 &color, float intensity)
+        : Direction(direction), Color(color), Intensity(intensity)
+    {
+    }
+};
+
+struct PointLightComponent
+{
+    glm::vec3 Position = {0.0f, 0.0f, 0.0f};
+    glm::vec3 Color = {1.0f, 1.0f, 1.0f};
+    float Intensity = 1.0f;
+
+    PointLightComponent() = default;
+    PointLightComponent(const PointLightComponent &) = default;
+    PointLightComponent(const glm::vec3 &position, const glm::vec3 &color, float intensity)
+        : Position(position), Color(color), Intensity(intensity)
+    {
+    }
+};
+
+struct SpotLightComponent
+{
+    glm::vec3 Position = {0.0f, 0.0f, 0.0f};
+    glm::vec3 Direction = {0.0f, 0.0f, 0.0f};
+    glm::vec3 Color = {1.0f, 1.0f, 1.0f};
+    float Intensity = 1.0f;
+    float Cutoff = 0.0f;
+
+    SpotLightComponent() = default;
+    SpotLightComponent(const SpotLightComponent &) = default;
+    SpotLightComponent(const glm::vec3 &position, const glm::vec3 &direction, const glm::vec3 &color, float intensity,
+                       float cutoff)
+        : Position(position), Direction(direction), Color(color), Intensity(intensity), Cutoff(cutoff)
+    {
     }
 };
 } // namespace Engine

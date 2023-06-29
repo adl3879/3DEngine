@@ -7,13 +7,17 @@
 #include <sstream>
 
 #include "Log.h"
+#include "PlatformUtils.h"
 
 namespace Engine
 {
 Shader::Shader(const std::string &vertexSourcePath, const std::string &fragmentSourcePath)
 {
-    auto vertexShader = ParseShader(vertexSourcePath);
-    auto fragmentShader = ParseShader(fragmentSourcePath);
+    auto vPath = Utils::Path::GetAbsolute(vertexSourcePath);
+    auto fPath = Utils::Path::GetAbsolute(fragmentSourcePath);
+
+    auto vertexShader = ParseShader(vPath);
+    auto fragmentShader = ParseShader(fPath);
     const GLchar *vs = vertexShader.c_str();
     const GLchar *fs = fragmentShader.c_str();
 

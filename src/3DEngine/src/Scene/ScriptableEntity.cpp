@@ -4,6 +4,7 @@
 
 #include <sol/sol.hpp>
 #include "Components.h"
+#include "PlatformUtils.h"
 
 namespace Engine
 {
@@ -12,7 +13,8 @@ namespace Engine
 LuaScriptableEntity::LuaScriptableEntity(const std::string &filepath, const std::string &name)
     : m_Filepath(filepath), m_Name(name)
 {
-    m_Script = std::make_shared<LuaScriptInstance>(filepath, name);
+    auto path = Utils::Path::GetAbsolute(filepath);
+    m_Script = std::make_shared<LuaScriptInstance>(path, name);
 
     // register callbacks
     const auto &callbackFuncs = m_Script->GetCallbackFunctions();
