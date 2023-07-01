@@ -76,15 +76,8 @@ void Mesh::Draw(Shader &shader, Camera &camera, const glm::mat4 &modelMatrix)
     shader.SetUniform3f("gMaterial.AmbientColor", m_Material.AmbientColor);
     shader.SetUniform3f("gMaterial.DiffuseColor", m_Material.DiffuseColor);
     shader.SetUniform3f("gMaterial.SpecularColor", m_Material.SpecularColor);
-    shader.SetUniform3f("gCameriaPos", camera.GetPosition());
+    shader.SetUniform3f("gCameraPos", camera.GetPosition());
 
-    auto dirLight = DirectionalLight();
-    dirLight.AmbientIntensity = 0.32f;
-    dirLight.Color = {1.0f, 0.8f, 1.0f};
-    dirLight.DiffuseIntensity = 0.8f;
-    dirLight.Direction = {1.0f, 0.0f, 0.0f};
-
-    Light::SetDirectionalLight(dirLight);
     Light::SetLightUniforms(shader);
 
     glDrawElements(GL_TRIANGLES, m_Indices.size(), GL_UNSIGNED_INT, 0);

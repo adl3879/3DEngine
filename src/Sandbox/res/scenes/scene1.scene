@@ -2,19 +2,19 @@ Scene: Untitled
 Entities:
   - Entity: 123456789
     TagComponent:
-      Tag: Suzanne
+      Tag: Floor
     TransformComponent:
-      Translation: [0, 0, 0]
+      Translation: [0, -1.5, -3.20000005]
       Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
+      Scale: [7.5, 0.300000012, 7.19999981]
     ModelComponent:
-      ModelPath: /res/models/suzanne/scene.gltf
+      ModelPath: /res/models/boxTextured/scene.gltf
   - Entity: 123456789
     TagComponent:
       Tag: Camera
     TransformComponent:
       Translation: [0, 0, 0]
-      Rotation: [0, 0, 0]
+      Rotation: [-90, 0, 0]
       Scale: [1, 1, 1]
     CameraComponent:
       Camera:
@@ -29,3 +29,12 @@ Entities:
     LuaScriptComponent:
       Paths: [/res/scripts/main.lua]
       Names: [Camera]
+  - Entity: 123456789
+    TagComponent:
+      Tag: Suzanne
+    TransformComponent:
+      Translation: [0, 0.699999988, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    ModelComponent:
+      ModelPath: /res/models/suzanne/scene.gltf

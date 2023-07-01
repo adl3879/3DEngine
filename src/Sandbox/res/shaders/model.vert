@@ -8,19 +8,17 @@ layout (location = 3) in vec2 aTex;
 out vec3 Color;
 out vec2 TexCoord;
 out vec3 Normal;
-out vec4 CurrentPos;
-out vec3 LocalPos;
+out vec3 CurrentPos;
 
 uniform mat4 model;
 uniform mat4 projectionViewMatrix;
 
 void main()
 {
-	CurrentPos = projectionViewMatrix * model * vec4(aPos, 1.0f);
-    gl_Position = CurrentPos;
+	CurrentPos = vec3(model * vec4(aPos, 1.0f));
+    gl_Position = projectionViewMatrix * vec4(CurrentPos, 1.0f);
 
-	Color = vec3(1.0f, 1.0f, 1.0f);
+	Color = aColor;
 	TexCoord = aTex;
 	Normal = aNormal;
-    LocalPos = aPos;
 }

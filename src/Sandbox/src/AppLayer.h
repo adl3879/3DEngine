@@ -33,6 +33,7 @@ class AppLayer : public Layer
     // scene
     std::shared_ptr<Scene> m_Scene;
     Entity m_LightEntity;
+    Entity m_LightEntity2;
 
     // panels
     SceneHierarchyPanel m_SceneHierarchyPanel;

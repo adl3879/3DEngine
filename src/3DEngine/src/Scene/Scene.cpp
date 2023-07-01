@@ -4,6 +4,7 @@
 #include "Components.h"
 #include "Camera.h"
 #include "Renderer.h"
+#include "Light.h"
 
 namespace Engine
 {
@@ -25,6 +26,18 @@ Entity Scene::CreateEntity(const std::string &name)
     entity.AddComponent<TransformComponent>();
 
     return entity;
+}
+
+Entity *Scene::GetEntity(const std::string &name)
+{
+    auto view = m_Registry.view<TagComponent>();
+    for (auto entity : view)
+    {
+        auto &tag = view.get<TagComponent>(entity);
+        auto entt = Entity{entity, this};
+        if (tag.Tag == name) return &entt;
+    }
+    return nullptr;
 }
 
 void Scene::DestroyEntity(Entity entity) { m_Registry.destroy(entity); }

@@ -29,7 +29,7 @@ void AppLayer::OnUpdate(float deltaTime)
 {
     {
         m_Framebuffer->Bind();
-        RendererCommand::SetClearColor({0.1f, 0.1f, 0.1f, 1.0f});
+        RendererCommand::SetClearColor({0.0f, 0.0f, 0.0f, 1.0f});
         RendererCommand::Clear();
     }
 
@@ -147,6 +147,8 @@ void AppLayer::OnImGuiRender()
     ImGui::Image((void *)(intptr_t)m_Framebuffer->GetColorAttachment(), ImVec2{m_ViewportSize.x, m_ViewportSize.y});
     ImGui::End();
     ImGui::PopStyleVar();
+
+    // ImGui::ShowDemoWindow();
 
     ImGui::End();
 }

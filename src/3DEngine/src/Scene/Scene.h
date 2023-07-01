@@ -18,6 +18,7 @@ class Scene
     virtual ~Scene();
 
     Entity CreateEntity(const std::string &name = std::string());
+    Entity *GetEntity(const std::string &name);
     void DestroyEntity(Entity entity);
 
     void OnUpdate(float dt);
