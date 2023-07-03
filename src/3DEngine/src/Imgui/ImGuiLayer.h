@@ -18,6 +18,9 @@ class ImGuiLayer : public Layer
     void End();
 
   private:
+    void SetDarkThemeColors();
+
+  private:
     float m_Time = 0.0f;
 };
 } // namespace Engine

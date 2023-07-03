@@ -239,8 +239,8 @@ void SceneHierarchyPanel::DrawComponents(Entity entity)
             auto &transform = entity.GetComponent<TransformComponent>();
             entityComponent.Light.Position = transform.Translation;
             ImGui::ColorEdit3("Color", glm::value_ptr(entityComponent.Light.Color));
-            ImGui::DragFloat("Ambient Intensity", &entityComponent.Light.AmbientIntensity, 0.001f, 0.0f, 1.0f);
-            ImGui::DragFloat("Diffuse Intensity", &entityComponent.Light.DiffuseIntensity, 0.001f, 0.0f, 1.0f);
+            ImGui::DragFloat("Ambience", &entityComponent.Light.AmbientIntensity, 0.001f, 0.0f, 1.0f);
+            ImGui::DragFloat("Diffusion", &entityComponent.Light.DiffuseIntensity, 0.001f, 0.0f, 1.0f);
             ImGui::DragFloat("Constant", &entityComponent.Light.Attenuation.Constant, 0.001f, 0.0f, 1.0f);
             ImGui::DragFloat("Linear", &entityComponent.Light.Attenuation.Linear, 0.001f, 0.0f, 1.0f);
             ImGui::DragFloat("Exponential", &entityComponent.Light.Attenuation.Exp, 0.001f, 0.0f, 1.0f);

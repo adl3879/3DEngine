@@ -14,3 +14,4 @@
 #include "Log.h"
 #include "SceneSerializer.h"
 #include "PlatformUtils.h"
+#include "Math.h"

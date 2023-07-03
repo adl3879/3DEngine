@@ -17,6 +17,7 @@ class AppLayer : public Layer
     virtual void OnDetach() override;
     virtual void OnUpdate(float deltaTime) override;
     virtual void OnImGuiRender() override;
+    virtual void OnKeyPressed(InputKey key, bool isRepeat) override;
 
   private:
     void NewScene();
@@ -39,5 +40,8 @@ class AppLayer : public Layer
 
     // panels
     SceneHierarchyPanel m_SceneHierarchyPanel;
+
+  private:
+    int m_GizmoType = -1;
 };
 } // namespace Engine

@@ -5,6 +5,7 @@
 #include <filesystem>
 
 #include <ImGuizmo.h>
+#include "Math.h"
 
 namespace Engine
 {
@@ -135,7 +136,8 @@ void AppLayer::OnImGuiRender()
 
     // Gizmos
     auto selectedEntity = m_SceneHierarchyPanel.GetSelectedEntity();
-    if (selectedEntity)
+
+    if (selectedEntity && m_GizmoType != -1)
     {
         ImGuizmo::SetOrthographic(false);
         ImGuizmo::SetDrawlist();
@@ -155,12 +157,24 @@ void AppLayer::OnImGuiRender()
             auto &tc = selectedEntity.GetComponent<TransformComponent>();
             glm::mat4 transform = tc.GetTransform();
 
-            ImGuizmo::Manipulate(glm::value_ptr(cameraView), glm::value_ptr(projection), ImGuizmo::OPERATION::TRANSLATE,
-                                 ImGuizmo::MODE::LOCAL, glm::value_ptr(transform));
+            // Snapping
+            bool snap = InputManager::Instance().IsKeyPressed(InputKey::LeftControl);
+            float snapValue = m_GizmoType == ImGuizmo::OPERATION::ROTATE ? 45.0f : 0.5f;
+            float snapValues[3] = {snapValue, snapValue, snapValue};
+
+            ImGuizmo::Manipulate(glm::value_ptr(cameraView), glm::value_ptr(projection),
+                                 (ImGuizmo::OPERATION)m_GizmoType, ImGuizmo::MODE::LOCAL, glm::value_ptr(transform),
+                                 nullptr, snap ? snapValues : nullptr);
 
             if (ImGuizmo::IsUsing())
             {
-                tc.Translation = transform[3];
+                glm::vec3 translation, rotation, scale;
+                Math::DecomposeTransform(transform, translation, rotation, scale);
+                glm::vec3 deltaRotation = rotation - tc.Rotation;
+
+                tc.Translation = translation;
+                tc.Rotation += deltaRotation;
+                tc.Scale = scale;
             }
         }
     }
@@ -171,6 +185,18 @@ void AppLayer::OnImGuiRender()
     // ImGui::ShowDemoWindow();
 
     ImGui::End();
+}
+
+void AppLayer::OnKeyPressed(InputKey key, bool isRepeat)
+{
+    switch (key)
+    {
+        case InputKey::Q: m_GizmoType = -1; break;
+        case InputKey::W: m_GizmoType = ImGuizmo::OPERATION::TRANSLATE; break;
+        case InputKey::E: m_GizmoType = ImGuizmo::OPERATION::ROTATE; break;
+        case InputKey::R: m_GizmoType = ImGuizmo::OPERATION::SCALE; break;
+        default: break;
+    }
 }
 
 void AppLayer::NewScene()
