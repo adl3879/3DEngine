@@ -42,12 +42,21 @@ struct TransformComponent
 
 struct ModelComponent
 {
-    std::string Path = "/res/models/boxTextured/scene.gltf";
+    std::string Path = "Null";
     Engine::Model Model{};
 
-    ModelComponent() { Model = Engine::Model(Path.c_str()); }
+    ModelComponent(const char *path = nullptr)
+    {
+        if (path != nullptr)
+        {
+            Path = path;
+            Model = Engine::Model(Path.c_str());
+        }
+    }
     ModelComponent(const ModelComponent &) = default;
     ModelComponent(const std::string &modelPath) : Path(modelPath) { Model = Engine::Model(modelPath.c_str()); }
+
+    void Create(const char *path) { Model = Engine::Model(path); }
 };
 
 struct CameraComponent

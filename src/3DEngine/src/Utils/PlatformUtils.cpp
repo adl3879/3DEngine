@@ -17,6 +17,7 @@ std::string FileDialogs::m_SelectedFile = "";
 std::string FileDialogs::m_SavedFile = "";
 bool FileDialogs::m_Done = false;
 bool FileDialogs::m_IsFileOpened = false;
+std::string FileDialogs::m_Id = "";
 
 static void openDialogOperation(FileDialogParams params)
 {
@@ -39,9 +40,9 @@ static void saveFileDialogOperation(FileDialogParams params)
     FileDialogs::SetDone(true);
 }
 
-void FileDialogs::OpenFile(FileDialogParams params)
+void FileDialogs::OpenFile(std::string id, FileDialogParams params)
 {
-    // reset all the variables
+    m_Id = id;
     Reset();
 
     m_Thread = std::thread(std::bind(openDialogOperation, params));
@@ -57,9 +58,9 @@ void FileDialogs::Reset()
     m_IsFileOpened = false;
 }
 
-bool FileDialogs::FileIsOpened()
+bool FileDialogs::FileIsOpened(std::string id)
 {
-    if (m_Done && m_SelectedFile != "" && !m_IsFileOpened)
+    if (m_Done && m_SelectedFile != "" && !m_IsFileOpened && id == m_Id)
     {
         m_IsFileOpened = true;
         return true;
@@ -67,9 +68,9 @@ bool FileDialogs::FileIsOpened()
     return false;
 }
 
-bool FileDialogs::FileIsSaved()
+bool FileDialogs::FileIsSaved(std::string id)
 {
-    if (m_Done && m_SavedFile != "" && !m_IsFileOpened)
+    if (m_Done && m_SavedFile != "" && !m_IsFileOpened && id == m_Id)
     {
         m_IsFileOpened = true;
         return true;
@@ -77,9 +78,9 @@ bool FileDialogs::FileIsSaved()
     return false;
 }
 
-void FileDialogs::SaveFile(FileDialogParams params)
+void FileDialogs::SaveFile(std::string id, FileDialogParams params)
 {
-    // reset all the variables
+    m_Id = id;
     Reset();
 
     m_Thread = std::thread(std::bind(saveFileDialogOperation, params));
@@ -98,6 +99,12 @@ std::string Path::GetAbsolute(const std::string &path)
     }
 
     return result + path;
+}
+std::string Path::GetRelative(std::string path)
+{
+    auto pos = path.find("/res");
+    if (pos != std::string::npos) path.erase(0, pos);
+    return path;
 }
 } // namespace Utils
 } // namespace Engine

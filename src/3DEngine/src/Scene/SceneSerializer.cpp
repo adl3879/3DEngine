@@ -97,6 +97,57 @@ static void SerializeEntity(YAML::Emitter &out, Entity entity)
         out << YAML::EndMap; // LuaScriptComponent
     }
 
+    if (entity.HasComponent<DirectionalLightComponent>())
+    {
+        out << YAML::Key << "DirectionalLightComponent";
+        out << YAML::BeginMap;
+
+        auto &dlc = entity.GetComponent<DirectionalLightComponent>();
+        out << YAML::Key << "Color" << YAML::Value << dlc.Light.Color;
+        out << YAML::Key << "AmbientIntensity" << YAML::Value << dlc.Light.AmbientIntensity;
+        out << YAML::Key << "DiffuseIntensity" << YAML::Value << dlc.Light.DiffuseIntensity;
+        out << YAML::Key << "Direction" << YAML::Value << dlc.Light.Direction;
+
+        out << YAML::EndMap;
+    }
+
+    if (entity.HasComponent<PointLightComponent>())
+    {
+        out << YAML::Key << "PointLightComponent";
+        out << YAML::BeginMap;
+
+        auto &plc = entity.GetComponent<PointLightComponent>();
+        out << YAML::Key << "Color" << YAML::Value << plc.Light.Color;
+        out << YAML::Key << "AmbientIntensity" << YAML::Value << plc.Light.AmbientIntensity;
+        out << YAML::Key << "DiffuseIntensity" << YAML::Value << plc.Light.DiffuseIntensity;
+        out << YAML::Key << "Position" << YAML::Value << plc.Light.Position;
+        out << YAML::Key << "Attenuation.Constant" << YAML::Value << plc.Light.Attenuation.Constant;
+        out << YAML::Key << "Attenuation.Exp" << YAML::Value << plc.Light.Attenuation.Exp;
+        out << YAML::Key << "Attenuation.Linear" << YAML::Value << plc.Light.Attenuation.Linear;
+
+        out << YAML::EndMap;
+    }
+
+    if (entity.HasComponent<SpotLightComponent>())
+    {
+        out << YAML::Key << "SpotLightComponent";
+        out << YAML::BeginMap;
+
+        auto &slc = entity.GetComponent<SpotLightComponent>();
+        out << YAML::Key << "Color" << YAML::Value << slc.Light.Color;
+        out << YAML::Key << "AmbientIntensity" << YAML::Value << slc.Light.AmbientIntensity;
+        out << YAML::Key << "DiffuseIntensity" << YAML::Value << slc.Light.DiffuseIntensity;
+        out << YAML::Key << "Position" << YAML::Value << slc.Light.Position;
+        out << YAML::Key << "Direction" << YAML::Value << slc.Light.Direction;
+        out << YAML::Key << "Attenuation.Constant" << YAML::Value << slc.Light.Attenuation.Constant;
+        out << YAML::Key << "Attenuation.Exp" << YAML::Value << slc.Light.Attenuation.Exp;
+        out << YAML::Key << "Attenuation.Linear" << YAML::Value << slc.Light.Attenuation.Linear;
+        out << YAML::Key << "Cutoff" << YAML::Value << slc.Light.Cutoff;
+        out << YAML::Key << "OuterCutoff" << YAML::Value << slc.Light.OuterCutoff;
+
+        out << YAML::EndMap;
+    }
+
     out << YAML::EndMap; // Entity
 }
 
@@ -162,7 +213,7 @@ bool SceneSerializer::Deserialize(const std::string &filepath)
             auto cameraComponent = entity["CameraComponent"];
             if (cameraComponent)
             {
-                auto cc = deserializedEntity.AddComponent<CameraComponent>();
+                auto &cc = deserializedEntity.AddComponent<CameraComponent>();
                 auto cameraProps = cameraComponent["Camera"];
                 cc.Camera.SetProjectionType((Camera::ProjectionType)cameraProps["ProjectionType"].as<int>());
 
@@ -194,6 +245,45 @@ bool SceneSerializer::Deserialize(const std::string &filepath)
                     auto name = luaScriptComponent["Names"][i].as<std::string>();
                     lsc.Bind(path, name);
                 }
+            }
+
+            auto directionalLightComponent = entity["DirectionalLightComponent"];
+            if (directionalLightComponent)
+            {
+                auto &dlc = deserializedEntity.AddComponent<DirectionalLightComponent>();
+                dlc.Light.Color = directionalLightComponent["Color"].as<glm::vec3>();
+                dlc.Light.AmbientIntensity = directionalLightComponent["AmbientIntensity"].as<float>();
+                dlc.Light.DiffuseIntensity = directionalLightComponent["DiffuseIntensity"].as<float>();
+                dlc.Light.Direction = directionalLightComponent["Direction"].as<glm::vec3>();
+            }
+
+            auto pointLightComponent = entity["PointLightComponent"];
+            if (pointLightComponent)
+            {
+                auto &plc = deserializedEntity.AddComponent<PointLightComponent>();
+                plc.Light.Color = pointLightComponent["Color"].as<glm::vec3>();
+                plc.Light.AmbientIntensity = pointLightComponent["AmbientIntensity"].as<float>();
+                plc.Light.DiffuseIntensity = pointLightComponent["DiffuseIntensity"].as<float>();
+                plc.Light.Position = pointLightComponent["Position"].as<glm::vec3>();
+                plc.Light.Attenuation.Constant = pointLightComponent["Attenuation.Constant"].as<float>();
+                plc.Light.Attenuation.Exp = pointLightComponent["Attenuation.Exp"].as<float>();
+                plc.Light.Attenuation.Linear = pointLightComponent["Attenuation.Linear"].as<float>();
+            }
+
+            auto spotLightComponent = entity["SpotLightComponent"];
+            if (spotLightComponent)
+            {
+                auto &slc = deserializedEntity.AddComponent<SpotLightComponent>();
+                slc.Light.Color = spotLightComponent["Color"].as<glm::vec3>();
+                slc.Light.AmbientIntensity = spotLightComponent["AmbientIntensity"].as<float>();
+                slc.Light.DiffuseIntensity = spotLightComponent["DiffuseIntensity"].as<float>();
+                slc.Light.Position = spotLightComponent["Position"].as<glm::vec3>();
+                slc.Light.Direction = spotLightComponent["Direction"].as<glm::vec3>();
+                slc.Light.Attenuation.Constant = spotLightComponent["Attenuation.Constant"].as<float>();
+                slc.Light.Attenuation.Exp = spotLightComponent["Attenuation.Exp"].as<float>();
+                slc.Light.Attenuation.Linear = spotLightComponent["Attenuation.Linear"].as<float>();
+                slc.Light.Cutoff = spotLightComponent["Cutoff"].as<float>();
+                slc.Light.OuterCutoff = spotLightComponent["OuterCutoff"].as<float>();
             }
         }
     }

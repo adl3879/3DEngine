@@ -182,13 +182,30 @@ void SceneHierarchyPanel::DrawComponents(Entity entity)
 
         //     ImGui::EndPopup();
         // }
+        auto &entityComponent = entity.GetComponent<ModelComponent>();
         if (ImGui::TreeNodeEx((void *)typeid(ModelComponent).hash_code(), ImGuiTreeNodeFlags_DefaultOpen, "Model"))
         {
-            auto &entityComponent = entity.GetComponent<ModelComponent>();
             char buffer[256];
             memset(buffer, 0, sizeof(buffer));
             strcpy(buffer, entityComponent.Path.c_str());
             if (ImGui::InputText("Path", buffer, sizeof(buffer))) entityComponent.Path = std::string(buffer);
+            ImGui::SameLine();
+            if (ImGui::Button("..."))
+            {
+                Utils::FileDialogs::OpenFile(
+                    "modelOpen",
+                    Utils::FileDialogParams{
+                        .DefaultPathAndFile = "/home/adeleye/Source/3DEngine/src/Sandbox/res/models/",
+                        .SingleFilterDescription = "Model (*.fbx;*.obj;*.dae;*.gltf)\0*.fbx;*.obj;*.dae;*.gltf\0",
+                    });
+            }
+
+            if (Utils::FileDialogs::FileIsOpened("modelOpen"))
+            {
+                auto path = Utils::Path::GetRelative(Utils::FileDialogs::m_SelectedFile);
+                entityComponent.Path = path;
+                entityComponent.Create(path.c_str());
+            }
 
             ImGui::TreePop();
         }
@@ -202,7 +219,7 @@ void SceneHierarchyPanel::DrawComponents(Entity entity)
                               "DirectionalLight"))
         {
             auto &entityComponent = entity.GetComponent<DirectionalLightComponent>();
-            ImGui::DragFloat3("Direction", glm::value_ptr(entityComponent.Light.Direction), 0.1f);
+            ImGui::DragFloat3("Direction", glm::value_ptr(entityComponent.Light.Direction), 1.0f, 0.0f, 1.0f);
             ImGui::ColorEdit3("Color", glm::value_ptr(entityComponent.Light.Color));
             ImGui::DragFloat("Ambient Intensity", &entityComponent.Light.AmbientIntensity, 0.001f, 0.0f, 1.0f);
             ImGui::DragFloat("Diffuse Intensity", &entityComponent.Light.DiffuseIntensity, 0.001f, 0.0f, 1.0f);
@@ -219,7 +236,8 @@ void SceneHierarchyPanel::DrawComponents(Entity entity)
                               "PointLight"))
         {
             auto &entityComponent = entity.GetComponent<PointLightComponent>();
-            ImGui::DragFloat3("Position", glm::value_ptr(entityComponent.Light.Position), 0.1f);
+            auto &transform = entity.GetComponent<TransformComponent>();
+            entityComponent.Light.Position = transform.Translation;
             ImGui::ColorEdit3("Color", glm::value_ptr(entityComponent.Light.Color));
             ImGui::DragFloat("Ambient Intensity", &entityComponent.Light.AmbientIntensity, 0.001f, 0.0f, 1.0f);
             ImGui::DragFloat("Diffuse Intensity", &entityComponent.Light.DiffuseIntensity, 0.001f, 0.0f, 1.0f);
@@ -239,9 +257,10 @@ void SceneHierarchyPanel::DrawComponents(Entity entity)
                               "SpotLight"))
         {
             auto &entityComponent = entity.GetComponent<SpotLightComponent>();
+            auto &transform = entity.GetComponent<TransformComponent>();
+            entityComponent.Light.Position = transform.Translation;
             ImGui::ColorEdit3("Color", glm::value_ptr(entityComponent.Light.Color));
             ImGui::DragFloat3("Direction", glm::value_ptr(entityComponent.Light.Direction), 0.1f);
-            ImGui::DragFloat3("Position", glm::value_ptr(entityComponent.Light.Position), 0.1f);
             ImGui::DragFloat("Ambient Intensity", &entityComponent.Light.AmbientIntensity, 0.001f, 0.0f, 1.0f);
             ImGui::DragFloat("Diffuse Intensity", &entityComponent.Light.DiffuseIntensity, 0.001f, 0.0f, 1.0f);
             ImGui::DragFloat("Constant", &entityComponent.Light.Attenuation.Constant, 0.001f, 0.0f, 1.0f);
@@ -257,7 +276,11 @@ void SceneHierarchyPanel::DrawComponents(Entity entity)
     }
 }
 
-void SceneHierarchyPanel::SetContext(const std::shared_ptr<Scene> &context) { m_Context = context; }
+void SceneHierarchyPanel::SetContext(const std::shared_ptr<Scene> &context)
+{
+    m_Context = context;
+    m_SelectionContext = {};
+}
 
 void SceneHierarchyPanel::OnImGuiRender()
 {
@@ -285,6 +308,16 @@ void SceneHierarchyPanel::OnImGuiRender()
         ImGui::Spacing();
         ImGui::Separator();
 
+        if (ImGui::MenuItem("Camera"))
+        {
+            auto entity = m_Context->CreateEntity("Camera");
+
+            entity.AddComponent<CameraComponent>();
+            m_SelectionContext = entity;
+        }
+        ImGui::Spacing();
+        ImGui::Separator();
+
         // check if scene does not contain directional light entity
         auto dLight = m_Context->GetEntity("Directional Light");
         if (dLight == nullptr)
@@ -306,7 +339,6 @@ void SceneHierarchyPanel::OnImGuiRender()
             auto entity = m_Context->CreateEntity("Point Light " + std::to_string(numPointLights));
 
             entity.AddComponent<PointLightComponent>();
-            entity.RemoveComponent<TransformComponent>();
             m_SelectionContext = entity;
         }
         if (ImGui::MenuItem("Spot Light"))
@@ -317,7 +349,16 @@ void SceneHierarchyPanel::OnImGuiRender()
             auto entity = m_Context->CreateEntity("Spot Light " + std::to_string(numPointLights));
 
             entity.AddComponent<SpotLightComponent>();
-            entity.RemoveComponent<TransformComponent>();
+            m_SelectionContext = entity;
+        }
+        ImGui::Spacing();
+        ImGui::Separator();
+
+        if (ImGui::MenuItem("Mesh"))
+        {
+            auto entity = m_Context->CreateEntity("Mesh");
+
+            entity.AddComponent<ModelComponent>();
             m_SelectionContext = entity;
         }
 
@@ -335,7 +376,6 @@ void SceneHierarchyPanel::OnImGuiRender()
     ImGui::End();
 
     ImGui::Begin("Properties");
-
     if (m_SelectionContext)
     {
         DrawComponents(m_SelectionContext);
@@ -344,23 +384,18 @@ void SceneHierarchyPanel::OnImGuiRender()
 
         if (ImGui::BeginPopup("AddComponent"))
         {
-            if (!m_SelectionContext.HasComponent<CameraComponent>())
-                if (ImGui::MenuItem("Camera"))
+            if (!m_SelectionContext.HasComponent<LuaScriptComponent>())
+            {
+                // TODO: create lua file and bind
+                if (ImGui::MenuItem("Lua Script"))
                 {
-                    m_SelectionContext.AddComponent<CameraComponent>();
+                    m_SelectionContext.AddComponent<LuaScriptComponent>();
                     ImGui::CloseCurrentPopup();
                 }
-
-            if (!m_SelectionContext.HasComponent<ModelComponent>())
-                if (ImGui::MenuItem("3D Mesh"))
-                {
-                    m_SelectionContext.AddComponent<ModelComponent>();
-                    ImGui::CloseCurrentPopup();
-                }
+            }
             ImGui::EndPopup();
         }
     }
-
     ImGui::End();
 
     ImGui::Begin("Editor Camera");

@@ -20,29 +20,30 @@ struct FileDialogParams
 class FileDialogs
 {
   public:
-    static void OpenFile(FileDialogParams params = FileDialogParams{.Title = "Open File"});
-    static void SaveFile(FileDialogParams params = FileDialogParams{.Title = "Save File"});
+    static void OpenFile(std::string id, FileDialogParams params = FileDialogParams{.Title = "Open File"});
+    static void SaveFile(std::string id, FileDialogParams params = FileDialogParams{.Title = "Save File"});
 
     static void SetSelectedFile(const std::string &file) { m_SelectedFile = file; }
     static void SetSavedFile(const std::string &file) { m_SavedFile = file; }
     static void SetDone(bool done) { m_Done = done; }
     static void Reset();
 
-    static bool FileIsOpened();
-    static bool FileIsSaved();
+    static bool FileIsOpened(std::string id);
+    static bool FileIsSaved(std::string id);
 
   public:
     static std::thread m_Thread;
     static bool m_Done, m_IsFileOpened;
 
   public:
-    static std::string m_SelectedFile, m_SavedFile;
+    static std::string m_SelectedFile, m_SavedFile, m_Id;
 };
 
 class Path
 {
   public:
     static std::string GetAbsolute(const std::string &path);
+    static std::string GetRelative(std::string path);
 };
 } // namespace Utils
 } // namespace Engine

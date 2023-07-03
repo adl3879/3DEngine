@@ -1,5 +1,8 @@
 #include "Camera.h"
 
+#define GLM_ENABLE_EXPERIMENTAL
+#include <glm/gtx/quaternion.hpp>
+
 #include "InputManager.h"
 
 namespace Engine
@@ -10,7 +13,7 @@ Camera::Camera()
 {
 }
 
-glm::mat4 Camera::GetProjectionViewMatrix()
+void Camera::RecalculateProjectionMatrix()
 {
     auto windowState = InputManager::Instance().GetWindowState();
     m_AspectRatio = static_cast<float>(windowState.Width) / static_cast<float>(windowState.Height);
@@ -25,13 +28,11 @@ glm::mat4 Camera::GetProjectionViewMatrix()
         glm::mat4 transform = glm::translate(glm::mat4(1.0f), m_Position) *
                               glm::rotate(glm::mat4(1.0f), glm::radians(m_Rotation.x), glm::vec3(0, 0, 1));
         auto viewMatrix = glm::inverse(transform);
+        m_ViewMatrix = viewMatrix;
 
         auto projection =
             glm::ortho(orthoLeft, orthoRight, orthoBottom, orthoTop, m_OrthographicNearClip, m_OrthographicFarClip);
-
-        glm::mat4 projectionViewMatrix = projection * viewMatrix;
-
-        return projectionViewMatrix;
+        m_ProjectionMatrix = projection;
     }
     else if (m_ProjectionType == ProjectionType::Perspective)
     {
@@ -45,14 +46,18 @@ glm::mat4 Camera::GetProjectionViewMatrix()
         m_Right = glm::normalize(glm::cross(m_Front, m_WorldUp));
         m_Up = glm::normalize(glm::cross(m_Right, m_Front));
         auto viewMatrix = glm::lookAt(m_Position, m_Position + m_Front, m_Up);
+        m_ViewMatrix = viewMatrix;
 
         auto projection =
             glm::perspective(m_PerspectiveVerticalFOV, m_AspectRatio, m_PerspectiveNearClip, m_PerspectiveFarClip);
-
-        glm::mat4 projectionViewMatrix = projection * viewMatrix;
-        return projectionViewMatrix;
+        m_ProjectionMatrix = projection;
     }
-    return glm::mat4{};
+}
+
+glm::mat4 Camera::GetProjectionViewMatrix()
+{
+    RecalculateProjectionMatrix();
+    return m_ProjectionMatrix * m_ViewMatrix;
 }
 
 void Camera::SetPerspective(float verticalFov, float aspectRatio, float nearClip, float farClip)

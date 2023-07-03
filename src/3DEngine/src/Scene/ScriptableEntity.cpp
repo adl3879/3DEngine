@@ -30,11 +30,11 @@ LuaScriptableEntity::LuaScriptableEntity(const std::string &filepath, const std:
 // clang-format off
 void LuaScriptableEntity::Setup()
 {
+    // TODO: redesign lua API
     auto s = static_cast<sol::state *>(m_Script->m_LuaState);
 
     s->set_function("printMessage", [](const std::string &s) { std::cout << s << rand() << std::endl; });
     auto &transform = m_Entity.GetComponent<TransformComponent>();
-
 
     struct Point3
     {

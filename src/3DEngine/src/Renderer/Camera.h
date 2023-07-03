@@ -23,8 +23,10 @@ class Camera
     ProjectionType GetProjectionType() const { return m_ProjectionType; }
     void SetProjectionType(ProjectionType projectionType) { m_ProjectionType = projectionType; }
 
+    void RecalculateProjectionMatrix();
     glm::mat4 GetProjectionViewMatrix();
 
+  public:
     inline void SetPosition(const glm::vec3 &position) { m_Position = position; }
     const glm::vec3 &GetPosition() const { return m_Position; }
 
@@ -34,6 +36,7 @@ class Camera
     void SetPerspective(float verticalFov, float aspectRatio, float nearClip, float farClip);
     void SetOrthographic(float size, float nearClip, float farClip);
 
+  public:
     float GetPerspectiveVerticalFOV() const { return m_PerspectiveVerticalFOV; }
     void SetPerspectiveVerticalFOV(float verticalFov) { m_PerspectiveVerticalFOV = verticalFov; }
     float GetPerspectiveNearClip() const { return m_PerspectiveNearClip; }
@@ -48,9 +51,24 @@ class Camera
     float GetOrthographicFarClip() const { return m_OrthographicFarClip; }
     void SetOrthographicFarClip(float farClip) { m_OrthographicFarClip = farClip; }
 
+  public:
+    const glm::mat4 &GetProjectionMatrix()
+    {
+        RecalculateProjectionMatrix();
+        return m_ProjectionMatrix;
+    }
+    const glm::mat4 &GetViewMatrix()
+    {
+        RecalculateProjectionMatrix();
+        return m_ViewMatrix;
+    }
+
   private:
     glm::vec3 m_Position, m_Front, m_Up, m_Right, m_WorldUp;
     glm::vec3 m_Rotation = glm::vec3(-90.0f, 0.0f, 0.0f);
+    glm::vec3 m_Scale = glm::vec3(1.0f, 1.0f, 1.0f);
+    glm::mat4 m_ProjectionMatrix = glm::mat4(1.0f);
+    glm::mat4 m_ViewMatrix = glm::mat4(1.0f);
     float m_FieldOfView, m_AspectRatio, m_NearPlane, m_FarPlane;
 
     float m_PerspectiveVerticalFOV = glm::radians(280.0f);

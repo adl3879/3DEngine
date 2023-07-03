@@ -1,8 +1,10 @@
 #include "ImGuiLayer.h"
 
+#define IMGUI_DEFINE_MATH_OPERATORS
 #include <imgui.h>
 #include <backends/imgui_impl_opengl3.h>
 #include <backends/imgui_impl_glfw.h>
+#include <ImGuizmo.h>
 
 #include "Application.h"
 
@@ -34,6 +36,7 @@ void ImGuiLayer::OnAttach()
     ImGui::StyleColorsDark();
     // ImGui::StyleColorsClassic();
 
+    ImGuizmo::SetGizmoSizeClipSpace(0.05f);
     auto nativeWindow = Application::GetWindow()->GetNativeWindow();
 
     // Setup Platform/Renderer bindings
@@ -53,6 +56,7 @@ void ImGuiLayer::Begin()
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
+    ImGuizmo::BeginFrame();
 }
 
 void ImGuiLayer::End()

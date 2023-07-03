@@ -17,6 +17,7 @@ file(GLOB_RECURSE SOURCES
     "vendor/glad/src/glad.c"
     "vendor/stb_image/stb_image.cpp"
     "vendor/tinyfiledialogs/tinyfiledialogs.c"
+    "vendor/ImGuizmo/ImGuizmo.cpp"
 )
 file(GLOB_RECURSE HEADERS
     "src/*.h"
@@ -24,6 +25,7 @@ file(GLOB_RECURSE HEADERS
     "vendor/entt/include/entt.hpp"
     "vendor/sol3/sol/sol.hpp"
     "vendor/tinyfiledialogs/tinyfiledialogs.h"
+    "vendor/ImGuizmo/ImGuizmo.h"
 )
 
 include_directories(
@@ -37,6 +39,7 @@ include_directories(
     "vendor/sol3"
     "vendor/yaml-cpp/include"
     "vendor/tinyfiledialogs"
+    "vendor/ImGuizmo"
 )
 
 set (INCLUDE_DIRS "")

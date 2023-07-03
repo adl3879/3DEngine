@@ -4,6 +4,8 @@
 #include <iostream>
 #include <filesystem>
 
+#include <ImGuizmo.h>
+
 namespace Engine
 {
 WindowState windowState = InputManager::Instance().GetWindowState();
@@ -17,9 +19,6 @@ void AppLayer::OnAttach()
     m_Scene = std::make_shared<Scene>();
     m_SceneHierarchyPanel.SetContext(m_Scene);
 
-    SceneSerializer serializer(m_Scene);
-    serializer.Deserialize("/home/adeleye/Source/3DEngine/src/Sandbox/res/scenes/scene1.scene");
-
     LOG_INFO("AppLayer Attached");
 }
 
@@ -27,6 +26,8 @@ void AppLayer::OnDetach() {}
 
 void AppLayer::OnUpdate(float deltaTime)
 {
+    HandleInput();
+
     {
         m_Framebuffer->Bind();
         RendererCommand::SetClearColor({0.0f, 0.0f, 0.0f, 1.0f});
@@ -89,23 +90,9 @@ void AppLayer::OnImGuiRender()
     {
         if (ImGui::BeginMenu("File"))
         {
-            if (ImGui::MenuItem("New", "Ctrl+N"))
-            {
-                m_Scene = std::make_unique<Scene>();
-                m_SceneHierarchyPanel.SetContext(m_Scene);
-            }
-            if (ImGui::MenuItem("Open...", "Ctrl+O"))
-            {
-                Utils::FileDialogs::OpenFile(Utils::FileDialogParams{
-                    .DefaultPathAndFile = "/home/adeleye/Source/3DEngine/src/Sandbox/res/scenes/scene1.scene",
-                    .SingleFilterDescription = "Scene Files (*.scene)\0*.scene\0"});
-            }
-            if (ImGui::MenuItem("Save As...", "Ctrl+Shift+S"))
-            {
-                Utils::FileDialogs::SaveFile(Utils::FileDialogParams{
-                    .DefaultPathAndFile = "/home/adeleye/Source/3DEngine/src/Sandbox/res/scenes/scene1.scene",
-                    .SingleFilterDescription = "Scene Files (*.scene)\0*.scene\0"});
-            }
+            if (ImGui::MenuItem("New", "Ctrl+N")) NewScene();
+            if (ImGui::MenuItem("Open...", "Ctrl+O")) OpenScene();
+            if (ImGui::MenuItem("Save As...", "Ctrl+Shift+S")) SaveSceneAs();
             if (ImGui::MenuItem("Exit", "")) Application::Close();
 
             ImGui::EndMenu();
@@ -113,7 +100,7 @@ void AppLayer::OnImGuiRender()
         ImGui::EndMenuBar();
     }
 
-    if (Utils::FileDialogs::FileIsOpened())
+    if (Utils::FileDialogs::FileIsOpened("openScene"))
     {
         // serialize the scene
         LOG_INFO("Serializing Scene");
@@ -124,7 +111,7 @@ void AppLayer::OnImGuiRender()
         serializer.Deserialize(Utils::FileDialogs::m_SelectedFile);
     }
 
-    if (Utils::FileDialogs::FileIsSaved())
+    if (Utils::FileDialogs::FileIsSaved("saveScene"))
     {
         // serialize the scene
         LOG_INFO("Serializing Scene");
@@ -145,6 +132,39 @@ void AppLayer::OnImGuiRender()
         m_ViewportSize = {viewportPanelSize.x, viewportPanelSize.y};
     }
     ImGui::Image((void *)(intptr_t)m_Framebuffer->GetColorAttachment(), ImVec2{m_ViewportSize.x, m_ViewportSize.y});
+
+    // Gizmos
+    auto selectedEntity = m_SceneHierarchyPanel.GetSelectedEntity();
+    if (selectedEntity)
+    {
+        ImGuizmo::SetOrthographic(false);
+        ImGuizmo::SetDrawlist();
+        ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, m_ViewportSize.x, m_ViewportSize.y);
+
+        auto editorCamera = m_Scene->GetEditorCamera();
+        glm::mat4 cameraView = editorCamera->GetViewMatrix();
+        auto projection = editorCamera->GetProjectionMatrix();
+
+        cameraView[0][1] = -cameraView[0][1];
+        cameraView[1][1] = -cameraView[1][1];
+        cameraView[2][1] = -cameraView[2][1];
+
+        // Entity Transform
+        if (selectedEntity.HasComponent<TransformComponent>())
+        {
+            auto &tc = selectedEntity.GetComponent<TransformComponent>();
+            glm::mat4 transform = tc.GetTransform();
+
+            ImGuizmo::Manipulate(glm::value_ptr(cameraView), glm::value_ptr(projection), ImGuizmo::OPERATION::TRANSLATE,
+                                 ImGuizmo::MODE::LOCAL, glm::value_ptr(transform));
+
+            if (ImGuizmo::IsUsing())
+            {
+                tc.Translation = transform[3];
+            }
+        }
+    }
+
     ImGui::End();
     ImGui::PopStyleVar();
 
@@ -153,11 +173,44 @@ void AppLayer::OnImGuiRender()
     ImGui::End();
 }
 
-void AppLayer::OnKeyPressed(InputKey key, bool isRepeat) {}
+void AppLayer::NewScene()
+{
+    m_Scene = std::make_unique<Scene>();
+    m_SceneHierarchyPanel.SetContext(m_Scene);
+}
 
-void AppLayer::OnMouseMoved(double xPos, double yPos, double xOffset, double yOffset) {}
+void AppLayer::OpenScene()
+{
+    Utils::FileDialogs::OpenFile(
+        "openScene", Utils::FileDialogParams{.DefaultPathAndFile =
+                                                 "/home/adeleye/Source/3DEngine/src/Sandbox/res/scenes/scene1.scene",
+                                             .SingleFilterDescription = "Scene Files (*.scene)\0*.scene\0"});
+}
 
-void AppLayer::OnMouseButtonPressed(MouseButton button) {}
+void AppLayer::SaveSceneAs()
+{
+    Utils::FileDialogs::SaveFile(
+        "saveScene", Utils::FileDialogParams{.DefaultPathAndFile =
+                                                 "/home/adeleye/Source/3DEngine/src/Sandbox/res/scenes/scene1.scene",
+                                             .SingleFilterDescription = "Scene Files (*.scene)\0*.scene\0"});
+}
 
-void AppLayer::OnWindowResize(int width, int height) {}
+bool AppLayer::HandleInput()
+{
+    // TODO: do sth about this
+    auto keyO = InputManager::Instance().IsKeyPressed(InputKey::O);
+    auto keyS = InputManager::Instance().IsKeyPressed(InputKey::S);
+    auto keyN = InputManager::Instance().IsKeyPressed(InputKey::N);
+
+    auto keyCtrl = InputManager::Instance().IsKeyPressed(InputKey::LeftControl) ||
+                   InputManager::Instance().IsKeyPressed(InputKey::RightControl);
+    auto keyShift = InputManager::Instance().IsKeyPressed(InputKey::LeftShift) ||
+                    InputManager::Instance().IsKeyPressed(InputKey::RightShift);
+
+    // if (keyCtrl && keyO) OpenScene();
+    // if (keyCtrl && keyShift && keyS) SaveSceneAs();
+    // if (keyCtrl && keyN) NewScene();
+
+    return true;
+}
 } // namespace Engine

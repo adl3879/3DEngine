@@ -2,13 +2,32 @@ Scene: Untitled
 Entities:
   - Entity: 123456789
     TagComponent:
-      Tag: Floor
+      Tag: Point Light 1
+    PointLightComponent:
+      Color: [1, 1, 1]
+      AmbientIntensity: 0
+      DiffuseIntensity: 0.100000001
+      Position: [0, 0, 0]
+      Attenuation.Constant: 1
+      Attenuation.Exp: 0.00300000003
+      Attenuation.Linear: 0.00200000009
+  - Entity: 123456789
+    TagComponent:
+      Tag: Directional Light
+    DirectionalLightComponent:
+      Color: [1, 1, 1]
+      AmbientIntensity: 0.370000005
+      DiffuseIntensity: 0.100000001
+      Direction: [1, 0, 0]
+  - Entity: 123456789
+    TagComponent:
+      Tag: Suzanne
     TransformComponent:
-      Translation: [0, -1.5, -3.20000005]
+      Translation: [0, 0.699999988, 0]
       Rotation: [0, 0, 0]
-      Scale: [7.5, 0.300000012, 7.19999981]
+      Scale: [1, 1, 1]
     ModelComponent:
-      ModelPath: /res/models/boxTextured/scene.gltf
+      ModelPath: /res/models/suzanne/scene.gltf
   - Entity: 123456789
     TagComponent:
       Tag: Camera
@@ -31,10 +50,10 @@ Entities:
       Names: [Camera]
   - Entity: 123456789
     TagComponent:
-      Tag: Suzanne
+      Tag: Floor
     TransformComponent:
-      Translation: [0, 0.699999988, 0]
+      Translation: [0, -1.5, -3.20000005]
       Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
+      Scale: [7.5, 0.300000012, 7.19999981]
     ModelComponent:
-      ModelPath: /res/models/suzanne/scene.gltf
+      ModelPath: /res/models/boxTextured/scene.gltf

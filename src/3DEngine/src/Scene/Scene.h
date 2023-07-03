@@ -25,6 +25,7 @@ class Scene
     void RenderScene();
 
     const std::shared_ptr<Camera> &GetSceneCamera() const { return m_SceneCamera; }
+    const std::shared_ptr<Camera> &GetEditorCamera() const { return m_EditorCamera; }
 
   private:
     entt::registry m_Registry;

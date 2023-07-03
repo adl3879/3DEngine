@@ -18,10 +18,12 @@ class AppLayer : public Layer
     virtual void OnUpdate(float deltaTime) override;
     virtual void OnImGuiRender() override;
 
-    virtual void OnKeyPressed(InputKey key, bool isRepeat) override;
-    virtual void OnMouseMoved(double xPos, double yPos, double xOffset, double yOffset) override;
-    virtual void OnMouseButtonPressed(MouseButton button) override;
-    virtual void OnWindowResize(int width, int height) override;
+  private:
+    void NewScene();
+    void OpenScene();
+    void SaveSceneAs();
+
+    bool HandleInput();
 
   private:
     std::shared_ptr<Framebuffer> m_Framebuffer;
@@ -38,4 +40,4 @@ class AppLayer : public Layer
     // panels
     SceneHierarchyPanel m_SceneHierarchyPanel;
 };
-}
+} // namespace Engine
