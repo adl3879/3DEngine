@@ -22,3 +22,6 @@
 [submodule "src/3DEngine/vendor/yaml-cpp"]
 	path = src/3DEngine/vendor/yaml-cpp
 	url = git@github.com:jbeder/yaml-cpp.git
+[submodule "src/3DEngine/vendor/ImGuizmo"]
+	path = src/3DEngine/vendor/ImGuizmo
+	url = git@github.com:TheCherno/ImGuizmo.git
