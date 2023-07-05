@@ -87,15 +87,15 @@ void Mesh::Draw(Shader &shader, Camera &camera, const glm::mat4 &modelMatrix)
 
 void Mesh::DrawCubeMap(Shader &shader, Camera &camera, const glm::mat4 &modelMatrix)
 {
-    camera.SetPosition({0.0f, 0.0f, 0.0f});
-
     glDepthFunc(GL_LEQUAL);
 
     shader.Use();
 
+    auto view = glm::mat4(glm::mat3(camera.GetViewMatrix()));
+
     shader.SetUniform1i("cubeMap", 0);
     shader.SetUniformMatrix4fv("model", modelMatrix);
-    shader.SetUniformMatrix4fv("projectionViewMatrix", camera.GetProjectionViewMatrix());
+    shader.SetUniformMatrix4fv("projectionViewMatrix", camera.GetProjectionMatrix() * view);
 
     m_VAO.Bind();
     m_Texture3D.Bind();

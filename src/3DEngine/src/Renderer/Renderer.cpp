@@ -8,20 +8,20 @@
 #include "Mesh.h"
 #include "Texture.h"
 #include "Camera.h"
+#include <any>
 
 #include <memory>
 
 namespace Engine
 {
-using CameraClass = Camera;
-
 void RendererCommand::SetClearColor(const glm::vec4 &color) { glClearColor(color.x, color.y, color.z, color.a); }
 
 void RendererCommand::Clear() { glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); }
 
 struct Renderer3DData
 {
-    CameraClass Camera{};
+    // camera
+    std::any Camera;
 
     // model
     std::shared_ptr<Shader> ModelShader;
@@ -29,7 +29,6 @@ struct Renderer3DData
     // skybox
     std::shared_ptr<Shader> SkyboxShader;
     std::shared_ptr<Mesh> SkyboxMesh;
-    CameraClass SkyboxCamera{};
 };
 static Renderer3DData s_Renderer3DData;
 
@@ -65,22 +64,35 @@ void Renderer3D::Init()
 
 void Renderer3D::BeginScene() {}
 
-void Renderer3D::BeginScene(const Camera &camera) { s_Renderer3DData.Camera = camera; }
+void Renderer3D::BeginScene(const PerspectiveCamera &camera) { s_Renderer3DData.Camera = camera; }
 
-void Renderer3D::EndScene() { s_Renderer3DData.Camera = Camera{}; }
+void Renderer3D::BeginScene(const EditorCamera &camera) { s_Renderer3DData.Camera = camera; }
 
-void Renderer3D::DrawModel(Model &model) { model.Draw(*s_Renderer3DData.ModelShader, s_Renderer3DData.Camera); }
+void Renderer3D::EndScene() {}
+
+void Renderer3D::DrawModel(Model &model)
+{
+    // TODO: add support for other camera types
+    auto camera = std::any_cast<EditorCamera>(s_Renderer3DData.Camera);
+    model.Draw(*s_Renderer3DData.ModelShader, camera);
+}
 
 void Renderer3D::DrawModel(Model &model, const glm::mat4 &transform)
 {
-    model.Draw(*s_Renderer3DData.ModelShader, s_Renderer3DData.Camera, transform);
+    auto camera = std::any_cast<EditorCamera>(s_Renderer3DData.Camera);
+    model.Draw(*s_Renderer3DData.ModelShader, camera, transform);
 }
 
-void Renderer3D::DrawModel(Model &model, Shader &shader) { model.Draw(shader, s_Renderer3DData.Camera); }
+void Renderer3D::DrawModel(Model &model, Shader &shader)
+{
+    auto camera = std::any_cast<EditorCamera>(s_Renderer3DData.Camera);
+    model.Draw(shader, camera);
+}
 
 void Renderer3D::DrawSkybox()
 {
-    //
-    s_Renderer3DData.SkyboxMesh->DrawCubeMap(*s_Renderer3DData.SkyboxShader, s_Renderer3DData.Camera);
+    auto camera = std::any_cast<EditorCamera>(s_Renderer3DData.Camera);
+
+    s_Renderer3DData.SkyboxMesh->DrawCubeMap(*s_Renderer3DData.SkyboxShader, camera);
 }
 } // namespace Engine

@@ -4,7 +4,8 @@
 #include <glm/glm.hpp>
 #include <memory>
 
-#include "Camera.h"
+#include "PerspectiveCamera.h"
+#include "EditorCamera.h"
 
 namespace Engine
 {
@@ -21,11 +22,10 @@ class Scene
     Entity *GetEntity(const std::string &name);
     void DestroyEntity(Entity entity);
 
-    void OnUpdate(float dt);
-    void RenderScene();
+    void OnUpdateRuntime(float dt);
+    void OnUpdateEditor(float dt, EditorCamera &camera);
 
-    const std::shared_ptr<Camera> &GetSceneCamera() const { return m_SceneCamera; }
-    const std::shared_ptr<Camera> &GetEditorCamera() const { return m_EditorCamera; }
+    const std::shared_ptr<PerspectiveCamera> &GetMainCamera() const { return m_MainCamera; }
 
   private:
     entt::registry m_Registry;
@@ -35,7 +35,6 @@ class Scene
     friend class SceneSerializer;
 
   private:
-    std::shared_ptr<Camera> m_EditorCamera = nullptr;
-    std::shared_ptr<Camera> m_SceneCamera = nullptr;
+    std::shared_ptr<PerspectiveCamera> m_MainCamera = nullptr;
 };
 } // namespace Engine

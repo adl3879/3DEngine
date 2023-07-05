@@ -132,12 +132,9 @@ void InputManager::ProcessInput()
             case InputDeviceType::MouseScroll:
             {
                 auto newState = device.MouseScrollStateFunc(device.Index);
-                auto currentScrollOffset = device.CurrentMouseScrollState;
-                if (newState.XOffset != currentScrollOffset.XOffset || newState.YOffset != currentScrollOffset.YOffset)
-                {
-                    mouseScrollCallbackParams = MouseScrollCallbackParams{.State = newState, .IsScrolled = true};
-                    device.CurrentMouseScrollState = newState;
-                }
+                auto &currentScrollOffset = device.CurrentMouseScrollState;
+                mouseScrollCallbackParams = MouseScrollCallbackParams{.State = newState, .IsScrolled = true};
+                device.CurrentMouseScrollState = newState;
             }
             break;
             case InputDeviceType::Window:

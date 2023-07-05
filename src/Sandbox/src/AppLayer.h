@@ -17,7 +17,9 @@ class AppLayer : public Layer
     virtual void OnDetach() override;
     virtual void OnUpdate(float deltaTime) override;
     virtual void OnImGuiRender() override;
+
     virtual void OnKeyPressed(InputKey key, bool isRepeat) override;
+    void OnMouseScrolled(double xOffset, double yOffset) override;
 
   private:
     void NewScene();
@@ -29,7 +31,8 @@ class AppLayer : public Layer
   private:
     std::shared_ptr<Framebuffer> m_Framebuffer;
 
-    Camera m_Camera{};
+    EditorCamera m_EditorCamera;
+
     glm::vec2 m_ViewportSize;
     bool m_ViewportFocused = false;
 

@@ -2,11 +2,33 @@ Scene: Untitled
 Entities:
   - Entity: 123456789
     TagComponent:
-      Tag: Box1
+      Tag: Point Light 1
     TransformComponent:
-      Translation: [0, 0, 0]
-      Rotation: [0, 3.9000001, 0]
+      Translation: [-0.0788778961, 0.97522527, -1.19212294]
+      Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
+    PointLightComponent:
+      Color: [0.812624335, 0.438986987, 0.849230766]
+      AmbientIntensity: 0
+      DiffuseIntensity: 0.411000013
+      Attenuation.Constant: 1
+      Attenuation.Exp: 0.00300000003
+      Attenuation.Linear: 0.00200000009
+  - Entity: 123456789
+    TagComponent:
+      Tag: Directional Light
+    DirectionalLightComponent:
+      Color: [1, 1, 1]
+      AmbientIntensity: 0.370000005
+      DiffuseIntensity: 0.100000001
+      Direction: [1, 0, 0]
+  - Entity: 123456789
+    TagComponent:
+      Tag: Box3
+    TransformComponent:
+      Translation: [3.1095345, 0.399460316, 0.0668757558]
+      Rotation: [-2.53639364, -0.658406258, -3.14159226]
+      Scale: [1.94838548, 0.300000131, 1.00000203]
     ModelComponent:
       ModelPath: /res/models/boxTextured/scene.gltf
   - Entity: 123456789
@@ -20,10 +42,26 @@ Entities:
       ModelPath: /res/models/boxTextured/scene.gltf
   - Entity: 123456789
     TagComponent:
-      Tag: Box3
+      Tag: Box1
     TransformComponent:
-      Translation: [2.5999999, 1.5, 0]
-      Rotation: [0, 3.79999995, 0]
-      Scale: [1, -0.300000012, 1]
+      Translation: [0, 0, 0]
+      Rotation: [0, 3.9000001, 0]
+      Scale: [1, 1, 1]
     ModelComponent:
       ModelPath: /res/models/boxTextured/scene.gltf
+  - Entity: 123456789
+    TagComponent:
+      Tag: Spot Light 1
+    TransformComponent:
+      Translation: [0.224027634, 2.16037488, -0.494965494]
+      Rotation: [2.42696047, 0.897138596, -0.563080668]
+      Scale: [1, 1.00000334, 1.00000286]
+    SpotLightComponent:
+      Color: [0.368094653, 0.830769241, 0.570247889]
+      AmbientIntensity: 0
+      DiffuseIntensity: 0.34799999
+      Attenuation.Constant: 1
+      Attenuation.Exp: 0.00300000003
+      Attenuation.Linear: 0.00200000009
+      Cutoff: 12.1000004
+      OuterCutoff: 20.7000008

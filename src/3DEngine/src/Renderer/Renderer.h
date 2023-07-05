@@ -2,7 +2,8 @@
 
 #include <glm/glm.hpp>
 
-#include "Camera.h"
+#include "PerspectiveCamera.h"
+#include "EditorCamera.h"
 #include "Light.h"
 #include "Model.h"
 
@@ -22,7 +23,9 @@ class Renderer3D
     static void Shutdown();
 
     static void BeginScene(); // default camera
-    static void BeginScene(const Camera &camera);
+    static void BeginScene(const PerspectiveCamera &camera);
+    static void BeginScene(const EditorCamera &camera);
+
     static void EndScene();
 
     static void DrawModel(Model &model);

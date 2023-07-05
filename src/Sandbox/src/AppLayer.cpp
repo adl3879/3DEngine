@@ -6,12 +6,13 @@
 
 #include <ImGuizmo.h>
 #include "Math.h"
+#include "Light.h"
 
 namespace Engine
 {
 WindowState windowState = InputManager::Instance().GetWindowState();
 
-AppLayer::AppLayer() {}
+AppLayer::AppLayer() : m_EditorCamera(-45.0f, 1.778f, 0.1f, 100.0f) {}
 
 void AppLayer::OnAttach()
 {
@@ -27,7 +28,9 @@ void AppLayer::OnDetach() {}
 
 void AppLayer::OnUpdate(float deltaTime)
 {
-    HandleInput();
+    // update
+    m_EditorCamera.OnUpdate(deltaTime);
+    m_EditorCamera.SetViewportSize(m_ViewportSize.x, m_ViewportSize.y);
 
     {
         m_Framebuffer->Bind();
@@ -35,11 +38,14 @@ void AppLayer::OnUpdate(float deltaTime)
         RendererCommand::Clear();
     }
 
-    Renderer3D::BeginScene(*m_Scene->GetSceneCamera());
-    Renderer3D::DrawSkybox();
-    Renderer3D::EndScene();
+    // if (m_Scene->GetMainCamera() != nullptr)
+    //     Renderer3D::BeginScene(*m_Scene->GetMainCamera());
+    // else
+    //     Renderer3D::BeginScene(m_EditorCamera);
+    // Renderer3D::DrawSkybox();
+    // Renderer3D::EndScene();
 
-    m_Scene->OnUpdate(deltaTime);
+    m_Scene->OnUpdateEditor(deltaTime, m_EditorCamera);
 
     m_Framebuffer->Unbind();
 }
@@ -143,9 +149,8 @@ void AppLayer::OnImGuiRender()
         ImGuizmo::SetDrawlist();
         ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, m_ViewportSize.x, m_ViewportSize.y);
 
-        auto editorCamera = m_Scene->GetEditorCamera();
-        glm::mat4 cameraView = editorCamera->GetViewMatrix();
-        auto projection = editorCamera->GetProjectionMatrix();
+        glm::mat4 cameraView = m_EditorCamera.GetViewMatrix();
+        auto projection = m_EditorCamera.GetProjectionMatrix();
 
         cameraView[0][1] = -cameraView[0][1];
         cameraView[1][1] = -cameraView[1][1];
@@ -199,14 +204,18 @@ void AppLayer::OnKeyPressed(InputKey key, bool isRepeat)
     }
 }
 
+void AppLayer::OnMouseScrolled(double xOffset, double yOffset) { m_EditorCamera.OnMouseScrolled(xOffset, yOffset); }
+
 void AppLayer::NewScene()
 {
+    Light::Reset();
     m_Scene = std::make_unique<Scene>();
     m_SceneHierarchyPanel.SetContext(m_Scene);
 }
 
 void AppLayer::OpenScene()
 {
+    Light::Reset();
     Utils::FileDialogs::OpenFile(
         "openScene", Utils::FileDialogParams{.DefaultPathAndFile =
                                                  "/home/adeleye/Source/3DEngine/src/Sandbox/res/scenes/scene1.scene",
@@ -219,24 +228,5 @@ void AppLayer::SaveSceneAs()
         "saveScene", Utils::FileDialogParams{.DefaultPathAndFile =
                                                  "/home/adeleye/Source/3DEngine/src/Sandbox/res/scenes/scene1.scene",
                                              .SingleFilterDescription = "Scene Files (*.scene)\0*.scene\0"});
-}
-
-bool AppLayer::HandleInput()
-{
-    // TODO: do sth about this
-    auto keyO = InputManager::Instance().IsKeyPressed(InputKey::O);
-    auto keyS = InputManager::Instance().IsKeyPressed(InputKey::S);
-    auto keyN = InputManager::Instance().IsKeyPressed(InputKey::N);
-
-    auto keyCtrl = InputManager::Instance().IsKeyPressed(InputKey::LeftControl) ||
-                   InputManager::Instance().IsKeyPressed(InputKey::RightControl);
-    auto keyShift = InputManager::Instance().IsKeyPressed(InputKey::LeftShift) ||
-                    InputManager::Instance().IsKeyPressed(InputKey::RightShift);
-
-    // if (keyCtrl && keyO) OpenScene();
-    // if (keyCtrl && keyShift && keyS) SaveSceneAs();
-    // if (keyCtrl && keyN) NewScene();
-
-    return true;
 }
 } // namespace Engine

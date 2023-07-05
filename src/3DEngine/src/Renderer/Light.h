@@ -55,6 +55,7 @@ class Light
     virtual ~Light() = default;
 
     static void SetLightUniforms(Shader &shader);
+    static void Reset();
 
     static void SetDirectionalLight(DirectionalLight *directionalLight);
     static void SetPointLight(const PointLight &pointLight, int index);

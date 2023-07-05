@@ -85,6 +85,13 @@ void Light::SetLightUniforms(Shader &shader)
     }
 }
 
+void Light::Reset()
+{
+    s_DirectionalLightProps = nullptr;
+    s_PointLightPropsMap.clear();
+    s_SpotLightPropsMap.clear();
+}
+
 void Light::SetDirectionalLight(DirectionalLight *directionalLight) { s_DirectionalLightProps = directionalLight; }
 
 void Light::SetPointLight(const PointLight &pointLight, int index) { s_PointLightPropsMap[index] = pointLight; }

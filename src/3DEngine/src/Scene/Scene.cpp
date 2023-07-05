@@ -2,18 +2,12 @@
 
 #include "Entity.h"
 #include "Components.h"
-#include "Camera.h"
 #include "Renderer.h"
 #include "Light.h"
 
 namespace Engine
 {
-Scene::Scene()
-{
-    m_EditorCamera = std::make_shared<Camera>();
-    m_EditorCamera->SetPerspective(45.0f, 1.778f, 0.1f, 100.0f);
-    m_SceneCamera = m_EditorCamera;
-}
+Scene::Scene() {}
 
 Scene::~Scene() {}
 
@@ -42,7 +36,7 @@ Entity *Scene::GetEntity(const std::string &name)
 
 void Scene::DestroyEntity(Entity entity) { m_Registry.destroy(entity); }
 
-void Scene::OnUpdate(float dt)
+void Scene::OnUpdateRuntime(float dt)
 {
     // update scripts
     {
@@ -73,7 +67,6 @@ void Scene::OnUpdate(float dt)
             });
     }
 
-    Camera *mainCamera = nullptr;
     glm::mat4 cameraTransform;
     {
         auto view = m_Registry.view<TransformComponent, CameraComponent>();
@@ -85,18 +78,13 @@ void Scene::OnUpdate(float dt)
                 cameraComponent.Camera.SetPosition(transformComponent.Translation);
                 cameraComponent.Camera.SetRotation(transformComponent.Rotation);
 
-                mainCamera = &cameraComponent.Camera;
+                m_MainCamera = std::make_shared<PerspectiveCamera>(cameraComponent.Camera);
             }
             cameraTransform = view.get<TransformComponent>(entity).GetTransform();
         }
     }
-    if (mainCamera)
-        m_SceneCamera = std::make_shared<Camera>(*mainCamera);
-    else
-        m_SceneCamera = m_EditorCamera;
-
     {
-        Renderer3D::BeginScene(*m_SceneCamera);
+        Renderer3D::BeginScene(*m_MainCamera);
         {
             auto view = m_Registry.view<TransformComponent, ModelComponent>();
             for (auto entity : view)
@@ -107,5 +95,19 @@ void Scene::OnUpdate(float dt)
         }
         Renderer3D::EndScene();
     }
+}
+
+void Scene::OnUpdateEditor(float dt, EditorCamera &camera)
+{
+    Renderer3D::BeginScene(camera);
+    {
+        auto view = m_Registry.view<TransformComponent, ModelComponent>();
+        for (auto entity : view)
+        {
+            auto [transform, model] = view.get<TransformComponent, ModelComponent>(entity);
+            Renderer3D::DrawModel(model.Model, transform.GetTransform());
+        }
+    }
+    Renderer3D::EndScene();
 }
 } // namespace Engine

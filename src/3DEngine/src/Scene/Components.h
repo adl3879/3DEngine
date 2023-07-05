@@ -61,12 +61,11 @@ struct ModelComponent
 
 struct CameraComponent
 {
-    Engine::Camera Camera;
+    Engine::PerspectiveCamera Camera;
     bool Primary = false;
 
     CameraComponent() = default;
     CameraComponent(const CameraComponent &) = default;
-    CameraComponent(const Engine::Camera &camera) : Camera(camera) {}
 };
 
 struct NativeScriptComponent
@@ -123,32 +122,18 @@ struct DirectionalLightComponent
 struct PointLightComponent
 {
     int Index = 0;
-    PointLight Light{};
+    PointLight Light;
 
-    PointLightComponent()
-    {
-        static int idx = 1;
-        idx++;
-
-        Index = idx;
-        Light::SetPointLight(Light, Index);
-    };
+    PointLightComponent() = default;
     PointLightComponent(const PointLightComponent &) = default;
 };
 
 struct SpotLightComponent
 {
     int Index = 0;
-    SpotLight Light{};
+    SpotLight Light;
 
-    SpotLightComponent()
-    {
-        static int idx = 1;
-        idx++;
-
-        Index = idx;
-        Light::SetSpotLight(Light, Index);
-    }
+    SpotLightComponent() = default;
     SpotLightComponent(const SpotLightComponent &) = default;
 };
 } // namespace Engine

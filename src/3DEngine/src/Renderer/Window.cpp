@@ -48,6 +48,10 @@ void Window::OnUpdate()
     // Define the viewport dimensions
     auto windowState = InputManager::Instance().GetWindowState();
     glViewport(0, 0, windowState.Width, windowState.Height);
+
+    // reset mouse scroll state
+    m_Input.UpdateMouseScrollState(0.0f, 0.0f);
+
     glfwPollEvents();
 
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);

@@ -105,27 +105,6 @@ void SceneHierarchyPanel::DrawComponents(Entity entity)
             auto &cameraComponent = entity.GetComponent<CameraComponent>();
             auto &camera = cameraComponent.Camera;
 
-            const char *projectionTypeStrings[] = {"Perspective", "Orthographic"};
-            const char *currentProjectionTypeString =
-                projectionTypeStrings[(int)cameraComponent.Camera.GetProjectionType()];
-            if (ImGui::BeginCombo("Projection", currentProjectionTypeString))
-            {
-                for (int i = 0; i < 2; i++)
-                {
-                    bool isSelected = currentProjectionTypeString == projectionTypeStrings[i];
-                    if (ImGui::Selectable(projectionTypeStrings[i], isSelected))
-                    {
-                        currentProjectionTypeString = projectionTypeStrings[i];
-                        cameraComponent.Camera.SetProjectionType((Camera::ProjectionType)i);
-                    }
-
-                    if (isSelected) ImGui::SetItemDefaultFocus();
-                }
-                ImGui::EndCombo();
-            }
-
-            ImGui::Separator();
-
             if (ImGui::Checkbox("Primary", &cameraComponent.Primary))
             {
                 auto view = m_Context->m_Registry.view<CameraComponent>();
@@ -138,33 +117,15 @@ void SceneHierarchyPanel::DrawComponents(Entity entity)
 
             ImGui::Separator();
 
-            if (camera.GetProjectionType() == Camera::ProjectionType::Perspective)
-            {
-                float perspectiveVerticalFOV = glm::degrees(camera.GetPerspectiveVerticalFOV());
-                if (ImGui::DragFloat("Vertical FOV", &perspectiveVerticalFOV))
-                    camera.SetPerspectiveVerticalFOV(glm::radians(perspectiveVerticalFOV));
+            float perspectiveVerticalFOV = glm::degrees(camera.GetPerspectiveVerticalFOV());
+            if (ImGui::DragFloat("Vertical FOV", &perspectiveVerticalFOV))
+                camera.SetPerspectiveVerticalFOV(glm::radians(perspectiveVerticalFOV));
 
-                float perspectiveNearClip = camera.GetPerspectiveNearClip();
-                if (ImGui::DragFloat("Near Clip", &perspectiveNearClip))
-                    camera.SetPerspectiveNearClip(perspectiveNearClip);
+            float perspectiveNearClip = camera.GetPerspectiveNearClip();
+            if (ImGui::DragFloat("Near Clip", &perspectiveNearClip)) camera.SetPerspectiveNearClip(perspectiveNearClip);
 
-                float perspectiveFarClip = camera.GetPerspectiveFarClip();
-                if (ImGui::DragFloat("Far Clip", &perspectiveFarClip)) camera.SetPerspectiveFarClip(perspectiveFarClip);
-            }
-
-            if (camera.GetProjectionType() == Camera::ProjectionType::Orthographic)
-            {
-                float orthographicSize = camera.GetOrthographicSize();
-                if (ImGui::DragFloat("Size", &orthographicSize)) camera.SetOrthographicSize(orthographicSize);
-
-                float orthographicNearClip = camera.GetOrthographicNearClip();
-                if (ImGui::DragFloat("Near Clip", &orthographicNearClip))
-                    camera.SetOrthographicNearClip(orthographicNearClip);
-
-                float orthographicFarClip = camera.GetOrthographicFarClip();
-                if (ImGui::DragFloat("Far Clip", &orthographicFarClip))
-                    camera.SetOrthographicFarClip(orthographicFarClip);
-            }
+            float perspectiveFarClip = camera.GetPerspectiveFarClip();
+            if (ImGui::DragFloat("Far Clip", &perspectiveFarClip)) camera.SetPerspectiveFarClip(perspectiveFarClip);
 
             ImGui::TreePop();
         }
@@ -259,8 +220,8 @@ void SceneHierarchyPanel::DrawComponents(Entity entity)
             auto &entityComponent = entity.GetComponent<SpotLightComponent>();
             auto &transform = entity.GetComponent<TransformComponent>();
             entityComponent.Light.Position = transform.Translation;
+            entityComponent.Light.Direction = transform.Rotation;
             ImGui::ColorEdit3("Color", glm::value_ptr(entityComponent.Light.Color));
-            ImGui::DragFloat3("Direction", glm::value_ptr(entityComponent.Light.Direction), 0.1f);
             ImGui::DragFloat("Ambient Intensity", &entityComponent.Light.AmbientIntensity, 0.001f, 0.0f, 1.0f);
             ImGui::DragFloat("Diffuse Intensity", &entityComponent.Light.DiffuseIntensity, 0.001f, 0.0f, 1.0f);
             ImGui::DragFloat("Constant", &entityComponent.Light.Attenuation.Constant, 0.001f, 0.0f, 1.0f);
@@ -286,7 +247,7 @@ void SceneHierarchyPanel::OnImGuiRender()
 {
     ImGui::Begin("Scene Hierarchy");
 
-    if (ImGui::Button("Add")) ImGui::OpenPopup("my_file_popup");
+    if (ImGui::Button("ADD")) ImGui::OpenPopup("my_file_popup");
     if (ImGui::BeginPopup("my_file_popup", ImGuiWindowFlags_MenuBar))
     {
         if (ImGui::BeginMenuBar())
@@ -396,17 +357,6 @@ void SceneHierarchyPanel::OnImGuiRender()
             ImGui::EndPopup();
         }
     }
-    ImGui::End();
-
-    ImGui::Begin("Editor Camera");
-
-    auto cameraPos = m_Context->m_EditorCamera->GetPosition();
-    if (ImGui::DragFloat3("Position", glm::value_ptr(cameraPos), 0.1f))
-        m_Context->m_EditorCamera->SetPosition(cameraPos);
-    auto cameraRotation = m_Context->m_EditorCamera->GetRotation();
-    if (ImGui::DragFloat3("Rotation", glm::value_ptr(cameraRotation), 0.1f))
-        m_Context->m_EditorCamera->SetRotation(cameraRotation);
-
     ImGui::End();
 }
 } // namespace Engine

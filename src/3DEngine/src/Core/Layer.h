@@ -27,4 +27,4 @@ class Layer
   protected:
     std::string m_DebugName;
 };
-}
+} // namespace Engine
