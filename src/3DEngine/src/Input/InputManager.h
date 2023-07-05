@@ -64,6 +64,10 @@ class InputManager
     void RegisterDevice(InputDevice device);
     void UnregisterDevice(InputDeviceType source, int inputIndex);
 
+    // register shortcuts
+    void RegisterKeyboardShortcut(std::vector<InputKey> keys, std::function<void()> callback);
+
+  public:
     // event callbacks
     void RegisterKeyboardCallback(KeyboardCallbackFunc callback);
     void RegisterKeyReleasedCallback(KeyReleasedCallbackFunc callback);
@@ -73,6 +77,7 @@ class InputManager
     void RegisterWindowResizeCallback(WindowResizeCallbackFunc callback);
     void RegisterMouseScrollCallback(MouseScrollCallbackFunc callback);
 
+  public:
     bool IsKeyPressed(InputKey key);
     bool IsMouseButtonPressed(MouseButton button);
     MouseMovedPosition GetMouseMovedPosition();

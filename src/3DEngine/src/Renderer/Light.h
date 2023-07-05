@@ -65,6 +65,9 @@ class Light
     static void RemovePointLight(int index);
     static void RemoveSpotLight(int index);
 
+    static int GetNumPointLights() { return s_PointLightPropsMap.size(); }
+    static int GetNumSpotLights() { return s_SpotLightPropsMap.size(); }
+
   public:
     static DirectionalLight *s_DirectionalLightProps;
     static std::map<int, PointLight> s_PointLightPropsMap;

@@ -177,12 +177,13 @@ void InputManager::ProcessInput()
                         events.insert(events.end(), generatedEvents.begin(), generatedEvents.end());
                         // save new state Value
                         device.CurrentKeyboardState[keyState.first].Value = keyState.second.Value;
+                        if (keyState.second.Value == 1.0f)
+                            keyCallbackParams = KeyboardCallbackParams{.Key = keyState.first, .IsRepeat = false};
+                        else if (keyState.second.Value == 2.0f)
+                            keyCallbackParams = KeyboardCallbackParams{.Key = keyState.first, .IsRepeat = true};
+                        else
+                            device.CurrentKeyboardState[keyState.first].Value = keyState.second.Value;
                     }
-                    if (keyState.second.Value > 0.0f)
-                        keyCallbackParams = KeyboardCallbackParams{.Key = keyState.first, .IsRepeat = false};
-                    else if (keyState.second.Value == 0.0f)
-                        keyCallbackParams = KeyboardCallbackParams{.Key = keyState.first, .IsRepeat = true};
-                    device.CurrentKeyboardState[keyState.first].Value = keyState.second.Value;
                 }
             }
             break;
@@ -195,7 +196,8 @@ void InputManager::ProcessInput()
 
     // keyboard callbacks
     for (auto &callback : m_KeyboardCallbacks)
-        if (keyCallbackParams.Key != InputKey::None) callback(keyCallbackParams.Key, keyCallbackParams.IsRepeat);
+        if (keyCallbackParams.Key != InputKey::None && !keyCallbackParams.IsRepeat)
+            callback(keyCallbackParams.Key, keyCallbackParams.IsRepeat);
 
     for (auto &callback : m_KeyReleasedCallbacks)
         if (keyCallbackParams.Key != InputKey::None) callback(keyCallbackParams.Key);

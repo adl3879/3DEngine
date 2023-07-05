@@ -25,8 +25,7 @@ class AppLayer : public Layer
     void NewScene();
     void OpenScene();
     void SaveSceneAs();
-
-    bool HandleInput();
+    void SaveScene();
 
   private:
     std::shared_ptr<Framebuffer> m_Framebuffer;

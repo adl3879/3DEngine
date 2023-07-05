@@ -29,8 +29,11 @@ void AppLayer::OnDetach() {}
 void AppLayer::OnUpdate(float deltaTime)
 {
     // update
-    m_EditorCamera.OnUpdate(deltaTime);
-    m_EditorCamera.SetViewportSize(m_ViewportSize.x, m_ViewportSize.y);
+    if (m_ViewportFocused)
+    {
+        m_EditorCamera.OnUpdate(deltaTime);
+        m_EditorCamera.SetViewportSize(m_ViewportSize.x, m_ViewportSize.y);
+    }
 
     {
         m_Framebuffer->Bind();
@@ -99,7 +102,10 @@ void AppLayer::OnImGuiRender()
         {
             if (ImGui::MenuItem("New", "Ctrl+N")) NewScene();
             if (ImGui::MenuItem("Open...", "Ctrl+O")) OpenScene();
+            ImGui::Separator();
+            if (ImGui::MenuItem("Save...", "Ctrl+S")) SaveScene();
             if (ImGui::MenuItem("Save As...", "Ctrl+Shift+S")) SaveSceneAs();
+            ImGui::Separator();
             if (ImGui::MenuItem("Exit", "")) Application::Close();
 
             ImGui::EndMenu();
@@ -112,6 +118,7 @@ void AppLayer::OnImGuiRender()
         // serialize the scene
         LOG_INFO("Serializing Scene");
         m_Scene = std::make_unique<Scene>();
+        m_Scene->SetSceneFilePath(Utils::FileDialogs::m_SelectedFile);
         m_SceneHierarchyPanel.SetContext(m_Scene);
 
         SceneSerializer serializer(m_Scene);
@@ -122,6 +129,7 @@ void AppLayer::OnImGuiRender()
     {
         // serialize the scene
         LOG_INFO("Serializing Scene");
+        m_Scene->SetSceneFilePath(Utils::FileDialogs::m_SavedFile);
 
         SceneSerializer serializer(m_Scene);
         serializer.Serialize(Utils::FileDialogs::m_SavedFile);
@@ -131,7 +139,7 @@ void AppLayer::OnImGuiRender()
 
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{0, 0});
     ImGui::Begin("Viewport");
-    m_ViewportFocused = ImGui::IsWindowFocused();
+    m_ViewportFocused = ImGui::IsWindowFocused() || ImGui::IsWindowHovered();
     auto viewportPanelSize = ImGui::GetContentRegionAvail();
     if (m_ViewportSize != *((glm::vec2 *)&viewportPanelSize))
     {
@@ -194,17 +202,42 @@ void AppLayer::OnImGuiRender()
 
 void AppLayer::OnKeyPressed(InputKey key, bool isRepeat)
 {
+    auto ctrl = InputManager::Instance().IsKeyPressed(InputKey::LeftControl) ||
+                InputManager::Instance().IsKeyPressed(InputKey::RightControl);
+    auto shift = InputManager::Instance().IsKeyPressed(InputKey::LeftShift) ||
+                 InputManager::Instance().IsKeyPressed(InputKey::RightShift);
+
     switch (key)
     {
         case InputKey::Q: m_GizmoType = -1; break;
         case InputKey::W: m_GizmoType = ImGuizmo::OPERATION::TRANSLATE; break;
         case InputKey::E: m_GizmoType = ImGuizmo::OPERATION::ROTATE; break;
         case InputKey::R: m_GizmoType = ImGuizmo::OPERATION::SCALE; break;
+
+        case InputKey::N:
+            if (ctrl) NewScene();
+            break;
+        case InputKey::O:
+            if (ctrl) OpenScene();
+            break;
+        case InputKey::S:
+            if (ctrl && shift)
+                SaveSceneAs();
+            else if (ctrl)
+                SaveScene();
+            break;
+
         default: break;
     }
 }
 
-void AppLayer::OnMouseScrolled(double xOffset, double yOffset) { m_EditorCamera.OnMouseScrolled(xOffset, yOffset); }
+void AppLayer::OnMouseScrolled(double xOffset, double yOffset)
+{
+    if (m_ViewportFocused)
+    {
+        m_EditorCamera.OnMouseScrolled(xOffset, yOffset);
+    }
+}
 
 void AppLayer::NewScene()
 {
@@ -228,5 +261,15 @@ void AppLayer::SaveSceneAs()
         "saveScene", Utils::FileDialogParams{.DefaultPathAndFile =
                                                  "/home/adeleye/Source/3DEngine/src/Sandbox/res/scenes/scene1.scene",
                                              .SingleFilterDescription = "Scene Files (*.scene)\0*.scene\0"});
+}
+void AppLayer::SaveScene()
+{
+    if (m_Scene->GetSceneFilePath().empty())
+        SaveSceneAs();
+    else
+    {
+        SceneSerializer serializer(m_Scene);
+        serializer.Serialize(m_Scene->GetSceneFilePath());
+    }
 }
 } // namespace Engine

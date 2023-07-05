@@ -27,6 +27,9 @@ class Scene
 
     const std::shared_ptr<PerspectiveCamera> &GetMainCamera() const { return m_MainCamera; }
 
+    void SetSceneFilePath(const std::string &filepath) { m_SceneFilePath = filepath; }
+    const std::string &GetSceneFilePath() const { return m_SceneFilePath; }
+
   private:
     entt::registry m_Registry;
 
@@ -36,5 +39,6 @@ class Scene
 
   private:
     std::shared_ptr<PerspectiveCamera> m_MainCamera = nullptr;
+    std::string m_SceneFilePath = std::string();
 };
 } // namespace Engine

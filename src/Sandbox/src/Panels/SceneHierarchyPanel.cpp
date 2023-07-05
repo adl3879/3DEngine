@@ -294,20 +294,16 @@ void SceneHierarchyPanel::OnImGuiRender()
         }
         if (ImGui::MenuItem("Point Light"))
         {
-            static int numPointLights = 0;
-
-            numPointLights = numPointLights + 1;
-            auto entity = m_Context->CreateEntity("Point Light " + std::to_string(numPointLights));
+            auto num = Light::GetNumPointLights() + 1;
+            auto entity = m_Context->CreateEntity("Point Light " + std::to_string(num));
 
             entity.AddComponent<PointLightComponent>();
             m_SelectionContext = entity;
         }
         if (ImGui::MenuItem("Spot Light"))
         {
-            static int numPointLights = 0;
-
-            numPointLights = numPointLights + 1;
-            auto entity = m_Context->CreateEntity("Spot Light " + std::to_string(numPointLights));
+            auto num = Light::GetNumSpotLights() + 1;
+            auto entity = m_Context->CreateEntity("Spot Light " + std::to_string(num));
 
             entity.AddComponent<SpotLightComponent>();
             m_SelectionContext = entity;
