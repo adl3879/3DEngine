@@ -11,6 +11,7 @@ enum class FramebufferTextureFormat
 
     // Color
     RGBA8,
+    RED_INTEGER,
 
     // Depth/stencil
     DEPTH24STENCIL8,
@@ -58,6 +59,7 @@ class Framebuffer
     void Invalidate();
 
     void Resize(int width, int height);
+    int ReadPixel(unsigned int attachmentIndex, int x, int y) const;
 
     unsigned int GetColorAttachment(unsigned int index = 0) const
     {

@@ -40,9 +40,11 @@ class InputManager
         float Value;
     };
 
+  public:
+    virtual ~InputManager();
+
   private:
     InputManager();
-    virtual ~InputManager();
 
   private:
     friend class Application;

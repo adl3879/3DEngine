@@ -34,6 +34,7 @@ class AppLayer : public Layer
 
     glm::vec2 m_ViewportSize;
     bool m_ViewportFocused = false;
+    glm::vec2 m_ViewportBounds[2];
 
     // scene
     std::shared_ptr<Scene> m_Scene;

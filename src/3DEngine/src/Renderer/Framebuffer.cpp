@@ -137,6 +137,10 @@ void Framebuffer::Invalidate()
                     Utils::AttachColorTexture(m_ColorAttachments[i], m_Specification.Samples, GL_RGBA8, GL_RGBA,
                                               m_Specification.Width, m_Specification.Height, i);
                     break;
+                case FramebufferTextureFormat::RED_INTEGER:
+                    Utils::AttachColorTexture(m_ColorAttachments[i], m_Specification.Samples, GL_R32I, GL_RED_INTEGER,
+                                              m_Specification.Width, m_Specification.Height, i);
+                    break;
                 default: break;
             }
         }
@@ -179,5 +183,14 @@ void Framebuffer::Resize(int width, int height)
     m_Specification.Height = height;
 
     Invalidate();
+}
+
+int Framebuffer::ReadPixel(unsigned int attachmentIndex, int x, int y) const
+{
+    assert(attachmentIndex < m_ColorAttachments.size());
+    glReadBuffer(GL_COLOR_ATTACHMENT0 + attachmentIndex);
+    int pixelData;
+    glReadPixels(x, y, 1, 1, GL_RED_INTEGER, GL_INT, &pixelData);
+    return pixelData;
 }
 } // namespace Engine

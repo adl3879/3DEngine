@@ -17,7 +17,7 @@ AppLayer::AppLayer() : m_EditorCamera(-45.0f, 1.778f, 0.1f, 100.0f) {}
 void AppLayer::OnAttach()
 {
     auto fbSpec = FramebufferSpecification{};
-    fbSpec.Attachments = {FramebufferTextureFormat::RGBA8, FramebufferTextureFormat::RGBA8,
+    fbSpec.Attachments = {FramebufferTextureFormat::RGBA8, FramebufferTextureFormat::RED_INTEGER,
                           FramebufferTextureFormat::Depth};
     fbSpec.Width = windowState.Width;
     fbSpec.Height = windowState.Height;
@@ -43,18 +43,25 @@ void AppLayer::OnUpdate(float deltaTime)
 
     {
         m_Framebuffer->Bind();
-        RendererCommand::SetClearColor({0.0f, 0.0f, 0.0f, 1.0f});
+        RendererCommand::SetClearColor({0.1f, 0.1f, 0.1f, 1.0f});
         RendererCommand::Clear();
     }
 
-    // if (m_Scene->GetMainCamera() != nullptr)
-    //     Renderer3D::BeginScene(*m_Scene->GetMainCamera());
-    // else
-    //     Renderer3D::BeginScene(m_EditorCamera);
-    // Renderer3D::DrawSkybox();
-    // Renderer3D::EndScene();
-
     m_Scene->OnUpdateEditor(deltaTime, m_EditorCamera);
+
+    auto [mx, my] = ImGui::GetMousePos();
+    mx -= m_ViewportBounds[0].x;
+    my -= m_ViewportBounds[0].y;
+    glm::vec2 viewportSize = m_ViewportBounds[1] - m_ViewportBounds[0];
+
+    int mouseX = (int)mx;
+    int mouseY = (int)my;
+
+    if (mouseX >= 0 && mouseY >= 0 && mouseX < (int)viewportSize.x && mouseY < (int)viewportSize.y)
+    {
+        auto pixelData = m_Framebuffer->ReadPixel(1, mouseX, mouseY);
+        LOG_CORE_INFO("Pixel Data: {0}", pixelData);
+    }
 
     m_Framebuffer->Unbind();
 }
@@ -145,6 +152,8 @@ void AppLayer::OnImGuiRender()
 
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{0, 0});
     ImGui::Begin("Viewport");
+    auto viewportOffset = ImGui::GetCursorPos();
+
     m_ViewportFocused = ImGui::IsWindowFocused() || ImGui::IsWindowHovered();
     auto viewportPanelSize = ImGui::GetContentRegionAvail();
     if (m_ViewportSize != *((glm::vec2 *)&viewportPanelSize))
@@ -152,7 +161,16 @@ void AppLayer::OnImGuiRender()
         m_Framebuffer->Resize((int)viewportPanelSize.x, (int)viewportPanelSize.y);
         m_ViewportSize = {viewportPanelSize.x, viewportPanelSize.y};
     }
-    ImGui::Image((void *)(intptr_t)m_Framebuffer->GetColorAttachment(1), ImVec2{m_ViewportSize.x, m_ViewportSize.y});
+    ImGui::Image((void *)(intptr_t)m_Framebuffer->GetColorAttachment(), ImVec2{m_ViewportSize.x, m_ViewportSize.y});
+
+    auto windowSize = ImGui::GetWindowSize();
+    auto miniBound = ImGui::GetWindowPos();
+    miniBound.x += viewportOffset.x;
+    miniBound.y += viewportOffset.y;
+
+    auto maxBound = ImVec2(miniBound.x + windowSize.x, miniBound.y + windowSize.y);
+    m_ViewportBounds[0] = {miniBound.x, miniBound.y};
+    m_ViewportBounds[1] = {maxBound.x, maxBound.y};
 
     // Gizmos
     auto selectedEntity = m_SceneHierarchyPanel.GetSelectedEntity();
@@ -208,10 +226,10 @@ void AppLayer::OnImGuiRender()
 
 void AppLayer::OnKeyPressed(InputKey key, bool isRepeat)
 {
-    auto ctrl = InputManager::Instance().IsKeyPressed(InputKey::LeftControl) ||
-                InputManager::Instance().IsKeyPressed(InputKey::RightControl);
-    auto shift = InputManager::Instance().IsKeyPressed(InputKey::LeftShift) ||
-                 InputManager::Instance().IsKeyPressed(InputKey::RightShift);
+    auto Input = InputManager::Instance();
+
+    auto ctrl = Input.IsKeyPressed(InputKey::LeftControl) || Input.IsKeyPressed(InputKey::RightControl);
+    auto shift = Input.IsKeyPressed(InputKey::LeftShift) || Input.IsKeyPressed(InputKey::RightShift);
 
     switch (key)
     {
@@ -239,10 +257,7 @@ void AppLayer::OnKeyPressed(InputKey key, bool isRepeat)
 
 void AppLayer::OnMouseScrolled(double xOffset, double yOffset)
 {
-    if (m_ViewportFocused)
-    {
-        m_EditorCamera.OnMouseScrolled(xOffset, yOffset);
-    }
+    if (m_ViewportFocused) m_EditorCamera.OnMouseScrolled(xOffset, yOffset);
 }
 
 void AppLayer::NewScene()
