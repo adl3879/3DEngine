@@ -5,7 +5,8 @@ in vec2 TexCoord;
 in vec3 Normal;
 in vec3 CurrentPos;
 
-out vec4 FragColor;
+layout (location = 0) out vec4 FragColor;
+layout (location = 1) out vec4 color2;
 
 #define MAX_POINT_LIGHTS 10
 #define MAX_SPOT_LIGHTS 10
@@ -146,4 +147,5 @@ void main()
     }
 
     FragColor = texture(diffuse0, TexCoord) * totalLight;
+    color2 = vec4(1.0, 0.2, 0.3, 1.0);
 }

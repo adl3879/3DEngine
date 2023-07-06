@@ -16,7 +16,13 @@ AppLayer::AppLayer() : m_EditorCamera(-45.0f, 1.778f, 0.1f, 100.0f) {}
 
 void AppLayer::OnAttach()
 {
-    m_Framebuffer = std::make_shared<Engine::Framebuffer>(windowState.Width, windowState.Height);
+    auto fbSpec = FramebufferSpecification{};
+    fbSpec.Attachments = {FramebufferTextureFormat::RGBA8, FramebufferTextureFormat::RGBA8,
+                          FramebufferTextureFormat::Depth};
+    fbSpec.Width = windowState.Width;
+    fbSpec.Height = windowState.Height;
+
+    m_Framebuffer = std::make_shared<Engine::Framebuffer>(fbSpec);
 
     m_Scene = std::make_shared<Scene>();
     m_SceneHierarchyPanel.SetContext(m_Scene);
@@ -146,7 +152,7 @@ void AppLayer::OnImGuiRender()
         m_Framebuffer->Resize((int)viewportPanelSize.x, (int)viewportPanelSize.y);
         m_ViewportSize = {viewportPanelSize.x, viewportPanelSize.y};
     }
-    ImGui::Image((void *)(intptr_t)m_Framebuffer->GetColorAttachment(), ImVec2{m_ViewportSize.x, m_ViewportSize.y});
+    ImGui::Image((void *)(intptr_t)m_Framebuffer->GetColorAttachment(1), ImVec2{m_ViewportSize.x, m_ViewportSize.y});
 
     // Gizmos
     auto selectedEntity = m_SceneHierarchyPanel.GetSelectedEntity();

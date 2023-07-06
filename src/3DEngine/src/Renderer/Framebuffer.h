@@ -1,13 +1,56 @@
 #pragma once
 
 #include <glm/glm.hpp>
+#include <vector>
 
 namespace Engine
 {
+enum class FramebufferTextureFormat
+{
+    None = 0,
+
+    // Color
+    RGBA8,
+
+    // Depth/stencil
+    DEPTH24STENCIL8,
+
+    // Defaults
+    Depth = DEPTH24STENCIL8
+};
+
+struct FramebufferTextureSpecification
+{
+    FramebufferTextureSpecification() = default;
+    FramebufferTextureSpecification(FramebufferTextureFormat format) : TextureFormat(format) {}
+
+    FramebufferTextureFormat TextureFormat = FramebufferTextureFormat::None;
+};
+
+struct FramebufferAttachmentSpecification
+{
+    FramebufferAttachmentSpecification() = default;
+    FramebufferAttachmentSpecification(std::initializer_list<FramebufferTextureSpecification> attachments)
+        : Attachments(attachments)
+    {
+    }
+
+    std::vector<FramebufferTextureSpecification> Attachments;
+};
+
+struct FramebufferSpecification
+{
+    unsigned int Width = 0, Height = 0;
+    FramebufferAttachmentSpecification Attachments;
+    unsigned int Samples = 1;
+
+    bool SwapChainTarget = false;
+};
+
 class Framebuffer
 {
   public:
-    Framebuffer(int width, int height);
+    Framebuffer(const FramebufferSpecification &spec);
     virtual ~Framebuffer();
 
     void Bind() const;
@@ -16,14 +59,23 @@ class Framebuffer
 
     void Resize(int width, int height);
 
-    unsigned int GetColorAttachment() const { return m_ColorAttachment; }
-    unsigned int GetDepthAttachment() const { return m_DepthAttachment; }
-    unsigned int GetWidth() const { return m_Width; }
-    unsigned int GetHeight() const { return m_Height; }
+    unsigned int GetColorAttachment(unsigned int index = 0) const
+    {
+        assert(index < m_ColorAttachments.size());
+        return m_ColorAttachments[index];
+    }
+    // unsigned int GetDepthAttachment() const { return m_DepthAttachment; }
+
+    const FramebufferSpecification &GetSpecification() const { return m_Specification; }
 
   private:
     unsigned int m_RendererID = 0;
-    unsigned int m_ColorAttachment = 0, m_DepthAttachment = 0;
-    unsigned int m_Width, m_Height;
+    FramebufferSpecification m_Specification;
+
+    std::vector<FramebufferTextureSpecification> m_ColorAttachmentSpecifications;
+    FramebufferTextureSpecification m_DepthAttachmentSpecification;
+
+    std::vector<unsigned int> m_ColorAttachments;
+    unsigned int m_DepthAttachment = 0;
 };
 } // namespace Engine

@@ -5,7 +5,8 @@ in vec2 TexCoord;
 in vec3 Normal;
 in vec4 CurrentPos;
 
-out vec4 color;
+layout (location = 0) out vec4 color;
+layout (location = 1) out vec4 color2;
 
 uniform sampler2D diffuse0;
 uniform sampler2D specular0;
@@ -114,12 +115,14 @@ vec4 spotLight()
 
 void main()
 {
-    if (lightType == 0)
-        color = pointLight();
-    else if (lightType == 1)
-        color = spotLight();
-    else if (lightType == 2)
-        color = directionalLight();
-    else
-        color = vec4(1.0f, 1.0f, 1.0f, 1.0f);
+    // if (lightType == 0)
+    //     color = pointLight();
+    // else if (lightType == 1)
+    //     color = spotLight();
+    // else if (lightType == 2)
+    //     color = directionalLight();
+    // else
+    //     color = vec4(1.0f, 1.0f, 1.0f, 1.0f);
+
+    color2 = vec4(1.0f, 0.2f, 0.3f, 0.0f);
 };

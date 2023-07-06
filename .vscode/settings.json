@@ -6,8 +6,10 @@
   "cSpell.words": [
     "Assimp",
     "Atten",
+    "Cubemap",
     "dockspace",
     "entt",
+    "equirectangular",
     "fout",
     "Framebuffer",
     "Gamepad",
@@ -15,13 +17,15 @@
     "gltf",
     "Guizmo",
     "luabridge",
+    "Multisample",
+    "multisampled",
     "OPENGL",
     "Parameteri",
     "Scriptable",
     "Skybox",
     "spdlog",
     "tinyfd"
-  ],
+],
   "files.associations": {
     "*.scene": "yaml",
     "functional": "cpp",
