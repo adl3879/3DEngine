@@ -70,6 +70,9 @@ class Framebuffer
 
     const FramebufferSpecification &GetSpecification() const { return m_Specification; }
 
+  public:
+    void ClearAttachment(unsigned int attachmentIndex, int value);
+
   private:
     unsigned int m_RendererID = 0;
     FramebufferSpecification m_Specification;

@@ -5,6 +5,7 @@ project(3DEngine)
 set(CMAKE_CXX_STANDARD 20)
 
 # external libraries
+add_subdirectory(vendor/glad)
 add_subdirectory(vendor/glfw)
 add_subdirectory(vendor/glm)
 add_subdirectory(vendor/assimp)
@@ -14,7 +15,6 @@ add_subdirectory(vendor/yaml-cpp)
 
 file(GLOB_RECURSE SOURCES 
     "src/*.cpp"
-    "vendor/glad/src/glad.c"
     "vendor/stb_image/stb_image.cpp"
     "vendor/tinyfiledialogs/tinyfiledialogs.c"
     "vendor/ImGuizmo/ImGuizmo.cpp"
@@ -29,8 +29,8 @@ file(GLOB_RECURSE HEADERS
 )
 
 include_directories(
-    "vendor/glm"
     "vendor/glad/include"
+    "vendor/glm"
     "vendor/spdlog/include"
     "vendor/assimp/include"
     "vendor/imgui"
@@ -54,7 +54,7 @@ add_library(${PROJECT_NAME} STATIC ${SOURCES})
 target_include_directories(${PROJECT_NAME}
     PUBLIC
         ${INCLUDE_DIRS}
-        glfw assimp imgui glm spdlog yaml-cpp
+        glad glfw assimp imgui glm spdlog yaml-cpp
     PRIVATE
 )
 
@@ -63,5 +63,5 @@ target_link_libraries(${PROJECT_NAME}
         glm assimp imgui spdlog yaml-cpp
         "${CMAKE_CURRENT_SOURCE_DIR}/vendor/lua542/liblua54.a"
     PRIVATE 
-        glfw
+        glad glfw
 )
