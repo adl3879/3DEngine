@@ -42,6 +42,7 @@ void VertexArray::Delete() const { glDeleteVertexArrays(1, &m_VertexArray); }
 
 void VertexArray::AddBuffer(const VertexBuffer &vb, const VertexBufferLayout &layout)
 {
+    vb.Bind();
     const auto &elements = layout.GetElements();
     unsigned int offset = 0;
     for (unsigned int i = 0; i < elements.size(); i++)
@@ -71,10 +72,9 @@ void VertexArray::AddBuffer(const VertexBuffer &vb, const VertexBufferLayout &la
                                        layout.GetStride() * sizeof(float),
                                        (const void *)(element.Offset * sizeof(float)));
             }
-            break;
-            default: LOG_CORE_ERROR("Unknown data type"); break;
         }
     }
+    vb.Unbind();
 }
 
 } // namespace Engine
