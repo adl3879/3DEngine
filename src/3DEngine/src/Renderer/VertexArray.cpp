@@ -3,6 +3,7 @@
 #include <glad/glad.h>
 
 #include "Buffer.h"
+#include "Log.h"
 #include <iostream>
 
 namespace Engine
@@ -41,18 +42,39 @@ void VertexArray::Delete() const { glDeleteVertexArrays(1, &m_VertexArray); }
 
 void VertexArray::AddBuffer(const VertexBuffer &vb, const VertexBufferLayout &layout)
 {
-    vb.Bind();
     const auto &elements = layout.GetElements();
     unsigned int offset = 0;
     for (unsigned int i = 0; i < elements.size(); i++)
     {
         const auto &element = elements[i];
-
-        glEnableVertexAttribArray(i);
-        glVertexAttribPointer(i, element.Count, ShaderDataTypeToOpenGLBaseType(element.Type), element.Normalized,
-                              layout.GetStride() * element.GetComponentCount(),
-                              (const void *)(element.Offset * element.GetComponentCount()));
+        switch (element.Type)
+        {
+            case ShaderDataType::Float:
+            case ShaderDataType::Float2:
+            case ShaderDataType::Float3:
+            case ShaderDataType::Float4:
+            {
+                glEnableVertexAttribArray(i);
+                glVertexAttribPointer(i, element.GetComponentCount(), ShaderDataTypeToOpenGLBaseType(element.Type),
+                                      element.Normalized, layout.GetStride() * sizeof(float),
+                                      (const void *)(element.Offset * sizeof(float)));
+            }
+            break;
+            case ShaderDataType::Int:
+            case ShaderDataType::Int2:
+            case ShaderDataType::Int3:
+            case ShaderDataType::Int4:
+            case ShaderDataType::Bool:
+            {
+                glEnableVertexAttribArray(i);
+                glVertexAttribIPointer(i, element.GetComponentCount(), ShaderDataTypeToOpenGLBaseType(element.Type),
+                                       layout.GetStride() * sizeof(float),
+                                       (const void *)(element.Offset * sizeof(float)));
+            }
+            break;
+            default: LOG_CORE_ERROR("Unknown data type"); break;
+        }
     }
-    vb.Unbind();
 }
+
 } // namespace Engine

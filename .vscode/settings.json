@@ -17,6 +17,7 @@
     "gltf",
     "Guizmo",
     "luabridge",
+    "MATKEY",
     "Multisample",
     "multisampled",
     "OPENGL",
@@ -25,11 +26,12 @@
     "Skybox",
     "spdlog",
     "tinyfd"
-],
+  ],
   "files.associations": {
     "*.scene": "yaml",
     "functional": "cpp",
-    "iostream": "cpp"
+    "iostream": "cpp",
+    "glad.h": "c"
   },
   "workbench.colorTheme": "Visual Studio 2017 Dark - C++",
   "workbench.colorCustomizations": {

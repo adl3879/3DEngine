@@ -43,9 +43,12 @@ void AppLayer::OnUpdate(float deltaTime)
 
     {
         m_Framebuffer->Bind();
-        RendererCommand::SetClearColor({0.1f, 0.1f, 0.1f, 1.0f});
+        RendererCommand::SetClearColor({0.0f, 0.0f, 0.0f, 1.0f});
         RendererCommand::Clear();
     }
+
+    // clear our entity ID attachment to -1
+    m_Framebuffer->ClearAttachment(1, -1);
 
     m_Scene->OnUpdateEditor(deltaTime, m_EditorCamera);
 

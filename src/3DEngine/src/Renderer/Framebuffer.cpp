@@ -52,7 +52,7 @@ static void AttachDepthTexture(uint32_t id, int samples, GLenum format, GLenum a
     }
     else
     {
-        glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
+        glTexStorage2D(GL_TEXTURE_2D, 1, format, width, height);
 
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -73,6 +73,16 @@ static bool IsDepthFormat(FramebufferTextureFormat format)
     }
 
     return false;
+}
+
+static GLenum TextureFormatToGL(FramebufferTextureFormat format)
+{
+    switch (format)
+    {
+        case FramebufferTextureFormat::RGBA8: return GL_RGBA8;
+        case FramebufferTextureFormat::RED_INTEGER: return GL_RED_INTEGER;
+        default: return 0;
+    }
 }
 
 } // namespace Utils
@@ -192,5 +202,14 @@ int Framebuffer::ReadPixel(unsigned int attachmentIndex, int x, int y) const
     int pixelData;
     glReadPixels(x, y, 1, 1, GL_RED_INTEGER, GL_INT, &pixelData);
     return pixelData;
+}
+
+void Framebuffer::ClearAttachment(unsigned int attachmentIndex, int value)
+{
+    assert(attachmentIndex < m_ColorAttachments.size());
+
+    auto &spec = m_ColorAttachmentSpecifications[attachmentIndex];
+    glClearTexImage(m_ColorAttachments[attachmentIndex], 0, Utils::TextureFormatToGL(spec.TextureFormat), GL_INT,
+                    &value);
 }
 } // namespace Engine

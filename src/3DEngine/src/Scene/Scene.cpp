@@ -106,8 +106,8 @@ void Scene::OnUpdateEditor(float dt, EditorCamera &camera)
         {
             auto [transform, model] = view.get<TransformComponent, ModelComponent>(entity);
             Renderer3D::DrawModel(model.Model, transform.GetTransform());
+            Renderer3D::EndScene();
         }
     }
-    Renderer3D::EndScene();
 }
 } // namespace Engine

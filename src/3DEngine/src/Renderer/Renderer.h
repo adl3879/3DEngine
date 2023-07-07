@@ -26,6 +26,7 @@ class Renderer3D
     static void BeginScene(const PerspectiveCamera &camera);
     static void BeginScene(const EditorCamera &camera);
 
+    static void Flush();
     static void EndScene();
 
     static void DrawModel(Model &model);
