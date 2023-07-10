@@ -1,5 +1,4 @@
 {
-  "editor.bracketPairColorization.enabled": false,
   "editor.tabSize": 4,
   "editor.indentSize": 4,
   "editor.detectIndentation": false,
@@ -32,60 +31,6 @@
     "functional": "cpp",
     "iostream": "cpp",
     "glad.h": "c"
-  },
-  "workbench.colorTheme": "Visual Studio 2017 Dark - C++",
-  "workbench.colorCustomizations": {
-    "editor.background": "#0e1a25",
-    "sideBar.background": "#0e1a25",
-    "sideBarSectionHeader.background": "#0e1a25",
-    "activityBar.background": "#0e1a25",
-    "activityBar.border": "#363e45",
-    "statusBar.background": "#0e639c",
-    "tab.activeBorder": "#007acc",
-    "tab.inactiveBackground": "#0e1a25",
-    "tab.hoverBackground": "#0e1a25",
-    "editorGroupHeader.tabsBackground": "#0e1a25",
-    "panel.background": "#0e1a25",
-    "dropdown.background": "#0e1a25",
-    "input.background": "#0e1a25",
-    "selection.background": "#0e1a25",
-    "editor.lineHighlightBackground": "#363e45",
-    "editorSuggestWidget.background": "#0e1a25",
-    "list.hoverBackground": "#363e45",
-    "list.activeSelectionBackground": "#363e45",
-    "list.inactiveSelectionBackground": "#363e45",
-    "list.focusBackground": "#363e45",
-    "statusBar.debuggingBackground": "#16825d",
-    "statusBar.debuggingForeground": "#ffffff",
-    "menu.background": "#0e1a25",
-    "editorWidget.background": "#0e1a25",
-    //change highlight colors to #363e45
-    "editor.findMatchBackground": "#363e45",
-    "editor.findMatchHighlightBackground": "#363e45",
-    "editor.findRangeHighlightBackground": "#363e45",
-    "editor.hoverHighlightBackground": "#363e45",
-    "editor.inactiveSelectionBackground": "#363e45",
-    "editor.selectionBackground": "#363e45",
-    "editor.selectionHighlightBackground": "#363e45",
-    "editor.wordHighlightBackground": "#363e45",
-    "editor.wordHighlightStrongBackground": "#363e45"
-  },
-  // italics for comments
-  "editor.tokenColorCustomizations": {
-    "textMateRules": [
-      {
-        "scope": [
-          "comment",
-          "comment.block",
-          "comment.block.documentation",
-          "comment.line",
-          "punctuation.definition.comment"
-        ],
-        "settings": {
-          "fontStyle": "italic"
-        }
-      }
-    ]
   },
   "Lua.diagnostics.globals": ["entity", "Input"]
 }

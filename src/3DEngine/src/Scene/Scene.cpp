@@ -2,8 +2,8 @@
 
 #include "Entity.h"
 #include "Components.h"
-#include "Renderer.h"
 #include "Light.h"
+#include "RenderSystem.h"
 
 namespace Engine
 {
@@ -84,30 +84,30 @@ void Scene::OnUpdateRuntime(float dt)
         }
     }
     {
-        Renderer3D::BeginScene(*m_MainCamera);
-        {
-            auto view = m_Registry.view<TransformComponent, ModelComponent>();
-            for (auto entity : view)
-            {
-                auto [transform, model] = view.get<TransformComponent, ModelComponent>(entity);
-                Renderer3D::DrawModel(model.Model, transform.GetTransform());
-            }
-        }
-        Renderer3D::EndScene();
+        // Renderer3D::BeginScene(*m_MainCamera);
+        // {
+        //     auto view = m_Registry.view<TransformComponent, ModelComponent>();
+        //     for (auto entity : view)
+        //     {
+        //         auto [transform, model] = view.get<TransformComponent, ModelComponent>(entity);
+        //         Renderer3D::DrawModel(model.Model, transform.GetTransform());
+        //     }
+        // }
+        // Renderer3D::EndScene();
     }
 }
 
 void Scene::OnUpdateEditor(float dt, EditorCamera &camera)
 {
-    Renderer3D::BeginScene(camera);
-    {
-        auto view = m_Registry.view<TransformComponent, ModelComponent>();
-        for (auto entity : view)
-        {
-            auto [transform, model] = view.get<TransformComponent, ModelComponent>(entity);
-            Renderer3D::DrawModel(model.Model, transform.GetTransform());
-            Renderer3D::EndScene();
-        }
-    }
+    // Renderer3D::BeginScene(camera);
+    // {
+    //     auto view = m_Registry.view<TransformComponent, ModelComponent>();
+    //     for (auto entity : view)
+    //     {
+    //         auto [transform, model] = view.get<TransformComponent, ModelComponent>(entity);
+    //         Renderer3D::DrawModel(model.Model, transform.GetTransform());
+    //         Renderer3D::EndScene();
+    //     }
+    // }
 }
 } // namespace Engine

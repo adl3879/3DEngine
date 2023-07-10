@@ -1,10 +1,8 @@
 #include "Shader.h"
 #include "Layer.h"
-#include "Model.h"
 #include "EditorCamera.h"
 #include "PerspectiveCamera.h"
 #include "Framebuffer.h"
-#include "Renderer.h"
 #include "Application.h"
 #include "Light.h"
 #include "Scene.h"
@@ -16,3 +14,5 @@
 #include "SceneSerializer.h"
 #include "PlatformUtils.h"
 #include "Math.h"
+
+#include "VertexArray.h"

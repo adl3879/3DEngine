@@ -221,7 +221,10 @@ bool SceneSerializer::Deserialize(const std::string &filepath)
             if (modelComponent)
             {
                 auto path = modelComponent["ModelPath"].as<std::string>();
-                deserializedEntity.AddComponent<ModelComponent>(path);
+                auto &model = deserializedEntity.AddComponent<ModelComponent>();
+                model.Path = path;
+                model.EntityID = (int)deserializedEntity.GetEntityID();
+                model.Create();
             }
 
             auto luaScriptComponent = entity["LuaScriptComponent"];

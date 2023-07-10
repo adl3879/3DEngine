@@ -27,6 +27,9 @@ void AppLayer::OnAttach()
     m_Scene = std::make_shared<Scene>();
     m_SceneHierarchyPanel.SetContext(m_Scene);
 
+    m_RenderSystem = std::make_shared<RenderSystem>();
+    m_RenderSystem->Init();
+
     LOG_INFO("AppLayer Attached");
 }
 
@@ -41,14 +44,13 @@ void AppLayer::OnUpdate(float deltaTime)
         m_EditorCamera.SetViewportSize(m_ViewportSize.x, m_ViewportSize.y);
     }
 
+    // clear our entity ID attachment to -1
+    // m_Framebuffer->ClearAttachment(1, -1);
+
     {
         m_Framebuffer->Bind();
-        RendererCommand::SetClearColor({0.0f, 0.0f, 0.0f, 1.0f});
-        RendererCommand::Clear();
+        m_RenderSystem->Render(m_EditorCamera, *m_Scene);
     }
-
-    // clear our entity ID attachment to -1
-    m_Framebuffer->ClearAttachment(1, -1);
 
     m_Scene->OnUpdateEditor(deltaTime, m_EditorCamera);
 
@@ -63,6 +65,8 @@ void AppLayer::OnUpdate(float deltaTime)
     if (mouseX >= 0 && mouseY >= 0 && mouseX < (int)viewportSize.x && mouseY < (int)viewportSize.y)
     {
         auto pixelData = m_Framebuffer->ReadPixel(1, mouseX, mouseY);
+        // removed one because i moved every entity by one
+        m_HoveredEntity = pixelData == 0 ? Entity() : Entity((entt::entity)(pixelData - 1), m_Scene.get());
         LOG_CORE_INFO("Pixel Data: {0}", pixelData);
     }
 
@@ -261,6 +265,16 @@ void AppLayer::OnKeyPressed(InputKey key, bool isRepeat)
 void AppLayer::OnMouseScrolled(double xOffset, double yOffset)
 {
     if (m_ViewportFocused) m_EditorCamera.OnMouseScrolled(xOffset, yOffset);
+}
+
+void AppLayer::OnMouseButtonPressed(MouseButton button)
+{
+    auto Input = InputManager::Instance();
+    // Mouse picking
+    if (button == MouseButton::Left && !ImGuizmo::IsOver() && !Input.IsKeyPressed(InputKey::LeftAlt))
+    {
+        if (m_ViewportFocused) m_SceneHierarchyPanel.SetSelectedEntity(m_HoveredEntity);
+    }
 }
 
 void AppLayer::NewScene()

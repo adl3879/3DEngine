@@ -1,108 +1,37 @@
 #include "Mesh.h"
 
-#include <glad/glad.h>
-
-#include "Buffer.h"
-#include "InputManager.h"
-#include "Light.h"
-
-#include <iostream>
-
 namespace Engine
 {
-Mesh::Mesh(std::vector<Vertex> &vertices, std::vector<unsigned int> &indices, std::vector<Texture> &textures)
-    : m_Vertices(vertices), m_Indices(indices), m_Textures(textures), m_Texture3D{}
+Mesh::Mesh(const std::vector<Vertex> &vertices, const std::vector<uint32_t> &indices)
+    : IndexCount(indices.size()), Vertices(vertices), Indices(indices)
 {
-    VertexBuffer vbo{m_Vertices};
-    IndexBuffer ebo{m_Indices};
-
-    VertexBufferLayout layout{
-        VertexBufferElement{.Type = ShaderDataType::Float4, .Count = 3, .Normalized = GL_FALSE}, // Position
-        VertexBufferElement{.Type = ShaderDataType::Float4, .Count = 3, .Normalized = GL_FALSE}, // Normal
-        VertexBufferElement{.Type = ShaderDataType::Float4, .Count = 3, .Normalized = GL_FALSE}, // Color
-        VertexBufferElement{.Type = ShaderDataType::Float4, .Count = 2, .Normalized = GL_FALSE}, // Texture
-    };
-    m_VAO.AddBuffer(vbo, layout);
-
-    m_VAO.Unbind();
-    vbo.Unbind();
-    ebo.Unbind();
+    SetupMesh(vertices, indices);
 }
 
-Mesh::Mesh(std::vector<float> &vertices, Texture3D &texture)
-    : m_Vertices{}, m_Indices{}, m_Textures{}, m_Texture3D{texture}
+Mesh::Mesh(const std::vector<Vertex> &vertices, const std::vector<uint32_t> &indices, const MaterialPtr &material)
+    : IndexCount(indices.size()), Material(material), Vertices(vertices), Indices(indices)
 {
-    VertexBuffer vbo(vertices.data(), vertices.size() * sizeof(float));
-
-    VertexBufferLayout layout{
-        VertexBufferElement{.Type = ShaderDataType::Float3, .Count = 3, .Normalized = GL_FALSE}, // Position
-    };
-    m_VAO.AddBuffer(vbo, layout);
-
-    m_VAO.Unbind();
-    vbo.Unbind();
+    SetupMesh(vertices, indices);
 }
 
-void Mesh::Draw(Shader &shader, Camera &camera, const glm::mat4 &modelMatrix)
+void Mesh::Clear() {}
+
+void Mesh::SetupMesh(const std::vector<Vertex> &vertices, const std::vector<uint32_t> &indices)
 {
-    shader.Use();
-    m_VAO.Bind();
+    VAO.Init();
+    VAO.Bind();
 
-    // Keep track of how many of each type of textures we have
-    unsigned int numDiffuse = 0;
-    unsigned int numSpecular = 0;
+    VAO.AttachBuffer(BufferType::ARRAY, vertices.size() * sizeof(Vertex), DrawMode::DYNAMIC, vertices.data());
+    VAO.AttachBuffer(BufferType::ELEMENT, indices.size() * sizeof(uint32_t), DrawMode::STATIC, indices.data());
 
-    for (unsigned int i = 0; i < m_Textures.size(); i++)
-    {
-        auto texture = m_Textures[i];
-        std::string num;
-        std::string type = texture.GetType();
-        if (type == "diffuse")
-        {
-            num = std::to_string(numDiffuse++);
-        }
-        else if (type == "specular")
-        {
-            num = std::to_string(numSpecular++);
-        }
-        texture.TextureUnit(shader, (type + num).c_str(), i);
-        texture.Bind();
-    }
+    // vertex attributes
+    const static auto vertexSize = sizeof(Vertex);
+    VAO.EnableAttribute(0, 3, vertexSize, reinterpret_cast<void *>(0));
+    VAO.EnableAttribute(1, 3, vertexSize, reinterpret_cast<void *>(offsetof(Vertex, Normal)));
+    VAO.EnableAttribute(2, 3, vertexSize, reinterpret_cast<void *>(offsetof(Vertex, Color)));
+    VAO.EnableAttribute(3, 2, vertexSize, reinterpret_cast<void *>(offsetof(Vertex, TexCoords)));
+    VAO.EnableAttribute(4, 1, vertexSize, reinterpret_cast<void *>(offsetof(Vertex, EditorID)));
 
-    shader.SetUniformMatrix4fv("model", modelMatrix);
-    shader.SetUniformMatrix4fv("projectionViewMatrix", camera.GetProjectionViewMatrix());
-
-    // set materials
-    shader.SetUniform3f("gMaterial.AmbientColor", m_Material.AmbientColor);
-    shader.SetUniform3f("gMaterial.DiffuseColor", m_Material.DiffuseColor);
-    shader.SetUniform3f("gMaterial.SpecularColor", m_Material.SpecularColor);
-    shader.SetUniform3f("gCameraPos", camera.GetPosition());
-
-    Light::SetLightUniforms(shader);
-
-    glDrawElements(GL_TRIANGLES, m_Indices.size(), GL_UNSIGNED_INT, 0);
-
-    m_VAO.Unbind();
-}
-
-void Mesh::DrawCubeMap(Shader &shader, Camera &camera, const glm::mat4 &modelMatrix)
-{
-    glDepthFunc(GL_LEQUAL);
-
-    shader.Use();
-
-    auto view = glm::mat4(glm::mat3(camera.GetViewMatrix()));
-
-    shader.SetUniform1i("cubeMap", 0);
-    shader.SetUniformMatrix4fv("model", modelMatrix);
-    shader.SetUniformMatrix4fv("projectionViewMatrix", camera.GetProjectionMatrix() * view);
-
-    m_VAO.Bind();
-    m_Texture3D.Bind();
-
-    glDrawArrays(GL_TRIANGLES, 0, 36);
-
-    m_VAO.Unbind();
-    glDepthFunc(GL_LESS);
+    VAO.Unbind();
 }
 } // namespace Engine

@@ -30,6 +30,8 @@ class Scene
     void SetSceneFilePath(const std::string &filepath) { m_SceneFilePath = filepath; }
     const std::string &GetSceneFilePath() const { return m_SceneFilePath; }
 
+    const entt::registry &GetRegistry() { return m_Registry; }
+
   private:
     entt::registry m_Registry;
 

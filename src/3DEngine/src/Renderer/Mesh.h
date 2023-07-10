@@ -1,35 +1,29 @@
 #pragma once
 
-#include <glm/glm.hpp>
 #include <vector>
 
-#include "Camera.h"
-#include "Texture.h"
+#include "Vertex.h"
 #include "VertexArray.h"
-#include "Shader.h"
-#include "Light.h"
 #include "Material.h"
 
 namespace Engine
 {
-class Mesh
+struct Mesh
 {
-  public:
-    Mesh() = default;
-    Mesh(std::vector<Vertex> &vertices, std::vector<unsigned int> &indices, std::vector<Texture> &textures);
-    Mesh(std::vector<float> &vertices, Texture3D &texture);
-    ~Mesh() = default;
+    Mesh(const std::vector<Vertex> &vertices, const std::vector<uint32_t> &indices);
+    Mesh(const std::vector<Vertex> &vertices, const std::vector<uint32_t> &indices, const MaterialPtr &material);
 
-    void Draw(Shader &shader, Camera &camera, const glm::mat4 &modelMatrix = glm::mat4{1.0f});
-    void DrawCubeMap(Shader &shader, Camera &camera, const glm::mat4 &modelMatrix = glm::mat4{1.0f});
+    void Clear();
+
+    auto GetTriangleCount() const { return IndexCount / 3; }
+
+    const std::size_t IndexCount;
+    std::vector<Vertex> Vertices;
+    std::vector<uint32_t> Indices;
+    VertexArray VAO;
+    MaterialPtr Material;
 
   private:
-    std::vector<Vertex> m_Vertices;
-    std::vector<unsigned int> m_Indices;
-    std::vector<Texture> m_Textures;
-    Material m_Material;
-    Texture3D m_Texture3D;
-
-    VertexArray m_VAO;
+    void SetupMesh(const std::vector<Vertex> &vertices, const std::vector<uint32_t> &indices);
 };
 } // namespace Engine

@@ -1,18 +1,13 @@
 #pragma once
 
-#include <assimp/Importer.hpp>
-#include <assimp/scene.h>
-#include <assimp/postprocess.h>
-#include <glm/glm.hpp>
-#include <vector>
-
-#include "Shader.h"
-#include "Camera.h"
-#include "Texture.h"
-#include "Buffer.h"
 #include "Mesh.h"
-#include "Light.h"
-#include "Material.h"
+
+#include <string>
+#include <string_view>
+
+struct aiScene;
+struct aiNode;
+struct aiMesh;
 
 namespace Engine
 {
@@ -20,29 +15,34 @@ class Model
 {
   public:
     Model() = default;
-    Model(const char *file);
+    Model(int entityID, const std::string_view path, const std::string_view name, const bool flipWindingOrder = false,
+          const bool loadMaterial = true);
+    Model(int entityID, const std::string_view name, const std::vector<Vertex> &vertices,
+          std::vector<unsigned int> &indices, const MaterialPtr &material) noexcept;
+    Model(int entityID, const std::string_view name, const Mesh &mesh) noexcept;
+    virtual ~Model() = default;
 
-    void Draw(Shader &shader, Camera &camera, const glm::mat4 &transform = glm::mat4(1.0f));
+    void AttachMesh(const Mesh mesh) noexcept;
 
-  private:
-    std::vector<unsigned int> GetIndices(const aiMesh *mesh);
-    std::vector<Vertex> AssembleVertices(const aiMesh *mesh);
-    std::vector<Texture> GetTextures();
-    Material GetMaterial();
+    // destroy all opengl handles for submeshes
+    void Delete();
 
-    void LoadMesh();
+    auto GetMeshes() const noexcept { return m_Meshes; }
 
-  private:
-    const char *m_File;
-    std::vector<unsigned char> m_Data;
-    const aiScene *m_Scene;
-
+  protected:
     std::vector<Mesh> m_Meshes;
-    bool m_HasTexture = false;
-    std::vector<Texture> m_TexturesLoaded;
-    Material m_Material;
 
   private:
-    glm::mat4 m_ModelMatrix{};
+    bool LoadModel(const std::string_view path, const bool flipWindingOrder, const bool loadMaterial);
+    void ProcessNode(aiNode *node, const aiScene *scene, const bool loadMaterial);
+    Mesh ProcessMesh(aiMesh *mesh, const aiScene *scene, const bool loadMaterial);
+
+    std::string m_Name;
+    std::string m_Path;
+    int m_EntityID;
+
+    size_t m_NumOfMaterials;
 };
+
+using ModelPtr = std::shared_ptr<Model>;
 } // namespace Engine

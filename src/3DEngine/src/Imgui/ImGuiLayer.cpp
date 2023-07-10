@@ -37,7 +37,7 @@ void ImGuiLayer::OnAttach()
     // ImGui::StyleColorsClassic();
     SetDarkThemeColors();
 
-    ImGuizmo::SetGizmoSizeClipSpace(0.05f);
+    ImGuizmo::SetGizmoSizeClipSpace(0.1f);
     auto nativeWindow = Application::GetWindow()->GetNativeWindow();
 
     // Setup Platform/Renderer bindings

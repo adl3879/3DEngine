@@ -4,7 +4,9 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+
 #include <string>
+#include <memory>
 
 namespace Engine
 {
@@ -32,4 +34,6 @@ class Shader
   private:
     unsigned int m_Program;
 };
+
+using ShaderPtr = std::shared_ptr<Shader>;
 } // namespace Engine

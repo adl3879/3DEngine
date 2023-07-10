@@ -1,7 +1,6 @@
 #include "Application.h"
 
 #include "InputManager.h"
-#include "Renderer.h"
 #include "Log.h"
 #include "PlatformUtils.h"
 
@@ -27,7 +26,7 @@ Application::Application()
     m_ImGuiLayer = new ImGuiLayer();
     PushOverlay(m_ImGuiLayer);
 
-    Renderer3D::Init();
+    // Renderer3D::Init();
 
     LOG_CORE_TRACE("Engine Initialized");
 }
@@ -48,9 +47,7 @@ void Application::Run()
         for (Layer *layer : m_LayerStack) layer->OnUpdate(m_DeltaTime);
 
         m_ImGuiLayer->Begin();
-        {
-            for (Layer *layer : m_LayerStack) layer->OnImGuiRender();
-        }
+        for (Layer *layer : m_LayerStack) layer->OnImGuiRender();
         m_ImGuiLayer->End();
 
         // Swap the screen buffers
@@ -62,21 +59,19 @@ void Application::SetupInputSystem() {}
 
 void Application::RegisterLayerEventCallbacks(Layer *layer)
 {
-    InputManager::Instance().RegisterKeyboardCallback(
+    static InputManager &Input = InputManager::Instance();
+
+    Input.RegisterKeyboardCallback(
         std::bind(&Layer::OnKeyPressed, layer, std::placeholders::_1, std::placeholders::_2));
-    InputManager::Instance().RegisterKeyReleasedCallback(
-        std::bind(&Layer::OnKeyReleased, layer, std::placeholders::_1));
-    InputManager::Instance().RegisterMousePressedCallback(
-        std::bind(&Layer::OnMouseButtonPressed, layer, std::placeholders::_1));
-    InputManager::Instance().RegisterMouseReleasedCallback(
-        std::bind(&Layer::OnMouseButtonReleased, layer, std::placeholders::_1));
-    InputManager::Instance().RegisterWindowResizeCallback(
+    Input.RegisterKeyReleasedCallback(std::bind(&Layer::OnKeyReleased, layer, std::placeholders::_1));
+    Input.RegisterMousePressedCallback(std::bind(&Layer::OnMouseButtonPressed, layer, std::placeholders::_1));
+    Input.RegisterMouseReleasedCallback(std::bind(&Layer::OnMouseButtonReleased, layer, std::placeholders::_1));
+    Input.RegisterWindowResizeCallback(
         std::bind(&Layer::OnWindowResize, layer, std::placeholders::_1, std::placeholders::_2));
-    InputManager::Instance().RegisterMouseScrollCallback(
+    Input.RegisterMouseScrollCallback(
         std::bind(&Layer::OnMouseScrolled, layer, std::placeholders::_1, std::placeholders::_2));
-    InputManager::Instance().RegisterMouseMovedCallback(std::bind(&Layer::OnMouseMoved, layer, std::placeholders::_1,
-                                                                  std::placeholders::_2, std::placeholders::_3,
-                                                                  std::placeholders::_4));
+    Input.RegisterMouseMovedCallback(std::bind(&Layer::OnMouseMoved, layer, std::placeholders::_1,
+                                               std::placeholders::_2, std::placeholders::_3, std::placeholders::_4));
 }
 
 Application::~Application() { glfwTerminate(); }

@@ -8,8 +8,10 @@
 
 #include "Engine.h"
 #include "Light.h"
+#include "Model.h"
 
 #include <iostream>
+#include <memory>
 
 namespace Engine
 {
@@ -43,20 +45,18 @@ struct TransformComponent
 struct ModelComponent
 {
     std::string Path = "Null";
-    Engine::Model Model{};
+    std::string Name = std::string();
+    int EntityID;
+    ModelPtr Model = nullptr;
 
-    ModelComponent(const char *path = nullptr)
-    {
-        if (path != nullptr)
-        {
-            Path = path;
-            Model = Engine::Model(Path.c_str());
-        }
-    }
+    ModelComponent() = default;
     ModelComponent(const ModelComponent &) = default;
-    ModelComponent(const std::string &modelPath) : Path(modelPath) { Model = Engine::Model(modelPath.c_str()); }
 
-    void Create(const char *path) { Model = Engine::Model(path); }
+    void Create()
+    {
+        Model = std::make_shared<Engine::Model>(EntityID, Path, Name);
+        LOG_CORE_INFO("Model {0} at {1} Loaded!", Name, Path);
+    }
 };
 
 struct CameraComponent

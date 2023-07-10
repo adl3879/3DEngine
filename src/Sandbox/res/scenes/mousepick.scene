@@ -1,0 +1,55 @@
+Scene: Untitled
+Entities:
+  - Entity: 123456789
+    TagComponent:
+      Tag: Directional Light
+    DirectionalLightComponent:
+      Color: [1, 1, 1]
+      AmbientIntensity: 0.370000005
+      DiffuseIntensity: 0.100000001
+      Direction: [1, 0, 0]
+  - Entity: 123456789
+    TagComponent:
+      Tag: Mesh
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    ModelComponent:
+      ModelPath: /res/models/suzanne/scene.gltf
+  - Entity: 123456789
+    TagComponent:
+      Tag: Mesh
+    TransformComponent:
+      Translation: [2.70000005, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    ModelComponent:
+      ModelPath: /res/models/suzanne/scene.gltf
+  - Entity: 123456789
+    TagComponent:
+      Tag: Mesh
+    TransformComponent:
+      Translation: [-2, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    ModelComponent:
+      ModelPath: /res/models/boxTextured/scene.gltf
+  - Entity: 123456789
+    TagComponent:
+      Tag: Mesh
+    TransformComponent:
+      Translation: [0, 2, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    ModelComponent:
+      ModelPath: /res/models/boxTextured/scene.gltf
+  - Entity: 123456789
+    TagComponent:
+      Tag: Mesh
+    TransformComponent:
+      Translation: [0, -2.4000001, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    ModelComponent:
+      ModelPath: /res/models/suzanne/scene.gltf

@@ -147,5 +147,6 @@ void main()
     }
 
     FragColor = texture(diffuse0, TexCoord) * totalLight;
+    FragColor = vec4(1, 1, 1, 1);
     color2 = 50;
 }

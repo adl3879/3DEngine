@@ -2,6 +2,7 @@
 
 #include "Engine.h"
 #include "SceneHierarchyPanel.h"
+#include "RenderSystem.h"
 
 #include <memory>
 
@@ -19,7 +20,8 @@ class AppLayer : public Layer
     virtual void OnImGuiRender() override;
 
     virtual void OnKeyPressed(InputKey key, bool isRepeat) override;
-    void OnMouseScrolled(double xOffset, double yOffset) override;
+    virtual void OnMouseScrolled(double xOffset, double yOffset) override;
+    virtual void OnMouseButtonPressed(MouseButton button) override;
 
   private:
     void NewScene();
@@ -44,7 +46,10 @@ class AppLayer : public Layer
     // panels
     SceneHierarchyPanel m_SceneHierarchyPanel;
 
+    RenderSystemPtr m_RenderSystem;
+
   private:
     int m_GizmoType = -1;
+    Entity m_HoveredEntity;
 };
 } // namespace Engine

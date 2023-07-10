@@ -3,126 +3,150 @@
 in vec3 Color;
 in vec2 TexCoord;
 in vec3 Normal;
-in vec4 CurrentPos;
+in vec3 CurrentPos;
+in float EntityID;
 
-layout (location = 0) out vec4 color;
-layout (location = 1) out vec4 color2;
+layout (location = 0) out vec4 FragColor;
+layout (location = 1) out int color2;
 
-uniform sampler2D diffuse0;
-uniform sampler2D specular0;
-uniform vec4 lightColor;
-uniform vec3 lightPos;
-uniform vec3 cameraPos;
-uniform int lightType;
+#define MAX_POINT_LIGHTS 10
+#define MAX_SPOT_LIGHTS 10
+
+struct BaseLight
+{
+    vec3 Color;
+    float AmbientIntensity;
+    float DiffuseIntensity;
+};
 
 struct DirectionalLight
 {
-    vec3 direction;
-    float ambient;
-    float specularLight;
+    BaseLight Base;
+    vec3 Direction;
 };
-uniform DirectionalLight dLight;
+
+struct Attenuation
+{
+    float Constant;
+    float Linear;
+    float Exp;
+};
 
 struct PointLight
 {
-    float constant;
-    float linear;
-    float quadratic;
-    float ambient;
-    float specularLight;
+    BaseLight Base;
+    vec3 Position;
+    Attenuation Atten;
 };
-uniform PointLight pLight;
 
 struct SpotLight
 {
-    float ambient;
-    float specularLight;
-    float cutOff;
-    float outerCutOff;
+    PointLight Base;
+    vec3 Direction;
+    float Cutoff;
+    float OuterCutoff;
 };
-uniform SpotLight sLight;
 
-vec4 pointLight()
+struct Material
 {
-    vec3 lightVec = lightPos - CurrentPos.xyz;
-    // intensity of light with respect to distance
-    float dist = length(lightVec);
-    float a = pLight.quadratic;
-    float b = pLight.linear;
-    float c = pLight.constant;
-    float inten = 1.0f / (a * dist * dist + b * dist + c);
+    vec3 AmbientColor;
+    vec3 DiffuseColor;
+    vec3 SpecularColor;
+};
 
-    float ambient = pLight.ambient;
-    vec3 normal = normalize(Normal);
-    vec3 lightDirection = normalize(lightVec);
+uniform Material gMaterial;
+uniform DirectionalLight gDirectionalLight;
+uniform int gNumPointLights;
+uniform PointLight gPointLights[MAX_POINT_LIGHTS];
+uniform int gNumSpotLights;
+uniform SpotLight gSpotLights[MAX_SPOT_LIGHTS];
 
-    float diffuse = max(dot(normal, lightDirection), 0.0f);
+uniform sampler2D diffuse0;
+uniform sampler2D specular0;
+uniform vec3 gCameraPos;
 
-    // specular lighting
-	float specularLight = pLight.specularLight;
-	vec3 viewDirection = normalize(cameraPos - CurrentPos.xyz);
-	vec3 reflectionDirection = reflect(-lightDirection, normal);
-	float specAmount = pow(max(dot(viewDirection, reflectionDirection), 0.0f), 16);
-	float specular = specAmount * specularLight;
+vec4 calcLightInternal(BaseLight base, vec3 direction, vec3 normal)
+{
+    vec4 ambientColor = vec4(base.Color, 1.0f) *
+                        base.AmbientIntensity *
+                        vec4(gMaterial.AmbientColor, 1.0f);
 
-    return (texture(diffuse0, TexCoord) * (diffuse * inten + ambient) + texture(specular0, TexCoord).r * specular * inten) * lightColor;
+    float diffuseFactor = dot(normal, -direction);
+    vec4 diffuseColor = vec4(0, 0, 0, 0);
+    vec4 specularColor = vec4(0, 0, 0, 0);
+    if (diffuseFactor > 0)
+    {
+        diffuseColor = vec4(base.Color, 1.0f) *
+                       base.DiffuseIntensity *
+                       vec4(gMaterial.DiffuseColor, 1.0f) *
+                       diffuseFactor;
+
+        vec3 viewDirection = normalize(gCameraPos - CurrentPos);
+        vec3 lightReflect = reflect(direction, normal);
+        float specularFactor = pow(max(dot(viewDirection, lightReflect), 0.0), 32);
+          
+        specularColor = vec4(base.Color, 1.0f) *
+                        vec4(gMaterial.SpecularColor, 1.0f) *
+                        texture(specular0, TexCoord).r *
+                        specularFactor;
+    }
+
+    return (ambientColor + diffuseColor + specularColor);   
 }
 
-vec4 directionalLight()
+vec4 calcDirectionalLight(vec3 normal)
 {
-    // ambient lighting
-    float ambient = dLight.ambient;
-
-    // diffuse lighting
-    vec3 normal = normalize(Normal);
-    vec3 lightDirection = normalize(dLight.direction);
-    float diffuse = max(dot(normal, lightDirection), 0.0f);
-
-    // specular lighting
-    float specularLight = 0.50f;
-    vec3 viewDirection = normalize(cameraPos - CurrentPos.xyz);
-    vec3 reflectionDirection = reflect(-lightDirection, normal);
-    float specAmount = pow(max(dot(viewDirection, reflectionDirection), 0.0f), 16);
-    float specular = specAmount * dLight.specularLight;
-
-    return (texture(diffuse0, TexCoord) * (diffuse + ambient) + texture(specular0, TexCoord).r * specular) * lightColor;
+    return calcLightInternal(gDirectionalLight.Base, gDirectionalLight.Direction, normal);
 }
 
-vec4 spotLight()
+vec4 calcPointLight(PointLight l, vec3 normal)
 {
-    float outerCone = sLight.outerCutOff;
-    float innerCone = sLight.cutOff;
+    vec3 lightDirection = CurrentPos - l.Position;
+    float distance = length(lightDirection);
+    lightDirection = normalize(lightDirection);
 
-    float ambient = sLight.ambient;
+    vec4 color = calcLightInternal(l.Base, lightDirection, normal);
 
-    // diffuse lighting
-    vec3 normal = normalize(Normal);
-    vec3 lightDirection = normalize(lightPos - CurrentPos.xyz);
-    float diffuse = max(dot(normal, lightDirection), 0.0f);
+    float attenuation = l.Atten.Constant +
+                        l.Atten.Linear * distance +
+                        l.Atten.Exp * distance * distance;
 
-    // specular lighting
-	float specularLight = sLight.specularLight;
-	vec3 viewDirection = normalize(cameraPos - CurrentPos.xyz);
-	vec3 reflectionDirection = reflect(-lightDirection, normal);
-	float specAmount = pow(max(dot(viewDirection, reflectionDirection), 0.0f), 16);
-	float specular = specAmount * specularLight;
+    return color / attenuation;
+}
 
-    float angle = dot(lightPos - CurrentPos.xyz, -lightDirection);
-    float inten = clamp((angle - outerCone) / (innerCone - outerCone), 0.0f, 1.0f);
+vec4 calcSpotLight(SpotLight l, vec3 normal)
+{
+    vec3 lightDirection = normalize(CurrentPos - l.Base.Position);
+    float spotFactor = dot(lightDirection, normalize(-l.Direction));
+    float epsilon = l.Cutoff - l.OuterCutoff;
 
-    return (texture(diffuse0, TexCoord) * (diffuse * inten + ambient) + texture(specular0, TexCoord).r * specular * inten) * lightColor;
+    if (spotFactor > l.Cutoff)
+    {
+        vec4 color = calcPointLight(l.Base, normal);
+        float spotLightIntensity = clamp((spotFactor - l.OuterCutoff) / epsilon, 0.0, 1.0);
+        return color * spotLightIntensity;
+    }
+    else
+    {
+        return vec4(0, 0, 0, 0);
+    }
 }
 
 void main()
 {
-    // if (lightType == 0)
-    //     color = pointLight();
-    // else if (lightType == 1)
-    //     color = spotLight();
-    // else if (lightType == 2)
-    //     color = directionalLight();
-    // else
-    //     color = vec4(1.0f, 1.0f, 1.0f, 1.0f);
+    vec3 normal = normalize(Normal);
+    vec4 totalLight = calcDirectionalLight(normal);
 
-    color2 = vec4(1.0f, 0.2f, 0.3f, 0.0f);
-};
+    for (int i = 0; i < gNumPointLights; i++)
+    {
+        totalLight += calcPointLight(gPointLights[i], normal);
+    }
+
+    for (int i = 0; i < gNumSpotLights; i++)
+    {
+        totalLight += calcSpotLight(gSpotLights[i], normal);
+    }
+
+    FragColor = texture(diffuse0, TexCoord) * totalLight;
+    color2 = int(EntityID);
+}

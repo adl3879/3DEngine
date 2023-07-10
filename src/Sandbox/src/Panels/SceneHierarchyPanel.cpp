@@ -165,7 +165,8 @@ void SceneHierarchyPanel::DrawComponents(Entity entity)
             {
                 auto path = Utils::Path::GetRelative(Utils::FileDialogs::m_SelectedFile);
                 entityComponent.Path = path;
-                entityComponent.Create(path.c_str());
+                entityComponent.EntityID = (int)entity.GetEntityID();
+                entityComponent.Create();
             }
 
             ImGui::TreePop();
@@ -242,6 +243,8 @@ void SceneHierarchyPanel::SetContext(const std::shared_ptr<Scene> &context)
     m_Context = context;
     m_SelectionContext = {};
 }
+
+void SceneHierarchyPanel::SetSelectedEntity(Entity entity) { m_SelectionContext = entity; }
 
 void SceneHierarchyPanel::OnImGuiRender()
 {
