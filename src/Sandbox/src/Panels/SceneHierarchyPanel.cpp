@@ -244,7 +244,11 @@ void SceneHierarchyPanel::SetContext(const std::shared_ptr<Scene> &context)
     m_SelectionContext = {};
 }
 
-void SceneHierarchyPanel::SetSelectedEntity(Entity entity) { m_SelectionContext = entity; }
+void SceneHierarchyPanel::SetSelectedEntity(Entity entity)
+{
+    m_SelectionContext = entity;
+    m_Context->SetSelectedEntity(entity);
+}
 
 void SceneHierarchyPanel::OnImGuiRender()
 {

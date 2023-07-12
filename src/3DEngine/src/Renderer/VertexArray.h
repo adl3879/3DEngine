@@ -35,7 +35,7 @@ class VertexArray
     void Bind() const noexcept;
     void Unbind() const noexcept;
     void EnableAttribute(const uint32_t index, const int size, const uint32_t offset, const void *data) noexcept;
-    void SetBufferSubData(const BufferType &type, const uint32_t size, const uint32_t offset,
+    void SetBufferSubData(const BufferType &type, const uint32_t offset, const uint32_t size,
                           const void *data) noexcept;
 
     void Delete() noexcept;

@@ -26,7 +26,7 @@ void VertexArray::EnableAttribute(const uint32_t index, const int size, const ui
     glVertexAttribPointer(index, size, GL_FLOAT, GL_FALSE, offset, data);
 }
 
-void VertexArray::SetBufferSubData(const BufferType &type, const uint32_t size, const uint32_t offset,
+void VertexArray::SetBufferSubData(const BufferType &type, const uint32_t offset, const uint32_t size,
                                    const void *data) noexcept
 {
     glBufferSubData(type, offset, size, data);

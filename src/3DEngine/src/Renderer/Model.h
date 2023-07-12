@@ -11,6 +11,11 @@ struct aiMesh;
 
 namespace Engine
 {
+struct ModelAABB
+{
+    glm::vec3 Min, Max;
+};
+
 class Model
 {
   public:
@@ -24,10 +29,11 @@ class Model
 
     void AttachMesh(const Mesh mesh) noexcept;
 
-    // destroy all opengl handles for submeshes
+    // destroy all opengl handles for sub-meshes
     void Delete();
 
     auto GetMeshes() const noexcept { return m_Meshes; }
+    auto GetBoundingBoxes() const noexcept { return m_BoundingBoxes; }
 
   protected:
     std::vector<Mesh> m_Meshes;
@@ -37,11 +43,13 @@ class Model
     void ProcessNode(aiNode *node, const aiScene *scene, const bool loadMaterial);
     Mesh ProcessMesh(aiMesh *mesh, const aiScene *scene, const bool loadMaterial);
 
+  private:
     std::string m_Name;
     std::string m_Path;
     int m_EntityID;
 
     size_t m_NumOfMaterials;
+    std::vector<ModelAABB> m_BoundingBoxes;
 };
 
 using ModelPtr = std::shared_ptr<Model>;

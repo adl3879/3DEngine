@@ -83,31 +83,7 @@ void Scene::OnUpdateRuntime(float dt)
             cameraTransform = view.get<TransformComponent>(entity).GetTransform();
         }
     }
-    {
-        // Renderer3D::BeginScene(*m_MainCamera);
-        // {
-        //     auto view = m_Registry.view<TransformComponent, ModelComponent>();
-        //     for (auto entity : view)
-        //     {
-        //         auto [transform, model] = view.get<TransformComponent, ModelComponent>(entity);
-        //         Renderer3D::DrawModel(model.Model, transform.GetTransform());
-        //     }
-        // }
-        // Renderer3D::EndScene();
-    }
 }
 
-void Scene::OnUpdateEditor(float dt, EditorCamera &camera)
-{
-    // Renderer3D::BeginScene(camera);
-    // {
-    //     auto view = m_Registry.view<TransformComponent, ModelComponent>();
-    //     for (auto entity : view)
-    //     {
-    //         auto [transform, model] = view.get<TransformComponent, ModelComponent>(entity);
-    //         Renderer3D::DrawModel(model.Model, transform.GetTransform());
-    //         Renderer3D::EndScene();
-    //     }
-    // }
-}
+void Scene::OnUpdateEditor(float dt, EditorCamera &camera) {}
 } // namespace Engine

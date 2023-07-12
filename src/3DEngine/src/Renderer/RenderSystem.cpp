@@ -21,14 +21,21 @@ void RenderSystem::Init()
 
     m_Shaders["modelShader"] = std::make_shared<Shader>("/res/shaders/model.vert", "/res/shaders/model.frag");
     m_Shaders["quadShader"] = std::make_shared<Shader>("/res/shaders/light.vert", "/res/shaders/light.frag");
+    m_Shaders["lineShader"] = std::make_shared<Shader>("/res/shaders/line.vert", "/res/shaders/line.frag");
+    m_Shaders["outlineShader"] = std::make_shared<Shader>("/res/shaders/outline.vert", "/res/shaders/outline.frag");
 
     SetupScreenQuad();
+    SetupLine();
     SetupTextureSamplers();
 
-    // glEnable(GL_DEBUG_OUTPUT);
-    // glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_STENCIL_TEST);
+    glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+
+    glEnable(GL_DEBUG_OUTPUT);
+    glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
     // SetupDefaultState();
-    // glEnable(GL_MULTISAMPLE);
+    glEnable(GL_MULTISAMPLE);
 }
 
 void RenderSystem::Update(const Camera &camera) {}
@@ -38,11 +45,13 @@ void RenderSystem::Shutdown() {}
 void RenderSystem::Render(Camera &camera, Scene &scene, const bool globalWireframe)
 {
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
     RenderModelsWithTextures(camera, scene);
     // RenderModelsWithNoTextures(camera, scene);
     // RenderQuad(camera);
+
+    // RenderLine(camera, glm::vec3(0.0f), glm::vec3(2.0f), glm::vec3(1.0f, 0.2f, 0.3f));
 }
 
 void RenderSystem::SetupDefaultState()
@@ -77,8 +86,6 @@ void RenderSystem::SetupTextureSamplers()
 
 void RenderSystem::SetupScreenQuad()
 {
-    unsigned int VBO, EBO;
-
     std::vector<Vertex> quadVerts = {
         Vertex{.Position{0.5f, 0.5f, 0.0f}},
         Vertex{.Position{0.5f, -0.5f, 0.0f}},
@@ -99,6 +106,16 @@ void RenderSystem::SetupScreenQuad()
     m_QuadVAO.Unbind();
 }
 
+void RenderSystem::SetupLine()
+{
+    m_LineVAO.Init();
+    m_LineVAO.Bind();
+
+    m_LineVAO.AttachBuffer(BufferType::ARRAY, 6 * sizeof(float), DrawMode::DYNAMIC, nullptr);
+    m_LineVAO.EnableAttribute(0, 3, 3 * sizeof(float), (void *)0);
+    m_LineVAO.Unbind();
+}
+
 void RenderSystem::RenderModelsWithTextures(Camera &camera, Scene &scene) const
 {
     glBindSampler(m_SamplerPBRTextures, 0);
@@ -107,6 +124,7 @@ void RenderSystem::RenderModelsWithTextures(Camera &camera, Scene &scene) const
     glBindSampler(m_SamplerPBRTextures, 3);
 
     auto modelShader = m_Shaders.at("modelShader");
+    auto outlineShader = m_Shaders.at("outlineShader");
 
     auto view = scene.GetRegistry().view<ModelComponent, TransformComponent>();
     for (auto entity : view)
@@ -140,8 +158,29 @@ void RenderSystem::RenderModelsWithTextures(Camera &camera, Scene &scene) const
 
             Light::SetLightUniforms(*modelShader);
 
+            glStencilFunc(GL_ALWAYS, 1, 0xFF);
+            glStencilMask(0xFF);
+
             glDrawElements(GL_TRIANGLES, mesh.IndexCount, GL_UNSIGNED_INT, nullptr);
             glBindTexture(GL_TEXTURE_2D, 0);
+
+            // draws outline on selected model
+            if (scene.GetSelectedEntity() == entity)
+            {
+                glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
+                glStencilMask(0x00);
+                glDisable(GL_DEPTH_TEST);
+
+                outlineShader->Use();
+                outlineShader->SetUniform1f("outlining", 0.06f);
+                outlineShader->SetUniformMatrix4fv("model", transform.GetTransform());
+                outlineShader->SetUniformMatrix4fv("projectionViewMatrix", camera.GetProjectionViewMatrix());
+                glDrawElements(GL_TRIANGLES, mesh.IndexCount, GL_UNSIGNED_INT, nullptr);
+
+                glStencilMask(0xFF);
+                glStencilFunc(GL_ALWAYS, 1, 0xFF);
+                glEnable(GL_DEPTH_TEST);
+            }
 
             mesh.VAO.Unbind();
         }
@@ -180,5 +219,22 @@ void RenderSystem::RenderQuad(Camera &camera) const
 
     m_QuadVAO.Bind();
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+    m_QuadVAO.Unbind();
+}
+
+void RenderSystem::RenderLine(Camera &camera, const glm::vec3 &start, const glm::vec3 &end, const glm::vec3 &color)
+{
+    float vertices[] = {start.x, start.y, start.z, end.x, end.y, end.z};
+    m_LineVAO.SetBufferSubData(BufferType::ARRAY, 0, sizeof(vertices), vertices);
+
+    auto lineShader = m_Shaders.at("lineShader");
+    lineShader->Use();
+    m_LineVAO.Bind();
+
+    lineShader->SetUniformMatrix4fv("projectionViewMatrix", camera.GetProjectionViewMatrix());
+    lineShader->SetUniform3f("color", color);
+
+    glDrawArrays(GL_LINES, 0, 2);
+    m_LineVAO.Unbind();
 }
 } // namespace Engine

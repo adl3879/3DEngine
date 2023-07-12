@@ -44,12 +44,10 @@ void AppLayer::OnUpdate(float deltaTime)
         m_EditorCamera.SetViewportSize(m_ViewportSize.x, m_ViewportSize.y);
     }
 
-    // clear our entity ID attachment to -1
-    // m_Framebuffer->ClearAttachment(1, -1);
-
     {
         m_Framebuffer->Bind();
         m_RenderSystem->Render(m_EditorCamera, *m_Scene);
+        auto selectedEntity = m_SceneHierarchyPanel.GetSelectedEntity();
     }
 
     m_Scene->OnUpdateEditor(deltaTime, m_EditorCamera);
@@ -67,7 +65,6 @@ void AppLayer::OnUpdate(float deltaTime)
         auto pixelData = m_Framebuffer->ReadPixel(1, mouseX, mouseY);
         // removed one because i moved every entity by one
         m_HoveredEntity = pixelData == 0 ? Entity() : Entity((entt::entity)(pixelData - 1), m_Scene.get());
-        LOG_CORE_INFO("Pixel Data: {0}", pixelData);
     }
 
     m_Framebuffer->Unbind();
@@ -279,6 +276,7 @@ void AppLayer::OnMouseButtonPressed(MouseButton button)
 
 void AppLayer::NewScene()
 {
+    // TODO: complete resets
     Light::Reset();
     m_Scene = std::make_unique<Scene>();
     m_SceneHierarchyPanel.SetContext(m_Scene);

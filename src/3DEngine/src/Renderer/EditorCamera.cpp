@@ -67,7 +67,8 @@ void EditorCamera::OnUpdate(float ts)
         glm::vec2 delta = (mouse - m_InitialMousePosition) * 0.003f;
         m_InitialMousePosition = mouse;
 
-        if (InputManager::Instance().IsMouseButtonPressed(MouseButton::Middle))
+        // TODO: fix mouse panning
+        if (InputManager::Instance().IsMouseButtonPressed(MouseButton::Right))
             MousePan(delta);
         else if (InputManager::Instance().IsMouseButtonPressed(MouseButton::Left))
             MouseRotate(delta);
@@ -85,7 +86,7 @@ void EditorCamera::OnMouseScrolled(double xOffset, double yOffset)
 void EditorCamera::MousePan(const glm::vec2 &delta)
 {
     auto [xSpeed, ySpeed] = PanSpeed();
-    m_FocalPoint += -GetRightDirection() * delta.x * xSpeed * m_Distance;
+    m_FocalPoint += GetRightDirection() * delta.x * xSpeed * m_Distance;
     m_FocalPoint += GetUpDirection() * delta.y * ySpeed * m_Distance;
 }
 

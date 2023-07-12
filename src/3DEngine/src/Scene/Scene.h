@@ -30,10 +30,14 @@ class Scene
     void SetSceneFilePath(const std::string &filepath) { m_SceneFilePath = filepath; }
     const std::string &GetSceneFilePath() const { return m_SceneFilePath; }
 
+    void SetSelectedEntity(entt::entity entity) { m_SelectedEntity = entity; }
+    const entt::entity &GetSelectedEntity() const { return m_SelectedEntity; }
+
     const entt::registry &GetRegistry() { return m_Registry; }
 
   private:
     entt::registry m_Registry;
+    entt::entity m_SelectedEntity;
 
     friend class Entity;
     friend class SceneHierarchyPanel;

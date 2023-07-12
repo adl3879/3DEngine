@@ -2,41 +2,6 @@ Scene: Untitled
 Entities:
   - Entity: 123456789
     TagComponent:
-      Tag: Box1
-    TransformComponent:
-      Translation: [0, 0, 0]
-      Rotation: [0, 3.9000001, 0]
-      Scale: [1, 1, 1]
-    ModelComponent:
-      ModelPath: /res/models/boxTextured/scene.gltf
-  - Entity: 123456789
-    TagComponent:
-      Tag: Box2
-    TransformComponent:
-      Translation: [-2.5, 0, 0]
-      Rotation: [0, 4.5, 0]
-      Scale: [1, 2.9000001, 1]
-    ModelComponent:
-      ModelPath: /res/models/boxTextured/scene.gltf
-  - Entity: 123456789
-    TagComponent:
-      Tag: Box3
-    TransformComponent:
-      Translation: [3.1095345, 0.399460316, 0.0668757558]
-      Rotation: [-2.53639364, -0.658406258, -3.14159226]
-      Scale: [1.94838548, 0.300000131, 1.00000203]
-    ModelComponent:
-      ModelPath: /res/models/boxTextured/scene.gltf
-  - Entity: 123456789
-    TagComponent:
-      Tag: Directional Light
-    DirectionalLightComponent:
-      Color: [1, 1, 1]
-      AmbientIntensity: 0.370000005
-      DiffuseIntensity: 0.100000001
-      Direction: [1, 0, 0]
-  - Entity: 123456789
-    TagComponent:
       Tag: Point Light 1
     TransformComponent:
       Translation: [-0.0788778961, 0.97522527, -1.19212294]
@@ -49,3 +14,38 @@ Entities:
       Attenuation.Constant: 1
       Attenuation.Exp: 0.00300000003
       Attenuation.Linear: 0.00200000009
+  - Entity: 123456789
+    TagComponent:
+      Tag: Directional Light
+    DirectionalLightComponent:
+      Color: [1, 1, 1]
+      AmbientIntensity: 0.370000005
+      DiffuseIntensity: 0.100000001
+      Direction: [1, 0, 0]
+  - Entity: 123456789
+    TagComponent:
+      Tag: Box3
+    TransformComponent:
+      Translation: [3.1095345, 0.399460316, 0.0668757558]
+      Rotation: [-2.53639364, -0.658406258, -3.14159226]
+      Scale: [1.94838548, 0.300000131, 1.00000203]
+    ModelComponent:
+      ModelPath: /res/models/boxTextured/scene.gltf
+  - Entity: 123456789
+    TagComponent:
+      Tag: Box2
+    TransformComponent:
+      Translation: [-2.5, 0, 0]
+      Rotation: [-2.02482867, -1.10460162, 2.35136342]
+      Scale: [1.00000012, 2.89999747, 1]
+    ModelComponent:
+      ModelPath: /res/models/boxTextured/scene.gltf
+  - Entity: 123456789
+    TagComponent:
+      Tag: Box1
+    TransformComponent:
+      Translation: [-0.176206261, -0.2087598, -0.471324444]
+      Rotation: [-2.58274984, -0.758407474, -3.14159226]
+      Scale: [0.999988556, 1, 0.999989033]
+    ModelComponent:
+      ModelPath: /res/models/boxTextured/scene.gltf

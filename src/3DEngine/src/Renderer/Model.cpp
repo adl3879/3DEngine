@@ -52,7 +52,8 @@ bool Model::LoadModel(const std::string_view path, const bool flipWindingOrder, 
             path.data(), aiProcess_Triangulate | aiProcess_JoinIdenticalVertices | aiProcess_GenUVCoords |
                              aiProcess_SortByPType | aiProcess_RemoveRedundantMaterials | aiProcess_FindInvalidData |
                              aiProcess_FlipUVs | aiProcess_FlipWindingOrder | // Reverse back-face culling
-                             aiProcess_CalcTangentSpace | aiProcess_OptimizeMeshes | aiProcess_SplitLargeMeshes);
+                             aiProcess_CalcTangentSpace | aiProcess_OptimizeMeshes | aiProcess_SplitLargeMeshes |
+                             aiProcess_GenBoundingBoxes);
     }
     else
     {
@@ -60,7 +61,8 @@ bool Model::LoadModel(const std::string_view path, const bool flipWindingOrder, 
             path.data(), aiProcess_Triangulate | aiProcess_JoinIdenticalVertices | aiProcess_GenUVCoords |
                              aiProcess_SortByPType | aiProcess_RemoveRedundantMaterials | aiProcess_FindInvalidData |
                              aiProcess_FlipUVs | aiProcess_CalcTangentSpace | aiProcess_GenSmoothNormals |
-                             aiProcess_ImproveCacheLocality | aiProcess_OptimizeMeshes | aiProcess_SplitLargeMeshes);
+                             aiProcess_ImproveCacheLocality | aiProcess_OptimizeMeshes | aiProcess_SplitLargeMeshes |
+                             aiProcess_GenBoundingBoxes);
     }
 
     // Check if scene is not null and model is done loading
@@ -88,13 +90,15 @@ void Model::ProcessNode(aiNode *node, const aiScene *scene, const bool loadMater
     {
         auto *mesh = scene->mMeshes[node->mMeshes[i]];
         m_Meshes.push_back(ProcessMesh(mesh, scene, loadMaterial));
+
+        // Add the bounding box for the mesh
+        const aiAABB &box = mesh->mAABB;
+        m_BoundingBoxes.push_back(
+            {glm::vec3(box.mMin.x, box.mMin.y, box.mMin.z), glm::vec3(box.mMax.x, box.mMax.y, box.mMax.z)});
     }
 
     // Process their children via recursive tree traversal
-    for (auto i = 0; i < node->mNumChildren; ++i)
-    {
-        ProcessNode(node->mChildren[i], scene, loadMaterial);
-    }
+    for (auto i = 0; i < node->mNumChildren; ++i) ProcessNode(node->mChildren[i], scene, loadMaterial);
 }
 
 Mesh Model::ProcessMesh(aiMesh *mesh, const aiScene *scene, const bool loadMaterial)
