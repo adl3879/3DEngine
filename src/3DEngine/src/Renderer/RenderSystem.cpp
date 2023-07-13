@@ -8,8 +8,6 @@
 
 namespace Engine
 {
-unsigned int VAO;
-
 void RenderSystem::Init()
 {
 #ifndef NDEBUG
@@ -26,6 +24,7 @@ void RenderSystem::Init()
 
     SetupScreenQuad();
     SetupLine();
+    SetupBoundingBox();
     SetupTextureSamplers();
 
     glEnable(GL_DEPTH_TEST);
@@ -49,9 +48,10 @@ void RenderSystem::Render(Camera &camera, Scene &scene, const bool globalWirefra
 
     RenderModelsWithTextures(camera, scene);
     // RenderModelsWithNoTextures(camera, scene);
-    // RenderQuad(camera);
 
-    // RenderLine(camera, glm::vec3(0.0f), glm::vec3(2.0f), glm::vec3(1.0f, 0.2f, 0.3f));
+    // RenderBoundingBox(camera, glm::vec3{-0.5f, -0.5f, -0.5f}, glm::vec3{0.5f, 0.5f, 0.5f}, glm::vec3{1.0f, 1.0f,
+    // 0.0f}); RenderQuad(camera); RenderLine(camera, glm::vec3{-0.5f, -0.5f, -0.5f}, glm::vec3{0.5f, 0.5f, 0.5f},
+    // glm::vec3{1.0f, 1.0f, 0.0f});
 }
 
 void RenderSystem::SetupDefaultState()
@@ -86,23 +86,22 @@ void RenderSystem::SetupTextureSamplers()
 
 void RenderSystem::SetupScreenQuad()
 {
-    std::vector<Vertex> quadVerts = {
-        Vertex{.Position{0.5f, 0.5f, 0.0f}},
-        Vertex{.Position{0.5f, -0.5f, 0.0f}},
-        Vertex{.Position{-0.5f, -0.5f, 0.0f}},
-        Vertex{.Position{-0.5f, 0.5f, 0.0f}},
+    float quadVerts[] = {
+        0.5f, 0.5f, 0.0f, 0.5f, -0.5f, 0.0f, -0.5f, -0.5f, 0.0f, -0.5f, 0.5f, 0.0f,
     };
-    std::vector<uint32_t> quadIndices = {
+    uint32_t quadIndices[] = {
         0, 1, 3, // first Triangle
         1, 2, 3  // second Triangle
     };
 
     m_QuadVAO.Init();
     m_QuadVAO.Bind();
-    m_QuadVAO.AttachBuffer(BufferType::ARRAY, sizeof(Vertex) * quadVerts.size(), DrawMode::STATIC, quadVerts.data());
-    m_QuadVAO.AttachBuffer(BufferType::ELEMENT, sizeof(uint32_t) * quadIndices.size(), DrawMode::STATIC,
-                           quadIndices.data());
-    m_QuadVAO.EnableAttribute(0, 3, sizeof(Vertex), (void *)0);
+    m_QuadVAO.AttachBuffer(BufferType::ARRAY, sizeof(quadVerts), DrawMode::DYNAMIC, nullptr);
+    m_QuadVAO.AttachBuffer(BufferType::ELEMENT, sizeof(quadIndices), DrawMode::DYNAMIC, nullptr);
+    m_QuadVAO.EnableAttribute(0, 3, 3 * sizeof(float), (void *)0);
+
+    m_QuadVAO.SetBufferSubData(BufferType::ARRAY, 0, sizeof(quadVerts), quadVerts);
+    m_QuadVAO.SetBufferSubData(BufferType::ELEMENT, 0, sizeof(quadIndices), quadIndices);
     m_QuadVAO.Unbind();
 }
 
@@ -116,7 +115,23 @@ void RenderSystem::SetupLine()
     m_LineVAO.Unbind();
 }
 
-void RenderSystem::RenderModelsWithTextures(Camera &camera, Scene &scene) const
+void RenderSystem::SetupBoundingBox()
+{
+    m_BoundingBoxVAO.Init();
+    m_BoundingBoxVAO.Bind();
+
+    m_BoundingBoxVAO.AttachBuffer(BufferType::ARRAY, 24 * sizeof(float), DrawMode::DYNAMIC, nullptr);
+    m_BoundingBoxVAO.AttachBuffer(BufferType::ELEMENT, 24 * sizeof(uint32_t), DrawMode::DYNAMIC, nullptr);
+
+    m_BoundingBoxVAO.EnableAttribute(0, 3, 3 * sizeof(float), (void *)0);
+
+    // m_BoundingBoxVAO.SetBufferSubData(BufferType::ARRAY, 0, sizeof(boundingBoxVertices), boundingBoxVertices);
+    // m_BoundingBoxVAO.SetBufferSubData(BufferType::ELEMENT, 0, boundingBoxIndices.size() * sizeof(unsigned int),
+    //                                   boundingBoxIndices.data());
+    m_BoundingBoxVAO.Unbind();
+}
+
+void RenderSystem::RenderModelsWithTextures(Camera &camera, Scene &scene)
 {
     glBindSampler(m_SamplerPBRTextures, 0);
     glBindSampler(m_SamplerPBRTextures, 1);
@@ -124,13 +139,14 @@ void RenderSystem::RenderModelsWithTextures(Camera &camera, Scene &scene) const
     glBindSampler(m_SamplerPBRTextures, 3);
 
     auto modelShader = m_Shaders.at("modelShader");
-    auto outlineShader = m_Shaders.at("outlineShader");
 
-    auto view = scene.GetRegistry().view<ModelComponent, TransformComponent>();
+    auto view = scene.GetRegistry().view<ModelComponent, TransformComponent, VisibilityComponent>();
     for (auto entity : view)
     {
-        auto [model, transform] = view.get<ModelComponent, TransformComponent>(entity);
-        if (model.Model == nullptr) continue;
+        auto [model, transform, visibility] = view.get<ModelComponent, TransformComponent, VisibilityComponent>(entity);
+        if (!visibility.IsVisible || model.Model == nullptr) continue;
+
+        auto boundingBox = model.Model->GetBoundingBoxes();
 
         for (auto mesh : model.Model->GetMeshes())
         {
@@ -158,28 +174,14 @@ void RenderSystem::RenderModelsWithTextures(Camera &camera, Scene &scene) const
 
             Light::SetLightUniforms(*modelShader);
 
-            glStencilFunc(GL_ALWAYS, 1, 0xFF);
-            glStencilMask(0xFF);
-
             glDrawElements(GL_TRIANGLES, mesh.IndexCount, GL_UNSIGNED_INT, nullptr);
             glBindTexture(GL_TEXTURE_2D, 0);
+
+            // RenderBoundingBox(camera, boundingBox[0].Min, boundingBox[0].Max, glm::vec3{1.0f, 0.0f, 0.0f});
 
             // draws outline on selected model
             if (scene.GetSelectedEntity() == entity)
             {
-                glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
-                glStencilMask(0x00);
-                glDisable(GL_DEPTH_TEST);
-
-                outlineShader->Use();
-                outlineShader->SetUniform1f("outlining", 0.06f);
-                outlineShader->SetUniformMatrix4fv("model", transform.GetTransform());
-                outlineShader->SetUniformMatrix4fv("projectionViewMatrix", camera.GetProjectionViewMatrix());
-                glDrawElements(GL_TRIANGLES, mesh.IndexCount, GL_UNSIGNED_INT, nullptr);
-
-                glStencilMask(0xFF);
-                glStencilFunc(GL_ALWAYS, 1, 0xFF);
-                glEnable(GL_DEPTH_TEST);
             }
 
             mesh.VAO.Unbind();
@@ -212,12 +214,14 @@ void RenderSystem::RenderModelsWithNoTextures(Camera &camera, Scene &scene) cons
     }
 }
 
-void RenderSystem::RenderQuad(Camera &camera) const
+void RenderSystem::RenderQuad(Camera &camera)
 {
     auto modelShader = m_Shaders.at("quadShader");
     modelShader->Use();
+    modelShader->SetUniformMatrix4fv("projectionViewMatrix", camera.GetProjectionViewMatrix());
 
     m_QuadVAO.Bind();
+
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
     m_QuadVAO.Unbind();
 }
@@ -236,5 +240,21 @@ void RenderSystem::RenderLine(Camera &camera, const glm::vec3 &start, const glm:
 
     glDrawArrays(GL_LINES, 0, 2);
     m_LineVAO.Unbind();
+}
+
+void RenderSystem::RenderBoundingBox(Camera &camera, const glm::vec3 &min, const glm::vec3 &max, const glm::vec3 &color)
+{
+    // Enable line drawing mode
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+    auto lineShader = m_Shaders.at("lineShader");
+    lineShader->Use();
+    m_BoundingBoxVAO.Bind();
+
+    lineShader->SetUniformMatrix4fv("projectionViewMatrix", camera.GetProjectionViewMatrix());
+    lineShader->SetUniform3f("color", color);
+
+    glDrawElements(GL_TRIANGLES, 24, GL_UNSIGNED_INT, nullptr);
+    m_BoundingBoxVAO.Unbind();
 }
 } // namespace Engine

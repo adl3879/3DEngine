@@ -79,7 +79,7 @@ void EditorCamera::OnUpdate(float ts)
 
 void EditorCamera::OnMouseScrolled(double xOffset, double yOffset)
 {
-    MouseZoom((float)yOffset * 0.07f);
+    MouseZoom((float)yOffset * 0.1f);
     UpdateView();
 }
 

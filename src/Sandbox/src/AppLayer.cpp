@@ -38,11 +38,9 @@ void AppLayer::OnDetach() {}
 void AppLayer::OnUpdate(float deltaTime)
 {
     // update
-    if (m_ViewportFocused)
-    {
-        m_EditorCamera.OnUpdate(deltaTime);
-        m_EditorCamera.SetViewportSize(m_ViewportSize.x, m_ViewportSize.y);
-    }
+
+    m_EditorCamera.OnUpdate(deltaTime);
+    m_EditorCamera.SetViewportSize(m_ViewportSize.x, m_ViewportSize.y);
 
     {
         m_Framebuffer->Bind();
@@ -77,7 +75,7 @@ void AppLayer::OnImGuiRender()
     static bool opt_padding = false;
     static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None;
 
-    // We are using the ImGuiWindowFlags_NoDocking flag to make the parent window not dockable into,
+    // We are using the ImGuiWindowFlags_NoDocking flag to make the parent window not dockable into
     // because it would be confusing to have two docking targets within each others.
     ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
     if (opt_fullscreen)
@@ -158,7 +156,8 @@ void AppLayer::OnImGuiRender()
     ImGui::Begin("Viewport");
     auto viewportOffset = ImGui::GetCursorPos();
 
-    m_ViewportFocused = ImGui::IsWindowFocused() || ImGui::IsWindowHovered();
+    m_ViewportFocused = ImGui::IsWindowFocused();
+    m_ViewportHovered = ImGui::IsWindowHovered();
     auto viewportPanelSize = ImGui::GetContentRegionAvail();
     if (m_ViewportSize != *((glm::vec2 *)&viewportPanelSize))
     {
@@ -261,7 +260,7 @@ void AppLayer::OnKeyPressed(InputKey key, bool isRepeat)
 
 void AppLayer::OnMouseScrolled(double xOffset, double yOffset)
 {
-    if (m_ViewportFocused) m_EditorCamera.OnMouseScrolled(xOffset, yOffset);
+    if (m_ViewportFocused || m_ViewportHovered) m_EditorCamera.OnMouseScrolled(xOffset, yOffset);
 }
 
 void AppLayer::OnMouseButtonPressed(MouseButton button)
@@ -270,7 +269,7 @@ void AppLayer::OnMouseButtonPressed(MouseButton button)
     // Mouse picking
     if (button == MouseButton::Left && !ImGuizmo::IsOver() && !Input.IsKeyPressed(InputKey::LeftAlt))
     {
-        if (m_ViewportFocused) m_SceneHierarchyPanel.SetSelectedEntity(m_HoveredEntity);
+        if (m_ViewportHovered) m_SceneHierarchyPanel.SetSelectedEntity(m_HoveredEntity);
     }
 }
 

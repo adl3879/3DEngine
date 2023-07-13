@@ -236,6 +236,17 @@ void SceneHierarchyPanel::DrawComponents(Entity entity)
             ImGui::TreePop();
         }
     }
+
+    if (entity.HasComponent<VisibilityComponent>())
+    {
+        if (ImGui::TreeNodeEx((void *)typeid(VisibilityComponent).hash_code(), ImGuiTreeNodeFlags_DefaultOpen,
+                              "Visibility"))
+        {
+            auto &entityComponent = entity.GetComponent<VisibilityComponent>();
+            ImGui::Checkbox("Visibility", &entityComponent.IsVisible);
+            ImGui::TreePop();
+        }
+    }
 }
 
 void SceneHierarchyPanel::SetContext(const std::shared_ptr<Scene> &context)

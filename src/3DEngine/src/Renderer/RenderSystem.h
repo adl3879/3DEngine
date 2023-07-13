@@ -27,12 +27,14 @@ class RenderSystem
     void SetupTextureSamplers();
     void SetupScreenQuad();
     void SetupLine();
+    void SetupBoundingBox();
 
   private:
-    void RenderModelsWithTextures(Camera &camera, Scene &scene) const;
+    void RenderModelsWithTextures(Camera &camera, Scene &scene);
     void RenderModelsWithNoTextures(Camera &camera, Scene &scene) const;
-    void RenderQuad(Camera &camera) const;
+    void RenderQuad(Camera &camera);
     void RenderLine(Camera &camera, const glm::vec3 &start, const glm::vec3 &end, const glm::vec3 &color);
+    void RenderBoundingBox(Camera &camera, const glm::vec3 &min, const glm::vec3 &max, const glm::vec3 &color);
 
   private:
     unsigned int m_UBOMatrices = 0;
@@ -40,6 +42,7 @@ class RenderSystem
 
     VertexArray m_QuadVAO;
     VertexArray m_LineVAO;
+    VertexArray m_BoundingBoxVAO;
 
   private:
     std::unordered_map<std::string, ShaderPtr> m_Shaders;

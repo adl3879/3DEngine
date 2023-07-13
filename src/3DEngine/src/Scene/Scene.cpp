@@ -18,6 +18,7 @@ Entity Scene::CreateEntity(const std::string &name)
 
     entity.GetComponent<TagComponent>().Tag = name.empty() ? "Unnamed Entity" : name;
     entity.AddComponent<TransformComponent>();
+    entity.AddComponent<VisibilityComponent>();
 
     return entity;
 }

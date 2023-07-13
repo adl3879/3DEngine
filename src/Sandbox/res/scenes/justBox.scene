@@ -4,20 +4,19 @@ Entities:
     TagComponent:
       Tag: Mesh
     TransformComponent:
-      Translation: [0, -3.51579165, 0]
-      Rotation: [0, 0, 0]
-      Scale: [2.44546342, 1, 6.28846359]
-    ModelComponent:
-      ModelPath: /res/models/boxTextured/scene.gltf
-  - Entity: 123456789
-    TagComponent:
-      Tag: Mesh
-    TransformComponent:
-      Translation: [0, 1.26615405, 0]
+      Translation: [0, 0, 0]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
     ModelComponent:
       ModelPath: /res/models/boxTextured/scene.gltf
+  - Entity: 123456789
+    TagComponent:
+      Tag: Directional Light
+    DirectionalLightComponent:
+      Color: [1, 1, 1]
+      AmbientIntensity: 0.370000005
+      DiffuseIntensity: 0.100000001
+      Direction: [0, -1, 0]
   - Entity: 123456789
     TagComponent:
       Tag: Mesh
@@ -29,18 +28,19 @@ Entities:
       ModelPath: /res/models/boxTextured/scene.gltf
   - Entity: 123456789
     TagComponent:
-      Tag: Directional Light
-    DirectionalLightComponent:
-      Color: [1, 1, 1]
-      AmbientIntensity: 0.370000005
-      DiffuseIntensity: 0.100000001
-      Direction: [1, 0, 0]
+      Tag: Mesh
+    TransformComponent:
+      Translation: [0, 1.26615405, -2.49384046]
+      Rotation: [0, 0, -1.04592216]
+      Scale: [1, 1, 1]
+    ModelComponent:
+      ModelPath: /res/models/boxTextured/scene.gltf
   - Entity: 123456789
     TagComponent:
       Tag: Mesh
     TransformComponent:
-      Translation: [0, 0, 0]
+      Translation: [0, -3.51579165, 0]
       Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
+      Scale: [2.44546342, 1, 6.28846359]
     ModelComponent:
       ModelPath: /res/models/boxTextured/scene.gltf

@@ -136,4 +136,12 @@ struct SpotLightComponent
     SpotLightComponent() = default;
     SpotLightComponent(const SpotLightComponent &) = default;
 };
+
+struct VisibilityComponent
+{
+    bool IsVisible = true;
+
+    VisibilityComponent() = default;
+    VisibilityComponent(const VisibilityComponent &) = default;
+};
 } // namespace Engine
