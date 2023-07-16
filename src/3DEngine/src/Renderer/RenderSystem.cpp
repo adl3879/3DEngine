@@ -8,6 +8,8 @@
 
 namespace Engine
 {
+int indexCount = 0;
+
 void RenderSystem::Init()
 {
 #ifndef NDEBUG
@@ -21,15 +23,12 @@ void RenderSystem::Init()
     m_Shaders["quadShader"] = std::make_shared<Shader>("/res/shaders/light.vert", "/res/shaders/light.frag");
     m_Shaders["lineShader"] = std::make_shared<Shader>("/res/shaders/line.vert", "/res/shaders/line.frag");
     m_Shaders["outlineShader"] = std::make_shared<Shader>("/res/shaders/outline.vert", "/res/shaders/outline.frag");
+    m_Shaders["pbrShader"] = std::make_shared<Shader>("/res/shaders/PBR.vert", "/res/shaders/PBR.frag");
 
     SetupScreenQuad();
     SetupLine();
-    SetupBoundingBox();
     SetupTextureSamplers();
-
-    glEnable(GL_DEPTH_TEST);
-    glEnable(GL_STENCIL_TEST);
-    glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+    SetupSphere();
 
     glEnable(GL_DEBUG_OUTPUT);
     glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
@@ -41,17 +40,61 @@ void RenderSystem::Update(const Camera &camera) {}
 
 void RenderSystem::Shutdown() {}
 
+glm::vec3 lightPositions[] = {
+    glm::vec3(-10.0f, 10.0f, 10.0f),
+    glm::vec3(10.0f, 10.0f, 10.0f),
+    glm::vec3(-10.0f, -10.0f, 10.0f),
+    glm::vec3(10.0f, -10.0f, 10.0f),
+};
+glm::vec3 lightColors[] = {glm::vec3(300.0f, 300.0f, 300.0f), glm::vec3(300.0f, 300.0f, 300.0f),
+                           glm::vec3(300.0f, 300.0f, 300.0f), glm::vec3(300.0f, 300.0f, 300.0f)};
+
+int nrRows = 7;
+int nrColumns = 7;
+float spacing = 2.5;
+
 void RenderSystem::Render(Camera &camera, Scene &scene, const bool globalWireframe)
 {
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
     RenderModelsWithTextures(camera, scene);
-    // RenderModelsWithNoTextures(camera, scene);
 
-    // RenderBoundingBox(camera, glm::vec3{-0.5f, -0.5f, -0.5f}, glm::vec3{0.5f, 0.5f, 0.5f}, glm::vec3{1.0f, 1.0f,
-    // 0.0f}); RenderQuad(camera); RenderLine(camera, glm::vec3{-0.5f, -0.5f, -0.5f}, glm::vec3{0.5f, 0.5f, 0.5f},
-    // glm::vec3{1.0f, 1.0f, 0.0f});
+    auto pbrShader = m_Shaders.at("pbrShader");
+    pbrShader->Use();
+
+    auto model = glm::mat4(1.0f);
+    for (int row = 0; row < nrRows; ++row)
+    {
+        for (int col = 0; col < nrColumns; ++col)
+        {
+            model = glm::mat4(1.0f);
+            model = glm::translate(model,
+                                   glm::vec3((col - (nrColumns / 2)) * spacing, (row - (nrRows / 2)) * spacing, 0.0f));
+            model = glm::scale(model, glm::vec3(0.7f));
+
+            pbrShader->SetUniformMatrix4fv("model", model);
+            pbrShader->SetUniformMatrix3fv("normalMatrix", glm::transpose(glm::inverse(glm::mat3(model))));
+
+            RenderSphere(camera, glm::vec3(0.0f), 1.0, {1.0f, 0.0f, 0.0f});
+        }
+    }
+
+    for (int i = 0; i < sizeof(lightPositions); ++i)
+    {
+        glm::vec3 newPos = lightPositions[i] + glm::vec3(sin(glfwGetTime() * 5.0) * 5.0, 0.0, 0.0);
+        newPos = lightPositions[i];
+        pbrShader->SetUniform3f("gPointLights[" + std::to_string(i) + "].Position", newPos);
+        pbrShader->SetUniform3f("gPointLights[" + std::to_string(i) + "].Color", lightColors[i]);
+
+        // auto model = glm::mat4(1.0f);
+        // model = glm::translate(model, newPos);
+        // model = glm::scale(model, glm::vec3(0.7f));
+        // pbrShader->SetUniformMatrix4fv("model", model);
+        // pbrShader->SetUniformMatrix3fv("normalMatrix", glm::transpose(glm::inverse(glm::mat3(model))));
+
+        // RenderSphere(camera, newPos, 1.0, {1.0f, 0.0f, 0.0f});
+    }
 }
 
 void RenderSystem::SetupDefaultState()
@@ -115,20 +158,87 @@ void RenderSystem::SetupLine()
     m_LineVAO.Unbind();
 }
 
-void RenderSystem::SetupBoundingBox()
+void RenderSystem::SetupSphere()
 {
-    m_BoundingBoxVAO.Init();
-    m_BoundingBoxVAO.Bind();
+    m_SphereVAO.Init();
+    m_SphereVAO.Bind();
 
-    m_BoundingBoxVAO.AttachBuffer(BufferType::ARRAY, 24 * sizeof(float), DrawMode::DYNAMIC, nullptr);
-    m_BoundingBoxVAO.AttachBuffer(BufferType::ELEMENT, 24 * sizeof(uint32_t), DrawMode::DYNAMIC, nullptr);
+    std::vector<glm::vec3> positions;
+    std::vector<glm::vec2> uv;
+    std::vector<glm::vec3> normals;
+    std::vector<unsigned int> indices;
 
-    m_BoundingBoxVAO.EnableAttribute(0, 3, 3 * sizeof(float), (void *)0);
+    const unsigned int X_SEGMENTS = 64;
+    const unsigned int Y_SEGMENTS = 64;
+    const float PI = 3.14159265359f;
+    for (unsigned int x = 0; x <= X_SEGMENTS; ++x)
+    {
+        for (unsigned int y = 0; y <= Y_SEGMENTS; ++y)
+        {
+            float xSegment = (float)x / (float)X_SEGMENTS;
+            float ySegment = (float)y / (float)Y_SEGMENTS;
+            float xPos = std::cos(xSegment * 2.0f * PI) * std::sin(ySegment * PI);
+            float yPos = std::cos(ySegment * PI);
+            float zPos = std::sin(xSegment * 2.0f * PI) * std::sin(ySegment * PI);
 
-    // m_BoundingBoxVAO.SetBufferSubData(BufferType::ARRAY, 0, sizeof(boundingBoxVertices), boundingBoxVertices);
-    // m_BoundingBoxVAO.SetBufferSubData(BufferType::ELEMENT, 0, boundingBoxIndices.size() * sizeof(unsigned int),
-    //                                   boundingBoxIndices.data());
-    m_BoundingBoxVAO.Unbind();
+            positions.push_back(glm::vec3(xPos, yPos, zPos));
+            uv.push_back(glm::vec2(xSegment, ySegment));
+            normals.push_back(glm::vec3(xPos, yPos, zPos));
+        }
+    }
+
+    bool oddRow = false;
+    for (unsigned int y = 0; y < Y_SEGMENTS; ++y)
+    {
+        if (!oddRow) // even rows: y == 0, y == 2; and so on
+        {
+            for (unsigned int x = 0; x <= X_SEGMENTS; ++x)
+            {
+                indices.push_back(y * (X_SEGMENTS + 1) + x);
+                indices.push_back((y + 1) * (X_SEGMENTS + 1) + x);
+            }
+        }
+        else
+        {
+            for (int x = X_SEGMENTS; x >= 0; --x)
+            {
+                indices.push_back((y + 1) * (X_SEGMENTS + 1) + x);
+                indices.push_back(y * (X_SEGMENTS + 1) + x);
+            }
+        }
+        oddRow = !oddRow;
+    }
+    indexCount = static_cast<unsigned int>(indices.size());
+
+    std::vector<float> data;
+    for (unsigned int i = 0; i < positions.size(); ++i)
+    {
+        data.push_back(positions[i].x);
+        data.push_back(positions[i].y);
+        data.push_back(positions[i].z);
+        if (normals.size() > 0)
+        {
+            data.push_back(normals[i].x);
+            data.push_back(normals[i].y);
+            data.push_back(normals[i].z);
+        }
+        if (uv.size() > 0)
+        {
+            data.push_back(uv[i].x);
+            data.push_back(uv[i].y);
+        }
+    }
+
+    m_SphereVAO.AttachBuffer(BufferType::ARRAY, data.size() * sizeof(float), DrawMode::STATIC, data.data());
+    m_SphereVAO.AttachBuffer(BufferType::ELEMENT, indices.size() * sizeof(unsigned int), DrawMode::STATIC,
+                             indices.data());
+
+    unsigned int stride = (3 + 2 + 3) * sizeof(float);
+    m_SphereVAO.EnableAttribute(0, 3, stride, (void *)0);
+    m_SphereVAO.EnableAttribute(1, 3, stride, (void *)(3 * sizeof(float)));
+    m_SphereVAO.EnableAttribute(2, 2, stride, (void *)(6 * sizeof(float)));
+
+    m_SphereVAO.Unbind();
 }
 
 void RenderSystem::RenderModelsWithTextures(Camera &camera, Scene &scene)
@@ -242,19 +352,26 @@ void RenderSystem::RenderLine(Camera &camera, const glm::vec3 &start, const glm:
     m_LineVAO.Unbind();
 }
 
-void RenderSystem::RenderBoundingBox(Camera &camera, const glm::vec3 &min, const glm::vec3 &max, const glm::vec3 &color)
+void RenderSystem::RenderSphere(Camera &camera, const glm::vec3 &position, const float radius, const glm::vec3 &color)
 {
-    // Enable line drawing mode
-    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    m_SphereVAO.Bind();
+    auto pbrShader = m_Shaders.at("pbrShader");
+    pbrShader->Use();
 
-    auto lineShader = m_Shaders.at("lineShader");
-    lineShader->Use();
-    m_BoundingBoxVAO.Bind();
+    pbrShader->SetUniformMatrix4fv("projectionViewMatrix", camera.GetProjectionViewMatrix());
 
-    lineShader->SetUniformMatrix4fv("projectionViewMatrix", camera.GetProjectionViewMatrix());
-    lineShader->SetUniform3f("color", color);
+    pbrShader->SetUniform3f("albedo", color);
+    pbrShader->SetUniform1f("metallic", 0.05f);
+    pbrShader->SetUniform1f("roughness", 0.15f);
+    pbrShader->SetUniform1f("ao", 1.0f);
 
-    glDrawElements(GL_TRIANGLES, 24, GL_UNSIGNED_INT, nullptr);
-    m_BoundingBoxVAO.Unbind();
+    pbrShader->SetUniform3f("cameraPosition", camera.GetPosition());
+    pbrShader->SetUniform1i("numOfPointLights", 4);
+
+    // pbrShader->SetUniform3f("gPointLights[0].Position", glm::vec3{0.0f, 0.0f, -1.0f});
+    // pbrShader->SetUniform3f("gPointLights[0].Color", glm::vec3{1.0f});
+
+    glDrawElements(GL_TRIANGLE_STRIP, indexCount, GL_UNSIGNED_INT, nullptr);
+    m_SphereVAO.Unbind();
 }
 } // namespace Engine

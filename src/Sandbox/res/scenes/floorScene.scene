@@ -8,7 +8,7 @@ Entities:
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
     PointLightComponent:
-      Color: [0.995001137, 0.852307677, 1]
+      Color: [0.849230766, 0.709944844, 0.107133709]
       AmbientIntensity: 0.00100000005
       DiffuseIntensity: 1
       Attenuation.Constant: 1
@@ -36,7 +36,7 @@ Entities:
     TagComponent:
       Tag: Mesh
     TransformComponent:
-      Translation: [1.22889256, -1.585953, 1.07048655]
+      Translation: [1.22889256, -1.17152941, 1.07048655]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
     ModelComponent:
@@ -49,3 +49,26 @@ Entities:
       AmbientIntensity: 0.064000003
       DiffuseIntensity: 0.100000001
       Direction: [1, 0, 0]
+  - Entity: 123456789
+    TagComponent:
+      Tag: Mesh
+    TransformComponent:
+      Translation: [-1.3561368, -1.05000782, -0.997337818]
+      Rotation: [0, 0, 0]
+      Scale: [0.700000048, 0.700000048, 0.700000048]
+    ModelComponent:
+      ModelPath: /res/models/suzanne/scene.gltf
+  - Entity: 123456789
+    TagComponent:
+      Tag: Point Light 2
+    TransformComponent:
+      Translation: [2.00817418, 0, -3.11914611]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    PointLightComponent:
+      Color: [0.622816622, 0.907692313, 0.847210944]
+      AmbientIntensity: 0
+      DiffuseIntensity: 0.379999995
+      Attenuation.Constant: 1
+      Attenuation.Exp: 0.00300000003
+      Attenuation.Linear: 0.00200000009

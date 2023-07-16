@@ -30,7 +30,8 @@
     "*.scene": "yaml",
     "functional": "cpp",
     "iostream": "cpp",
-    "glad.h": "c"
+    "glad.h": "c",
+    "string_view": "cpp"
   },
   "Lua.diagnostics.globals": ["entity", "Input"]
 }
