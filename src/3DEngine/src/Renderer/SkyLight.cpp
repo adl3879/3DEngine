@@ -10,24 +10,26 @@
 
 namespace Engine
 {
+unsigned int hdrTexture = 0;
+
 void SkyLight::Init(const std::string &path, const std::size_t resolution)
 {
+    glDepthFunc(GL_LEQUAL);
     SetupCube();
 
     auto fullPath = Utils::Path::GetAbsolute(path);
 
-    auto hdrTexture = ResourceManager::Instance().LoadHDRI(fullPath);
+    hdrTexture = ResourceManager::Instance().LoadHDRI(fullPath);
 
-    // shaders
-    m_Shaders["equirectangularToCubemapShader"] =
+    m_Shaders["light"] = std::make_shared<Shader>("/res/shaders/light.vert", "/res/shaders/light.frag");
+    m_Shaders["equirectangularToCubemap"] =
         std::make_shared<Shader>("/res/shaders/cubemap.vert", "/res/shaders/cubemapConverter.frag");
-    m_Shaders["backgroundShader"] =
-        std::make_shared<Shader>("/res/shaders/cubemapBg.vert", "/res/shaders/cubemapBg.frag");
+    m_Shaders["cubemap"] = std::make_shared<Shader>("/res/shaders/cubemapBg.vert", "/res/shaders/cubemapBg.frag");
 
-    auto equirectangularToCubemapShader = m_Shaders["equirectangularToCubemapShader"];
+    m_Shaders["cubemap"]->SetUniform1i("environmentMap", 0);
 
-    auto bgShader = m_Shaders["backgroundShader"];
-    bgShader->SetUniform1i("environmentMap", 0);
+    auto equirectangularToCubemapShader = m_Shaders["equirectangularToCubemap"];
+    equirectangularToCubemapShader->SetUniform1i("equirectangularMap", 0);
 
     unsigned int captureFBO, captureRBO;
     glGenFramebuffers(1, &captureFBO);
@@ -40,9 +42,9 @@ void SkyLight::Init(const std::string &path, const std::size_t resolution)
 
     glGenTextures(1, &m_EnvCubemap);
     glBindTexture(GL_TEXTURE_CUBE_MAP, m_EnvCubemap);
-    for (size_t i = 0; i < 6; ++i)
+    for (unsigned int i = 0; i < 6; ++i)
     {
-        // store each face with 16 bit floating points
+        // note that we store each face with 16 bit floating point values
         glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB16F, resolution, resolution, 0, GL_RGB, GL_FLOAT,
                      nullptr);
     }
@@ -61,6 +63,7 @@ void SkyLight::Init(const std::string &path, const std::size_t resolution)
         glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, -1.0f, 0.0f)),
         glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, -1.0f, 0.0f))};
 
+    // convert HDR equirectangular environment map to cubemap equivalent
     equirectangularToCubemapShader->Use();
     equirectangularToCubemapShader->SetUniform1i("equirectangularMap", 0);
     equirectangularToCubemapShader->SetUniformMatrix4fv("projection", captureProjection);
@@ -68,32 +71,30 @@ void SkyLight::Init(const std::string &path, const std::size_t resolution)
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, hdrTexture);
 
-    glViewport(0, 0, resolution, resolution);
+    glViewport(0, 0, resolution, resolution); // don't forget to configure the viewport to the capture dimensions.
     glBindFramebuffer(GL_FRAMEBUFFER, captureFBO);
-    for (size_t i = 0; i < 6; ++i)
+    for (unsigned int i = 0; i < 6; ++i)
     {
         equirectangularToCubemapShader->SetUniformMatrix4fv("view", captureViews[i]);
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, m_EnvCubemap,
                                0);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        // render cube
-        RenderCube();
+        RenderCube(); // renders a 1x1 cube
     }
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-    auto windowSize = InputManager::Instance().GetWindowState();
-    glViewport(0, 0, windowSize.Width, windowSize.Height);
 }
 
 void SkyLight::Render(Camera &camera)
 {
-    auto bgShader = m_Shaders["backgroundShader"];
-    bgShader->SetUniformMatrix4fv("projection", camera.GetProjectionMatrix());
-    bgShader->SetUniformMatrix4fv("view", camera.GetViewMatrix());
+    auto cubemap = m_Shaders["cubemap"];
+    cubemap->Use();
+    cubemap->SetUniformMatrix4fv("projection", camera.GetProjectionMatrix());
+    cubemap->SetUniformMatrix4fv("view", camera.GetViewMatrix());
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_CUBE_MAP, m_EnvCubemap);
+
     RenderCube();
 }
 
