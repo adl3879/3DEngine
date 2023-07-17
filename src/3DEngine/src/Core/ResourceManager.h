@@ -25,6 +25,7 @@ class ResourceManager
   public:
     // loads a texture from file if not cached
     unsigned int LoadTexture(const fs::path &path, const bool useMipMaps = true, const bool useUnalignedUnpack = false);
+    unsigned int LoadHDRI(const std::string &path) const;
 
     std::optional<MaterialPtr> GetMaterial(const std::string_view name) const;
     MaterialPtr CacheMaterial(const std::string_view name, const std::string_view albedoPath,

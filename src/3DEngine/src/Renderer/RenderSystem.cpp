@@ -68,6 +68,8 @@ void RenderSystem::Render(Camera &camera, Scene &scene, const bool globalWirefra
     {
         for (int col = 0; col < nrColumns; ++col)
         {
+            pbrShader->SetUniform1f("roughness", glm::clamp((float)col / (float)nrColumns, 0.05f, 1.0f));
+
             model = glm::mat4(1.0f);
             model = glm::translate(model,
                                    glm::vec3((col - (nrColumns / 2)) * spacing, (row - (nrRows / 2)) * spacing, 0.0f));
@@ -86,14 +88,6 @@ void RenderSystem::Render(Camera &camera, Scene &scene, const bool globalWirefra
         newPos = lightPositions[i];
         pbrShader->SetUniform3f("gPointLights[" + std::to_string(i) + "].Position", newPos);
         pbrShader->SetUniform3f("gPointLights[" + std::to_string(i) + "].Color", lightColors[i]);
-
-        // auto model = glm::mat4(1.0f);
-        // model = glm::translate(model, newPos);
-        // model = glm::scale(model, glm::vec3(0.7f));
-        // pbrShader->SetUniformMatrix4fv("model", model);
-        // pbrShader->SetUniformMatrix3fv("normalMatrix", glm::transpose(glm::inverse(glm::mat3(model))));
-
-        // RenderSphere(camera, newPos, 1.0, {1.0f, 0.0f, 0.0f});
     }
 }
 
@@ -361,8 +355,8 @@ void RenderSystem::RenderSphere(Camera &camera, const glm::vec3 &position, const
     pbrShader->SetUniformMatrix4fv("projectionViewMatrix", camera.GetProjectionViewMatrix());
 
     pbrShader->SetUniform3f("albedo", color);
-    pbrShader->SetUniform1f("metallic", 0.05f);
-    pbrShader->SetUniform1f("roughness", 0.15f);
+    pbrShader->SetUniform1f("metallic", 0.5f);
+    // pbrShader->SetUniform1f("roughness", 0.7f);
     pbrShader->SetUniform1f("ao", 1.0f);
 
     pbrShader->SetUniform3f("cameraPosition", camera.GetPosition());
@@ -374,4 +368,5 @@ void RenderSystem::RenderSphere(Camera &camera, const glm::vec3 &position, const
     glDrawElements(GL_TRIANGLE_STRIP, indexCount, GL_UNSIGNED_INT, nullptr);
     m_SphereVAO.Unbind();
 }
+
 } // namespace Engine

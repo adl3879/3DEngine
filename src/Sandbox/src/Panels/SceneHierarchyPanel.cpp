@@ -201,11 +201,11 @@ void SceneHierarchyPanel::DrawComponents(Entity entity)
             auto &transform = entity.GetComponent<TransformComponent>();
             entityComponent.Light.Position = transform.Translation;
             ImGui::ColorEdit3("Color", glm::value_ptr(entityComponent.Light.Color));
-            ImGui::DragFloat("Ambience", &entityComponent.Light.AmbientIntensity, 0.001f, 0.0f, 1.0f);
-            ImGui::DragFloat("Diffusion", &entityComponent.Light.DiffuseIntensity, 0.001f, 0.0f, 1.0f);
-            ImGui::DragFloat("Constant", &entityComponent.Light.Attenuation.Constant, 0.001f, 0.0f, 1.0f);
-            ImGui::DragFloat("Linear", &entityComponent.Light.Attenuation.Linear, 0.001f, 0.0f, 1.0f);
-            ImGui::DragFloat("Exponential", &entityComponent.Light.Attenuation.Exp, 0.001f, 0.0f, 1.0f);
+            ImGui::SliderFloat("Ambience", &entityComponent.Light.AmbientIntensity, 0.001f, 1.0f);
+            ImGui::SliderFloat("Diffusion", &entityComponent.Light.DiffuseIntensity, 0.001f, 1.0f);
+            ImGui::SliderFloat("Constant", &entityComponent.Light.Attenuation.Constant, 0.001f, 1.0f);
+            ImGui::SliderFloat("Linear", &entityComponent.Light.Attenuation.Linear, 0.001f, 1.0f);
+            ImGui::SliderFloat("Exponential", &entityComponent.Light.Attenuation.Exp, 0.001f, 1.0f);
 
             Light::SetPointLight(entityComponent.Light, entityComponent.Index);
 
@@ -223,11 +223,11 @@ void SceneHierarchyPanel::DrawComponents(Entity entity)
             entityComponent.Light.Position = transform.Translation;
             entityComponent.Light.Direction = transform.Rotation;
             ImGui::ColorEdit3("Color", glm::value_ptr(entityComponent.Light.Color));
-            ImGui::DragFloat("Ambient Intensity", &entityComponent.Light.AmbientIntensity, 0.001f, 0.0f, 1.0f);
-            ImGui::DragFloat("Diffuse Intensity", &entityComponent.Light.DiffuseIntensity, 0.001f, 0.0f, 1.0f);
-            ImGui::DragFloat("Constant", &entityComponent.Light.Attenuation.Constant, 0.001f, 0.0f, 1.0f);
-            ImGui::DragFloat("Linear", &entityComponent.Light.Attenuation.Linear, 0.001f, 0.0f, 1.0f);
-            ImGui::DragFloat("Exponential", &entityComponent.Light.Attenuation.Exp, 0.001f, 0.0f, 1.0f);
+            ImGui::SliderFloat("Ambient Intensity", &entityComponent.Light.AmbientIntensity, 0.001f, 1.0f);
+            ImGui::SliderFloat("Diffuse Intensity", &entityComponent.Light.DiffuseIntensity, 0.001f, 1.0f);
+            ImGui::SliderFloat("Constant", &entityComponent.Light.Attenuation.Constant, 0.001f, 1.0f);
+            ImGui::SliderFloat("Linear", &entityComponent.Light.Attenuation.Linear, 0.001f, 1.0f);
+            ImGui::SliderFloat("Exponential", &entityComponent.Light.Attenuation.Exp, 0.001f, 1.0f);
             ImGui::DragFloat("Cutoff", &entityComponent.Light.Cutoff, 0.1f, 0.0f, 90.0f);
             ImGui::DragFloat("Outer Cutoff", &entityComponent.Light.OuterCutoff, 0.1f, 0.0f, 90.0f);
 

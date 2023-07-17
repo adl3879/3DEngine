@@ -15,6 +15,13 @@ struct PointLight {
 };
 uniform PointLight gPointLights[MAX_POINT_LIGHTS];
 
+struct Spotlight {
+    vec3 Position;
+    vec3 Direction;
+    vec3 Color;
+};
+uniform Spotlight gSpotLights[MAX_SPOT_LIGHTS];
+
 uniform vec3 cameraPosition;
 
 uniform vec3  albedo;
