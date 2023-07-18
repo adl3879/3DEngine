@@ -29,6 +29,9 @@ uniform float metallic;
 uniform float roughness;
 uniform float ao;
 
+// IBL
+uniform samplerCube irradianceMap;
+
 uniform int numOfPointLights;
 
 const float PI = 3.14159265359;
@@ -76,6 +79,12 @@ float GeometrySmith(vec3 N, vec3 V, vec3 L, float roughness)
 void main() {
     vec3 N = normalize(Normal);
     vec3 V = normalize(cameraPosition - WorldPosition);
+    vec3 R = reflect(-V, N); 
+
+    // calculate reflectance at normal incidence; if dia-electric (like plastic) use F0 
+    // of 0.04 and if it's a metal, use the albedo color as F0 (metallic workflow)    
+    vec3 F0 = vec3(0.04); 
+    F0 = mix(F0, albedo, metallic);
 
     vec3 Lo = vec3(0.0);
     // point lights
@@ -110,8 +119,15 @@ void main() {
         Lo += (kD * albedo / PI + specular) * radiance * NdotL;
     }
 
-    vec3 ambient = vec3(0.03) * albedo * ao;
-    vec3 color   = ambient + Lo;  
+    // ambient lighting (we now use IBL as the ambient term)
+    vec3 kS = fresnelSchlick(max(dot(N, V), 0.0), F0);
+    vec3 kD = 1.0 - kS;
+    kD *= 1.0 - metallic;	  
+    vec3 irradiance = texture(irradianceMap, N).rgb;
+    vec3 diffuse = irradiance * albedo;
+    vec3 ambient = (kD * diffuse) * ao;
+ 
+    vec3 color = ambient + Lo;  
     color = color / (color + vec3(1.0));
     color = pow(color, vec3(1.0/2.2)); 
 

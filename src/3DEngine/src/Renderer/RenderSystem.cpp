@@ -25,14 +25,19 @@ void RenderSystem::Init()
     m_Shaders["outlineShader"] = std::make_shared<Shader>("/res/shaders/outline.vert", "/res/shaders/outline.frag");
     m_Shaders["pbrShader"] = std::make_shared<Shader>("/res/shaders/PBR.vert", "/res/shaders/PBR.frag");
 
+    m_Shaders["pbrShader"]->SetUniform1i("irradianceMap", 0);
+
     SetupScreenQuad();
     SetupLine();
     SetupTextureSamplers();
     SetupSphere();
 
+    m_SkyLight = std::make_shared<SkyLight>();
+    m_SkyLight->Init("/res/textures/hdr/ballroom_4k.hdr", 2048);
+
     glEnable(GL_DEBUG_OUTPUT);
     glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
-    // SetupDefaultState();
+    SetupDefaultState();
     glEnable(GL_MULTISAMPLE);
 }
 
@@ -61,6 +66,7 @@ void RenderSystem::Render(Camera &camera, Scene &scene, const bool globalWirefra
     RenderModelsWithTextures(camera, scene);
 
     auto pbrShader = m_Shaders.at("pbrShader");
+
     pbrShader->Use();
 
     auto model = glm::mat4(1.0f);
@@ -89,18 +95,21 @@ void RenderSystem::Render(Camera &camera, Scene &scene, const bool globalWirefra
         pbrShader->SetUniform3f("gPointLights[" + std::to_string(i) + "].Position", newPos);
         pbrShader->SetUniform3f("gPointLights[" + std::to_string(i) + "].Color", lightColors[i]);
     }
+
+    glActiveTexture(GL_TEXTURE0);
+    m_SkyLight->Render(camera);
 }
 
 void RenderSystem::SetupDefaultState()
 {
-    glFrontFace(GL_CCW);
-    glCullFace(GL_BACK);
-    glEnable(GL_CULL_FACE);
+    // glFrontFace(GL_CCW);
+    // glCullFace(GL_BACK);
+    // glEnable(GL_CULL_FACE);
     glEnable(GL_DEPTH_TEST);
-    glDepthMask(GL_TRUE);
+    // glDepthMask(GL_TRUE);
     glDepthFunc(GL_LEQUAL);
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    // glEnable(GL_BLEND);
+    // glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
 void RenderSystem::SetupTextureSamplers()
@@ -351,6 +360,10 @@ void RenderSystem::RenderSphere(Camera &camera, const glm::vec3 &position, const
     m_SphereVAO.Bind();
     auto pbrShader = m_Shaders.at("pbrShader");
     pbrShader->Use();
+
+    // // bind pre-computed IBL data
+    // glActiveTexture(GL_TEXTURE0);
+    // glBindTexture(GL_TEXTURE_CUBE_MAP, m_SkyLight->GetIrradianceMap());
 
     pbrShader->SetUniformMatrix4fv("projectionViewMatrix", camera.GetProjectionViewMatrix());
 

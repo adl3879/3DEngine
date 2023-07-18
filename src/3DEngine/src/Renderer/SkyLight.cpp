@@ -10,7 +10,6 @@
 
 namespace Engine
 {
-unsigned int hdrTexture = 0;
 
 void SkyLight::Init(const std::string &path, const std::size_t resolution)
 {
@@ -19,16 +18,18 @@ void SkyLight::Init(const std::string &path, const std::size_t resolution)
 
     auto fullPath = Utils::Path::GetAbsolute(path);
 
-    hdrTexture = ResourceManager::Instance().LoadHDRI(fullPath);
+    auto hdrTexture = ResourceManager::Instance().LoadHDRI(fullPath);
 
-    m_Shaders["light"] = std::make_shared<Shader>("/res/shaders/light.vert", "/res/shaders/light.frag");
     m_Shaders["equirectangularToCubemap"] =
         std::make_shared<Shader>("/res/shaders/cubemap.vert", "/res/shaders/cubemapConverter.frag");
     m_Shaders["cubemap"] = std::make_shared<Shader>("/res/shaders/cubemapBg.vert", "/res/shaders/cubemapBg.frag");
+    m_Shaders["irradiance"] =
+        std::make_shared<Shader>("/res/shaders/cubemap.vert", "/res/shaders/irradianceConvolution.frag");
 
     m_Shaders["cubemap"]->SetUniform1i("environmentMap", 0);
 
     auto equirectangularToCubemapShader = m_Shaders["equirectangularToCubemap"];
+    auto irradianceShader = m_Shaders["irradiance"];
     equirectangularToCubemapShader->SetUniform1i("equirectangularMap", 0);
 
     unsigned int captureFBO, captureRBO;
@@ -51,7 +52,7 @@ void SkyLight::Init(const std::string &path, const std::size_t resolution)
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
     glm::mat4 captureProjection = glm::perspective(glm::radians(90.0f), 1.0f, 0.1f, 10.0f);
@@ -83,6 +84,51 @@ void SkyLight::Init(const std::string &path, const std::size_t resolution)
         RenderCube(); // renders a 1x1 cube
     }
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+    // Generate mipmaps from first mip face (again to reduce bright dots)
+    glBindTexture(GL_TEXTURE_CUBE_MAP, m_EnvCubemap);
+    glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
+
+    // create an irradiance cubemap, and re-scale capture FBO to irradiance scale.
+    glGenTextures(1, &m_IrradianceMap);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, m_IrradianceMap);
+    for (unsigned int i = 0; i < 6; ++i)
+    {
+        glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB16F, resolution / 16, resolution / 16, 0, GL_RGB,
+                     GL_FLOAT, nullptr);
+    }
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, captureFBO);
+    glBindRenderbuffer(GL_RENDERBUFFER, captureRBO);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, resolution / 16, resolution / 16);
+
+    irradianceShader->Use();
+    irradianceShader->SetUniform1i("environmentMap", 0);
+    irradianceShader->SetUniformMatrix4fv("projection", captureProjection);
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, m_EnvCubemap);
+
+    glViewport(0, 0, resolution / 16, resolution / 16);
+    glBindFramebuffer(GL_FRAMEBUFFER, captureFBO);
+    for (unsigned int i = 0; i < 6; ++i)
+    {
+        irradianceShader->SetUniformMatrix3fv("view", captureViews[i]);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
+                               m_IrradianceMap, 0);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        RenderCube();
+    }
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+    auto windowSize = InputManager::Instance().GetWindowState();
+    glViewport(0, 0, windowSize.Width, windowSize.Height);
 }
 
 void SkyLight::Render(Camera &camera)
@@ -93,7 +139,7 @@ void SkyLight::Render(Camera &camera)
     cubemap->SetUniformMatrix4fv("view", camera.GetViewMatrix());
 
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_CUBE_MAP, m_EnvCubemap);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, m_IrradianceMap);
 
     RenderCube();
 }

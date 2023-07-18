@@ -12,7 +12,6 @@
 namespace Engine
 {
 WindowState windowState = InputManager::Instance().GetWindowState();
-std::shared_ptr<SkyLight> skyLight = nullptr;
 
 AppLayer::AppLayer() : m_EditorCamera(-45.0f, 1.778f, 0.1f, 100.0f) {}
 
@@ -31,9 +30,6 @@ void AppLayer::OnAttach()
 
     m_RenderSystem = std::make_shared<RenderSystem>();
     m_RenderSystem->Init();
-
-    skyLight = std::make_shared<SkyLight>();
-    skyLight->Init("/res/textures/hdr/skyLight.hdr", 2048);
 
     LOG_INFO("AppLayer Attached");
 }
@@ -69,7 +65,6 @@ void AppLayer::OnUpdate(float deltaTime)
         // removed one because i moved every entity by one
         m_HoveredEntity = pixelData == 0 ? Entity() : Entity((entt::entity)(pixelData - 1), m_Scene.get());
     }
-    skyLight->Render(m_EditorCamera);
 
     m_Framebuffer->Unbind();
 }
