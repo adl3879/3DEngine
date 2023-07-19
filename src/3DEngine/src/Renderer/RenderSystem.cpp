@@ -26,6 +26,8 @@ void RenderSystem::Init()
     m_Shaders["pbrShader"] = std::make_shared<Shader>("/res/shaders/PBR.vert", "/res/shaders/PBR.frag");
 
     m_Shaders["pbrShader"]->SetUniform1i("irradianceMap", 0);
+    m_Shaders["pbrShader"]->SetUniform1i("prefilterMap", 1);
+    m_Shaders["pbrShader"]->SetUniform1i("brdfLUT", 2);
 
     SetupScreenQuad();
     SetupLine();
@@ -361,22 +363,22 @@ void RenderSystem::RenderSphere(Camera &camera, const glm::vec3 &position, const
     auto pbrShader = m_Shaders.at("pbrShader");
     pbrShader->Use();
 
-    // // bind pre-computed IBL data
-    // glActiveTexture(GL_TEXTURE0);
-    // glBindTexture(GL_TEXTURE_CUBE_MAP, m_SkyLight->GetIrradianceMap());
+    // bind pre-computed IBL data
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, m_SkyLight->GetIrradianceMap());
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, m_SkyLight->GetPrefilterMap());
+    glActiveTexture(GL_TEXTURE2);
+    glBindTexture(GL_TEXTURE_2D, m_SkyLight->GetBrdfLUT());
 
     pbrShader->SetUniformMatrix4fv("projectionViewMatrix", camera.GetProjectionViewMatrix());
 
     pbrShader->SetUniform3f("albedo", color);
     pbrShader->SetUniform1f("metallic", 0.5f);
-    // pbrShader->SetUniform1f("roughness", 0.7f);
     pbrShader->SetUniform1f("ao", 1.0f);
 
     pbrShader->SetUniform3f("cameraPosition", camera.GetPosition());
     pbrShader->SetUniform1i("numOfPointLights", 4);
-
-    // pbrShader->SetUniform3f("gPointLights[0].Position", glm::vec3{0.0f, 0.0f, -1.0f});
-    // pbrShader->SetUniform3f("gPointLights[0].Color", glm::vec3{1.0f});
 
     glDrawElements(GL_TRIANGLE_STRIP, indexCount, GL_UNSIGNED_INT, nullptr);
     m_SphereVAO.Unbind();

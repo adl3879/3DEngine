@@ -85,7 +85,10 @@ std::string Shader::ParseShader(const std::string &sourcePath)
 
 void Shader::Use() const { glUseProgram(m_Program); }
 
-void Shader::Delete() const { glDeleteProgram(m_Program); }
+void Shader::Delete() const
+{
+    if (m_Program != 0) glDeleteProgram(m_Program);
+}
 
 void Shader::SetUniform4f(std::string id, float x, float y, float w, float h)
 {

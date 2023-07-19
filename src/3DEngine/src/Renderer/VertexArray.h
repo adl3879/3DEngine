@@ -30,6 +30,8 @@ class VertexArray
     VertexArray() = default;
     virtual ~VertexArray() = default;
 
+    uint32_t GetID() const noexcept { return m_VAO; }
+
     void Init() noexcept;
     void AttachBuffer(const BufferType &type, const int size, const DrawMode &mode, const void *data) noexcept;
     void Bind() const noexcept;
