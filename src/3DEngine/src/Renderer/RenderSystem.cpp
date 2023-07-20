@@ -82,10 +82,10 @@ void RenderSystem::SetupDefaultState()
     // glCullFace(GL_BACK);
     // glEnable(GL_CULL_FACE);
     glEnable(GL_DEPTH_TEST);
-    // glDepthMask(GL_TRUE);
+    glDepthMask(GL_TRUE);
     glDepthFunc(GL_LEQUAL);
-    // glEnable(GL_BLEND);
-    // glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
 void RenderSystem::SetupTextureSamplers()
@@ -239,22 +239,6 @@ void RenderSystem::RenderModelsWithTextures(Camera &camera, Scene &scene)
 
     auto modelShader = m_Shaders.at("pbrShader");
 
-    for (int i = 0; i < sizeof(lightPositions); ++i)
-    {
-        glm::vec3 newPos = lightPositions[i] + glm::vec3(sin(glfwGetTime() * 5.0) * 5.0, 0.0, 0.0);
-        newPos = lightPositions[i];
-        modelShader->SetUniform3f("gPointLights[" + std::to_string(i) + "].Position", newPos);
-        modelShader->SetUniform3f("gPointLights[" + std::to_string(i) + "].Color", lightColors[i]);
-    }
-
-    modelShader->SetUniform3f("albedoParam", {1.0, 1.0, 1.0});
-    modelShader->SetUniform1f("metallicParam", 0.05f);
-    modelShader->SetUniform1f("aoParam", 1.0f);
-    modelShader->SetUniform1f("roughnessParam", 0.5f);
-
-    modelShader->SetUniform3f("cameraPosition", camera.GetPosition());
-    modelShader->SetUniform1i("numOfPointLights", 4);
-
     auto view = scene.GetRegistry().view<ModelComponent, TransformComponent, VisibilityComponent>();
     for (auto entity : view)
     {
@@ -263,7 +247,6 @@ void RenderSystem::RenderModelsWithTextures(Camera &camera, Scene &scene)
 
         for (auto mesh : model.Model->GetMeshes())
         {
-
             modelShader->Use();
             mesh.VAO.Bind();
 
@@ -282,6 +265,22 @@ void RenderSystem::RenderModelsWithTextures(Camera &camera, Scene &scene)
                                              glm::transpose(glm::inverse(glm::mat3(transform.GetTransform()))));
             modelShader->SetUniformMatrix4fv("projectionViewMatrix", camera.GetProjectionViewMatrix());
             modelShader->SetUniform3f("cameraPosition", camera.GetPosition());
+
+            for (int i = 0; i < sizeof(lightPositions); ++i)
+            {
+                glm::vec3 newPos = lightPositions[i] + glm::vec3(sin(glfwGetTime() * 5.0) * 5.0, 0.0, 0.0);
+                newPos = lightPositions[i];
+                modelShader->SetUniform3f("gPointLights[" + std::to_string(i) + "].Position", newPos);
+                modelShader->SetUniform3f("gPointLights[" + std::to_string(i) + "].Color", lightColors[i]);
+            }
+
+            modelShader->SetUniform3f("albedoParam", {0.0, 0.0, 0.0});
+            modelShader->SetUniform1f("metallicParam", 0.5f);
+            modelShader->SetUniform1f("aoParam", 1.0f);
+            modelShader->SetUniform1f("roughnessParam", 0.5f);
+
+            modelShader->SetUniform3f("cameraPosition", camera.GetPosition());
+            modelShader->SetUniform1i("numOfPointLights", 4);
 
             // Light::SetLightUniforms(*modelShader);
 

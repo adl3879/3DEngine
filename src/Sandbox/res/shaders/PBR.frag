@@ -201,7 +201,6 @@ void main() {
     vec3 color = amb * 0.5 + Lo;  
     color = color / (color + vec3(1.0));
     color = pow(color, vec3(1.0/2.2));
-    // color = texture(prefilterMap, R).rgb;
 
     FragColor = vec4(color, 1.0);
 

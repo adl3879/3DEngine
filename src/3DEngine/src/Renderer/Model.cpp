@@ -142,6 +142,7 @@ Mesh Model::ProcessMesh(aiMesh *mesh, const aiScene *scene, const bool loadMater
             vertex.TexCoords = glm::vec2(0.0f);
         }
 
+        // add one because 0 represents no selection but 0 is a valid entt id
         vertex.EditorID = m_EntityID + 1;
 
         vertices.push_back(vertex);
