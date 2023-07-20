@@ -5,10 +5,12 @@
 #include "Log.h"
 #include "Components.h"
 #include "Shader.h"
+#include "ResourceManager.h"
 
 namespace Engine
 {
 int indexCount = 0;
+unsigned int albedoTex, metallicTex, roughnessTex;
 
 void RenderSystem::Init()
 {
@@ -25,17 +27,20 @@ void RenderSystem::Init()
     m_Shaders["outlineShader"] = std::make_shared<Shader>("/res/shaders/outline.vert", "/res/shaders/outline.frag");
     m_Shaders["pbrShader"] = std::make_shared<Shader>("/res/shaders/PBR.vert", "/res/shaders/PBR.frag");
 
-    m_Shaders["pbrShader"]->SetUniform1i("irradianceMap", 0);
-    m_Shaders["pbrShader"]->SetUniform1i("prefilterMap", 1);
-    m_Shaders["pbrShader"]->SetUniform1i("brdfLUT", 2);
+    albedoTex = ResourceManager::Instance().LoadTexture(
+        "/home/adeleye/Source/3DEngine/src/Sandbox/res/textures/rustediron2_basecolor.png");
+    metallicTex = ResourceManager::Instance().LoadTexture(
+        "/home/adeleye/Source/3DEngine/src/Sandbox/res/textures/rustediron2_metallic.png");
+    roughnessTex = ResourceManager::Instance().LoadTexture(
+        "/home/adeleye/Source/3DEngine/src/Sandbox/res/textures/rustediron2_roughness.png");
 
     SetupScreenQuad();
     SetupLine();
     SetupTextureSamplers();
-    SetupSphere();
+    // SetupSphere();
 
     m_SkyLight = std::make_shared<SkyLight>();
-    m_SkyLight->Init("/res/textures/hdr/ballroom_4k.hdr", 2048);
+    m_SkyLight->Init("/res/textures/hdr/skyLight.hdr", 2048);
 
     glEnable(GL_DEBUG_OUTPUT);
     glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
@@ -67,37 +72,6 @@ void RenderSystem::Render(Camera &camera, Scene &scene, const bool globalWirefra
 
     RenderModelsWithTextures(camera, scene);
 
-    auto pbrShader = m_Shaders.at("pbrShader");
-
-    pbrShader->Use();
-
-    auto model = glm::mat4(1.0f);
-    for (int row = 0; row < nrRows; ++row)
-    {
-        for (int col = 0; col < nrColumns; ++col)
-        {
-            pbrShader->SetUniform1f("roughness", glm::clamp((float)col / (float)nrColumns, 0.05f, 1.0f));
-
-            model = glm::mat4(1.0f);
-            model = glm::translate(model,
-                                   glm::vec3((col - (nrColumns / 2)) * spacing, (row - (nrRows / 2)) * spacing, 0.0f));
-            model = glm::scale(model, glm::vec3(0.7f));
-
-            pbrShader->SetUniformMatrix4fv("model", model);
-            pbrShader->SetUniformMatrix3fv("normalMatrix", glm::transpose(glm::inverse(glm::mat3(model))));
-
-            RenderSphere(camera, glm::vec3(0.0f), 1.0, {1.0f, 0.0f, 0.0f});
-        }
-    }
-
-    for (int i = 0; i < sizeof(lightPositions); ++i)
-    {
-        glm::vec3 newPos = lightPositions[i] + glm::vec3(sin(glfwGetTime() * 5.0) * 5.0, 0.0, 0.0);
-        newPos = lightPositions[i];
-        pbrShader->SetUniform3f("gPointLights[" + std::to_string(i) + "].Position", newPos);
-        pbrShader->SetUniform3f("gPointLights[" + std::to_string(i) + "].Color", lightColors[i]);
-    }
-
     glActiveTexture(GL_TEXTURE0);
     m_SkyLight->Render(camera);
 }
@@ -123,13 +97,15 @@ void RenderSystem::SetupTextureSamplers()
     glSamplerParameteri(m_SamplerPBRTextures, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
     glSamplerParameteri(m_SamplerPBRTextures, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-    // set texture units
-    // TODO: change uniform names
-    auto modelShader = m_Shaders.at("modelShader");
-    modelShader->SetUniform1i("diffuse0", 0);
-    modelShader->SetUniform1i("normal", 1);
-    modelShader->SetUniform1i("metallic", 2);
-    modelShader->SetUniform1i("specular0", 3);
+    auto pbrShader = m_Shaders.at("pbrShader");
+    pbrShader->SetUniform1i("irradianceMap", 0);
+    pbrShader->SetUniform1i("prefilterMap", 1);
+    pbrShader->SetUniform1i("brdfLUT", 2);
+
+    pbrShader->SetUniform1i("albedoMap", 3);
+    pbrShader->SetUniform1i("normalMap", 4);
+    pbrShader->SetUniform1i("metallicMap", 5);
+    pbrShader->SetUniform1i("roughnessMap", 6);
 }
 
 void RenderSystem::SetupScreenQuad()
@@ -248,12 +224,36 @@ void RenderSystem::SetupSphere()
 
 void RenderSystem::RenderModelsWithTextures(Camera &camera, Scene &scene)
 {
-    glBindSampler(m_SamplerPBRTextures, 0);
-    glBindSampler(m_SamplerPBRTextures, 1);
-    glBindSampler(m_SamplerPBRTextures, 2);
-    glBindSampler(m_SamplerPBRTextures, 3);
+    // bind pre-computed IBL data
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, m_SkyLight->GetIrradianceMap());
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, m_SkyLight->GetPrefilterMap());
+    glActiveTexture(GL_TEXTURE2);
+    glBindTexture(GL_TEXTURE_2D, m_SkyLight->GetBrdfLUT());
 
-    auto modelShader = m_Shaders.at("modelShader");
+    glBindSampler(m_SamplerPBRTextures, 3);
+    glBindSampler(m_SamplerPBRTextures, 4);
+    glBindSampler(m_SamplerPBRTextures, 5);
+    glBindSampler(m_SamplerPBRTextures, 6);
+
+    auto modelShader = m_Shaders.at("pbrShader");
+
+    for (int i = 0; i < sizeof(lightPositions); ++i)
+    {
+        glm::vec3 newPos = lightPositions[i] + glm::vec3(sin(glfwGetTime() * 5.0) * 5.0, 0.0, 0.0);
+        newPos = lightPositions[i];
+        modelShader->SetUniform3f("gPointLights[" + std::to_string(i) + "].Position", newPos);
+        modelShader->SetUniform3f("gPointLights[" + std::to_string(i) + "].Color", lightColors[i]);
+    }
+
+    modelShader->SetUniform3f("albedoParam", {1.0, 1.0, 1.0});
+    modelShader->SetUniform1f("metallicParam", 0.05f);
+    modelShader->SetUniform1f("aoParam", 1.0f);
+    modelShader->SetUniform1f("roughnessParam", 0.5f);
+
+    modelShader->SetUniform3f("cameraPosition", camera.GetPosition());
+    modelShader->SetUniform1i("numOfPointLights", 4);
 
     auto view = scene.GetRegistry().view<ModelComponent, TransformComponent, VisibilityComponent>();
     for (auto entity : view)
@@ -261,38 +261,32 @@ void RenderSystem::RenderModelsWithTextures(Camera &camera, Scene &scene)
         auto [model, transform, visibility] = view.get<ModelComponent, TransformComponent, VisibilityComponent>(entity);
         if (!visibility.IsVisible || model.Model == nullptr) continue;
 
-        auto boundingBox = model.Model->GetBoundingBoxes();
-
         for (auto mesh : model.Model->GetMeshes())
         {
+
             modelShader->Use();
             mesh.VAO.Bind();
 
-            glActiveTexture(GL_TEXTURE0);
-            glBindTexture(GL_TEXTURE_2D, mesh.Material->GetParameterTexture(Material::ALBEDO));
-            glActiveTexture(GL_TEXTURE1);
-            glBindTexture(GL_TEXTURE_2D, mesh.Material->GetParameterTexture(Material::NORMAL));
-            glActiveTexture(GL_TEXTURE2);
-            glBindTexture(GL_TEXTURE_2D, mesh.Material->GetParameterTexture(Material::METALLIC));
+            const auto mat = mesh.Material;
             glActiveTexture(GL_TEXTURE3);
-            glBindTexture(GL_TEXTURE_2D, mesh.Material->GetParameterTexture(Material::ROUGHNESS));
+            glBindTexture(GL_TEXTURE_2D, mat->GetParameterTexture(Material::ALBEDO));
+            glActiveTexture(GL_TEXTURE4);
+            glBindTexture(GL_TEXTURE_2D, mat->GetParameterTexture(Material::NORMAL));
+            glActiveTexture(GL_TEXTURE5);
+            glBindTexture(GL_TEXTURE_2D, mat->GetParameterTexture(Material::METALLIC));
+            glActiveTexture(GL_TEXTURE6);
+            glBindTexture(GL_TEXTURE_2D, mat->GetParameterTexture(Material::ROUGHNESS));
 
             modelShader->SetUniformMatrix4fv("model", transform.GetTransform());
+            modelShader->SetUniformMatrix3fv("normalMatrix",
+                                             glm::transpose(glm::inverse(glm::mat3(transform.GetTransform()))));
             modelShader->SetUniformMatrix4fv("projectionViewMatrix", camera.GetProjectionViewMatrix());
-            modelShader->SetUniform3f("gCameraPos", camera.GetPosition());
+            modelShader->SetUniform3f("cameraPosition", camera.GetPosition());
 
-            // set materials
-            // TODO: rewrite shader to fix this weirdness
-            modelShader->SetUniform3f("gMaterial.AmbientColor", glm::vec3{1.0f});
-            modelShader->SetUniform3f("gMaterial.DiffuseColor", glm::vec3{1.0f});
-            modelShader->SetUniform3f("gMaterial.SpecularColor", glm::vec3{1.0f});
-
-            Light::SetLightUniforms(*modelShader);
+            // Light::SetLightUniforms(*modelShader);
 
             glDrawElements(GL_TRIANGLES, mesh.IndexCount, GL_UNSIGNED_INT, nullptr);
             glBindTexture(GL_TEXTURE_2D, 0);
-
-            // RenderBoundingBox(camera, boundingBox[0].Min, boundingBox[0].Max, glm::vec3{1.0f, 0.0f, 0.0f});
 
             // draws outline on selected model
             if (scene.GetSelectedEntity() == entity)
@@ -359,29 +353,62 @@ void RenderSystem::RenderLine(Camera &camera, const glm::vec3 &start, const glm:
 
 void RenderSystem::RenderSphere(Camera &camera, const glm::vec3 &position, const float radius, const glm::vec3 &color)
 {
-    m_SphereVAO.Bind();
     auto pbrShader = m_Shaders.at("pbrShader");
-    pbrShader->Use();
+    auto model = glm::mat4(1.0f);
+    for (int row = 0; row < nrRows; ++row)
+    {
+        for (int col = 0; col < nrColumns; ++col)
+        {
+            pbrShader->SetUniform1f("roughnessParam", glm::clamp((float)col / (float)nrColumns, 0.05f, 1.0f));
 
-    // bind pre-computed IBL data
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_CUBE_MAP, m_SkyLight->GetIrradianceMap());
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_CUBE_MAP, m_SkyLight->GetPrefilterMap());
-    glActiveTexture(GL_TEXTURE2);
-    glBindTexture(GL_TEXTURE_2D, m_SkyLight->GetBrdfLUT());
+            model = glm::mat4(1.0f);
+            model = glm::translate(model,
+                                   glm::vec3((col - (nrColumns / 2)) * spacing, (row - (nrRows / 2)) * spacing, 0.0f));
+            model = glm::scale(model, glm::vec3(0.7f));
 
-    pbrShader->SetUniformMatrix4fv("projectionViewMatrix", camera.GetProjectionViewMatrix());
+            pbrShader->SetUniformMatrix4fv("model", model);
+            pbrShader->SetUniformMatrix3fv("normalMatrix", glm::transpose(glm::inverse(glm::mat3(model))));
 
-    pbrShader->SetUniform3f("albedo", color);
-    pbrShader->SetUniform1f("metallic", 0.5f);
-    pbrShader->SetUniform1f("ao", 1.0f);
+            glBindSampler(m_SamplerPBRTextures, 3);
+            glBindSampler(m_SamplerPBRTextures, 4);
+            glBindSampler(m_SamplerPBRTextures, 5);
+            glBindSampler(m_SamplerPBRTextures, 6);
 
-    pbrShader->SetUniform3f("cameraPosition", camera.GetPosition());
-    pbrShader->SetUniform1i("numOfPointLights", 4);
+            m_SphereVAO.Bind();
+            auto pbrShader = m_Shaders.at("pbrShader");
+            pbrShader->Use();
 
-    glDrawElements(GL_TRIANGLE_STRIP, indexCount, GL_UNSIGNED_INT, nullptr);
-    m_SphereVAO.Unbind();
+            glActiveTexture(GL_TEXTURE3);
+            glBindTexture(GL_TEXTURE_2D, albedoTex);
+            glActiveTexture(GL_TEXTURE4);
+            glBindTexture(GL_TEXTURE_2D, metallicTex);
+            glActiveTexture(GL_TEXTURE5);
+            glBindTexture(GL_TEXTURE_2D, roughnessTex);
+            glActiveTexture(GL_TEXTURE6);
+            glBindTexture(GL_TEXTURE_2D, 0);
+
+            pbrShader->SetUniformMatrix4fv("projectionViewMatrix", camera.GetProjectionViewMatrix());
+
+            pbrShader->SetUniform3f("albedoParam", {1.0, 1.0, 1.0});
+            pbrShader->SetUniform1f("metallicParam", 0.05f);
+            pbrShader->SetUniform1f("aoParam", 1.0f);
+
+            pbrShader->SetUniform3f("cameraPosition", camera.GetPosition());
+            pbrShader->SetUniform1i("numOfPointLights", 4);
+
+            glDrawElements(GL_TRIANGLE_STRIP, indexCount, GL_UNSIGNED_INT, nullptr);
+            m_SphereVAO.Unbind();
+
+            glBindSampler(m_SamplerPBRTextures, 0);
+        }
+    }
+
+    for (int i = 0; i < sizeof(lightPositions); ++i)
+    {
+        glm::vec3 newPos = lightPositions[i] + glm::vec3(sin(glfwGetTime() * 5.0) * 5.0, 0.0, 0.0);
+        newPos = lightPositions[i];
+        pbrShader->SetUniform3f("gPointLights[" + std::to_string(i) + "].Position", newPos);
+        pbrShader->SetUniform3f("gPointLights[" + std::to_string(i) + "].Color", lightColors[i]);
+    }
 }
-
 } // namespace Engine

@@ -8,6 +8,15 @@
 
 namespace Engine
 {
+struct MaterialData
+{
+    glm::vec3 Albedo;
+    float AO;
+    glm::vec3 Normal;
+    float Metallic;
+    float Roughness;
+};
+
 class Material
 {
   public:
@@ -26,13 +35,12 @@ class Material
               const std::string_view metallicPath, const std::string_view normalPath,
               const std::string_view roughnessPath, const std::string_view alphaMaskPath);
 
-    void Init(const std::string_view name, const glm::vec3 &albedo, const glm::vec3 &ao, const glm::vec3 &metallic,
-              const glm::vec3 &normal, const glm::vec3 &roughness, const float alpha = 1.0f);
+    void Init(const std::string_view name, const glm::vec3 &albedo, float ao, const glm::vec3 &normal, float metallic,
+              float roughness, const float alpha = 1.0f);
 
     auto operator==(const Material &other) const noexcept { return Name == other.Name; }
 
     unsigned int GetParameterTexture(const ParameterType &type) const noexcept;
-    glm::vec3 GetParameterColor(const ParameterType &type) const noexcept;
 
     auto GetAlphaValue() const noexcept { return m_Alpha; }
     auto GetAlphaMask() const noexcept { return m_AlphaMaskTexture; }
@@ -41,7 +49,7 @@ class Material
 
   private:
     std::array<unsigned int, 5> m_MaterialTextures;
-    std::array<glm::vec3, 5> m_MaterialColors;
+    MaterialData m_Material;
 
     float m_Alpha;
     unsigned int m_AlphaMaskTexture;

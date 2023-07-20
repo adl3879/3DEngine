@@ -178,20 +178,11 @@ Mesh Model::ProcessMesh(aiMesh *mesh, const aiScene *scene, const bool loadMater
 
             // Get the first texture for each texture type we need
             // since there could be multiple textures per type
-            aiString albedoPath;
-            mat->GetTexture(aiTextureType_DIFFUSE, 0, &albedoPath);
+            aiString albedoPath, metallicPath, normalPath, roughnessPath, alphaMaskPath;
 
-            aiString metallicPath;
-            mat->GetTexture(aiTextureType_AMBIENT, 0, &metallicPath);
-
-            aiString normalPath;
-            mat->GetTexture(aiTextureType_HEIGHT, 0, &normalPath);
-
-            aiString roughnessPath;
-            mat->GetTexture(aiTextureType_SHININESS, 0, &roughnessPath);
-
-            aiString alphaMaskPath;
-            mat->GetTexture(aiTextureType_OPACITY, 0, &alphaMaskPath);
+            mat->GetTexture(AI_MATKEY_BASE_COLOR_TEXTURE, &albedoPath);
+            mat->GetTexture(AI_MATKEY_METALLIC_TEXTURE, &metallicPath);
+            mat->GetTexture(AI_MATKEY_ROUGHNESS_TEXTURE, &roughnessPath);
 
             const auto newMaterial = ResourceManager::Instance().CacheMaterial(
                 name.C_Str(), m_Path + albedoPath.C_Str(), "", m_Path + metallicPath.C_Str(),

@@ -147,6 +147,7 @@ void main()
         totalLight += calcSpotLight(gSpotLights[i], normal);
     }
 
-    FragColor = texture(diffuse0, TexCoord) * totalLight;
+    FragColor = texture(diffuse0, TexCoord);
+    // FragColor = vec4(1, 1, 1, 1);
     color2 = int(EntityID);
 }

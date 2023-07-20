@@ -32,24 +32,24 @@ void Light::SetLightUniforms(Shader &shader)
         for (unsigned int i = 0; i < s_PointLightPropsMap.size(); i++)
         {
             char buffer[100];
-            SNPRINTF(buffer, sizeof(buffer), "gPointLights[%d].Base.Color", i);
+            SNPRINTF(buffer, sizeof(buffer), "gPointLights[%d].Color", i);
             shader.SetUniform3f(buffer, it->second.Color);
-            SNPRINTF(buffer, sizeof(buffer), "gPointLights[%d].Base.AmbientIntensity", i);
-            shader.SetUniform1f(buffer, it->second.AmbientIntensity);
-            SNPRINTF(buffer, sizeof(buffer), "gPointLights[%d].Base.DiffuseIntensity", i);
-            shader.SetUniform1f(buffer, it->second.DiffuseIntensity);
+            // SNPRINTF(buffer, sizeof(buffer), "gPointLights[%d].Base.AmbientIntensity", i);
+            // shader.SetUniform1f(buffer, it->second.AmbientIntensity);
+            // SNPRINTF(buffer, sizeof(buffer), "gPointLights[%d].Base.DiffuseIntensity", i);
+            // shader.SetUniform1f(buffer, it->second.DiffuseIntensity);
             SNPRINTF(buffer, sizeof(buffer), "gPointLights[%d].Position", i);
             shader.SetUniform3f(buffer, it->second.Position);
-            SNPRINTF(buffer, sizeof(buffer), "gPointLights[%d].Atten.Constant", i);
-            shader.SetUniform1f(buffer, it->second.Attenuation.Constant);
-            SNPRINTF(buffer, sizeof(buffer), "gPointLights[%d].Atten.Linear", i);
-            shader.SetUniform1f(buffer, it->second.Attenuation.Linear);
-            SNPRINTF(buffer, sizeof(buffer), "gPointLights[%d].Atten.Exp", i);
-            shader.SetUniform1f(buffer, it->second.Attenuation.Exp);
+            // SNPRINTF(buffer, sizeof(buffer), "gPointLights[%d].Atten.Constant", i);
+            // shader.SetUniform1f(buffer, it->second.Attenuation.Constant);
+            // SNPRINTF(buffer, sizeof(buffer), "gPointLights[%d].Atten.Linear", i);
+            // shader.SetUniform1f(buffer, it->second.Attenuation.Linear);
+            // SNPRINTF(buffer, sizeof(buffer), "gPointLights[%d].Atten.Exp", i);
+            // shader.SetUniform1f(buffer, it->second.Attenuation.Exp);
 
             it++;
         }
-        shader.SetUniform1i("gNumPointLights", s_PointLightPropsMap.size());
+        shader.SetUniform1i("numPointLights", s_PointLightPropsMap.size());
     }
 
     // spot
