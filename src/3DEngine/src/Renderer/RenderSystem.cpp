@@ -58,8 +58,8 @@ glm::vec3 lightPositions[] = {
     glm::vec3(-10.0f, -10.0f, 10.0f),
     glm::vec3(10.0f, -10.0f, 10.0f),
 };
-glm::vec3 lightColors[] = {glm::vec3(300.0f, 300.0f, 300.0f), glm::vec3(300.0f, 300.0f, 300.0f),
-                           glm::vec3(300.0f, 300.0f, 300.0f), glm::vec3(300.0f, 300.0f, 300.0f)};
+glm::vec3 lightColors[] = {glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f),
+                           glm::vec3(1.0f, 0.0f, 0.0f)};
 
 int nrRows = 7;
 int nrColumns = 7;
@@ -78,9 +78,6 @@ void RenderSystem::Render(Camera &camera, Scene &scene, const bool globalWirefra
 
 void RenderSystem::SetupDefaultState()
 {
-    // glFrontFace(GL_CCW);
-    // glCullFace(GL_BACK);
-    // glEnable(GL_CULL_FACE);
     glEnable(GL_DEPTH_TEST);
     glDepthMask(GL_TRUE);
     glDepthFunc(GL_LEQUAL);
@@ -266,23 +263,14 @@ void RenderSystem::RenderModelsWithTextures(Camera &camera, Scene &scene)
             modelShader->SetUniformMatrix4fv("projectionViewMatrix", camera.GetProjectionViewMatrix());
             modelShader->SetUniform3f("cameraPosition", camera.GetPosition());
 
-            for (int i = 0; i < sizeof(lightPositions); ++i)
-            {
-                glm::vec3 newPos = lightPositions[i] + glm::vec3(sin(glfwGetTime() * 5.0) * 5.0, 0.0, 0.0);
-                newPos = lightPositions[i];
-                modelShader->SetUniform3f("gPointLights[" + std::to_string(i) + "].Position", newPos);
-                modelShader->SetUniform3f("gPointLights[" + std::to_string(i) + "].Color", lightColors[i]);
-            }
-
             modelShader->SetUniform3f("albedoParam", {0.0, 0.0, 0.0});
             modelShader->SetUniform1f("metallicParam", 0.5f);
             modelShader->SetUniform1f("aoParam", 1.0f);
             modelShader->SetUniform1f("roughnessParam", 0.5f);
 
-            modelShader->SetUniform3f("cameraPosition", camera.GetPosition());
             modelShader->SetUniform1i("numOfPointLights", 4);
 
-            // Light::SetLightUniforms(*modelShader);
+            Light::SetLightUniforms(*modelShader);
 
             glDrawElements(GL_TRIANGLES, mesh.IndexCount, GL_UNSIGNED_INT, nullptr);
             glBindTexture(GL_TEXTURE_2D, 0);

@@ -111,11 +111,7 @@ struct DirectionalLightComponent
 {
     DirectionalLight Light{};
 
-    DirectionalLightComponent()
-    {
-        Light.AmbientIntensity = 0.37;
-        Light::SetDirectionalLight(&Light);
-    }
+    DirectionalLightComponent() { Light::SetDirectionalLight(&Light); }
     DirectionalLightComponent(const DirectionalLightComponent &) = default;
 };
 

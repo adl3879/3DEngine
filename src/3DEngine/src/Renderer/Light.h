@@ -16,36 +16,28 @@
 
 namespace Engine
 {
-struct BaseLight
-{
-    glm::vec3 Color = {1.0f, 1.0f, 1.0f};
-    float AmbientIntensity = 0.0f;
-    float DiffuseIntensity = 0.1f;
-};
-
-struct DirectionalLight : public BaseLight
+struct DirectionalLight
 {
     glm::vec3 Direction = {1.0f, 0.0f, 0.0f};
+    glm::vec3 Color = {1.0f, 1.0f, 1.0f};
+    float Intensity = 1.0f;
 };
 
-struct LightAttenuation
-{
-    float Constant = 1.0f;
-    float Linear = 0.002f;
-    float Exp = 0.003f;
-};
-
-struct PointLight : public BaseLight
+struct PointLight
 {
     glm::vec3 Position = {0.0f, 0.0f, 0.0f};
-    LightAttenuation Attenuation;
+    glm::vec3 Color = {1.0f, 1.0f, 1.0f};
+    float Intensity = 1.0f;
 };
 
-struct SpotLight : public PointLight
+struct SpotLight
 {
+    glm::vec3 Position = {0.0f, 0.0f, 0.0f};
     glm::vec3 Direction = {0.0f, 0.0f, 0.0f};
+    glm::vec3 Color = {1.0f, 1.0f, 1.0f};
     float Cutoff = 30.0f;
     float OuterCutoff = 35.0f;
+    float Intensity = 1.0f;
 };
 
 class Light

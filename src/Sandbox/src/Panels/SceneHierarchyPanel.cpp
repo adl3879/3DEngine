@@ -181,10 +181,9 @@ void SceneHierarchyPanel::DrawComponents(Entity entity)
                               "DirectionalLight"))
         {
             auto &entityComponent = entity.GetComponent<DirectionalLightComponent>();
-            ImGui::DragFloat3("Direction", glm::value_ptr(entityComponent.Light.Direction), 1.0f, 0.0f, 1.0f);
+            ImGui::DragFloat3("Direction", glm::value_ptr(entityComponent.Light.Direction), 1.0f, -1.0f, 1.0f);
             ImGui::ColorEdit3("Color", glm::value_ptr(entityComponent.Light.Color));
-            ImGui::DragFloat("Ambient Intensity", &entityComponent.Light.AmbientIntensity, 0.001f, 0.0f, 1.0f);
-            ImGui::DragFloat("Diffuse Intensity", &entityComponent.Light.DiffuseIntensity, 0.001f, 0.0f, 1.0f);
+            ImGui::DragFloat("Intensity", &entityComponent.Light.Intensity, 1.0f, 0.0f, 10000.0f);
 
             Light::SetDirectionalLight(&entityComponent.Light);
 
@@ -201,11 +200,7 @@ void SceneHierarchyPanel::DrawComponents(Entity entity)
             auto &transform = entity.GetComponent<TransformComponent>();
             entityComponent.Light.Position = transform.Translation;
             ImGui::ColorEdit3("Color", glm::value_ptr(entityComponent.Light.Color));
-            ImGui::SliderFloat("Ambience", &entityComponent.Light.AmbientIntensity, 0.001f, 1.0f);
-            ImGui::SliderFloat("Diffusion", &entityComponent.Light.DiffuseIntensity, 0.001f, 1.0f);
-            ImGui::SliderFloat("Constant", &entityComponent.Light.Attenuation.Constant, 0.001f, 1.0f);
-            ImGui::SliderFloat("Linear", &entityComponent.Light.Attenuation.Linear, 0.001f, 1.0f);
-            ImGui::SliderFloat("Exponential", &entityComponent.Light.Attenuation.Exp, 0.001f, 1.0f);
+            ImGui::DragFloat("Intensity", &entityComponent.Light.Intensity, 1.0f, 0.0f, 10000.0f);
 
             Light::SetPointLight(entityComponent.Light, entityComponent.Index);
 
@@ -223,13 +218,9 @@ void SceneHierarchyPanel::DrawComponents(Entity entity)
             entityComponent.Light.Position = transform.Translation;
             entityComponent.Light.Direction = transform.Rotation;
             ImGui::ColorEdit3("Color", glm::value_ptr(entityComponent.Light.Color));
-            ImGui::SliderFloat("Ambient Intensity", &entityComponent.Light.AmbientIntensity, 0.001f, 1.0f);
-            ImGui::SliderFloat("Diffuse Intensity", &entityComponent.Light.DiffuseIntensity, 0.001f, 1.0f);
-            ImGui::SliderFloat("Constant", &entityComponent.Light.Attenuation.Constant, 0.001f, 1.0f);
-            ImGui::SliderFloat("Linear", &entityComponent.Light.Attenuation.Linear, 0.001f, 1.0f);
-            ImGui::SliderFloat("Exponential", &entityComponent.Light.Attenuation.Exp, 0.001f, 1.0f);
             ImGui::DragFloat("Cutoff", &entityComponent.Light.Cutoff, 0.1f, 0.0f, 90.0f);
             ImGui::DragFloat("Outer Cutoff", &entityComponent.Light.OuterCutoff, 0.1f, 0.0f, 90.0f);
+            ImGui::DragFloat("Intensity", &entityComponent.Light.Intensity, 1.0f, 0.0f, 10000.0f);
 
             Light::SetSpotLight(entityComponent.Light, entityComponent.Index);
 

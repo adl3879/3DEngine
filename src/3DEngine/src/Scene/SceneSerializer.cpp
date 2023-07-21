@@ -101,8 +101,7 @@ static void SerializeEntity(YAML::Emitter &out, Entity entity)
 
         auto &dlc = entity.GetComponent<DirectionalLightComponent>();
         out << YAML::Key << "Color" << YAML::Value << dlc.Light.Color;
-        out << YAML::Key << "AmbientIntensity" << YAML::Value << dlc.Light.AmbientIntensity;
-        out << YAML::Key << "DiffuseIntensity" << YAML::Value << dlc.Light.DiffuseIntensity;
+        out << YAML::Key << "AmbientIntensity" << YAML::Value << dlc.Light.Intensity;
         out << YAML::Key << "Direction" << YAML::Value << dlc.Light.Direction;
 
         out << YAML::EndMap;
@@ -115,11 +114,7 @@ static void SerializeEntity(YAML::Emitter &out, Entity entity)
 
         auto &plc = entity.GetComponent<PointLightComponent>();
         out << YAML::Key << "Color" << YAML::Value << plc.Light.Color;
-        out << YAML::Key << "AmbientIntensity" << YAML::Value << plc.Light.AmbientIntensity;
-        out << YAML::Key << "DiffuseIntensity" << YAML::Value << plc.Light.DiffuseIntensity;
-        out << YAML::Key << "Attenuation.Constant" << YAML::Value << plc.Light.Attenuation.Constant;
-        out << YAML::Key << "Attenuation.Exp" << YAML::Value << plc.Light.Attenuation.Exp;
-        out << YAML::Key << "Attenuation.Linear" << YAML::Value << plc.Light.Attenuation.Linear;
+        out << YAML::Key << "AmbientIntensity" << YAML::Value << plc.Light.Intensity;
 
         out << YAML::EndMap;
     }
@@ -131,11 +126,7 @@ static void SerializeEntity(YAML::Emitter &out, Entity entity)
 
         auto &slc = entity.GetComponent<SpotLightComponent>();
         out << YAML::Key << "Color" << YAML::Value << slc.Light.Color;
-        out << YAML::Key << "AmbientIntensity" << YAML::Value << slc.Light.AmbientIntensity;
-        out << YAML::Key << "DiffuseIntensity" << YAML::Value << slc.Light.DiffuseIntensity;
-        out << YAML::Key << "Attenuation.Constant" << YAML::Value << slc.Light.Attenuation.Constant;
-        out << YAML::Key << "Attenuation.Exp" << YAML::Value << slc.Light.Attenuation.Exp;
-        out << YAML::Key << "Attenuation.Linear" << YAML::Value << slc.Light.Attenuation.Linear;
+        out << YAML::Key << "AmbientIntensity" << YAML::Value << slc.Light.Intensity;
         out << YAML::Key << "Cutoff" << YAML::Value << slc.Light.Cutoff;
         out << YAML::Key << "OuterCutoff" << YAML::Value << slc.Light.OuterCutoff;
 
@@ -243,10 +234,9 @@ bool SceneSerializer::Deserialize(const std::string &filepath)
             if (directionalLightComponent)
             {
                 auto &dlc = deserializedEntity.AddComponent<DirectionalLightComponent>();
-                dlc.Light.Color = directionalLightComponent["Color"].as<glm::vec3>();
-                dlc.Light.AmbientIntensity = directionalLightComponent["AmbientIntensity"].as<float>();
-                dlc.Light.DiffuseIntensity = directionalLightComponent["DiffuseIntensity"].as<float>();
                 dlc.Light.Direction = directionalLightComponent["Direction"].as<glm::vec3>();
+                dlc.Light.Color = directionalLightComponent["Color"].as<glm::vec3>();
+                dlc.Light.Intensity = directionalLightComponent["AmbientIntensity"].as<float>();
 
                 deserializedEntity.RemoveComponent<TransformComponent>();
             }
@@ -262,11 +252,7 @@ bool SceneSerializer::Deserialize(const std::string &filepath)
                 plc.Index = count;
                 plc.Light.Color = pointLightComponent["Color"].as<glm::vec3>();
                 plc.Light.Position = tc.Translation;
-                plc.Light.AmbientIntensity = pointLightComponent["AmbientIntensity"].as<float>();
-                plc.Light.DiffuseIntensity = pointLightComponent["DiffuseIntensity"].as<float>();
-                plc.Light.Attenuation.Constant = pointLightComponent["Attenuation.Constant"].as<float>();
-                plc.Light.Attenuation.Exp = pointLightComponent["Attenuation.Exp"].as<float>();
-                plc.Light.Attenuation.Linear = pointLightComponent["Attenuation.Linear"].as<float>();
+                plc.Light.Intensity = pointLightComponent["AmbientIntensity"].as<float>();
                 Light::SetPointLight(plc.Light, plc.Index);
             }
 
@@ -282,11 +268,7 @@ bool SceneSerializer::Deserialize(const std::string &filepath)
                 slc.Light.Color = spotLightComponent["Color"].as<glm::vec3>();
                 slc.Light.Position = tc.Translation;
                 slc.Light.Direction = tc.Rotation;
-                slc.Light.AmbientIntensity = spotLightComponent["AmbientIntensity"].as<float>();
-                slc.Light.DiffuseIntensity = spotLightComponent["DiffuseIntensity"].as<float>();
-                slc.Light.Attenuation.Constant = spotLightComponent["Attenuation.Constant"].as<float>();
-                slc.Light.Attenuation.Exp = spotLightComponent["Attenuation.Exp"].as<float>();
-                slc.Light.Attenuation.Linear = spotLightComponent["Attenuation.Linear"].as<float>();
+                slc.Light.Intensity = spotLightComponent["AmbientIntensity"].as<float>();
                 slc.Light.Cutoff = spotLightComponent["Cutoff"].as<float>();
                 slc.Light.OuterCutoff = spotLightComponent["OuterCutoff"].as<float>();
                 Light::SetSpotLight(slc.Light, slc.Index);

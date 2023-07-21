@@ -27,8 +27,8 @@ struct Spotlight {
     vec3 Position;
     vec3 Direction;
     vec3 Color;
-    float CutOff;
-    float Exponent;
+    float Cutoff;
+    float OuterCutoff;
 };
 uniform Spotlight gSpotLights[MAX_SPOT_LIGHTS];
 
@@ -52,8 +52,8 @@ uniform sampler2D metallicMap;
 uniform sampler2D roughnessMap;
 uniform sampler2D aoMap;
 
-uniform int numOfPointLights;
-uniform int numOfSpotLights;
+uniform int gNumOfPointLights;
+uniform int gNumOfSpotLights;
 
 const float PI = 3.14159265359;
 
@@ -155,18 +155,18 @@ void main() {
     }
 
     // point lights reflection
-    for (int i = 0; i < numOfPointLights; ++i) {
+    for (int i = 0; i < gNumOfPointLights; ++i) {
         vec3 L = normalize(gPointLights[i].Position - WorldPosition);
     
         float distance = length(gPointLights[i].Position - WorldPosition);
         float attenuation = 1.0 / (distance * distance);
-        vec3 radiance = gPointLights[1].Color * attenuation; 
+        vec3 radiance = gPointLights[i].Color * attenuation; 
 
         Lo += calcReflectanceEquation(L, V, N, albedo, metallic, roughness) * radiance;
     }
 
     // spot lights reflection
-    for (int i = 0; i < numOfSpotLights; ++i) {
+    for (int i = 0; i < gNumOfSpotLights; ++i) {
         vec3 L = normalize(gSpotLights[i].Position - WorldPosition);
 
         float distance = length(gSpotLights[i].Position - WorldPosition);
@@ -174,8 +174,8 @@ void main() {
         vec3 radiance = gSpotLights[i].Color * attenuation; 
 
         float spotEffect = dot(normalize(gSpotLights[i].Direction), -L);
-        if (spotEffect > gSpotLights[i].CutOff) {
-            spotEffect = pow(spotEffect, gSpotLights[i].Exponent);
+        if (spotEffect > gSpotLights[i].Cutoff) {
+            spotEffect = pow(spotEffect, gSpotLights[i].OuterCutoff);
             Lo += calcReflectanceEquation(L, V, N, albedo, metallic, roughness) * radiance * spotEffect;
         }
     }
