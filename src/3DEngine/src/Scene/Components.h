@@ -9,12 +9,20 @@
 #include "Engine.h"
 #include "Light.h"
 #include "Model.h"
+#include "UUID.h"
 
 #include <iostream>
 #include <memory>
 
 namespace Engine
 {
+struct IDComponent
+{
+    UUID ID = 0;
+
+    IDComponent() = default;
+    IDComponent(const IDComponent &) = default;
+};
 
 struct TagComponent
 {
@@ -85,6 +93,8 @@ struct NativeScriptComponent
         };
     }
 };
+
+class LuaScriptableEntity;
 
 struct LuaScriptComponent
 {

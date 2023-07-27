@@ -115,6 +115,12 @@ void Framebuffer::Bind() const
 
 void Framebuffer::Unbind() const { glBindFramebuffer(GL_FRAMEBUFFER, 0); }
 
+void Framebuffer::Reset()
+{
+    glDeleteFramebuffers(1, &m_RendererID);
+    glGenFramebuffers(1, &m_RendererID);
+}
+
 void Framebuffer::Invalidate()
 {
     if (m_RendererID)

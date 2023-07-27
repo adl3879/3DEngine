@@ -11,12 +11,15 @@ Scene::Scene() {}
 
 Scene::~Scene() {}
 
-Entity Scene::CreateEntity(const std::string &name)
+Entity Scene::CreateEntity(const std::string &name) { return CreateEntityWithUUID(UUID(), name); }
+
+Entity Scene::CreateEntityWithUUID(UUID uuid, const std::string &name)
 {
     Entity entity = {m_Registry.create(), this};
     auto tag = entity.AddComponent<TagComponent>();
 
     entity.GetComponent<TagComponent>().Tag = name.empty() ? "Unnamed Entity" : name;
+    entity.AddComponent<IDComponent>(uuid);
     entity.AddComponent<TransformComponent>();
     entity.AddComponent<VisibilityComponent>();
 

@@ -1,0 +1,49 @@
+Scene: Untitled
+Entities:
+  - Entity: 123456789
+    TagComponent:
+      Tag: Mesh
+    TransformComponent:
+      Translation: [-0.345731616, -1.90368879, 0]
+      Rotation: [0, 0, 0.0774034038]
+      Scale: [4.92332315, 0.0643729195, 4.7440834]
+    ModelComponent:
+      ModelPath: /res/models/box/scene.gltf
+  - Entity: 123456789
+    TagComponent:
+      Tag: Directional Light
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [3.08113027, -0.829600453, -1.54700768]
+      Scale: [0.999999642, 0.999998808, 0.999999225]
+    DirectionalLightComponent:
+      Color: [0.850498319, 0.816591442, 0.824702024]
+      AmbientIntensity: 30
+  - Entity: 123456789
+    TagComponent:
+      Tag: Mesh
+    TransformComponent:
+      Translation: [0.300952256, -0.952843487, 0.0231013093]
+      Rotation: [0.918269217, -1.45894504, -0.826726258]
+      Scale: [0.58999604, 0.589932919, 0.589995205]
+    ModelComponent:
+      ModelPath: /res/models/ScifiHelment/SciFiHelmet.gltf
+  - Entity: 123456789
+    TagComponent:
+      Tag: Mesh
+    TransformComponent:
+      Translation: [1.92450082, -0.898305655, -0.00721910596]
+      Rotation: [0, 0, 0.0980348215]
+      Scale: [0.134832442, 1.90020919, 4.74425411]
+    ModelComponent:
+      ModelPath: /res/models/box/scene.gltf
+  - Entity: 123456789
+    TagComponent:
+      Tag: Point Light 1
+    TransformComponent:
+      Translation: [1.07206023, -1.8356005, -0.616819143]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    PointLightComponent:
+      Color: [0.880398691, 0.462136179, 0.462136179]
+      AmbientIntensity: 23

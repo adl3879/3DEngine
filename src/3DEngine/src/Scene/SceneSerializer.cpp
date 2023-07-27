@@ -19,7 +19,7 @@ static void SerializeEntity(YAML::Emitter &out, Entity entity)
 {
     out << YAML::BeginMap; // Entity
 
-    out << YAML::Key << "Entity" << YAML::Value << "123456789";
+    out << YAML::Key << "Entity" << YAML::Value << entity.GetComponent<IDComponent>().ID;
 
     if (entity.HasComponent<TagComponent>())
     {
@@ -102,7 +102,6 @@ static void SerializeEntity(YAML::Emitter &out, Entity entity)
         auto &dlc = entity.GetComponent<DirectionalLightComponent>();
         out << YAML::Key << "Color" << YAML::Value << dlc.Light.Color;
         out << YAML::Key << "AmbientIntensity" << YAML::Value << dlc.Light.Intensity;
-        out << YAML::Key << "Direction" << YAML::Value << dlc.Light.Direction;
 
         out << YAML::EndMap;
     }
@@ -176,7 +175,7 @@ bool SceneSerializer::Deserialize(const std::string &filepath)
     {
         for (auto entity : entities)
         {
-            uint64_t uuid = entity["Entity"].as<uint64_t>(); // TODO: use uuid
+            uint64_t uuid = entity["Entity"].as<uint64_t>();
 
             std::string name;
             auto tagComponent = entity["TagComponent"];
@@ -184,7 +183,7 @@ bool SceneSerializer::Deserialize(const std::string &filepath)
 
             LOG_CORE_TRACE("Deserialized entity with ID = {0}, name = {1}", uuid, name);
 
-            Entity deserializedEntity = m_Scene->CreateEntity(name);
+            Entity deserializedEntity = m_Scene->CreateEntityWithUUID(uuid, name);
 
             auto transformComponent = entity["TransformComponent"];
             if (transformComponent)
@@ -233,12 +232,11 @@ bool SceneSerializer::Deserialize(const std::string &filepath)
             auto directionalLightComponent = entity["DirectionalLightComponent"];
             if (directionalLightComponent)
             {
+                auto &tc = deserializedEntity.GetComponent<TransformComponent>();
                 auto &dlc = deserializedEntity.AddComponent<DirectionalLightComponent>();
-                dlc.Light.Direction = directionalLightComponent["Direction"].as<glm::vec3>();
+                dlc.Light.Direction = tc.Rotation;
                 dlc.Light.Color = directionalLightComponent["Color"].as<glm::vec3>();
                 dlc.Light.Intensity = directionalLightComponent["AmbientIntensity"].as<float>();
-
-                deserializedEntity.RemoveComponent<TransformComponent>();
             }
 
             auto pointLightComponent = entity["PointLightComponent"];

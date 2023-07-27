@@ -181,7 +181,8 @@ void SceneHierarchyPanel::DrawComponents(Entity entity)
                               "DirectionalLight"))
         {
             auto &entityComponent = entity.GetComponent<DirectionalLightComponent>();
-            ImGui::DragFloat3("Direction", glm::value_ptr(entityComponent.Light.Direction), 1.0f, -1.0f, 1.0f);
+            auto &transform = entity.GetComponent<TransformComponent>();
+            entityComponent.Light.Direction = transform.Rotation;
             ImGui::ColorEdit3("Color", glm::value_ptr(entityComponent.Light.Color));
             ImGui::DragFloat("Intensity", &entityComponent.Light.Intensity, 1.0f, 0.0f, 10000.0f);
 
@@ -297,7 +298,6 @@ void SceneHierarchyPanel::OnImGuiRender()
                 auto entity = m_Context->CreateEntity("Directional Light");
 
                 entity.AddComponent<DirectionalLightComponent>();
-                entity.RemoveComponent<TransformComponent>();
                 m_SelectionContext = entity;
             }
         }

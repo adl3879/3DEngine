@@ -14,5 +14,6 @@
 #include "SceneSerializer.h"
 #include "PlatformUtils.h"
 #include "Math.h"
+#include "Project.h"
 
 #include "VertexArray.h"

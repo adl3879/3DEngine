@@ -4,56 +4,11 @@ Entities:
     TagComponent:
       Tag: Mesh
     TransformComponent:
-      Translation: [1.29106498, -0.777049303, -0.325031936]
-      Rotation: [-1.54417527, 1.37608707, -7.70159261e-07]
-      Scale: [0.0228000209, 0.0227999799, 0.0228003617]
-    ModelComponent:
-      ModelPath: /res/models/Cerberus_by_Andrew_Maximov/Cerberus_LP.FBX
-  - Entity: 123456789
-    TagComponent:
-      Tag: Directional Light
-    DirectionalLightComponent:
-      Color: [1, 1, 1]
-      AmbientIntensity: 0.347000003
-      DiffuseIntensity: 0.108999997
-      Direction: [1, 0, 0]
-  - Entity: 123456789
-    TagComponent:
-      Tag: Mesh
-    TransformComponent:
-      Translation: [0.133700743, -0.826381445, 1.13536358]
-      Rotation: [0, 0, 0]
-      Scale: [0.865199983, 0.865199983, 0.865199983]
-    ModelComponent:
-      ModelPath: /res/models/ScifiHelment/SciFiHelmet.gltf
-  - Entity: 123456789
-    TagComponent:
-      Tag: Point Light 1
-    TransformComponent:
-      Translation: [-0.100461006, 2.44302869, 1.79443598]
+      Translation: [-2.20139527, -1.17603254, 2.3855381]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
-    PointLightComponent:
-      Color: [0.44923079, 0.750882864, 1]
-      AmbientIntensity: 0
-      DiffuseIntensity: 0.583000004
-      Attenuation.Constant: 1
-      Attenuation.Exp: 0.00300000003
-      Attenuation.Linear: 0.00200000009
-  - Entity: 123456789
-    TagComponent:
-      Tag: Point Light 2
-    TransformComponent:
-      Translation: [-1.02471137, 2.07329273, 0.0806922913]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-    PointLightComponent:
-      Color: [0.959999979, 0.419446141, 0.948357403]
-      AmbientIntensity: 0.050999999
-      DiffuseIntensity: 1
-      Attenuation.Constant: 1
-      Attenuation.Exp: 0.00300000003
-      Attenuation.Linear: 0.00200000009
+    ModelComponent:
+      ModelPath: /res/models/suzanne/scene.gltf
   - Entity: 123456789
     TagComponent:
       Tag: Mesh
@@ -65,10 +20,49 @@ Entities:
       ModelPath: /res/models/boxTextured/scene.gltf
   - Entity: 123456789
     TagComponent:
-      Tag: Mesh
+      Tag: Point Light 2
     TransformComponent:
-      Translation: [-2.20139527, -1.17603254, 2.3855381]
+      Translation: [-1.02471137, 2.07329273, 0.0806922913]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
+    PointLightComponent:
+      Color: [0.959999979, 0.419446141, 0.948357403]
+      AmbientIntensity: 0.050999999
+  - Entity: 123456789
+    TagComponent:
+      Tag: Point Light 1
+    TransformComponent:
+      Translation: [-0.100461006, 2.44302869, 1.79443598]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    PointLightComponent:
+      Color: [0.44923079, 0.750882864, 1]
+      AmbientIntensity: 0
+  - Entity: 123456789
+    TagComponent:
+      Tag: Mesh
+    TransformComponent:
+      Translation: [0.133700743, -0.826381445, 1.13536358]
+      Rotation: [0, 0, 0]
+      Scale: [0.865199983, 0.865199983, 0.865199983]
     ModelComponent:
-      ModelPath: /res/models/suzanne/scene.gltf
+      ModelPath: /res/models/ScifiHelment/SciFiHelmet.gltf
+  - Entity: 123456789
+    TagComponent:
+      Tag: Directional Light
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [2.22799993, -4.48099995, -12.7390003]
+      Scale: [0.999999225, 0.999999881, 1.00000012]
+    DirectionalLightComponent:
+      Color: [1, 1, 1]
+      AmbientIntensity: 5
+  - Entity: 123456789
+    TagComponent:
+      Tag: Mesh
+    TransformComponent:
+      Translation: [1.29106498, -0.777049303, -0.325031936]
+      Rotation: [-1.54417527, 1.37608707, -7.70159261e-07]
+      Scale: [0.0228000209, 0.0227999799, 0.0228003617]
+    ModelComponent:
+      ModelPath: /res/models/Cerberus_by_Andrew_Maximov/Cerberus_LP.FBX

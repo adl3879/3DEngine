@@ -59,6 +59,7 @@ float EditorCamera::ZoomSpeed() const
 
 void EditorCamera::OnUpdate(float ts)
 {
+    m_DeltaTime = ts;
     if (InputManager::Instance().IsKeyPressed(InputKey::LeftAlt))
     {
         auto mousePos = InputManager::Instance().GetMouseMovedPosition();
@@ -79,7 +80,8 @@ void EditorCamera::OnUpdate(float ts)
 
 void EditorCamera::OnMouseScrolled(double xOffset, double yOffset)
 {
-    MouseZoom((float)yOffset * 0.1f);
+    float speed = (float)yOffset * 10.0f;
+    MouseZoom(speed * m_DeltaTime);
     UpdateView();
 }
 

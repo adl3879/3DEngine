@@ -2,6 +2,7 @@
 
 #include "Application.h"
 #include "AppLayer.h"
+#include "Project.h"
 
 class Sandbox : public Engine::Application
 {
@@ -11,4 +12,8 @@ class Sandbox : public Engine::Application
     ~Sandbox() = default;
 };
 
-Engine::Application *Engine::CreateApplication() { return new Sandbox(); }
+Engine::Application *Engine::CreateApplication()
+{
+    // Project::New()->SaveActive("/home/adeleye/Source/3DEngine/src/Sandbox/Untitled.3dproj");
+    return new Sandbox();
+}

@@ -167,6 +167,7 @@ void main() {
 
     // spot lights reflection
     for (int i = 0; i < gNumOfSpotLights; ++i) {
+        // TODO: fix spotlight
         vec3 L = normalize(gSpotLights[i].Position - WorldPosition);
 
         float distance = length(gSpotLights[i].Position - WorldPosition);

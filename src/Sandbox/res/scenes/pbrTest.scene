@@ -4,6 +4,15 @@ Entities:
     TagComponent:
       Tag: Mesh
     TransformComponent:
+      Translation: [2.12702346, -1.84192944, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    ModelComponent:
+      ModelPath: /res/models/box/scene.gltf
+  - Entity: 123456789
+    TagComponent:
+      Tag: Mesh
+    TransformComponent:
       Translation: [-2.20139527, -1.17603254, 2.3855381]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
@@ -18,16 +27,6 @@ Entities:
       Scale: [8.7735405, 0.175101578, 9.59827709]
     ModelComponent:
       ModelPath: /res/models/boxTextured/scene.gltf
-  - Entity: 123456789
-    TagComponent:
-      Tag: Point Light 2
-    TransformComponent:
-      Translation: [-1.02471137, 5.97300005, 0.0806922913]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-    PointLightComponent:
-      Color: [0.959999979, 0.419446141, 0.948357403]
-      AmbientIntensity: 101.051003
   - Entity: 123456789
     TagComponent:
       Tag: Point Light 1
@@ -50,10 +49,13 @@ Entities:
   - Entity: 123456789
     TagComponent:
       Tag: Directional Light
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
     DirectionalLightComponent:
       Color: [1, 1, 1]
-      AmbientIntensity: 2
-      Direction: [0, -1, 1]
+      AmbientIntensity: 13
   - Entity: 123456789
     TagComponent:
       Tag: Mesh

@@ -6,6 +6,7 @@
 
 #include "PerspectiveCamera.h"
 #include "EditorCamera.h"
+#include "UUID.h"
 
 namespace Engine
 {
@@ -19,6 +20,7 @@ class Scene
     virtual ~Scene();
 
     Entity CreateEntity(const std::string &name = std::string());
+    Entity CreateEntityWithUUID(UUID uuid, const std::string &name = std::string());
     Entity *GetEntity(const std::string &name);
     void DestroyEntity(Entity entity);
 
@@ -37,7 +39,7 @@ class Scene
 
   private:
     entt::registry m_Registry;
-    entt::entity m_SelectedEntity;
+    entt::entity m_SelectedEntity = entt::null;
 
     friend class Entity;
     friend class SceneHierarchyPanel;

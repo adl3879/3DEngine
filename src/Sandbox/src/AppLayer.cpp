@@ -6,8 +6,6 @@
 
 #include <ImGuizmo.h>
 #include "Math.h"
-#include "Light.h"
-#include "SkyLight.h"
 
 namespace Engine
 {
@@ -39,10 +37,8 @@ void AppLayer::OnDetach() {}
 void AppLayer::OnUpdate(float deltaTime)
 {
     // update
-
     m_EditorCamera.OnUpdate(deltaTime);
     m_EditorCamera.SetViewportSize(m_ViewportSize.x, m_ViewportSize.y);
-
     {
         m_Framebuffer->Bind();
         m_RenderSystem->Render(m_EditorCamera, *m_Scene);
@@ -65,7 +61,6 @@ void AppLayer::OnUpdate(float deltaTime)
         // removed one because i moved every entity by one
         m_HoveredEntity = pixelData == 0 ? Entity() : Entity((entt::entity)(pixelData - 1), m_Scene.get());
     }
-
     m_Framebuffer->Unbind();
 }
 
@@ -133,9 +128,7 @@ void AppLayer::OnImGuiRender()
     {
         // serialize the scene
         LOG_INFO("Serializing Scene");
-        m_Scene = std::make_unique<Scene>();
-        m_Scene->SetSceneFilePath(Utils::FileDialogs::m_SelectedFile);
-        m_SceneHierarchyPanel.SetContext(m_Scene);
+        ResetScene(Utils::FileDialogs::m_SelectedFile);
 
         SceneSerializer serializer(m_Scene);
         serializer.Deserialize(Utils::FileDialogs::m_SelectedFile);
@@ -152,6 +145,7 @@ void AppLayer::OnImGuiRender()
     }
 
     m_SceneHierarchyPanel.OnImGuiRender();
+    m_ContentBrowserPanel.OnImGuiRender();
 
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{0, 0});
     ImGui::Begin("Viewport");
@@ -166,6 +160,22 @@ void AppLayer::OnImGuiRender()
         m_ViewportSize = {viewportPanelSize.x, viewportPanelSize.y};
     }
     ImGui::Image((void *)(intptr_t)m_Framebuffer->GetColorAttachment(), ImVec2{m_ViewportSize.x, m_ViewportSize.y});
+
+    if (ImGui::BeginDragDropTarget())
+    {
+        if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
+        {
+            const char *path = (const char *)payload->Data;
+            if (std::string(path).ends_with(".scene"))
+            {
+                ResetScene(path);
+                m_Scene->SetSceneFilePath(path);
+                SceneSerializer serializer(m_Scene);
+                serializer.Deserialize(path);
+            }
+        }
+        ImGui::EndDragDropTarget();
+    }
 
     auto windowSize = ImGui::GetWindowSize();
     auto miniBound = ImGui::GetWindowPos();
@@ -276,15 +286,14 @@ void AppLayer::OnMouseButtonPressed(MouseButton button)
 
 void AppLayer::NewScene()
 {
-    // TODO: complete resets
-    Light::Reset();
+    // TODO: create new scene file
+    ResetScene("");
     m_Scene = std::make_unique<Scene>();
     m_SceneHierarchyPanel.SetContext(m_Scene);
 }
 
 void AppLayer::OpenScene()
 {
-    Light::Reset();
     Utils::FileDialogs::OpenFile(
         "openScene", Utils::FileDialogParams{.DefaultPathAndFile =
                                                  "/home/adeleye/Source/3DEngine/src/Sandbox/res/scenes/scene1.scene",
@@ -307,5 +316,14 @@ void AppLayer::SaveScene()
         SceneSerializer serializer(m_Scene);
         serializer.Serialize(m_Scene->GetSceneFilePath());
     }
+}
+
+void AppLayer::ResetScene(const std::string &path)
+{
+    Light::Reset();
+    m_EditorCamera = EditorCamera(-45.0f, 1.778f, 0.1f, 100.0f);
+    m_Scene = std::make_unique<Scene>();
+    m_Scene->SetSceneFilePath(path);
+    m_SceneHierarchyPanel.SetContext(m_Scene);
 }
 } // namespace Engine

@@ -3,6 +3,8 @@
 #include <glm/glm.hpp>
 #include <vector>
 
+#include <memory>
+
 namespace Engine
 {
 enum class FramebufferTextureFormat
@@ -56,6 +58,7 @@ class Framebuffer
 
     void Bind() const;
     void Unbind() const;
+    void Reset();
     void Invalidate();
 
     void Resize(int width, int height);
@@ -83,4 +86,6 @@ class Framebuffer
     std::vector<unsigned int> m_ColorAttachments;
     unsigned int m_DepthAttachment = 0;
 };
+
+using FramebufferPtr = std::shared_ptr<Framebuffer>;
 } // namespace Engine

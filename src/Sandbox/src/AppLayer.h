@@ -3,6 +3,7 @@
 #include "Engine.h"
 #include "SceneHierarchyPanel.h"
 #include "RenderSystem.h"
+#include "ContentBrowserPanel.h"
 
 #include <memory>
 
@@ -29,8 +30,11 @@ class AppLayer : public Layer
     void SaveSceneAs();
     void SaveScene();
 
+    void ResetScene(const std::string &path);
+
   private:
     std::shared_ptr<Framebuffer> m_Framebuffer;
+    std::shared_ptr<Framebuffer> m_Framebuffer2;
 
     EditorCamera m_EditorCamera;
 
@@ -40,11 +44,10 @@ class AppLayer : public Layer
 
     // scene
     std::shared_ptr<Scene> m_Scene;
-    Entity m_LightEntity;
-    Entity m_LightEntity2;
 
     // panels
     SceneHierarchyPanel m_SceneHierarchyPanel;
+    ContentBrowserPanel m_ContentBrowserPanel;
 
     RenderSystemPtr m_RenderSystem;
 

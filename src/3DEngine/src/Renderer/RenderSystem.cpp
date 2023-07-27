@@ -6,12 +6,11 @@
 #include "Components.h"
 #include "Shader.h"
 #include "ResourceManager.h"
+#include "InputManager.h"
+#include "OutlineSystem.h"
 
 namespace Engine
 {
-int indexCount = 0;
-unsigned int albedoTex, metallicTex, roughnessTex;
-
 void RenderSystem::Init()
 {
 #ifndef NDEBUG
@@ -27,20 +26,24 @@ void RenderSystem::Init()
     m_Shaders["outlineShader"] = std::make_shared<Shader>("/res/shaders/outline.vert", "/res/shaders/outline.frag");
     m_Shaders["pbrShader"] = std::make_shared<Shader>("/res/shaders/PBR.vert", "/res/shaders/PBR.frag");
 
-    albedoTex = ResourceManager::Instance().LoadTexture(
-        "/home/adeleye/Source/3DEngine/src/Sandbox/res/textures/rustediron2_basecolor.png");
-    metallicTex = ResourceManager::Instance().LoadTexture(
-        "/home/adeleye/Source/3DEngine/src/Sandbox/res/textures/rustediron2_metallic.png");
-    roughnessTex = ResourceManager::Instance().LoadTexture(
-        "/home/adeleye/Source/3DEngine/src/Sandbox/res/textures/rustediron2_roughness.png");
+    auto outlineShader = m_Shaders.at("outlineShader");
+    outlineShader->SetUniform1i("selectionMask", 0);
 
     SetupScreenQuad();
-    SetupLine();
     SetupTextureSamplers();
-    // SetupSphere();
 
     m_SkyLight = std::make_shared<SkyLight>();
     m_SkyLight->Init("/res/textures/hdr/skyLight.hdr", 2048);
+
+    WindowState windowState = InputManager::Instance().GetWindowState();
+    auto fbSpec = FramebufferSpecification{};
+    fbSpec.Attachments = {FramebufferTextureFormat::RGBA8};
+    fbSpec.Width = windowState.Width;
+    fbSpec.Height = windowState.Height;
+    m_FBO = std::make_shared<Engine::Framebuffer>(fbSpec);
+
+    m_Outline = std::make_shared<OutlineSystem>();
+    m_Outline->Init();
 
     glEnable(GL_DEBUG_OUTPUT);
     glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
@@ -51,19 +54,6 @@ void RenderSystem::Init()
 void RenderSystem::Update(const Camera &camera) {}
 
 void RenderSystem::Shutdown() {}
-
-glm::vec3 lightPositions[] = {
-    glm::vec3(-10.0f, 10.0f, 10.0f),
-    glm::vec3(10.0f, 10.0f, 10.0f),
-    glm::vec3(-10.0f, -10.0f, 10.0f),
-    glm::vec3(10.0f, -10.0f, 10.0f),
-};
-glm::vec3 lightColors[] = {glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f),
-                           glm::vec3(1.0f, 0.0f, 0.0f)};
-
-int nrRows = 7;
-int nrColumns = 7;
-float spacing = 2.5;
 
 void RenderSystem::Render(Camera &camera, Scene &scene, const bool globalWireframe)
 {
@@ -107,116 +97,17 @@ void RenderSystem::SetupTextureSamplers()
 
 void RenderSystem::SetupScreenQuad()
 {
-    float quadVerts[] = {
-        0.5f, 0.5f, 0.0f, 0.5f, -0.5f, 0.0f, -0.5f, -0.5f, 0.0f, -0.5f, 0.5f, 0.0f,
-    };
-    uint32_t quadIndices[] = {
-        0, 1, 3, // first Triangle
-        1, 2, 3  // second Triangle
-    };
+    float vertices[] = {1.0f, -1.0f, 1.0f, 0.0f, -1.0f, -1.0f, 0.0f, 0.0f, -1.0f, 1.0f, 0.0f, 1.0f,
+                        1.0f, 1.0f,  1.0f, 1.0f, 1.0f,  -1.0f, 1.0f, 0.0f, -1.0f, 1.0f, 0.0f, 1.0f};
 
     m_QuadVAO.Init();
     m_QuadVAO.Bind();
-    m_QuadVAO.AttachBuffer(BufferType::ARRAY, sizeof(quadVerts), DrawMode::DYNAMIC, nullptr);
-    m_QuadVAO.AttachBuffer(BufferType::ELEMENT, sizeof(quadIndices), DrawMode::DYNAMIC, nullptr);
-    m_QuadVAO.EnableAttribute(0, 3, 3 * sizeof(float), (void *)0);
+    m_QuadVAO.AttachBuffer(BufferType::ARRAY, sizeof(vertices), DrawMode::STATIC, vertices);
 
-    m_QuadVAO.SetBufferSubData(BufferType::ARRAY, 0, sizeof(quadVerts), quadVerts);
-    m_QuadVAO.SetBufferSubData(BufferType::ELEMENT, 0, sizeof(quadIndices), quadIndices);
+    m_QuadVAO.EnableAttribute(0, 2, 4 * sizeof(float), (void *)0);
+    m_QuadVAO.EnableAttribute(1, 2, 4 * sizeof(float), (void *)(2 * sizeof(float)));
+
     m_QuadVAO.Unbind();
-}
-
-void RenderSystem::SetupLine()
-{
-    m_LineVAO.Init();
-    m_LineVAO.Bind();
-
-    m_LineVAO.AttachBuffer(BufferType::ARRAY, 6 * sizeof(float), DrawMode::DYNAMIC, nullptr);
-    m_LineVAO.EnableAttribute(0, 3, 3 * sizeof(float), (void *)0);
-    m_LineVAO.Unbind();
-}
-
-void RenderSystem::SetupSphere()
-{
-    m_SphereVAO.Init();
-    m_SphereVAO.Bind();
-
-    std::vector<glm::vec3> positions;
-    std::vector<glm::vec2> uv;
-    std::vector<glm::vec3> normals;
-    std::vector<unsigned int> indices;
-
-    const unsigned int X_SEGMENTS = 64;
-    const unsigned int Y_SEGMENTS = 64;
-    const float PI = 3.14159265359f;
-    for (unsigned int x = 0; x <= X_SEGMENTS; ++x)
-    {
-        for (unsigned int y = 0; y <= Y_SEGMENTS; ++y)
-        {
-            float xSegment = (float)x / (float)X_SEGMENTS;
-            float ySegment = (float)y / (float)Y_SEGMENTS;
-            float xPos = std::cos(xSegment * 2.0f * PI) * std::sin(ySegment * PI);
-            float yPos = std::cos(ySegment * PI);
-            float zPos = std::sin(xSegment * 2.0f * PI) * std::sin(ySegment * PI);
-
-            positions.push_back(glm::vec3(xPos, yPos, zPos));
-            uv.push_back(glm::vec2(xSegment, ySegment));
-            normals.push_back(glm::vec3(xPos, yPos, zPos));
-        }
-    }
-
-    bool oddRow = false;
-    for (unsigned int y = 0; y < Y_SEGMENTS; ++y)
-    {
-        if (!oddRow) // even rows: y == 0, y == 2; and so on
-        {
-            for (unsigned int x = 0; x <= X_SEGMENTS; ++x)
-            {
-                indices.push_back(y * (X_SEGMENTS + 1) + x);
-                indices.push_back((y + 1) * (X_SEGMENTS + 1) + x);
-            }
-        }
-        else
-        {
-            for (int x = X_SEGMENTS; x >= 0; --x)
-            {
-                indices.push_back((y + 1) * (X_SEGMENTS + 1) + x);
-                indices.push_back(y * (X_SEGMENTS + 1) + x);
-            }
-        }
-        oddRow = !oddRow;
-    }
-    indexCount = static_cast<unsigned int>(indices.size());
-
-    std::vector<float> data;
-    for (unsigned int i = 0; i < positions.size(); ++i)
-    {
-        data.push_back(positions[i].x);
-        data.push_back(positions[i].y);
-        data.push_back(positions[i].z);
-        if (normals.size() > 0)
-        {
-            data.push_back(normals[i].x);
-            data.push_back(normals[i].y);
-            data.push_back(normals[i].z);
-        }
-        if (uv.size() > 0)
-        {
-            data.push_back(uv[i].x);
-            data.push_back(uv[i].y);
-        }
-    }
-
-    m_SphereVAO.AttachBuffer(BufferType::ARRAY, data.size() * sizeof(float), DrawMode::STATIC, data.data());
-    m_SphereVAO.AttachBuffer(BufferType::ELEMENT, indices.size() * sizeof(unsigned int), DrawMode::STATIC,
-                             indices.data());
-
-    unsigned int stride = (3 + 2 + 3) * sizeof(float);
-    m_SphereVAO.EnableAttribute(0, 3, stride, (void *)0);
-    m_SphereVAO.EnableAttribute(1, 3, stride, (void *)(3 * sizeof(float)));
-    m_SphereVAO.EnableAttribute(2, 2, stride, (void *)(6 * sizeof(float)));
-
-    m_SphereVAO.Unbind();
 }
 
 void RenderSystem::RenderModelsWithTextures(Camera &camera, Scene &scene)
@@ -237,6 +128,7 @@ void RenderSystem::RenderModelsWithTextures(Camera &camera, Scene &scene)
     auto modelShader = m_Shaders.at("pbrShader");
 
     auto view = scene.GetRegistry().view<ModelComponent, TransformComponent, VisibilityComponent>();
+
     for (auto entity : view)
     {
         auto [model, transform, visibility] = view.get<ModelComponent, TransformComponent, VisibilityComponent>(entity);
@@ -312,90 +204,8 @@ void RenderSystem::RenderModelsWithNoTextures(Camera &camera, Scene &scene) cons
 
 void RenderSystem::RenderQuad(Camera &camera)
 {
-    auto modelShader = m_Shaders.at("quadShader");
-    modelShader->Use();
-    modelShader->SetUniformMatrix4fv("projectionViewMatrix", camera.GetProjectionViewMatrix());
-
     m_QuadVAO.Bind();
-
-    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
     m_QuadVAO.Unbind();
-}
-
-void RenderSystem::RenderLine(Camera &camera, const glm::vec3 &start, const glm::vec3 &end, const glm::vec3 &color)
-{
-    float vertices[] = {start.x, start.y, start.z, end.x, end.y, end.z};
-    m_LineVAO.SetBufferSubData(BufferType::ARRAY, 0, sizeof(vertices), vertices);
-
-    auto lineShader = m_Shaders.at("lineShader");
-    lineShader->Use();
-    m_LineVAO.Bind();
-
-    lineShader->SetUniformMatrix4fv("projectionViewMatrix", camera.GetProjectionViewMatrix());
-    lineShader->SetUniform3f("color", color);
-
-    glDrawArrays(GL_LINES, 0, 2);
-    m_LineVAO.Unbind();
-}
-
-void RenderSystem::RenderSphere(Camera &camera, const glm::vec3 &position, const float radius, const glm::vec3 &color)
-{
-    auto pbrShader = m_Shaders.at("pbrShader");
-    auto model = glm::mat4(1.0f);
-    for (int row = 0; row < nrRows; ++row)
-    {
-        for (int col = 0; col < nrColumns; ++col)
-        {
-            pbrShader->SetUniform1f("roughnessParam", glm::clamp((float)col / (float)nrColumns, 0.05f, 1.0f));
-
-            model = glm::mat4(1.0f);
-            model = glm::translate(model,
-                                   glm::vec3((col - (nrColumns / 2)) * spacing, (row - (nrRows / 2)) * spacing, 0.0f));
-            model = glm::scale(model, glm::vec3(0.7f));
-
-            pbrShader->SetUniformMatrix4fv("model", model);
-            pbrShader->SetUniformMatrix3fv("normalMatrix", glm::transpose(glm::inverse(glm::mat3(model))));
-
-            glBindSampler(m_SamplerPBRTextures, 3);
-            glBindSampler(m_SamplerPBRTextures, 4);
-            glBindSampler(m_SamplerPBRTextures, 5);
-            glBindSampler(m_SamplerPBRTextures, 6);
-
-            m_SphereVAO.Bind();
-            auto pbrShader = m_Shaders.at("pbrShader");
-            pbrShader->Use();
-
-            glActiveTexture(GL_TEXTURE3);
-            glBindTexture(GL_TEXTURE_2D, albedoTex);
-            glActiveTexture(GL_TEXTURE4);
-            glBindTexture(GL_TEXTURE_2D, metallicTex);
-            glActiveTexture(GL_TEXTURE5);
-            glBindTexture(GL_TEXTURE_2D, roughnessTex);
-            glActiveTexture(GL_TEXTURE6);
-            glBindTexture(GL_TEXTURE_2D, 0);
-
-            pbrShader->SetUniformMatrix4fv("projectionViewMatrix", camera.GetProjectionViewMatrix());
-
-            pbrShader->SetUniform3f("albedoParam", {1.0, 1.0, 1.0});
-            pbrShader->SetUniform1f("metallicParam", 0.05f);
-            pbrShader->SetUniform1f("aoParam", 1.0f);
-
-            pbrShader->SetUniform3f("cameraPosition", camera.GetPosition());
-            pbrShader->SetUniform1i("numOfPointLights", 4);
-
-            glDrawElements(GL_TRIANGLE_STRIP, indexCount, GL_UNSIGNED_INT, nullptr);
-            m_SphereVAO.Unbind();
-
-            glBindSampler(m_SamplerPBRTextures, 0);
-        }
-    }
-
-    for (int i = 0; i < sizeof(lightPositions); ++i)
-    {
-        glm::vec3 newPos = lightPositions[i] + glm::vec3(sin(glfwGetTime() * 5.0) * 5.0, 0.0, 0.0);
-        newPos = lightPositions[i];
-        pbrShader->SetUniform3f("gPointLights[" + std::to_string(i) + "].Position", newPos);
-        pbrShader->SetUniform3f("gPointLights[" + std::to_string(i) + "].Color", lightColors[i]);
-    }
 }
 } // namespace Engine

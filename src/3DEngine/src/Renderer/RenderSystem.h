@@ -5,11 +5,15 @@
 #include "Scene.h"
 #include "Shader.h"
 #include "SkyLight.h"
+#include "Framebuffer.h"
 
 #include <unordered_map>
+#include <memory>
 
 namespace Engine
 {
+class OutlineSystem;
+
 class RenderSystem
 {
   public:
@@ -27,15 +31,11 @@ class RenderSystem
     void SetupDefaultState();
     void SetupTextureSamplers();
     void SetupScreenQuad();
-    void SetupLine();
-    void SetupSphere();
 
   private:
     void RenderModelsWithTextures(Camera &camera, Scene &scene);
     void RenderModelsWithNoTextures(Camera &camera, Scene &scene) const;
     void RenderQuad(Camera &camera);
-    void RenderLine(Camera &camera, const glm::vec3 &start, const glm::vec3 &end, const glm::vec3 &color);
-    void RenderSphere(Camera &camera, const glm::vec3 &position, const float radius, const glm::vec3 &color);
 
   private:
     unsigned int m_UBOMatrices = 0;
@@ -50,6 +50,10 @@ class RenderSystem
 
   private:
     std::unordered_map<std::string, ShaderPtr> m_Shaders;
+
+  private:
+    std::shared_ptr<OutlineSystem> m_Outline = nullptr;
+    FramebufferPtr m_FBO = nullptr;
 };
 
 using RenderSystemPtr = std::shared_ptr<RenderSystem>;

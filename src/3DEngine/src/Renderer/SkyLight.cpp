@@ -10,6 +10,7 @@
 
 namespace Engine
 {
+// TODO: Allow blurring of cubemap
 
 void SkyLight::Init(const std::string &path, const std::size_t resolution)
 {
