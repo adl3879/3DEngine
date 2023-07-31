@@ -2,42 +2,72 @@
 
 #include <stb_image.h>
 #include <vector>
+#include <memory>
 
 #include "Shader.h"
+#include "Buffer.h"
+#include "Asset/Asset.h"
 
 namespace Engine
 {
-class Texture
+enum class ImageFormat
 {
-  public:
-    Texture() = default;
-    Texture(const std::string &src, const std::string &type, unsigned int slot);
-
-    void TextureUnit(Shader &shader, const char *uniform, unsigned int unit);
-    const std::string &GetType() const { return m_Type; }
-    const std::string &GetPath() const { return m_Path; }
-
-    void Bind() const;
-    void Unbind() const;
-    void Delete() const;
-
-  private:
-    unsigned int m_Texture;
-    std::string m_Type;
-    std::string m_Path;
-    unsigned int m_Slot;
+    None = 0,
+    R8,
+    RGB8,
+    RGBA8,
+    RGBA32F
 };
 
-class Texture3D
+struct TextureSpecification
+{
+    uint32_t Width = 1;
+    uint32_t Height = 1;
+    ImageFormat Format = ImageFormat::RGBA8;
+    bool GenerateMips = true;
+};
+
+class Texture : public Asset
 {
   public:
-    Texture3D() = default;
-    Texture3D(const std::vector<std::string> &faces);
+    virtual ~Texture() = default;
 
-    void Bind() const;
-    void Unbind() const;
+    virtual const TextureSpecification &GetSpecification() const = 0;
+
+    virtual uint32_t GetWidth() const = 0;
+    virtual uint32_t GetHeight() const = 0;
+    virtual uint32_t GetRendererID() const = 0;
+
+    virtual void SetData(Buffer data) = 0;
+
+    virtual void Bind(uint32_t slot = 0) const = 0;
+
+    virtual bool IsLoaded() const = 0;
+};
+
+class Texture2D : public Texture
+{
+  public:
+    Texture2D(const TextureSpecification &specification, Buffer data);
+    ~Texture2D();
+
+    virtual void SetData(Buffer data) override;
+    virtual void Bind(uint32_t slot = 0) const override;
+    virtual bool IsLoaded() const override;
+
+    virtual uint32_t GetWidth() const override { return m_Specification.Width; }
+    virtual uint32_t GetHeight() const override { return m_Specification.Height; }
+    virtual uint32_t GetRendererID() const override { return m_RendererID; }
+    virtual const TextureSpecification &GetSpecification() const override { return m_Specification; }
+
+    static AssetType GetStaticType() { return AssetType::Texture2D; }
+    virtual AssetType GetType() const override { return GetStaticType(); }
 
   private:
-    unsigned int m_Texture;
+    TextureSpecification m_Specification;
+    unsigned int m_RendererID;
+    unsigned int m_InternalFormat, m_DataFormat;
 };
+
+using Texture2DRef = std::shared_ptr<Texture2D>;
 } // namespace Engine

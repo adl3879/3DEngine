@@ -125,9 +125,9 @@ void Framebuffer::Invalidate()
 {
     if (m_RendererID)
     {
-        // glDeleteFramebuffers(1, &m_RendererID);
-        // glDeleteTextures(m_ColorAttachments.size(), m_ColorAttachments.data());
-        // glDeleteTextures(1, &m_DepthAttachment);
+        glDeleteFramebuffers(1, &m_RendererID);
+        glDeleteTextures(m_ColorAttachments.size(), m_ColorAttachments.data());
+        glDeleteTextures(1, &m_DepthAttachment);
 
         m_ColorAttachments.clear();
         m_DepthAttachment = 0;

@@ -22,6 +22,7 @@ struct IDComponent
 
     IDComponent() = default;
     IDComponent(const IDComponent &) = default;
+    IDComponent(const UUID &uuid) : ID(uuid) {}
 };
 
 struct TagComponent

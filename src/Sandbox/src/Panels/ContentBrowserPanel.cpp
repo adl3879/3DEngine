@@ -10,7 +10,7 @@ namespace Engine
 ContentBrowserPanel::ContentBrowserPanel()
     : m_BaseDirectory("/home/adeleye/Source/3DEngine/src/Sandbox/res"), m_CurrentDirectory(m_BaseDirectory)
 {
-    auto basePath = "/home/adeleye/Source/3DEngine/src/Sandbox/Resources/ContentBrowser";
+    auto basePath = "/home/adeleye/Source/3DEngine/src/Sandbox/Resources/Icons/ContentBrowser";
     m_DirectoryIcon = ResourceManager::Instance().LoadTexture(basePath + std::string("/DirectoryIcon.png"));
     m_FileIcon = ResourceManager::Instance().LoadTexture(basePath + std::string("/FileIcon.png"));
 }

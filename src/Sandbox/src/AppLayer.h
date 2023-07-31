@@ -29,8 +29,14 @@ class AppLayer : public Layer
     void OpenScene();
     void SaveSceneAs();
     void SaveScene();
-
     void ResetScene(const std::string &path);
+
+    void OnScenePlay();
+    void OnSceneStop();
+
+  private:
+    // UI Panels
+    void UI_Toolbar();
 
   private:
     std::shared_ptr<Framebuffer> m_Framebuffer;
@@ -54,5 +60,14 @@ class AppLayer : public Layer
   private:
     int m_GizmoType = -1;
     Entity m_HoveredEntity;
+
+    enum class SceneState
+    {
+        Edit = 0,
+        Play = 1
+    };
+    SceneState m_SceneState = SceneState::Edit;
+
+    unsigned int m_IconPlay, m_IconStop;
 };
 } // namespace Engine

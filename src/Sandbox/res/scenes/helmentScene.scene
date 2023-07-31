@@ -4,7 +4,7 @@ Entities:
     TagComponent:
       Tag: Mesh
     TransformComponent:
-      Translation: [-2.20139527, -1.17603254, 2.3855381]
+      Translation: [-2.20139527, -1.3160615, 2.3855381]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
     ModelComponent:
@@ -15,7 +15,7 @@ Entities:
     TransformComponent:
       Translation: [0.314461142, -2.32731104, -0.138660908]
       Rotation: [0, 0, 0]
-      Scale: [8.7735405, 0.175101578, 9.59827709]
+      Scale: [8.7735405, 0.000175101581, 9.59827709]
     ModelComponent:
       ModelPath: /res/models/boxTextured/scene.gltf
   - Entity: 123456789
@@ -42,7 +42,7 @@ Entities:
     TagComponent:
       Tag: Mesh
     TransformComponent:
-      Translation: [0.133700743, -0.826381445, 1.13536358]
+      Translation: [0.133700743, -0.954660058, 1.13536358]
       Rotation: [0, 0, 0]
       Scale: [0.865199983, 0.865199983, 0.865199983]
     ModelComponent:

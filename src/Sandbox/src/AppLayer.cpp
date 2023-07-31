@@ -6,6 +6,7 @@
 
 #include <ImGuizmo.h>
 #include "Math.h"
+#include "ResourceManager.h"
 
 namespace Engine
 {
@@ -28,6 +29,10 @@ void AppLayer::OnAttach()
 
     m_RenderSystem = std::make_shared<RenderSystem>();
     m_RenderSystem->Init();
+
+    auto basePath = "/home/adeleye/Source/3DEngine/src/Sandbox/Resources/Icons";
+    m_IconPlay = ResourceManager::Instance().LoadTexture(basePath + std::string("/PlayButton.png"));
+    m_IconStop = ResourceManager::Instance().LoadTexture(basePath + std::string("/StopButton.png"));
 
     LOG_INFO("AppLayer Attached");
 }
@@ -234,6 +239,7 @@ void AppLayer::OnImGuiRender()
     ImGui::PopStyleVar();
 
     // ImGui::ShowDemoWindow();
+    UI_Toolbar();
 
     ImGui::End();
 }
@@ -307,6 +313,7 @@ void AppLayer::SaveSceneAs()
                                                  "/home/adeleye/Source/3DEngine/src/Sandbox/res/scenes/scene1.scene",
                                              .SingleFilterDescription = "Scene Files (*.scene)\0*.scene\0"});
 }
+
 void AppLayer::SaveScene()
 {
     if (m_Scene->GetSceneFilePath().empty())
@@ -325,5 +332,37 @@ void AppLayer::ResetScene(const std::string &path)
     m_Scene = std::make_unique<Scene>();
     m_Scene->SetSceneFilePath(path);
     m_SceneHierarchyPanel.SetContext(m_Scene);
+}
+
+void AppLayer::OnScenePlay() { m_SceneState = SceneState::Play; }
+
+void AppLayer::OnSceneStop() { m_SceneState = SceneState::Edit; }
+
+void AppLayer::UI_Toolbar()
+{
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{0, 2});
+    ImGui::PushStyleVar(ImGuiStyleVar_ItemInnerSpacing, ImVec2{0, 0});
+    ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{0, 0, 0, 0});
+    auto &colors = ImGui::GetStyle().Colors;
+    const auto &buttonHovered = colors[ImGuiCol_ButtonHovered];
+    ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4{buttonHovered.x, buttonHovered.y, buttonHovered.z, 0.5f});
+    const auto &buttonActive = colors[ImGuiCol_ButtonActive];
+    ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4{buttonActive.x, buttonActive.y, buttonActive.z, 0.5f});
+
+    ImGui::Begin("##toolbar", nullptr,
+                 ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
+    auto icon = m_SceneState == SceneState::Edit ? m_IconPlay : m_IconStop;
+    auto size = ImGui::GetWindowHeight() - 4.0f;
+    ImGui::SetCursorPosX((ImGui::GetWindowContentRegionMax().x * 0.5f) - (size * 0.5));
+    if (ImGui::ImageButton((ImTextureID)icon, ImVec2{size, size}, ImVec2{0, 0}, ImVec2{1, 1}, 0))
+    {
+        if (m_SceneState == SceneState::Edit)
+            OnScenePlay();
+        else if (m_SceneState == SceneState::Play)
+            OnSceneStop();
+    }
+    ImGui::PopStyleVar(2);
+    ImGui::PopStyleColor(3);
+    ImGui::End();
 }
 } // namespace Engine

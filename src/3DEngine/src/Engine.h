@@ -15,5 +15,7 @@
 #include "PlatformUtils.h"
 #include "Math.h"
 #include "Project.h"
+#include "UUID.h"
+#include "Asset.h"
 
 #include "VertexArray.h"

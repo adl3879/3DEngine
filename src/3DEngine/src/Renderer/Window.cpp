@@ -66,7 +66,13 @@ void Window::Init(const WindowProps &props)
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);
 
-    m_Window = glfwCreateWindow(props.Width, props.Height, props.Title.c_str(), nullptr, nullptr);
+    GLFWmonitor *MyMonitor = glfwGetPrimaryMonitor(); // The primary monitor.. Later Occulus?..
+
+    const GLFWvidmode *mode = glfwGetVideoMode(MyMonitor);
+    auto SCR_WIDTH = mode->width;
+    auto SCR_HEIGHT = mode->height;
+
+    m_Window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, props.Title.c_str(), nullptr, nullptr);
     if (m_Window == nullptr)
     {
         LOG_CORE_ERROR("Failed to create a GLFW window");
