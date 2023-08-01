@@ -4,6 +4,8 @@
 #include <filesystem>
 #include <memory>
 
+#include "EditorAssetManager.h"
+
 namespace Engine
 {
 struct ProjectConfig
@@ -14,6 +16,7 @@ struct ProjectConfig
 
     std::filesystem::path AssetDirectory;
     std::filesystem::path ScriptModulePath;
+    std::filesystem::path AssetRegistryPath;
 };
 
 class Project
@@ -26,15 +29,19 @@ class Project
         return GetProjectDirectory() / s_ActiveProject->m_Config.AssetDirectory;
     }
 
-    // TODO: move to asset manager when we have one
-    static std::filesystem::path GetAssetFileSystemPath(const std::filesystem::path &path)
+    static std::filesystem::path GetAssetRegistryPath()
     {
-        return GetAssetDirectory() / path;
+        return GetAssetDirectory() / s_ActiveProject->m_Config.AssetRegistryPath;
     }
 
     ProjectConfig &GetConfig() { return m_Config; }
 
     static std::shared_ptr<Project> GetActive() { return s_ActiveProject; }
+    std::shared_ptr<AssetManagerBase> GetAssetManager() { return m_AssetManager; }
+    std::shared_ptr<EditorAssetManager> GetEditorAssetManager()
+    {
+        return std::static_pointer_cast<EditorAssetManager>(m_AssetManager);
+    }
 
     static std::shared_ptr<Project> New();
     static std::shared_ptr<Project> Load(const std::filesystem::path &path);
@@ -43,6 +50,7 @@ class Project
   private:
     ProjectConfig m_Config;
     std::filesystem::path m_ProjectDirectory;
+    std::shared_ptr<AssetManagerBase> m_AssetManager;
 
     inline static std::shared_ptr<Project> s_ActiveProject;
 };

@@ -3,24 +3,29 @@
 #include <stb_image.h>
 
 #include "Log.h"
+#include "Project.h"
 
 namespace Engine
 {
 Texture2DRef TextureImporter::ImportTexture2D(AssetHandle handle, const AssetMetadata &metadata)
+{
+    return LoadTexture2D(Project::GetAssetDirectory() / metadata.FilePath);
+}
+
+Texture2DRef TextureImporter::LoadTexture2D(const std::filesystem::path &path)
 {
     int width, height, channels;
     stbi_set_flip_vertically_on_load(1);
     Buffer data;
 
     {
-        std::string pathStr = metadata.FilePath.string();
+        std::string pathStr = path.string();
         data.Data = stbi_load(pathStr.c_str(), &width, &height, &channels, 0);
     }
 
     if (data.Data == nullptr)
     {
-        LOG_CORE_ERROR("TextureImporter::ImportTexture2D - Could not load texture from filepath: {}",
-                       metadata.FilePath.string());
+        LOG_CORE_ERROR("TextureImporter::ImportTexture2D - Could not load texture from filepath: {}", path.string());
         return nullptr;
     }
 

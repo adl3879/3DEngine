@@ -2,6 +2,7 @@
 
 #include "AssetManagerBase.h"
 #include "AssetMetadata.h"
+#include "Asset.h"
 
 #include <map>
 
@@ -17,7 +18,13 @@ class EditorAssetManager : public AssetManagerBase
     virtual bool IsAssetHandleValid(AssetHandle handle) const override;
     virtual bool IsAssetLoaded(AssetHandle handle) const override;
 
+    void ImportAsset(const std::filesystem::path &path);
+
     const AssetMetadata &GetMetadata(AssetHandle handle) const;
+    const AssetRegistry &GetAssetRegistry() const { return m_AssetRegistry; }
+
+    void SerializeAssetRegistry();
+    bool DeserializeAssetRegistry();
 
   private:
     AssetRegistry m_AssetRegistry;
