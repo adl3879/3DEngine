@@ -12,11 +12,7 @@ namespace Utils
 
 static GLenum TextureTarget(bool multisampled) { return multisampled ? GL_TEXTURE_2D_MULTISAMPLE : GL_TEXTURE_2D; }
 
-static void CreateTextures(bool multisampled, uint32_t *outID, uint32_t count)
-{
-    //
-    glGenTextures(count, outID);
-}
+static void CreateTextures(bool multisampled, uint32_t *outID, uint32_t count) { glGenTextures(count, outID); }
 
 static void BindTexture(bool multisampled, uint32_t id) { glBindTexture(TextureTarget(multisampled), id); }
 

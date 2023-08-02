@@ -90,11 +90,6 @@ void Model::ProcessNode(aiNode *node, const aiScene *scene, const bool loadMater
     {
         auto *mesh = scene->mMeshes[node->mMeshes[i]];
         m_Meshes.push_back(ProcessMesh(mesh, scene, loadMaterial));
-
-        // Add the bounding box for the mesh
-        const aiAABB &box = mesh->mAABB;
-        m_BoundingBoxes.push_back(
-            {glm::vec3(box.mMin.x, box.mMin.y, box.mMin.z), glm::vec3(box.mMax.x, box.mMax.y, box.mMax.z)});
     }
 
     // Process their children via recursive tree traversal
@@ -105,9 +100,12 @@ Mesh Model::ProcessMesh(aiMesh *mesh, const aiScene *scene, const bool loadMater
 {
 
     std::vector<Vertex> vertices;
+    VertexSOA vertexSOA;
 
     for (auto i = 0; i < mesh->mNumVertices; ++i)
     {
+        vertexSOA.Colors.emplace_back(glm::vec4(1.0f));
+        vertexSOA.EditorIDs.emplace_back(-1.0f);
         Vertex vertex;
 
         if (mesh->HasPositions())
@@ -115,6 +113,7 @@ Mesh Model::ProcessMesh(aiMesh *mesh, const aiScene *scene, const bool loadMater
             vertex.Position.x = mesh->mVertices[i].x;
             vertex.Position.y = mesh->mVertices[i].y;
             vertex.Position.z = mesh->mVertices[i].z;
+            vertexSOA.Positions.emplace_back(vertex.Position);
         }
 
         if (mesh->HasNormals())
@@ -122,28 +121,23 @@ Mesh Model::ProcessMesh(aiMesh *mesh, const aiScene *scene, const bool loadMater
             vertex.Normal.x = mesh->mNormals[i].x;
             vertex.Normal.y = mesh->mNormals[i].y;
             vertex.Normal.z = mesh->mNormals[i].z;
+            vertexSOA.Normals.emplace_back(vertex.Normal);
         }
-
-        // if (mesh->HasTangentsAndBitangents())
-        // {
-        //     vertex.Tangent.x = mesh->mTangents[i].x;
-        //     vertex.Tangent.y = mesh->mTangents[i].y;
-        //     vertex.Tangent.z = mesh->mTangents[i].z;
-        // }
 
         if (mesh->HasTextureCoords(0) && loadMaterial)
         {
             // Just take the first set of texture coords (since we could have up to 8)
             vertex.TexCoords.x = mesh->mTextureCoords[0][i].x;
             vertex.TexCoords.y = mesh->mTextureCoords[0][i].y;
+            vertexSOA.TexCoords.emplace_back(vertex.TexCoords);
         }
         else
         {
             vertex.TexCoords = glm::vec2(0.0f);
+            vertexSOA.TexCoords.emplace_back(vertex.TexCoords);
         }
 
-        // add one because 0 represents no selection but 0 is a valid entt id
-        vertex.EditorID = m_EntityID + 1;
+        // vertex.EditorID = m_EntityID + 1;
 
         vertices.push_back(vertex);
     }
@@ -174,7 +168,7 @@ Mesh Model::ProcessMesh(aiMesh *mesh, const aiScene *scene, const bool loadMater
             const auto cachedMaterial = ResourceManager::Instance().GetMaterial(name.C_Str());
             if (cachedMaterial.has_value())
             {
-                return Mesh(vertices, indices, cachedMaterial.value());
+                return Mesh(vertexSOA, indices, cachedMaterial.value());
             }
 
             // Get the first texture for each texture type we need
@@ -190,10 +184,10 @@ Mesh Model::ProcessMesh(aiMesh *mesh, const aiScene *scene, const bool loadMater
                 m_Path + normalPath.C_Str(), m_Path + roughnessPath.C_Str(), m_Path + alphaMaskPath.C_Str());
 
             ++m_NumOfMaterials;
-            return Mesh(vertices, indices, newMaterial);
+            return Mesh(vertexSOA, indices, newMaterial);
         }
     }
 
-    return Mesh(vertices, indices);
+    return Mesh(vertexSOA, indices);
 }
 } // namespace Engine

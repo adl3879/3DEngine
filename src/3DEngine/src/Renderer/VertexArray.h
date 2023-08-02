@@ -37,12 +37,14 @@ class VertexArray
     void Bind() const noexcept;
     void Unbind() const noexcept;
     void EnableAttribute(const uint32_t index, const int size, const uint32_t offset, const void *data) noexcept;
-    void SetBufferSubData(const BufferType &type, const uint32_t offset, const uint32_t size,
+    void SetBufferSubData(const int index, const BufferType &type, const uint32_t offset, const uint32_t size,
                           const void *data) noexcept;
 
     void Delete() noexcept;
 
   private:
+    uint32_t m_VBOs[5];
     uint32_t m_VAO = 0;
+    int m_VBOCount = 0;
 };
 } // namespace Engine

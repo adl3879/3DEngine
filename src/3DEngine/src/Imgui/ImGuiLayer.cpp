@@ -29,9 +29,9 @@ void ImGuiLayer::OnAttach()
 
     float fontSize = 24.0f;
     io.Fonts->AddFontFromFileTTF(
-        "/home/adeleye/Source/3DEngine/src/Sandbox/res/fonts/IBM_Plex_Sans/IBMPlexSans-Bold.ttf", fontSize);
+        "/home/adeleye/Source/3DEngine/src/Sandbox/Resources/fonts/IBM_Plex_Sans/IBMPlexSans-Bold.ttf", fontSize);
     io.FontDefault = io.Fonts->AddFontFromFileTTF(
-        "/home/adeleye/Source/3DEngine/src/Sandbox/res/fonts/IBM_Plex_Sans/IBMPlexSans-Regular.ttf", fontSize);
+        "/home/adeleye/Source/3DEngine/src/Sandbox/Resources/fonts/IBM_Plex_Sans/IBMPlexSans-Regular.ttf", fontSize);
 
     ImGui::StyleColorsDark();
     // ImGui::StyleColorsClassic();

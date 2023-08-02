@@ -34,6 +34,9 @@ void AppLayer::OnAttach()
     m_IconPlay = ResourceManager::Instance().LoadTexture(basePath + std::string("/PlayButton.png"));
     m_IconStop = ResourceManager::Instance().LoadTexture(basePath + std::string("/StopButton.png"));
 
+    // TODO: load last opened project from a savefile
+    Project::Load("/home/adeleye/Source/3DEngine/src/Sandbox/SandboxProject/SandboxProject.3dproj");
+
     LOG_INFO("AppLayer Attached");
 }
 
@@ -63,6 +66,7 @@ void AppLayer::OnUpdate(float deltaTime)
     if (mouseX >= 0 && mouseY >= 0 && mouseX < (int)viewportSize.x && mouseY < (int)viewportSize.y)
     {
         auto pixelData = m_Framebuffer->ReadPixel(1, mouseX, mouseY);
+        // LOG_CORE_TRACE("pixel {}", pixelData - 1);
         // removed one because i moved every entity by one
         m_HoveredEntity = pixelData == 0 ? Entity() : Entity((entt::entity)(pixelData - 1), m_Scene.get());
     }
@@ -126,28 +130,16 @@ void AppLayer::OnImGuiRender()
 
             ImGui::EndMenu();
         }
+        if (ImGui::BeginMenu("Project"))
+        {
+            if (ImGui::MenuItem("New Project", "Ctrl+Shift+N")) NewProject();
+            if (ImGui::MenuItem("Open Project", "Ctrl+Shift+O")) return;
+
+            ImGui::EndMenu();
+        }
         ImGui::EndMenuBar();
     }
-
-    if (Utils::FileDialogs::FileIsOpened("openScene"))
-    {
-        // serialize the scene
-        LOG_INFO("Serializing Scene");
-        ResetScene(Utils::FileDialogs::m_SelectedFile);
-
-        SceneSerializer serializer(m_Scene);
-        serializer.Deserialize(Utils::FileDialogs::m_SelectedFile);
-    }
-
-    if (Utils::FileDialogs::FileIsSaved("saveScene"))
-    {
-        // serialize the scene
-        LOG_INFO("Serializing Scene");
-        m_Scene->SetSceneFilePath(Utils::FileDialogs::m_SavedFile);
-
-        SceneSerializer serializer(m_Scene);
-        serializer.Serialize(Utils::FileDialogs::m_SavedFile);
-    }
+    FileOperations();
 
     m_SceneHierarchyPanel.OnImGuiRender();
     m_ContentBrowserPanel.OnImGuiRender();
@@ -290,6 +282,18 @@ void AppLayer::OnMouseButtonPressed(MouseButton button)
     }
 }
 
+void AppLayer::NewProject()
+{
+    // Project::New()->SaveActive("/home/adeleye/Source/3DEngine/src/Sandbox/Untitled.3dproj");
+    Utils::FileDialogs::CreateFolder("newProject",
+                                     Utils::FileDialogParams{
+                                         .Title = "New Project",
+                                         .DefaultPathAndFile = "/home/adeleye/Source/3DEngine/src/SandboxProjects/",
+                                     });
+}
+
+void AppLayer::OpenProject() {}
+
 void AppLayer::NewScene()
 {
     // TODO: create new scene file
@@ -337,6 +341,34 @@ void AppLayer::ResetScene(const std::string &path)
 void AppLayer::OnScenePlay() { m_SceneState = SceneState::Play; }
 
 void AppLayer::OnSceneStop() { m_SceneState = SceneState::Edit; }
+
+void AppLayer::FileOperations()
+{
+    if (Utils::FileDialogs::FileIsOpened("openScene"))
+    {
+        // serialize the scene
+        LOG_INFO("Serializing Scene");
+        ResetScene(Utils::FileDialogs::m_SelectedFile);
+
+        SceneSerializer serializer(m_Scene);
+        serializer.Deserialize(Utils::FileDialogs::m_SelectedFile);
+    }
+
+    if (Utils::FileDialogs::FileIsSaved("saveScene"))
+    {
+        // serialize the scene
+        LOG_INFO("Serializing Scene");
+        m_Scene->SetSceneFilePath(Utils::FileDialogs::m_SavedFile);
+
+        SceneSerializer serializer(m_Scene);
+        serializer.Serialize(Utils::FileDialogs::m_SavedFile);
+    }
+
+    if (Utils::FileDialogs::FolderIsOpened("newProject"))
+    {
+        Project::New(Utils::FileDialogs::m_SelectedFolder);
+    }
+}
 
 void AppLayer::UI_Toolbar()
 {

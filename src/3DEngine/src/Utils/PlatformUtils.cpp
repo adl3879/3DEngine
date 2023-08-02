@@ -14,6 +14,7 @@ namespace Utils
 {
 std::thread FileDialogs::m_Thread = std::thread();
 std::string FileDialogs::m_SelectedFile = "";
+std::string FileDialogs::m_SelectedFolder = "";
 std::string FileDialogs::m_SavedFile = "";
 bool FileDialogs::m_Done = false;
 bool FileDialogs::m_IsFileOpened = false;
@@ -40,6 +41,15 @@ static void saveFileDialogOperation(FileDialogParams params)
     FileDialogs::SetDone(true);
 }
 
+static void createFolderDialogOperation(FileDialogParams params)
+{
+    LOG_CORE_TRACE("Opening create folder dialog");
+    const char *result = tinyfd_selectFolderDialog(params.Title, params.DefaultPathAndFile);
+
+    FileDialogs::SetSelectedFolder(result ? result : "");
+    FileDialogs::SetDone(true);
+}
+
 void FileDialogs::OpenFile(std::string id, FileDialogParams params)
 {
     m_Id = id;
@@ -53,6 +63,7 @@ void FileDialogs::Reset()
     if (m_Thread.joinable()) m_Thread.join();
     m_Thread = std::thread();
     m_SelectedFile = "";
+    m_SelectedFolder = "";
     m_SavedFile = "";
     m_Done = false;
     m_IsFileOpened = false;
@@ -61,6 +72,16 @@ void FileDialogs::Reset()
 bool FileDialogs::FileIsOpened(std::string id)
 {
     if (m_Done && m_SelectedFile != "" && !m_IsFileOpened && id == m_Id)
+    {
+        m_IsFileOpened = true;
+        return true;
+    }
+    return false;
+}
+
+bool FileDialogs::FolderIsOpened(std::string id)
+{
+    if (m_Done && m_SelectedFolder != "" && !m_IsFileOpened && id == m_Id)
     {
         m_IsFileOpened = true;
         return true;
@@ -85,6 +106,15 @@ void FileDialogs::SaveFile(std::string id, FileDialogParams params)
 
     m_Thread = std::thread(std::bind(saveFileDialogOperation, params));
 }
+
+void FileDialogs::CreateFolder(std::string id, FileDialogParams params)
+{
+    m_Id = id;
+    Reset();
+
+    m_Thread = std::thread(std::bind(createFolderDialogOperation, params));
+}
+
 std::string Path::GetAbsolute(const std::string &path)
 {
     auto cwd = fs::current_path().string();

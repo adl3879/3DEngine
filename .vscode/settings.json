@@ -28,13 +28,16 @@
     "Skybox",
     "spdlog",
     "tinyfd"
-],
+  ],
   "files.associations": {
     "*.scene": "yaml",
     "functional": "cpp",
     "iostream": "cpp",
     "glad.h": "c",
-    "string_view": "cpp"
+    "string_view": "cpp",
+    "array": "cpp",
+    "string": "cpp",
+    "span": "cpp"
   },
   "Lua.diagnostics.globals": ["entity", "Input"]
 }

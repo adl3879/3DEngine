@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <memory>
 
 #include "Vertex.h"
 #include "VertexArray.h"
@@ -10,20 +11,29 @@ namespace Engine
 {
 struct Mesh
 {
-    Mesh(const std::vector<Vertex> &vertices, const std::vector<uint32_t> &indices);
-    Mesh(const std::vector<Vertex> &vertices, const std::vector<uint32_t> &indices, const MaterialPtr &material);
+    Mesh(const std::vector<Vertex> &vertices, const std::vector<uint32_t> &indices,
+         const MaterialPtr &material = nullptr);
+    Mesh(const struct VertexSOA &vertices, const std::vector<uint32_t> &indices, const MaterialPtr &material = nullptr);
 
     void Clear();
 
     auto GetTriangleCount() const { return IndexCount / 3; }
 
     const std::size_t IndexCount;
+    const std::size_t VertexCount;
+
     std::vector<Vertex> Vertices;
+    struct VertexSOA VertexSOA;
     std::vector<uint32_t> Indices;
     VertexArray VAO;
     MaterialPtr Material;
 
+    unsigned int VBOs[5];
+
   private:
     void SetupMesh(const std::vector<Vertex> &vertices, const std::vector<uint32_t> &indices);
+    void SetupMesh(const struct VertexSOA &vertices, const std::vector<uint32_t> &indices);
 };
+
+using MeshRef = std::shared_ptr<Mesh>;
 } // namespace Engine

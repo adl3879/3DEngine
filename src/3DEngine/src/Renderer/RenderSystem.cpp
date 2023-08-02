@@ -20,11 +20,14 @@ void RenderSystem::Init()
     LOG_CORE_INFO("OpenGL Renderer: {0}", (const char *)glGetString(GL_RENDERER));
 #endif
 
-    m_Shaders["modelShader"] = std::make_shared<Shader>("/res/shaders/model.vert", "/res/shaders/model.frag");
-    m_Shaders["quadShader"] = std::make_shared<Shader>("/res/shaders/light.vert", "/res/shaders/light.frag");
-    m_Shaders["lineShader"] = std::make_shared<Shader>("/res/shaders/line.vert", "/res/shaders/line.frag");
-    m_Shaders["outlineShader"] = std::make_shared<Shader>("/res/shaders/outline.vert", "/res/shaders/outline.frag");
-    m_Shaders["pbrShader"] = std::make_shared<Shader>("/res/shaders/PBR.vert", "/res/shaders/PBR.frag");
+    m_Shaders["modelShader"] =
+        std::make_shared<Shader>("/Resources/shaders/model.vert", "/Resources/shaders/model.frag");
+    m_Shaders["quadShader"] =
+        std::make_shared<Shader>("/Resources/shaders/light.vert", "/Resources/shaders/light.frag");
+    m_Shaders["lineShader"] = std::make_shared<Shader>("/Resources/shaders/line.vert", "/Resources/shaders/line.frag");
+    m_Shaders["outlineShader"] =
+        std::make_shared<Shader>("/Resources/shaders/outline.vert", "/Resources/shaders/outline.frag");
+    m_Shaders["pbrShader"] = std::make_shared<Shader>("/Resources/shaders/PBR.vert", "/Resources/shaders/PBR.frag");
 
     auto outlineShader = m_Shaders.at("outlineShader");
     outlineShader->SetUniform1i("selectionMask", 0);
@@ -138,6 +141,21 @@ void RenderSystem::RenderModelsWithTextures(Camera &camera, Scene &scene)
         {
             modelShader->Use();
             mesh.VAO.Bind();
+
+            // entity id should be populated only once
+            if (mesh.VertexSOA.EditorIDs[0] < 0.0f)
+                mesh.VertexSOA.EditorIDs = std::vector<float>(mesh.VertexCount, (int)entity + 1);
+
+            mesh.VAO.SetBufferSubData(0, BufferType::ARRAY, 0, mesh.VertexSOA.Positions.size() * sizeof(glm::vec3),
+                                      &mesh.VertexSOA.Positions[0]);
+            mesh.VAO.SetBufferSubData(1, BufferType::ARRAY, 0, mesh.VertexSOA.Normals.size() * sizeof(glm::vec3),
+                                      &mesh.VertexSOA.Normals[0]);
+            mesh.VAO.SetBufferSubData(2, BufferType::ARRAY, 0, mesh.VertexSOA.Colors.size() * sizeof(glm::vec3),
+                                      &mesh.VertexSOA.Colors[0]);
+            mesh.VAO.SetBufferSubData(3, BufferType::ARRAY, 0, mesh.VertexSOA.TexCoords.size() * sizeof(glm::vec2),
+                                      &mesh.VertexSOA.TexCoords[0]);
+            mesh.VAO.SetBufferSubData(4, BufferType::ARRAY, 0, mesh.VertexSOA.EditorIDs.size() * sizeof(float),
+                                      &mesh.VertexSOA.EditorIDs[0]);
 
             const auto mat = mesh.Material;
             glActiveTexture(GL_TEXTURE3);

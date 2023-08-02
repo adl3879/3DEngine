@@ -1,5 +1,32 @@
 Scene: Untitled
 Entities:
+  - Entity: 5330444857057620984
+    TagComponent:
+      Tag: Mesh
+    TransformComponent:
+      Translation: [-3.96192312, 0, 0.922586381]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    ModelComponent:
+      ModelPath: /res/models/suzanne/scene.gltf
+  - Entity: 7082071362643479278
+    TagComponent:
+      Tag: Mesh
+    TransformComponent:
+      Translation: [2.61459827, 2.00071239, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    ModelComponent:
+      ModelPath: /res/models/ScifiHelment/SciFiHelmet.gltf
+  - Entity: 3044421762768289929
+    TagComponent:
+      Tag: Mesh
+    TransformComponent:
+      Translation: [2.45517492, -1.28148627, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    ModelComponent:
+      ModelPath: /res/models/ScifiHelment/SciFiHelmet.gltf
   - Entity: 123456789
     TagComponent:
       Tag: Mesh
@@ -46,3 +73,21 @@ Entities:
       Scale: [1, 1, 1]
     ModelComponent:
       ModelPath: /res/models/boxTextured/scene.gltf
+  - Entity: 7962016740258002927
+    TagComponent:
+      Tag: Mesh
+    TransformComponent:
+      Translation: [-2.45501423, -1.36133552, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    ModelComponent:
+      ModelPath: /res/models/suzanne/scene.gltf
+  - Entity: 16764343476612755007
+    TagComponent:
+      Tag: Mesh
+    TransformComponent:
+      Translation: [-0.830934286, -0.267841876, 3.03083348]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    ModelComponent:
+      ModelPath: /res/models/suzanne/scene.gltf

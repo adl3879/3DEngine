@@ -23,12 +23,14 @@ void SkyLight::Init(const std::string &path, const std::size_t resolution)
     auto hdrTexture = ResourceManager::Instance().LoadHDRI(fullPath);
 
     m_Shaders["equirectangularToCubemap"] =
-        std::make_shared<Shader>("/res/shaders/cubemap.vert", "/res/shaders/cubemapConverter.frag");
-    m_Shaders["cubemap"] = std::make_shared<Shader>("/res/shaders/cubemapBg.vert", "/res/shaders/cubemapBg.frag");
+        std::make_shared<Shader>("/Resources/shaders/cubemap.vert", "/Resources/shaders/cubemapConverter.frag");
+    m_Shaders["cubemap"] =
+        std::make_shared<Shader>("/Resources/shaders/cubemapBg.vert", "/Resources/shaders/cubemapBg.frag");
     m_Shaders["irradiance"] =
-        std::make_shared<Shader>("/res/shaders/cubemap.vert", "/res/shaders/irradianceConvolution.frag");
-    m_Shaders["prefilter"] = std::make_shared<Shader>("/res/shaders/cubemap.vert", "/res/shaders/prefilter.frag");
-    m_Shaders["brdf"] = std::make_shared<Shader>("/res/shaders/brdf.vert", "/res/shaders/brdf.frag");
+        std::make_shared<Shader>("/Resources/shaders/cubemap.vert", "/Resources/shaders/irradianceConvolution.frag");
+    m_Shaders["prefilter"] =
+        std::make_shared<Shader>("/Resources/shaders/cubemap.vert", "/Resources/shaders/prefilter.frag");
+    m_Shaders["brdf"] = std::make_shared<Shader>("/Resources/shaders/brdf.vert", "/Resources/shaders/brdf.frag");
 
     m_Shaders["cubemap"]->SetUniform1i("environmentMap", 0);
 

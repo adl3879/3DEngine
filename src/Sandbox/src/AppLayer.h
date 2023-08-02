@@ -4,6 +4,7 @@
 #include "SceneHierarchyPanel.h"
 #include "RenderSystem.h"
 #include "ContentBrowserPanel.h"
+#include "Project.h"
 
 #include <memory>
 
@@ -25,6 +26,11 @@ class AppLayer : public Layer
     virtual void OnMouseButtonPressed(MouseButton button) override;
 
   private:
+    // Project
+    void NewProject();
+    void OpenProject();
+
+    // New
     void NewScene();
     void OpenScene();
     void SaveSceneAs();
@@ -35,6 +41,8 @@ class AppLayer : public Layer
     void OnSceneStop();
 
   private:
+    void FileOperations();
+
     // UI Panels
     void UI_Toolbar();
 

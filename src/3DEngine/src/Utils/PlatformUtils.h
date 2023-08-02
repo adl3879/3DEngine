@@ -22,13 +22,16 @@ class FileDialogs
   public:
     static void OpenFile(std::string id, FileDialogParams params = FileDialogParams{.Title = "Open File"});
     static void SaveFile(std::string id, FileDialogParams params = FileDialogParams{.Title = "Save File"});
+    static void CreateFolder(std::string id, FileDialogParams params = FileDialogParams{.Title = "Create Folder"});
 
     static void SetSelectedFile(const std::string &file) { m_SelectedFile = file; }
+    static void SetSelectedFolder(const std::string &folder) { m_SelectedFolder = folder; }
     static void SetSavedFile(const std::string &file) { m_SavedFile = file; }
     static void SetDone(bool done) { m_Done = done; }
     static void Reset();
 
     static bool FileIsOpened(std::string id);
+    static bool FolderIsOpened(std::string id);
     static bool FileIsSaved(std::string id);
 
   public:
@@ -36,7 +39,7 @@ class FileDialogs
     static bool m_Done, m_IsFileOpened;
 
   public:
-    static std::string m_SelectedFile, m_SavedFile, m_Id;
+    static std::string m_SelectedFile, m_SelectedFolder, m_SavedFile, m_Id;
 };
 
 class Path

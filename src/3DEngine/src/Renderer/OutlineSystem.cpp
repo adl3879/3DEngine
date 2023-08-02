@@ -9,7 +9,7 @@ namespace Engine
 {
 void OutlineSystem::Init()
 {
-    m_OutlineShader = std::make_shared<Shader>("/res/shaders/light.vert", "/res/shaders/light.frag");
+    m_OutlineShader = std::make_shared<Shader>("/Resources/shaders/light.vert", "/Resources/shaders/light.frag");
 
     WindowState windowState = InputManager::Instance().GetWindowState();
     auto fbSpec = FramebufferSpecification{};

@@ -35,6 +35,7 @@ class Project
     }
 
     ProjectConfig &GetConfig() { return m_Config; }
+    void SetConfig(const ProjectConfig &config) { m_Config = config; }
 
     static std::shared_ptr<Project> GetActive() { return s_ActiveProject; }
     std::shared_ptr<AssetManagerBase> GetAssetManager() { return m_AssetManager; }
@@ -44,6 +45,7 @@ class Project
     }
 
     static std::shared_ptr<Project> New();
+    static std::shared_ptr<Project> New(const std::filesystem::path &path);
     static std::shared_ptr<Project> Load(const std::filesystem::path &path);
     static bool SaveActive(const std::filesystem::path &path);
 
