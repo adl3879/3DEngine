@@ -157,46 +157,34 @@ Mesh Model::ProcessMesh(aiMesh *mesh, const aiScene *scene, const bool loadMater
             aiString name;
             mat->Get(AI_MATKEY_NAME, name);
 
-            // // Is the material cached?
-            // const auto cachedMaterial = ResourceManager::Instance().GetMaterial(name.C_Str());
-            // if (cachedMaterial.has_value())
-            // {
-            //     return Mesh(vertexSOA, indices, cachedMaterial.value());
-            // }
-
             aiString albedoPath, metallicPath, normalPath, roughnessPath, alphaMaskPath;
 
             mat->GetTexture(AI_MATKEY_BASE_COLOR_TEXTURE, &albedoPath);
             mat->GetTexture(AI_MATKEY_METALLIC_TEXTURE, &metallicPath);
             mat->GetTexture(AI_MATKEY_ROUGHNESS_TEXTURE, &roughnessPath);
 
-            // auto albedoRPath = std::filesystem::relative(m_Path + albedoPath.C_Str(), Project::GetAssetDirectory());
-            // auto metallicRPath = std::filesystem::relative(m_Path + metallicPath.C_Str(),
-            // Project::GetAssetDirectory()); auto normalRPath = std::filesystem::relative(m_Path + normalPath.C_Str(),
-            // Project::GetAssetDirectory()); auto roughnessRPath =
-            //     std::filesystem::relative(m_Path + roughnessPath.C_Str(), Project::GetAssetDirectory());
-            // auto alphaMaskRPath =
-            //     std::filesystem::relative(m_Path + alphaMaskPath.C_Str(), Project::GetAssetDirectory());
+            auto albedoHandle = AssetManager::ImportAsset(GetRelativeTexturePath(albedoPath));
+            auto metallicHandle = AssetManager::ImportAsset(GetRelativeTexturePath(metallicPath));
+            auto normalHandle = AssetManager::ImportAsset(GetRelativeTexturePath(normalPath));
+            auto roughnessHandle = AssetManager::ImportAsset(GetRelativeTexturePath(roughnessPath));
+            auto alphaMaskHandle = AssetManager::ImportAsset(GetRelativeTexturePath(alphaMaskPath));
 
-            // auto albedoHandle = AssetManager::ImportAsset(albedoRPath);
-            // auto metallicHandle = AssetManager::ImportAsset(metallicRPath);
-            // auto normalHandle = AssetManager::ImportAsset(normalRPath);
-            // auto roughnessHandle = AssetManager::ImportAsset(roughnessRPath);
-            // auto alphaMaskHandle = AssetManager::ImportAsset(alphaMaskRPath);
-
-            // MaterialRef material = std::make_shared<Material>();
-            // material->Init(name.C_Str(), albedoHandle, metallicHandle, normalHandle, roughnessHandle,
-            // alphaMaskHandle);
-
-            const auto newMaterial = ResourceManager::Instance().CacheMaterial(
-                name.C_Str(), m_Path + albedoPath.C_Str(), "", m_Path + metallicPath.C_Str(),
-                m_Path + normalPath.C_Str(), m_Path + roughnessPath.C_Str(), m_Path + alphaMaskPath.C_Str());
+            MaterialRef material = std::make_shared<Material>();
+            material->Init(name.C_Str(), albedoHandle, metallicHandle, normalHandle, roughnessHandle, alphaMaskHandle);
 
             ++m_NumOfMaterials;
-            return Mesh(vertexSOA, indices, newMaterial);
+            return Mesh(vertexSOA, indices, material);
         }
     }
 
     return Mesh(vertexSOA, indices);
+}
+
+std::filesystem::path Model::GetRelativeTexturePath(const aiString &path) const
+{
+    if (path.C_Str()[0] != '\0')
+        return std::filesystem::relative(m_Path + path.C_Str(), Project::GetAssetDirectory());
+    else
+        return std::filesystem::path();
 }
 } // namespace Engine

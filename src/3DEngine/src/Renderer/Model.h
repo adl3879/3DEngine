@@ -11,6 +11,7 @@
 struct aiScene;
 struct aiNode;
 struct aiMesh;
+struct aiString;
 
 namespace Engine
 {
@@ -40,6 +41,8 @@ class Model : public Asset
     bool LoadModel(const std::filesystem::path &path, const bool flipWindingOrder, const bool loadMaterial);
     void ProcessNode(aiNode *node, const aiScene *scene, const bool loadMaterial);
     Mesh ProcessMesh(aiMesh *mesh, const aiScene *scene, const bool loadMaterial);
+
+    std::filesystem::path GetRelativeTexturePath(const aiString &path) const;
 
   private:
     std::string m_Path;

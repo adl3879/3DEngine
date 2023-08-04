@@ -158,14 +158,7 @@ void RenderSystem::RenderModelsWithTextures(Camera &camera, Scene &scene)
             // clang-format on
 
             const auto mat = mesh.Material;
-            glActiveTexture(GL_TEXTURE3);
-            glBindTexture(GL_TEXTURE_2D, mat->GetParameterTexture(Material::ALBEDO));
-            glActiveTexture(GL_TEXTURE4);
-            glBindTexture(GL_TEXTURE_2D, mat->GetParameterTexture(Material::NORMAL));
-            glActiveTexture(GL_TEXTURE5);
-            glBindTexture(GL_TEXTURE_2D, mat->GetParameterTexture(Material::METALLIC));
-            glActiveTexture(GL_TEXTURE6);
-            glBindTexture(GL_TEXTURE_2D, mat->GetParameterTexture(Material::ROUGHNESS));
+            mat->BindMaterialTextures(3);
 
             modelShader->SetUniformMatrix4fv("model", transform.GetTransform());
             modelShader->SetUniformMatrix3fv("normalMatrix",

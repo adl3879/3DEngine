@@ -48,6 +48,7 @@ class Material
 
     unsigned int GetParameterTexture(const ParameterType &type) const noexcept;
     Texture2DRef GetTexture(const ParameterType &type) const noexcept { return m_Textures[type]; }
+    void BindMaterialTextures(uint32_t startIndex) const noexcept;
 
     auto GetAlphaValue() const noexcept { return m_Alpha; }
     auto GetAlphaMask() const noexcept { return m_AlphaMaskTexture; }

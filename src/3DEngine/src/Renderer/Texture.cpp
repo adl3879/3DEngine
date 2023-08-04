@@ -46,7 +46,9 @@ Texture2D::Texture2D(const TextureSpecification &specification, Buffer data) : m
     if (data) SetData(data);
 }
 
-Texture2D::~Texture2D() { glDeleteTextures(1, &m_RendererID); }
+Texture2D::~Texture2D()
+{ /**glDeleteTextures(1, &m_RendererID);**/
+}
 
 void Texture2D::SetData(Buffer data)
 {
@@ -55,5 +57,9 @@ void Texture2D::SetData(Buffer data)
                         GL_UNSIGNED_BYTE, data.Data);
 }
 
-void Texture2D::Bind(uint32_t slot) const { glBindTextureUnit(GL_TEXTURE0 + slot, m_RendererID); }
+void Texture2D::Bind(uint32_t slot) const
+{
+    glActiveTexture(GL_TEXTURE0 + slot);
+    glBindTexture(GL_TEXTURE_2D, m_RendererID);
+}
 } // namespace Engine

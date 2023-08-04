@@ -248,81 +248,66 @@ void SceneHierarchyPanel::OnImGuiRender()
 {
     ImGui::Begin("Scene Hierarchy");
 
-    if (ImGui::Button("ADD")) ImGui::OpenPopup("my_file_popup");
-    if (ImGui::BeginPopup("my_file_popup", ImGuiWindowFlags_MenuBar))
+    // Right-click on blank space
+    if (ImGui::BeginPopupContextWindow())
     {
-        if (ImGui::BeginMenuBar())
+        if (ImGui::MenuItem("Create Empty Entity")) m_Context->CreateEntity("Empty Entity");
+
+        if (ImGui::BeginMenu("Add Entity"))
         {
-            ImGui::EndMenuBar();
-        }
-
-        // search bar
-        static char buf[64] = "";
-        ImGui::InputTextWithHint("##Search", "Search", buf, IM_ARRAYSIZE(buf));
-        ImGui::Separator();
-        ImGui::Spacing();
-
-        if (ImGui::MenuItem("Create Empty Entity"))
-        {
-            auto entity = m_Context->CreateEntity();
-            m_SelectionContext = entity;
-        }
-        ImGui::Spacing();
-        ImGui::Separator();
-
-        if (ImGui::MenuItem("Camera"))
-        {
-            auto entity = m_Context->CreateEntity("Camera");
-
-            entity.AddComponent<CameraComponent>();
-            m_SelectionContext = entity;
-        }
-        ImGui::Spacing();
-        ImGui::Separator();
-
-        // check if scene does not contain directional light entity
-        auto dLight = m_Context->GetEntity("Directional Light");
-        if (dLight == nullptr)
-        {
-            if (ImGui::MenuItem("Directional Light"))
+            if (ImGui::MenuItem("Camera"))
             {
-                auto entity = m_Context->CreateEntity("Directional Light");
+                auto entity = m_Context->CreateEntity("Camera");
 
-                entity.AddComponent<DirectionalLightComponent>();
+                entity.AddComponent<CameraComponent>();
                 m_SelectionContext = entity;
             }
-        }
-        if (ImGui::MenuItem("Point Light"))
-        {
-            auto num = Light::GetNumPointLights() + 1;
-            auto entity = m_Context->CreateEntity("Point Light " + std::to_string(num));
+            ImGui::Spacing();
+            ImGui::Separator();
 
-            entity.AddComponent<PointLightComponent>();
-            m_SelectionContext = entity;
-        }
-        if (ImGui::MenuItem("Spot Light"))
-        {
-            auto num = Light::GetNumSpotLights() + 1;
-            auto entity = m_Context->CreateEntity("Spot Light " + std::to_string(num));
+            // check if scene does not contain directional light entity
+            auto dLight = m_Context->GetEntity("Directional Light");
+            if (dLight == nullptr)
+            {
+                if (ImGui::MenuItem("Directional Light"))
+                {
+                    auto entity = m_Context->CreateEntity("Directional Light");
 
-            entity.AddComponent<SpotLightComponent>();
-            m_SelectionContext = entity;
-        }
-        ImGui::Spacing();
-        ImGui::Separator();
+                    entity.AddComponent<DirectionalLightComponent>();
+                    m_SelectionContext = entity;
+                }
+            }
+            if (ImGui::MenuItem("Point Light"))
+            {
+                auto num = Light::GetNumPointLights() + 1;
+                auto entity = m_Context->CreateEntity("Point Light " + std::to_string(num));
 
-        if (ImGui::MenuItem("Mesh"))
-        {
-            auto entity = m_Context->CreateEntity("Mesh");
+                entity.AddComponent<PointLightComponent>();
+                m_SelectionContext = entity;
+            }
+            if (ImGui::MenuItem("Spot Light"))
+            {
+                auto num = Light::GetNumSpotLights() + 1;
+                auto entity = m_Context->CreateEntity("Spot Light " + std::to_string(num));
 
-            entity.AddComponent<MeshComponent>();
-            m_SelectionContext = entity;
+                entity.AddComponent<SpotLightComponent>();
+                m_SelectionContext = entity;
+            }
+            ImGui::Spacing();
+            ImGui::Separator();
+
+            if (ImGui::MenuItem("Mesh"))
+            {
+                auto entity = m_Context->CreateEntity("Mesh");
+
+                entity.AddComponent<MeshComponent>();
+                m_SelectionContext = entity;
+            }
+            ImGui::EndPopup();
         }
 
         ImGui::EndPopup();
     }
-
-    ImGui::Spacing();
 
     m_Context->m_Registry.each(
         [this](auto entityId)

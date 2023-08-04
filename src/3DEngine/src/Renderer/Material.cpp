@@ -23,6 +23,7 @@ void Material::Init(const std::string_view name, const std::string_view albedoPa
                     const std::string_view metallicPath, const std::string_view normalPath,
                     const std::string_view roughnessPath, const std::string_view alphaMaskPath)
 {
+    // TODO: remove if not needed
     Name = name;
 
     m_MaterialTextures[ALBEDO] = ResourceManager::Instance().LoadTexture(albedoPath);
@@ -51,5 +52,13 @@ void Material::Init(const std::string_view name, const glm::vec3 &albedo, float 
 unsigned int Material::GetParameterTexture(const ParameterType &type) const noexcept
 {
     return m_MaterialTextures[type];
+}
+
+void Material::BindMaterialTextures(uint32_t startIndex) const noexcept
+{
+    for (const auto &texture : m_Textures)
+    {
+        if (texture != nullptr) texture->Bind(startIndex++);
+    }
 }
 } // namespace Engine
