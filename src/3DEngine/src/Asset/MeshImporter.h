@@ -3,13 +3,13 @@
 #include "Asset.h"
 #include "AssetMetadata.h"
 
-#include "Mesh.h"
+#include "Model.h"
 
 namespace Engine
 {
 class MeshImporter
 {
   public:
-    static MeshRef ImportMesh(AssetHandle handle, const AssetMetadata &metadata);
+    static ModelRef ImportMesh(AssetHandle handle, const AssetMetadata &metadata);
 };
 } // namespace Engine

@@ -55,5 +55,5 @@ void Texture2D::SetData(Buffer data)
                         GL_UNSIGNED_BYTE, data.Data);
 }
 
-void Texture2D::Bind(uint32_t slot) const { glBindTextureUnit(slot, m_RendererID); }
+void Texture2D::Bind(uint32_t slot) const { glBindTextureUnit(GL_TEXTURE0 + slot, m_RendererID); }
 } // namespace Engine

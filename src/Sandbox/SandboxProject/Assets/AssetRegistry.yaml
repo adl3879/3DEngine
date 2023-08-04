@@ -1,0 +1,46 @@
+AssetRegistry:
+  - Handle: 1635641871423053833
+    FilePath: Models/ScifiHelment/SciFiHelmet_MetallicRoughness.png
+    Type: AssetType::Texture2D
+  - Handle: 2611699255192028008
+    FilePath: Models/ScifiHelment/SciFiHelmet_BaseColor.png
+    Type: AssetType::Texture2D
+  - Handle: 2807657759649600698
+    FilePath: Models/boxTextured/CesiumLogoFlat.png
+    Type: AssetType::Texture2D
+  - Handle: 4347700271255350939
+    FilePath: Textures/wall.jpg
+    Type: AssetType::Texture2D
+  - Handle: 7126104399159220141
+    FilePath: Models/ScifiHelment/SciFiHelmet.gltf
+    Type: AssetType::Mesh
+  - Handle: 7668865139698931490
+    FilePath: Models/ScifiHelment/SciFiHelmet_MetallicRoughness.png
+    Type: AssetType::Texture2D
+  - Handle: 8544283669099750317
+    FilePath: Textures/planks.png
+    Type: AssetType::Texture2D
+  - Handle: 10384554625717599069
+    FilePath: Models/boxTextured/scene.gltf
+    Type: AssetType::Mesh
+  - Handle: 10720065784731367611
+    FilePath: Textures/skybox/front.jpg
+    Type: AssetType::Texture2D
+  - Handle: 10742991810128438689
+    FilePath: Models/suzanne/scene.gltf
+    Type: AssetType::Mesh
+  - Handle: 11884129295974674470
+    FilePath: Textures/skybox/top.jpg
+    Type: AssetType::Texture2D
+  - Handle: 15420238057780218390
+    FilePath: Models/boxTextured/CesiumLogoFlat.png
+    Type: AssetType::Texture2D
+  - Handle: 16807410324865351551
+    FilePath: Textures/planks.png
+    Type: AssetType::Texture2D
+  - Handle: 17425621155582442928
+    FilePath: Textures/skybox/back.jpg
+    Type: AssetType::Texture2D
+  - Handle: 18059732684843994057
+    FilePath: Textures/skybox/bottom.jpg
+    Type: AssetType::Texture2D

@@ -9,30 +9,26 @@
 
 #include "ResourceManager.h"
 #include "PlatformUtils.h"
+#include "AssetManager.h"
+#include "Project.h"
 
 #include "Log.h"
 
 namespace Engine
 {
-Model::Model(int entityID, const std::string_view path, const std::string_view name, const bool flipWindingOrder,
-             const bool loadMaterial)
-    : m_EntityID(entityID), m_Path(path), m_Name(name)
+Model::Model(const std::filesystem::path &path, const bool flipWindingOrder, const bool loadMaterial) : m_Path(path)
 {
-    auto fullPath = Utils::Path::GetAbsolute(std::string(path));
-    if (!LoadModel(fullPath, flipWindingOrder, loadMaterial)) LOG_CORE_ERROR("Failed to load model: {0}", name);
+    // auto fullPath = Utils::Path::GetAbsolute(std::string(path));
+    if (!LoadModel(path, flipWindingOrder, loadMaterial)) LOG_CORE_ERROR("Failed to load model: {0}", path.string());
 }
 
-Model::Model(int entityID, const std::string_view name, const std::vector<Vertex> &vertices,
-             std::vector<unsigned int> &indices, const MaterialPtr &material) noexcept
-    : m_EntityID(entityID), m_Name(name)
+Model::Model(const std::vector<Vertex> &vertices, std::vector<unsigned int> &indices,
+             const MaterialRef &material) noexcept
 {
     m_Meshes.emplace_back(vertices, indices, material);
 }
 
-Model::Model(int entityID, const std::string_view name, const Mesh &mesh) noexcept : m_EntityID(entityID), m_Name(name)
-{
-    m_Meshes.push_back(mesh);
-}
+Model::Model(const Mesh &mesh) noexcept { m_Meshes.push_back(mesh); }
 
 void Model::AttachMesh(const Mesh mesh) noexcept { m_Meshes.push_back(mesh); }
 
@@ -41,7 +37,7 @@ void Model::Delete()
     for (auto &mesh : m_Meshes) mesh.VAO.Delete();
 }
 
-bool Model::LoadModel(const std::string_view path, const bool flipWindingOrder, const bool loadMaterial)
+bool Model::LoadModel(const std::filesystem::path &path, const bool flipWindingOrder, const bool loadMaterial)
 {
     Assimp::Importer importer;
     const aiScene *scene = nullptr;
@@ -49,32 +45,32 @@ bool Model::LoadModel(const std::string_view path, const bool flipWindingOrder, 
     if (flipWindingOrder)
     {
         scene = importer.ReadFile(
-            path.data(), aiProcess_Triangulate | aiProcess_JoinIdenticalVertices | aiProcess_GenUVCoords |
-                             aiProcess_SortByPType | aiProcess_RemoveRedundantMaterials | aiProcess_FindInvalidData |
-                             aiProcess_FlipUVs | aiProcess_FlipWindingOrder | // Reverse back-face culling
-                             aiProcess_CalcTangentSpace | aiProcess_OptimizeMeshes | aiProcess_SplitLargeMeshes |
-                             aiProcess_GenBoundingBoxes);
+            path.c_str(), aiProcess_Triangulate | aiProcess_JoinIdenticalVertices | aiProcess_GenUVCoords |
+                              aiProcess_SortByPType | aiProcess_RemoveRedundantMaterials | aiProcess_FindInvalidData |
+                              aiProcess_FlipUVs | aiProcess_FlipWindingOrder | // Reverse back-face culling
+                              aiProcess_CalcTangentSpace | aiProcess_OptimizeMeshes | aiProcess_SplitLargeMeshes |
+                              aiProcess_GenBoundingBoxes);
     }
     else
     {
         scene = importer.ReadFile(
-            path.data(), aiProcess_Triangulate | aiProcess_JoinIdenticalVertices | aiProcess_GenUVCoords |
-                             aiProcess_SortByPType | aiProcess_RemoveRedundantMaterials | aiProcess_FindInvalidData |
-                             aiProcess_FlipUVs | aiProcess_CalcTangentSpace | aiProcess_GenSmoothNormals |
-                             aiProcess_ImproveCacheLocality | aiProcess_OptimizeMeshes | aiProcess_SplitLargeMeshes |
-                             aiProcess_GenBoundingBoxes);
+            path.c_str(), aiProcess_Triangulate | aiProcess_JoinIdenticalVertices | aiProcess_GenUVCoords |
+                              aiProcess_SortByPType | aiProcess_RemoveRedundantMaterials | aiProcess_FindInvalidData |
+                              aiProcess_FlipUVs | aiProcess_CalcTangentSpace | aiProcess_GenSmoothNormals |
+                              aiProcess_ImproveCacheLocality | aiProcess_OptimizeMeshes | aiProcess_SplitLargeMeshes |
+                              aiProcess_GenBoundingBoxes);
     }
 
     // Check if scene is not null and model is done loading
     if (!scene || scene->mFlags == AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
     {
-        LOG_CORE_ERROR("Assimp Error for {0}: {1}", m_Name, importer.GetErrorString());
+        LOG_CORE_ERROR("Assimp Error for {0}: {1}", m_Path, importer.GetErrorString());
         importer.FreeScene();
 
         return false;
     }
 
-    m_Path = path.substr(0, path.find_last_of('/')); // Strip the model file name and keep the model folder.
+    m_Path = path.string().substr(0, path.string().find_last_of('/'));
     m_Path += "/";
 
     ProcessNode(scene->mRootNode, scene, loadMaterial);
@@ -98,14 +94,13 @@ void Model::ProcessNode(aiNode *node, const aiScene *scene, const bool loadMater
 
 Mesh Model::ProcessMesh(aiMesh *mesh, const aiScene *scene, const bool loadMaterial)
 {
-
     std::vector<Vertex> vertices;
     VertexSOA vertexSOA;
 
     for (auto i = 0; i < mesh->mNumVertices; ++i)
     {
         vertexSOA.Colors.emplace_back(glm::vec4(1.0f));
-        vertexSOA.EditorIDs.emplace_back(-1.0f);
+        vertexSOA.EntityIDs.emplace_back(-1.0f);
         Vertex vertex;
 
         if (mesh->HasPositions())
@@ -137,8 +132,6 @@ Mesh Model::ProcessMesh(aiMesh *mesh, const aiScene *scene, const bool loadMater
             vertexSOA.TexCoords.emplace_back(vertex.TexCoords);
         }
 
-        // vertex.EditorID = m_EntityID + 1;
-
         vertices.push_back(vertex);
     }
 
@@ -164,20 +157,36 @@ Mesh Model::ProcessMesh(aiMesh *mesh, const aiScene *scene, const bool loadMater
             aiString name;
             mat->Get(AI_MATKEY_NAME, name);
 
-            // Is the material cached?
-            const auto cachedMaterial = ResourceManager::Instance().GetMaterial(name.C_Str());
-            if (cachedMaterial.has_value())
-            {
-                return Mesh(vertexSOA, indices, cachedMaterial.value());
-            }
+            // // Is the material cached?
+            // const auto cachedMaterial = ResourceManager::Instance().GetMaterial(name.C_Str());
+            // if (cachedMaterial.has_value())
+            // {
+            //     return Mesh(vertexSOA, indices, cachedMaterial.value());
+            // }
 
-            // Get the first texture for each texture type we need
-            // since there could be multiple textures per type
             aiString albedoPath, metallicPath, normalPath, roughnessPath, alphaMaskPath;
 
             mat->GetTexture(AI_MATKEY_BASE_COLOR_TEXTURE, &albedoPath);
             mat->GetTexture(AI_MATKEY_METALLIC_TEXTURE, &metallicPath);
             mat->GetTexture(AI_MATKEY_ROUGHNESS_TEXTURE, &roughnessPath);
+
+            // auto albedoRPath = std::filesystem::relative(m_Path + albedoPath.C_Str(), Project::GetAssetDirectory());
+            // auto metallicRPath = std::filesystem::relative(m_Path + metallicPath.C_Str(),
+            // Project::GetAssetDirectory()); auto normalRPath = std::filesystem::relative(m_Path + normalPath.C_Str(),
+            // Project::GetAssetDirectory()); auto roughnessRPath =
+            //     std::filesystem::relative(m_Path + roughnessPath.C_Str(), Project::GetAssetDirectory());
+            // auto alphaMaskRPath =
+            //     std::filesystem::relative(m_Path + alphaMaskPath.C_Str(), Project::GetAssetDirectory());
+
+            // auto albedoHandle = AssetManager::ImportAsset(albedoRPath);
+            // auto metallicHandle = AssetManager::ImportAsset(metallicRPath);
+            // auto normalHandle = AssetManager::ImportAsset(normalRPath);
+            // auto roughnessHandle = AssetManager::ImportAsset(roughnessRPath);
+            // auto alphaMaskHandle = AssetManager::ImportAsset(alphaMaskRPath);
+
+            // MaterialRef material = std::make_shared<Material>();
+            // material->Init(name.C_Str(), albedoHandle, metallicHandle, normalHandle, roughnessHandle,
+            // alphaMaskHandle);
 
             const auto newMaterial = ResourceManager::Instance().CacheMaterial(
                 name.C_Str(), m_Path + albedoPath.C_Str(), "", m_Path + metallicPath.C_Str(),

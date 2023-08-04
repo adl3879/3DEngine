@@ -194,17 +194,17 @@ unsigned int ResourceManager::LoadHDRI(const std::string &path) const
     return hdrTexture;
 }
 
-std::optional<MaterialPtr> ResourceManager::GetMaterial(const std::string_view name) const
+std::optional<MaterialRef> ResourceManager::GetMaterial(const std::string_view name) const
 {
     // check if material exists
     const auto val = m_MaterialCache.find(name.data());
 
-    if (val == m_MaterialCache.end()) return std::optional<MaterialPtr>();
+    if (val == m_MaterialCache.end()) return std::optional<MaterialRef>();
 
-    return std::make_optional<MaterialPtr>(val->second);
+    return std::make_optional<MaterialRef>(val->second);
 }
 
-MaterialPtr ResourceManager::CacheMaterial(const std::string_view name, const std::string_view albedoPath,
+MaterialRef ResourceManager::CacheMaterial(const std::string_view name, const std::string_view albedoPath,
                                            const std::string_view aoPath, const std::string_view metallicPath,
                                            const std::string_view normalPath, const std::string_view roughnessPath,
                                            const std::string_view alphaMaskPath)

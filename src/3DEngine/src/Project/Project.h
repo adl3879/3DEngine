@@ -16,7 +16,7 @@ struct ProjectConfig
 
     std::filesystem::path AssetDirectory;
     std::filesystem::path ScriptModulePath;
-    std::filesystem::path AssetRegistryPath;
+    std::filesystem::path AssetRegistryPath = "AssetRegistry.yaml";
 };
 
 class Project

@@ -8,6 +8,7 @@
 #include "ResourceManager.h"
 #include "InputManager.h"
 #include "OutlineSystem.h"
+#include "AssetManager.h"
 
 namespace Engine
 {
@@ -130,32 +131,31 @@ void RenderSystem::RenderModelsWithTextures(Camera &camera, Scene &scene)
 
     auto modelShader = m_Shaders.at("pbrShader");
 
-    auto view = scene.GetRegistry().view<ModelComponent, TransformComponent, VisibilityComponent>();
+    auto view = scene.GetRegistry().view<MeshComponent, TransformComponent, VisibilityComponent>();
 
     for (auto entity : view)
     {
-        auto [model, transform, visibility] = view.get<ModelComponent, TransformComponent, VisibilityComponent>(entity);
-        if (!visibility.IsVisible || model.Model == nullptr) continue;
+        auto [model, transform, visibility] = view.get<MeshComponent, TransformComponent, VisibilityComponent>(entity);
+        if (!visibility.IsVisible || model.Handle == 0) continue;
+        const auto &entityModel = AssetManager::GetAsset<Model>(model.Handle);
 
-        for (auto mesh : model.Model->GetMeshes())
+        for (auto &mesh : entityModel->GetMeshes())
         {
             modelShader->Use();
             mesh.VAO.Bind();
 
             // entity id should be populated only once
-            if (mesh.VertexSOA.EditorIDs[0] < 0.0f)
-                mesh.VertexSOA.EditorIDs = std::vector<float>(mesh.VertexCount, (int)entity + 1);
+            if (mesh.VertexSOA.EntityIDs[0] < 0.0f)
+                mesh.VertexSOA.EntityIDs = std::vector<float>(mesh.VertexCount, (int)entity + 1);
 
-            mesh.VAO.SetBufferSubData(0, BufferType::ARRAY, 0, mesh.VertexSOA.Positions.size() * sizeof(glm::vec3),
-                                      &mesh.VertexSOA.Positions[0]);
-            mesh.VAO.SetBufferSubData(1, BufferType::ARRAY, 0, mesh.VertexSOA.Normals.size() * sizeof(glm::vec3),
-                                      &mesh.VertexSOA.Normals[0]);
-            mesh.VAO.SetBufferSubData(2, BufferType::ARRAY, 0, mesh.VertexSOA.Colors.size() * sizeof(glm::vec3),
-                                      &mesh.VertexSOA.Colors[0]);
-            mesh.VAO.SetBufferSubData(3, BufferType::ARRAY, 0, mesh.VertexSOA.TexCoords.size() * sizeof(glm::vec2),
-                                      &mesh.VertexSOA.TexCoords[0]);
-            mesh.VAO.SetBufferSubData(4, BufferType::ARRAY, 0, mesh.VertexSOA.EditorIDs.size() * sizeof(float),
-                                      &mesh.VertexSOA.EditorIDs[0]);
+            // clang-format off
+            auto vertices = mesh.VertexSOA;
+            mesh.VAO.SetBufferSubData(0, BufferType::ARRAY, 0, vertices.Positions.size() * sizeof(glm::vec3), &vertices.Positions[0]);
+            mesh.VAO.SetBufferSubData(1, BufferType::ARRAY, 0, vertices.Normals.size() * sizeof(glm::vec3), &vertices.Normals[0]);
+            mesh.VAO.SetBufferSubData(2, BufferType::ARRAY, 0, vertices.Colors.size() * sizeof(glm::vec3), &vertices.Colors[0]);
+            mesh.VAO.SetBufferSubData(3, BufferType::ARRAY, 0, vertices.TexCoords.size() * sizeof(glm::vec2), &vertices.TexCoords[0]);
+            mesh.VAO.SetBufferSubData(4, BufferType::ARRAY, 0, vertices.EntityIDs.size() * sizeof(float), &vertices.EntityIDs[0]);
+            // clang-format on
 
             const auto mat = mesh.Material;
             glActiveTexture(GL_TEXTURE3);
@@ -184,11 +184,6 @@ void RenderSystem::RenderModelsWithTextures(Camera &camera, Scene &scene)
 
             glDrawElements(GL_TRIANGLES, mesh.IndexCount, GL_UNSIGNED_INT, nullptr);
             glBindTexture(GL_TEXTURE_2D, 0);
-
-            // draws outline on selected model
-            if (scene.GetSelectedEntity() == entity)
-            {
-            }
 
             mesh.VAO.Unbind();
         }

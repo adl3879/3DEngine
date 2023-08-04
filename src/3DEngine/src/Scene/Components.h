@@ -10,6 +10,7 @@
 #include "Light.h"
 #include "Model.h"
 #include "UUID.h"
+#include "Asset.h"
 
 #include <iostream>
 #include <memory>
@@ -56,16 +57,24 @@ struct ModelComponent
     std::string Path = "Null";
     std::string Name = std::string();
     int EntityID;
-    ModelPtr Model = nullptr;
+    ModelRef Model = nullptr;
 
     ModelComponent() = default;
     ModelComponent(const ModelComponent &) = default;
 
     void Create()
     {
-        Model = std::make_shared<Engine::Model>(EntityID, Path, Name);
-        LOG_CORE_INFO("Model {0} at {1} Loaded!", Name, Path);
+        // Model = std::make_shared<Engine::Model>(Path);
+        // LOG_CORE_INFO("Model {0} at {1} Loaded!", Name, Path);
     }
+};
+
+struct MeshComponent
+{
+    AssetHandle Handle = 0;
+
+    MeshComponent() = default;
+    MeshComponent(const MeshComponent &) = default;
 };
 
 struct CameraComponent

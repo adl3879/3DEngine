@@ -16,6 +16,9 @@ AppLayer::AppLayer() : m_EditorCamera(-45.0f, 1.778f, 0.1f, 100.0f) {}
 
 void AppLayer::OnAttach()
 {
+    // TODO: load last opened project from a savefile
+    Project::Load("/home/adeleye/Source/3DEngine/src/Sandbox/SandboxProject/SandboxProject.3dproj");
+
     auto fbSpec = FramebufferSpecification{};
     fbSpec.Attachments = {FramebufferTextureFormat::RGBA8, FramebufferTextureFormat::RED_INTEGER,
                           FramebufferTextureFormat::Depth};
@@ -34,8 +37,7 @@ void AppLayer::OnAttach()
     m_IconPlay = ResourceManager::Instance().LoadTexture(basePath + std::string("/PlayButton.png"));
     m_IconStop = ResourceManager::Instance().LoadTexture(basePath + std::string("/StopButton.png"));
 
-    // TODO: load last opened project from a savefile
-    Project::Load("/home/adeleye/Source/3DEngine/src/Sandbox/SandboxProject/SandboxProject.3dproj");
+    m_ContentBrowserPanel = std::make_shared<ContentBrowserPanel>();
 
     LOG_INFO("AppLayer Attached");
 }
@@ -123,17 +125,13 @@ void AppLayer::OnImGuiRender()
             if (ImGui::MenuItem("New", "Ctrl+N")) NewScene();
             if (ImGui::MenuItem("Open...", "Ctrl+O")) OpenScene();
             ImGui::Separator();
+            if (ImGui::MenuItem("New Project", "Ctrl+Shift+N")) NewProject();
+            if (ImGui::MenuItem("Open Project", "Ctrl+Shift+O")) return;
+            ImGui::Separator();
             if (ImGui::MenuItem("Save...", "Ctrl+S")) SaveScene();
             if (ImGui::MenuItem("Save As...", "Ctrl+Shift+S")) SaveSceneAs();
             ImGui::Separator();
             if (ImGui::MenuItem("Exit", "")) Application::Close();
-
-            ImGui::EndMenu();
-        }
-        if (ImGui::BeginMenu("Project"))
-        {
-            if (ImGui::MenuItem("New Project", "Ctrl+Shift+N")) NewProject();
-            if (ImGui::MenuItem("Open Project", "Ctrl+Shift+O")) return;
 
             ImGui::EndMenu();
         }
@@ -142,7 +140,7 @@ void AppLayer::OnImGuiRender()
     FileOperations();
 
     m_SceneHierarchyPanel.OnImGuiRender();
-    m_ContentBrowserPanel.OnImGuiRender();
+    m_ContentBrowserPanel->OnImGuiRender();
 
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{0, 0});
     ImGui::Begin("Viewport");

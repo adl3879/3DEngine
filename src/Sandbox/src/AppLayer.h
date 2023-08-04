@@ -61,7 +61,7 @@ class AppLayer : public Layer
 
     // panels
     SceneHierarchyPanel m_SceneHierarchyPanel;
-    ContentBrowserPanel m_ContentBrowserPanel;
+    std::shared_ptr<ContentBrowserPanel> m_ContentBrowserPanel = nullptr;
 
     RenderSystemPtr m_RenderSystem;
 

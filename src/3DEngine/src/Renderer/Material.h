@@ -6,6 +6,9 @@
 #include <array>
 #include <string_view>
 
+#include "Texture.h"
+#include "Asset.h"
+
 namespace Engine
 {
 struct MaterialData
@@ -31,6 +34,9 @@ class Material
 
     Material();
 
+    void Init(const std::string &name, AssetHandle albedo, AssetHandle metallic, AssetHandle normal,
+              AssetHandle roughness, AssetHandle alphaMask);
+
     void Init(const std::string_view name, const std::string_view albedoPath, const std::string_view aoPath,
               const std::string_view metallicPath, const std::string_view normalPath,
               const std::string_view roughnessPath, const std::string_view alphaMaskPath);
@@ -41,6 +47,7 @@ class Material
     auto operator==(const Material &other) const noexcept { return Name == other.Name; }
 
     unsigned int GetParameterTexture(const ParameterType &type) const noexcept;
+    Texture2DRef GetTexture(const ParameterType &type) const noexcept { return m_Textures[type]; }
 
     auto GetAlphaValue() const noexcept { return m_Alpha; }
     auto GetAlphaMask() const noexcept { return m_AlphaMaskTexture; }
@@ -49,11 +56,12 @@ class Material
 
   private:
     std::array<unsigned int, 5> m_MaterialTextures;
+    std::array<Texture2DRef, 5> m_Textures;
     MaterialData m_Material;
 
     float m_Alpha;
     unsigned int m_AlphaMaskTexture;
 };
 
-using MaterialPtr = std::shared_ptr<Material>;
+using MaterialRef = std::shared_ptr<Material>;
 } // namespace Engine

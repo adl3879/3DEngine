@@ -12,8 +12,8 @@ namespace Engine
 struct Mesh
 {
     Mesh(const std::vector<Vertex> &vertices, const std::vector<uint32_t> &indices,
-         const MaterialPtr &material = nullptr);
-    Mesh(const struct VertexSOA &vertices, const std::vector<uint32_t> &indices, const MaterialPtr &material = nullptr);
+         const MaterialRef &material = nullptr);
+    Mesh(const struct VertexSOA &vertices, const std::vector<uint32_t> &indices, const MaterialRef &material = nullptr);
 
     void Clear();
 
@@ -26,7 +26,7 @@ struct Mesh
     struct VertexSOA VertexSOA;
     std::vector<uint32_t> Indices;
     VertexArray VAO;
-    MaterialPtr Material;
+    MaterialRef Material;
 
     unsigned int VBOs[5];
 

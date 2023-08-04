@@ -4,13 +4,13 @@
 
 namespace Engine
 {
-Mesh::Mesh(const std::vector<Vertex> &vertices, const std::vector<uint32_t> &indices, const MaterialPtr &material)
+Mesh::Mesh(const std::vector<Vertex> &vertices, const std::vector<uint32_t> &indices, const MaterialRef &material)
     : IndexCount(indices.size()), VertexCount(vertices.size()), Material(material), Vertices(vertices), Indices(indices)
 {
     SetupMesh(vertices, indices);
 }
 
-Mesh::Mesh(const struct VertexSOA &vertices, const std::vector<uint32_t> &indices, const MaterialPtr &material)
+Mesh::Mesh(const struct VertexSOA &vertices, const std::vector<uint32_t> &indices, const MaterialRef &material)
     : IndexCount(indices.size()), VertexCount(vertices.Positions.size()), Material(material), VertexSOA(vertices),
       Indices(indices)
 {
@@ -35,7 +35,7 @@ void Mesh::SetupMesh(const std::vector<Vertex> &vertices, const std::vector<uint
     VAO.EnableAttribute(1, 3, vertexSize, reinterpret_cast<void *>(offsetof(Vertex, Normal)));
     VAO.EnableAttribute(2, 3, vertexSize, reinterpret_cast<void *>(offsetof(Vertex, Color)));
     VAO.EnableAttribute(3, 2, vertexSize, reinterpret_cast<void *>(offsetof(Vertex, TexCoords)));
-    VAO.EnableAttribute(4, 1, vertexSize, reinterpret_cast<void *>(offsetof(Vertex, EditorID)));
+    VAO.EnableAttribute(4, 1, vertexSize, reinterpret_cast<void *>(offsetof(Vertex, EntityID)));
 
     VAO.Unbind();
 }
@@ -57,7 +57,7 @@ void Mesh::SetupMesh(const struct VertexSOA &vertices, const std::vector<uint32_
     VAO.AttachBuffer(BufferType::ARRAY, vertices.TexCoords.size() * sizeof(glm::vec2), DrawMode::DYNAMIC, nullptr);
     VAO.EnableAttribute(3, 2, 0, nullptr);
 
-    VAO.AttachBuffer(BufferType::ARRAY, vertices.EditorIDs.size() * sizeof(float), DrawMode::DYNAMIC, nullptr);
+    VAO.AttachBuffer(BufferType::ARRAY, vertices.EntityIDs.size() * sizeof(float), DrawMode::DYNAMIC, nullptr);
     VAO.EnableAttribute(4, 1, 0, nullptr);
 
     VAO.AttachBuffer(BufferType::ELEMENT, indices.size() * sizeof(uint32_t), DrawMode::STATIC, indices.data());

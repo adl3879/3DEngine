@@ -1,10 +1,23 @@
 #include "Material.h"
 
 #include "ResourceManager.h"
+#include "AssetManager.h"
+#include "Texture.h"
 
 namespace Engine
 {
 Material::Material() { std::fill(m_MaterialTextures.begin(), m_MaterialTextures.end(), 0); }
+
+void Material::Init(const std::string &name, AssetHandle albedo, AssetHandle metallic, AssetHandle normal,
+                    AssetHandle roughness, AssetHandle alphaMask)
+{
+    Name = name;
+
+    m_Textures[ALBEDO] = AssetManager::GetAsset<Texture2D>(albedo);
+    m_Textures[METALLIC] = AssetManager::GetAsset<Texture2D>(metallic);
+    m_Textures[NORMAL] = AssetManager::GetAsset<Texture2D>(normal);
+    m_Textures[ROUGHNESS] = AssetManager::GetAsset<Texture2D>(roughness);
+}
 
 void Material::Init(const std::string_view name, const std::string_view albedoPath, const std::string_view aoPath,
                     const std::string_view metallicPath, const std::string_view normalPath,

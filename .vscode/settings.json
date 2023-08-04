@@ -37,7 +37,8 @@
     "string_view": "cpp",
     "array": "cpp",
     "string": "cpp",
-    "span": "cpp"
+    "span": "cpp",
+    "*.def": "cpp"
   },
   "Lua.diagnostics.globals": ["entity", "Input"]
 }

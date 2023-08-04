@@ -12,7 +12,7 @@ struct Vertex
     glm::vec3 Color = glm::vec3{1.0f};
     glm::vec2 TexCoords;
     // editor only
-    float EditorID = -1.0f;
+    float EntityID = -1.0f;
 };
 
 struct VertexSOA
@@ -21,6 +21,6 @@ struct VertexSOA
     std::vector<glm::vec3> Normals;
     std::vector<glm::vec3> Colors;
     std::vector<glm::vec2> TexCoords;
-    std::vector<float> EditorIDs;
+    std::vector<float> EntityIDs;
 };
 } // namespace Engine

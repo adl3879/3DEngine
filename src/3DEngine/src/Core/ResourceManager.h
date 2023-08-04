@@ -27,8 +27,8 @@ class ResourceManager
     unsigned int LoadTexture(const fs::path &path, const bool useMipMaps = true, const bool useUnalignedUnpack = false);
     unsigned int LoadHDRI(const std::string &path) const;
 
-    std::optional<MaterialPtr> GetMaterial(const std::string_view name) const;
-    MaterialPtr CacheMaterial(const std::string_view name, const std::string_view albedoPath,
+    std::optional<MaterialRef> GetMaterial(const std::string_view name) const;
+    MaterialRef CacheMaterial(const std::string_view name, const std::string_view albedoPath,
                               const std::string_view aoPath, const std::string_view metallicPath,
                               const std::string_view normalPath, const std::string_view roughnessPath,
                               const std::string_view alphaMaskPath);
@@ -41,6 +41,6 @@ class ResourceManager
 
   private:
     std::unordered_map<std::string, unsigned int> m_TextureCache;
-    std::unordered_map<std::string, MaterialPtr> m_MaterialCache;
+    std::unordered_map<std::string, MaterialRef> m_MaterialCache;
 };
 } // namespace Engine

@@ -17,5 +17,6 @@
 #include "Project.h"
 #include "UUID.h"
 #include "Asset.h"
+#include "AssetManager.h"
 
 #include "VertexArray.h"

@@ -9,6 +9,9 @@ namespace Engine
 std::shared_ptr<Project> Project::New()
 {
     s_ActiveProject = std::make_shared<Project>();
+    std::shared_ptr<EditorAssetManager> editorAssetManager = std::make_shared<EditorAssetManager>();
+    s_ActiveProject->m_AssetManager = editorAssetManager;
+    editorAssetManager->DeserializeAssetRegistry();
     return s_ActiveProject;
 }
 
@@ -22,12 +25,11 @@ std::shared_ptr<Project> Project::New(const std::filesystem::path &path)
     std::filesystem::create_directory(path / "Assets/Scenes");
     std::filesystem::create_directory(path / "Assets/Materials");
 
-    s_ActiveProject = std::make_shared<Project>();
+    s_ActiveProject = New();
     s_ActiveProject->m_ProjectDirectory = path;
     ProjectConfig config = ProjectConfig{
         .Name = path.filename().string(),
         .AssetDirectory = "Assets",
-        .AssetRegistryPath = "Assets/AssetRegistry.json",
     };
     s_ActiveProject->SetConfig(config);
     auto fileName = path.filename().string() + ".3dproj";
@@ -43,9 +45,14 @@ std::shared_ptr<Project> Project::Load(const std::filesystem::path &path)
     ProjectSerializer serializer(project);
     if (serializer.Deserialize(path))
     {
-        project->m_ProjectDirectory = path.parent_path();
         s_ActiveProject = project;
-        LOG_CORE_INFO("Project {} opened", project->GetConfig().Name);
+        s_ActiveProject->m_ProjectDirectory = path.parent_path();
+
+        std::shared_ptr<EditorAssetManager> editorAssetManager = std::make_shared<EditorAssetManager>();
+        s_ActiveProject->m_AssetManager = editorAssetManager;
+        editorAssetManager->DeserializeAssetRegistry();
+
+        LOG_CORE_INFO("Project {} opened", s_ActiveProject->m_ProjectDirectory.string());
         return s_ActiveProject;
     }
     return nullptr;

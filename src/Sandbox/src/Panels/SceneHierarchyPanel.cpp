@@ -26,7 +26,6 @@ void SceneHierarchyPanel::DrawEntityNode(Entity entity)
     if (ImGui::BeginPopupContextItem())
     {
         if (ImGui::MenuItem("Delete Entity")) entityDeleted = true;
-
         ImGui::EndPopup();
     }
 
@@ -133,7 +132,7 @@ void SceneHierarchyPanel::DrawComponents(Entity entity)
         if (removeComponent) entity.RemoveComponent<CameraComponent>();
     }
 
-    if (entity.HasComponent<ModelComponent>())
+    if (entity.HasComponent<MeshComponent>())
     {
         bool removeComponent = false;
         // if (ImGui::BeginPopupContextItem())
@@ -143,36 +142,28 @@ void SceneHierarchyPanel::DrawComponents(Entity entity)
 
         //     ImGui::EndPopup();
         // }
-        auto &entityComponent = entity.GetComponent<ModelComponent>();
-        if (ImGui::TreeNodeEx((void *)typeid(ModelComponent).hash_code(), ImGuiTreeNodeFlags_DefaultOpen, "Model"))
+        auto &entityComponent = entity.GetComponent<MeshComponent>();
+        if (ImGui::TreeNodeEx((void *)typeid(MeshComponent).hash_code(), ImGuiTreeNodeFlags_DefaultOpen, "Mesh"))
         {
-            char buffer[256];
-            memset(buffer, 0, sizeof(buffer));
-            strcpy(buffer, entityComponent.Path.c_str());
-            if (ImGui::InputText("Path", buffer, sizeof(buffer))) entityComponent.Path = std::string(buffer);
-            ImGui::SameLine();
-            if (ImGui::Button("..."))
+            ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.05f, 0.05f, 0.05f, 0.54f));
+            ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.05f, 0.05f, 0.05f, 0.54f));
+            ImGui::Button("Drop Mesh", ImVec2(430.0f, 50.0f));
+            ImGui::PopStyleColor(2);
+            if (ImGui::BeginDragDropTarget())
             {
-                Utils::FileDialogs::OpenFile(
-                    "modelOpen",
-                    Utils::FileDialogParams{
-                        .DefaultPathAndFile = "/home/adeleye/Source/3DEngine/src/Sandbox/res/models/",
-                        .SingleFilterDescription = "Model (*.fbx;*.obj;*.dae;*.gltf)\0*.fbx;*.obj;*.dae;*.gltf\0",
-                    });
-            }
-
-            if (Utils::FileDialogs::FileIsOpened("modelOpen"))
-            {
-                auto path = Utils::Path::GetRelative(Utils::FileDialogs::m_SelectedFile);
-                entityComponent.Path = path;
-                entityComponent.EntityID = (int)entity.GetEntityID();
-                entityComponent.Create();
+                if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
+                {
+                    const char *handle = (const char *)payload->Data;
+                    // convert handle to uint64_t(AssetHandle)
+                    entityComponent.Handle = std::stoull(handle);
+                }
+                ImGui::EndDragDropTarget();
             }
 
             ImGui::TreePop();
         }
 
-        if (removeComponent) entity.RemoveComponent<ModelComponent>();
+        if (removeComponent) entity.RemoveComponent<MeshComponent>();
     }
 
     if (entity.HasComponent<DirectionalLightComponent>())
@@ -324,7 +315,7 @@ void SceneHierarchyPanel::OnImGuiRender()
         {
             auto entity = m_Context->CreateEntity("Mesh");
 
-            entity.AddComponent<ModelComponent>();
+            entity.AddComponent<MeshComponent>();
             m_SelectionContext = entity;
         }
 

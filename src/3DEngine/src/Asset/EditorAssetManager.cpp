@@ -47,13 +47,15 @@ bool EditorAssetManager::IsAssetLoaded(AssetHandle handle) const
     return m_LoadedAssets.find(handle) != m_LoadedAssets.end();
 }
 
-void EditorAssetManager::ImportAsset(const std::filesystem::path &path)
+AssetHandle EditorAssetManager::ImportAsset(const std::filesystem::path &path)
 {
+    if (path.filename().empty()) return 0;
     AssetHandle handle; // generate new handle
     AssetMetadata metadata;
     metadata.FilePath = path;
     metadata.Type = Utils::GetAssetTypeFromExtension(path);
     AssetRef asset = AssetImporter::ImportAsset(handle, metadata);
+    if (asset == nullptr) return 0;
     asset->Handle = handle;
     if (asset)
     {
@@ -61,6 +63,7 @@ void EditorAssetManager::ImportAsset(const std::filesystem::path &path)
         m_AssetRegistry[handle] = metadata;
         SerializeAssetRegistry();
     }
+    return handle;
 }
 
 const AssetMetadata &EditorAssetManager::GetMetadata(AssetHandle handle) const
@@ -127,7 +130,7 @@ bool EditorAssetManager::DeserializeAssetRegistry()
     return true;
 }
 
-AssetRef EditorAssetManager::GetAsset(AssetHandle handle) const
+AssetRef EditorAssetManager::GetAsset(AssetHandle handle)
 {
     // 1. check if handle is valid
     if (!IsAssetHandleValid(handle)) return nullptr;
@@ -143,6 +146,7 @@ AssetRef EditorAssetManager::GetAsset(AssetHandle handle) const
         // load asset
         const AssetMetadata &metadata = GetMetadata(handle);
         asset = AssetImporter::ImportAsset(handle, metadata);
+        m_LoadedAssets[handle] = asset;
         if (!asset)
         {
             LOG_CORE_ERROR("EditorAssetManager::GetAsset - asset import failed!");
