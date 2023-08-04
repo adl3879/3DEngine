@@ -41,6 +41,9 @@ AssetRegistry:
   - Handle: 9002473878902268135
     FilePath: Models/boxTextured/CesiumLogoFlat.png
     Type: AssetType::Texture2D
+  - Handle: 9412395609919637078
+    FilePath: Models/boxTextured/CesiumLogoFlat.png
+    Type: AssetType::Texture2D
   - Handle: 10344511639350367749
     FilePath: Models/boxTextured/CesiumLogoFlat.png
     Type: AssetType::Texture2D

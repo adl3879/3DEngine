@@ -7,6 +7,7 @@
 #include "TextureImporter.h"
 #include "AssetManager.h"
 #include "Log.h"
+#include "PlatformUtils.h"
 
 #include <iostream>
 
@@ -65,11 +66,15 @@ void ContentBrowserPanel::OnImGuiRender()
     if (m_Mode == Mode::Asset)
     {
 
-        // currentNode = ShowFileTree(currentNode);
         // Right-click on blank space
         if (ImGui::BeginPopupContextWindow())
         {
             if (ImGui::MenuItem("Refresh")) RefreshAssetTree();
+            if (ImGui::MenuItem("Open in File Browser"))
+            {
+                std::string path = Project::GetAssetDirectory() / m_AssetCurrentDirectory;
+                Utils::FileDialogs::OpenFileExplorer(path + "/");
+            }
             ImGui::EndPopup();
         }
 
@@ -82,12 +87,6 @@ void ContentBrowserPanel::OnImGuiRender()
             ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
             Texture2DRef icon = isDirectory ? m_DirectoryIcon : m_FileIcon;
             ImGui::ImageButton((ImTextureID)icon->GetRendererID(), {thumbnailSize, thumbnailSize}, {0, 1}, {1, 0});
-
-            if (ImGui::BeginPopupContextItem())
-            {
-                if (ImGui::MenuItem("Refresh")) RefreshAssetTree();
-                ImGui::EndPopup();
-            }
 
             if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
             {
@@ -106,6 +105,7 @@ void ContentBrowserPanel::OnImGuiRender()
                 auto assetHandle = m_AssetHandles[completePath.string()].ToString();
                 ImGui::SetDragDropPayload("CONTENT_BROWSER_ITEM", assetHandle.c_str(),
                                           (strlen(assetHandle.c_str()) + 1) * sizeof(char *));
+                ImGui::Button(completePath.c_str());
                 ImGui::EndDragDropSource();
             }
 
@@ -120,6 +120,13 @@ void ContentBrowserPanel::OnImGuiRender()
     }
     else
     {
+        // Right-click on blank space
+        if (ImGui::BeginPopupContextWindow())
+        {
+            if (ImGui::MenuItem("Open in File Browser"))
+                Utils::FileDialogs::OpenFileExplorer(m_CurrentDirectory.string() + "/");
+            ImGui::EndPopup();
+        }
         for (auto &directoryEntry : std::filesystem::directory_iterator(m_CurrentDirectory))
         {
             const auto &path = directoryEntry.path();
@@ -142,9 +149,10 @@ void ContentBrowserPanel::OnImGuiRender()
 
             if (ImGui::BeginDragDropSource())
             {
-                std::filesystem::path relativePath(path);
+                auto relativePath = std::filesystem::relative(path, Project::GetAssetDirectory());
                 const char *itemPath = relativePath.c_str();
                 ImGui::SetDragDropPayload("CONTENT_BROWSER_ITEM", itemPath, (strlen(itemPath) + 1) * sizeof(char *));
+                ImGui::Button(relativePath.c_str());
                 ImGui::EndDragDropSource();
             }
 

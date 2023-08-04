@@ -23,6 +23,7 @@ class FileDialogs
     static void OpenFile(std::string id, FileDialogParams params = FileDialogParams{.Title = "Open File"});
     static void SaveFile(std::string id, FileDialogParams params = FileDialogParams{.Title = "Save File"});
     static void CreateFolder(std::string id, FileDialogParams params = FileDialogParams{.Title = "Create Folder"});
+    static void OpenFileExplorer(const std::string &path);
 
     static void SetSelectedFile(const std::string &file) { m_SelectedFile = file; }
     static void SetSelectedFolder(const std::string &folder) { m_SelectedFolder = folder; }

@@ -50,6 +50,12 @@ static void createFolderDialogOperation(FileDialogParams params)
     FileDialogs::SetDone(true);
 }
 
+static void openFileExplorerOperation(const std::string &path)
+{
+    LOG_CORE_TRACE("Opening file explorer");
+    tinyfd_selectFolderDialog("Open File Explorer", path.c_str());
+}
+
 void FileDialogs::OpenFile(std::string id, FileDialogParams params)
 {
     m_Id = id;
@@ -113,6 +119,11 @@ void FileDialogs::CreateFolder(std::string id, FileDialogParams params)
     Reset();
 
     m_Thread = std::thread(std::bind(createFolderDialogOperation, params));
+}
+
+void FileDialogs::OpenFileExplorer(const std::string &path)
+{
+    std::thread(std::bind(openFileExplorerOperation, path)).detach();
 }
 
 std::string Path::GetAbsolute(const std::string &path)
