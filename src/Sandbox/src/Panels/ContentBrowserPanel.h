@@ -31,9 +31,10 @@ class ContentBrowserPanel
 
   private:
     std::filesystem::path m_BaseDirectory;
-    std::filesystem::path m_CurrentDirectory;
+    std::filesystem::path m_CurrentDirectory, m_AssetCurrentDirectory;
 
     Texture2DRef m_DirectoryIcon, m_FileIcon;
+    std::map<std::string, AssetHandle> m_AssetHandles;
 
     enum class Mode
     {

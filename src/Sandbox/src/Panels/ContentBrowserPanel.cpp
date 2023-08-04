@@ -48,6 +48,7 @@ void ContentBrowserPanel::OnImGuiRender()
         {
             currentNode = m_NodeStack.back();
             m_NodeStack.pop_back();
+            m_AssetCurrentDirectory = m_AssetCurrentDirectory.parent_path();
         }
     }
 
@@ -95,8 +96,19 @@ void ContentBrowserPanel::OnImGuiRender()
                     opened = true;
                     // Push the current node onto the stack
                     m_NodeStack.push_back(currentNode);
+                    m_AssetCurrentDirectory /= std::filesystem::path(name);
                 }
             }
+
+            if (ImGui::BeginDragDropSource() && !isDirectory)
+            {
+                auto completePath = m_AssetCurrentDirectory / std::filesystem::path(name);
+                auto assetHandle = m_AssetHandles[completePath.string()].ToString();
+                ImGui::SetDragDropPayload("CONTENT_BROWSER_ITEM", assetHandle.c_str(),
+                                          (strlen(assetHandle.c_str()) + 1) * sizeof(char *));
+                ImGui::EndDragDropSource();
+            }
+
             ImGui::TextWrapped(name.c_str());
 
             if (opened) currentNode = &childNode;
@@ -164,6 +176,7 @@ void ContentBrowserPanel::RefreshAssetTree()
     const auto &assetRegistry = Project::GetActive()->GetEditorAssetManager()->GetAssetRegistry();
     for (const auto &[handle, metadata] : assetRegistry)
     {
+        m_AssetHandles[metadata.FilePath.string()] = handle;
         AddPathToTree(m_FileTree, metadata.FilePath);
     }
 }
