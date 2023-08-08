@@ -27,11 +27,17 @@ static AssetType GetAssetTypeFromExtension(const std::filesystem::path &path)
     std::string extension = path.extension().string();
     std::vector<std::string> textureExtensions = {".png", ".jpg", ".jpeg", ".bmp", ".tga"};
     std::vector<std::string> meshExtensions = {".obj", ".fbx", ".dae", ".gltf", ".glb"};
+    std::string sceneExtension = ".scene";
+    std::string materialExtension = ".material";
 
     if (IsInVector(textureExtensions, extension))
         return AssetType::Texture2D;
     else if (IsInVector(meshExtensions, extension))
         return AssetType::Mesh;
+    else if (extension == sceneExtension)
+        return AssetType::Scene;
+    else if (extension == materialExtension)
+        return AssetType::Material;
     else
         return AssetType::None;
 }
@@ -54,6 +60,7 @@ AssetHandle EditorAssetManager::ImportAsset(const std::filesystem::path &path)
     AssetMetadata metadata;
     metadata.FilePath = path;
     metadata.Type = Utils::GetAssetTypeFromExtension(path);
+
     AssetRef asset = AssetImporter::ImportAsset(handle, metadata);
     if (asset == nullptr) return 0;
     asset->Handle = handle;
@@ -154,5 +161,20 @@ AssetRef EditorAssetManager::GetAsset(AssetHandle handle)
     }
     // 3. return asset
     return asset;
+}
+
+AssetHandle EditorAssetManager::GetAssetHandleFromPath(const std::filesystem::path &path)
+{
+    for (auto &[handle, metadata] : m_AssetRegistry)
+    {
+        if (metadata.FilePath == path) return handle;
+    }
+    return 0;
+}
+
+void EditorAssetManager::UnloadAsset(AssetHandle handle)
+{
+    m_AssetRegistry.erase(handle);
+    SerializeAssetRegistry();
 }
 } // namespace Engine

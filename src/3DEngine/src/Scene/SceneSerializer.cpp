@@ -64,15 +64,15 @@ static void SerializeEntity(YAML::Emitter &out, Entity entity)
         out << YAML::EndMap; // CameraComponent
     }
 
-    if (entity.HasComponent<ModelComponent>())
+    if (entity.HasComponent<MeshComponent>())
     {
-        out << YAML::Key << "ModelComponent";
-        out << YAML::BeginMap; // ModelComponent
+        out << YAML::Key << "MeshComponent";
+        out << YAML::BeginMap; // MeshComponent
 
-        auto &modelComponent = entity.GetComponent<ModelComponent>();
-        out << YAML::Key << "ModelPath" << YAML::Value << modelComponent.Path;
+        auto &meshComponent = entity.GetComponent<MeshComponent>();
+        out << YAML::Key << "Handle" << YAML::Value << meshComponent.Handle;
 
-        out << YAML::EndMap; // ModelComponent
+        out << YAML::EndMap; // MeshComponent
     }
 
     if (entity.HasComponent<LuaScriptComponent>())
@@ -207,14 +207,12 @@ bool SceneSerializer::Deserialize(const std::string &filepath)
                 cc.Primary = cameraComponent["Primary"].as<bool>();
             }
 
-            auto modelComponent = entity["ModelComponent"];
+            auto modelComponent = entity["MeshComponent"];
             if (modelComponent)
             {
-                auto path = modelComponent["ModelPath"].as<std::string>();
-                auto &model = deserializedEntity.AddComponent<ModelComponent>();
-                model.Path = path;
-                model.EntityID = (int)deserializedEntity.GetEntityID();
-                model.Create();
+                auto handle = modelComponent["Handle"].as<uint64_t>();
+                auto &mesh = deserializedEntity.AddComponent<MeshComponent>();
+                mesh.Handle = handle;
             }
 
             auto luaScriptComponent = entity["LuaScriptComponent"];

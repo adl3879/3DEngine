@@ -20,7 +20,7 @@ std::shared_ptr<Project> Project::New(const std::filesystem::path &path)
     // create empty folders
     std::filesystem::create_directory(path / "Assets");
     std::filesystem::create_directory(path / "Assets/Textures");
-    std::filesystem::create_directory(path / "Assets/Models");
+    std::filesystem::create_directory(path / "Assets/Meshes");
     std::filesystem::create_directory(path / "Assets/Scripts");
     std::filesystem::create_directory(path / "Assets/Scenes");
     std::filesystem::create_directory(path / "Assets/Materials");

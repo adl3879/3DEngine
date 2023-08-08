@@ -4,6 +4,7 @@
 #include "SceneHierarchyPanel.h"
 #include "RenderSystem.h"
 #include "ContentBrowserPanel.h"
+#include "MaterialEditorPanel.h"
 #include "Project.h"
 
 #include <memory>
@@ -61,6 +62,7 @@ class AppLayer : public Layer
 
     // panels
     SceneHierarchyPanel m_SceneHierarchyPanel;
+    MaterialEditorPanel m_MaterialEditorPanel;
     std::shared_ptr<ContentBrowserPanel> m_ContentBrowserPanel = nullptr;
 
     RenderSystemPtr m_RenderSystem;

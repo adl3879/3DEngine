@@ -1,0 +1,11 @@
+Scene: Untitled
+Entities:
+  - Entity: 8308098728332065104
+    TagComponent:
+      Tag: " Mesh"
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    MeshComponent:
+      Handle: 11331964229842197674

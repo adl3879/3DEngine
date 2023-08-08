@@ -5,6 +5,8 @@
 #include <memory>
 #include <array>
 #include <string_view>
+#include <any>
+#include <filesystem>
 
 #include "Texture.h"
 #include "Asset.h"
@@ -13,25 +15,26 @@ namespace Engine
 {
 struct MaterialData
 {
-    glm::vec3 Albedo;
-    float AO;
-    glm::vec3 Normal;
-    float Metallic;
-    float Roughness;
+    glm::vec3 Albedo = glm::vec3(0.0f);
+    float AO = 0.0f;
+    glm::vec3 Normal = glm::vec3(0.0f);
+    float Metallic = 0.5f;
+    float Roughness = 0.5f;
+    bool UseNormalMap = true;
 };
 
-class Material
+enum ParameterType
+{
+    ALBEDO = 0,
+    AO,
+    METALLIC,
+    NORMAL,
+    ROUGHNESS,
+};
+
+class Material : public Asset
 {
   public:
-    enum ParameterType
-    {
-        ALBEDO = 0,
-        AO,
-        METALLIC,
-        NORMAL,
-        ROUGHNESS,
-    };
-
     Material();
 
     void Init(const std::string &name, AssetHandle albedo, AssetHandle metallic, AssetHandle normal,
@@ -53,15 +56,30 @@ class Material
     auto GetAlphaValue() const noexcept { return m_Alpha; }
     auto GetAlphaMask() const noexcept { return m_AlphaMaskTexture; }
 
+    virtual AssetType GetType() const override { return AssetType::Material; }
+
+  public:
+    MaterialData GetMaterialData() const { return m_MaterialParam; }
+    std::array<Texture2DRef, 5> GetTextures() const { return m_Textures; }
+    std::array<AssetHandle, 5> GetTextureHandles() const { return m_TextureHandles; }
+
+  public:
+    void SetTexture(ParameterType type, AssetHandle textureHandle);
+    void SetMaterialParam(ParameterType type, std::any param);
+
+  public:
     std::string_view Name;
+    MaterialData m_MaterialParam;
 
   private:
     std::array<unsigned int, 5> m_MaterialTextures;
     std::array<Texture2DRef, 5> m_Textures;
-    MaterialData m_Material;
+    std::array<AssetHandle, 5> m_TextureHandles;
 
     float m_Alpha;
     unsigned int m_AlphaMaskTexture;
+
+    std::filesystem::path m_MaterialPath;
 };
 
 using MaterialRef = std::shared_ptr<Material>;

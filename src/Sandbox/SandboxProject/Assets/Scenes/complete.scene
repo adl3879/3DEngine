@@ -1,0 +1,29 @@
+Scene: Untitled
+Entities:
+  - Entity: 15063356206115472074
+    TagComponent:
+      Tag: " Mesh"
+    TransformComponent:
+      Translation: [0.955496252, -2.26990223, -0.363019943]
+      Rotation: [0, 0, 0]
+      Scale: [11.3144035, 0.273848116, 11.0665331]
+    MeshComponent:
+      Handle: 7965377243735506135
+  - Entity: 7278886629780992797
+    TagComponent:
+      Tag: " Mesh"
+    TransformComponent:
+      Translation: [2.05655074, 0.0293487348, -0.866106987]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    MeshComponent:
+      Handle: 7965377243735506135
+  - Entity: 5491414618758079770
+    TagComponent:
+      Tag: " Mesh"
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    MeshComponent:
+      Handle: 3386080780721564564

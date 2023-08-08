@@ -47,16 +47,12 @@ void Mesh::SetupMesh(const struct VertexSOA &vertices, const std::vector<uint32_
 
     VAO.AttachBuffer(BufferType::ARRAY, vertices.Positions.size() * sizeof(glm::vec3), DrawMode::DYNAMIC, nullptr);
     VAO.EnableAttribute(0, 3, 0, nullptr);
-
     VAO.AttachBuffer(BufferType::ARRAY, vertices.Normals.size() * sizeof(glm::vec3), DrawMode::DYNAMIC, nullptr);
     VAO.EnableAttribute(1, 3, 0, nullptr);
-
     VAO.AttachBuffer(BufferType::ARRAY, vertices.Colors.size() * sizeof(glm::vec3), DrawMode::DYNAMIC, nullptr);
     VAO.EnableAttribute(2, 3, 0, nullptr);
-
     VAO.AttachBuffer(BufferType::ARRAY, vertices.TexCoords.size() * sizeof(glm::vec2), DrawMode::DYNAMIC, nullptr);
     VAO.EnableAttribute(3, 2, 0, nullptr);
-
     VAO.AttachBuffer(BufferType::ARRAY, vertices.EntityIDs.size() * sizeof(float), DrawMode::DYNAMIC, nullptr);
     VAO.EnableAttribute(4, 1, 0, nullptr);
 

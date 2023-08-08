@@ -7,6 +7,7 @@
 #include <ImGuizmo.h>
 #include "Math.h"
 #include "ResourceManager.h"
+#include "AssetManager.h"
 
 namespace Engine
 {
@@ -140,6 +141,7 @@ void AppLayer::OnImGuiRender()
     FileOperations();
 
     m_SceneHierarchyPanel.OnImGuiRender();
+    m_MaterialEditorPanel.OnImGuiRender();
     m_ContentBrowserPanel->OnImGuiRender();
 
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{0, 0});
@@ -160,14 +162,10 @@ void AppLayer::OnImGuiRender()
     {
         if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
         {
-            const char *path = (const char *)payload->Data;
-            if (std::string(path).ends_with(".scene"))
-            {
-                ResetScene(path);
-                m_Scene->SetSceneFilePath(path);
-                SceneSerializer serializer(m_Scene);
-                serializer.Deserialize(path);
-            }
+            const char *handle = (const char *)payload->Data;
+            ResetScene("");
+            m_Scene = AssetManager::GetAsset<Scene>(std::stoull(handle));
+            m_SceneHierarchyPanel.SetContext(m_Scene);
         }
         ImGui::EndDragDropTarget();
     }
@@ -331,9 +329,8 @@ void AppLayer::ResetScene(const std::string &path)
 {
     Light::Reset();
     m_EditorCamera = EditorCamera(-45.0f, 1.778f, 0.1f, 100.0f);
-    m_Scene = std::make_unique<Scene>();
-    m_Scene->SetSceneFilePath(path);
-    m_SceneHierarchyPanel.SetContext(m_Scene);
+    // m_Scene = std::make_unique<Scene>();
+    // m_Scene->SetSceneFilePath(path);
 }
 
 void AppLayer::OnScenePlay() { m_SceneState = SceneState::Play; }

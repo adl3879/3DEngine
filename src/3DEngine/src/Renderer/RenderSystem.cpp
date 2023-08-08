@@ -39,16 +39,6 @@ void RenderSystem::Init()
     m_SkyLight = std::make_shared<SkyLight>();
     m_SkyLight->Init("/res/textures/hdr/skyLight.hdr", 2048);
 
-    WindowState windowState = InputManager::Instance().GetWindowState();
-    auto fbSpec = FramebufferSpecification{};
-    fbSpec.Attachments = {FramebufferTextureFormat::RGBA8};
-    fbSpec.Width = windowState.Width;
-    fbSpec.Height = windowState.Height;
-    m_FBO = std::make_shared<Engine::Framebuffer>(fbSpec);
-
-    m_Outline = std::make_shared<OutlineSystem>();
-    m_Outline->Init();
-
     glEnable(GL_DEBUG_OUTPUT);
     glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
     SetupDefaultState();
@@ -138,6 +128,7 @@ void RenderSystem::RenderModelsWithTextures(Camera &camera, Scene &scene)
         auto [model, transform, visibility] = view.get<MeshComponent, TransformComponent, VisibilityComponent>(entity);
         if (!visibility.IsVisible || model.Handle == 0) continue;
         const auto &entityModel = AssetManager::GetAsset<Model>(model.Handle);
+        auto material = AssetManager::GetAsset<Material>(model.MaterialHandle);
 
         for (auto &mesh : entityModel->GetMeshes())
         {
@@ -157,19 +148,20 @@ void RenderSystem::RenderModelsWithTextures(Camera &camera, Scene &scene)
             mesh.VAO.SetBufferSubData(4, BufferType::ARRAY, 0, vertices.EntityIDs.size() * sizeof(float), &vertices.EntityIDs[0]);
             // clang-format on
 
-            const auto mat = mesh.Material;
-            mat->BindMaterialTextures(3);
-
             modelShader->SetUniformMatrix4fv("model", transform.GetTransform());
             modelShader->SetUniformMatrix3fv("normalMatrix",
                                              glm::transpose(glm::inverse(glm::mat3(transform.GetTransform()))));
             modelShader->SetUniformMatrix4fv("projectionViewMatrix", camera.GetProjectionViewMatrix());
             modelShader->SetUniform3f("cameraPosition", camera.GetPosition());
 
-            modelShader->SetUniform3f("albedoParam", {0.0, 0.0, 0.0});
-            modelShader->SetUniform1f("metallicParam", 0.5f);
-            modelShader->SetUniform1f("aoParam", 1.0f);
-            modelShader->SetUniform1f("roughnessParam", 0.5f);
+            const auto &mat = material == nullptr ? mesh.Material : material;
+
+            mat->BindMaterialTextures(3);
+
+            modelShader->SetUniform3f("albedoParam", mat->GetMaterialData().Albedo);
+            modelShader->SetUniform1f("metallicParam", mat->GetMaterialData().Metallic);
+            modelShader->SetUniform1f("aoParam", 1.0);
+            modelShader->SetUniform1f("roughnessParam", mat->GetMaterialData().Roughness);
 
             modelShader->SetUniform1i("numOfPointLights", 4);
 
@@ -185,28 +177,7 @@ void RenderSystem::RenderModelsWithTextures(Camera &camera, Scene &scene)
     glBindSampler(m_SamplerPBRTextures, 0);
 }
 
-void RenderSystem::RenderModelsWithNoTextures(Camera &camera, Scene &scene) const
-{
-    auto modelShader = m_Shaders.at("modelShader");
-    auto view = scene.GetRegistry().view<ModelComponent, TransformComponent>();
-    for (auto entity : view)
-    {
-        auto [model, transform] = view.get<ModelComponent, TransformComponent>(entity);
-        if (model.Model == nullptr) continue;
-
-        for (auto mesh : model.Model->GetMeshes())
-        {
-            modelShader->Use();
-            mesh.VAO.Bind();
-
-            modelShader->SetUniformMatrix4fv("model", transform.GetTransform());
-            modelShader->SetUniformMatrix4fv("projectionViewMatrix", camera.GetProjectionViewMatrix());
-
-            glDrawElements(GL_TRIANGLES, mesh.IndexCount, GL_UNSIGNED_INT, nullptr);
-            mesh.VAO.Unbind();
-        }
-    }
-}
+void RenderSystem::RenderModelsWithNoTextures(Camera &camera, Scene &scene) const {}
 
 void RenderSystem::RenderQuad(Camera &camera)
 {

@@ -31,6 +31,7 @@ class Model : public Asset
     void Delete();
 
     auto GetMeshes() const noexcept { return m_Meshes; }
+    auto GetDefaultMaterialName() const { return m_DefaultMaterial; }
 
     virtual AssetType GetType() const override { return AssetType::Mesh; }
 
@@ -46,7 +47,7 @@ class Model : public Asset
 
   private:
     std::string m_Path;
-
+    const char *m_DefaultMaterial;
     size_t m_NumOfMaterials;
 };
 

@@ -5,6 +5,7 @@
 #include <glm/glm.hpp>
 
 #include "Light.h"
+#include "IconsFontAwesome5.h"
 
 namespace Engine
 {
@@ -147,7 +148,7 @@ void SceneHierarchyPanel::DrawComponents(Entity entity)
         {
             ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.05f, 0.05f, 0.05f, 0.54f));
             ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.05f, 0.05f, 0.05f, 0.54f));
-            ImGui::Button("Drop Mesh", ImVec2(430.0f, 50.0f));
+            ImGui::Button("Mesh", ImVec2(430.0f, 50.0f));
             ImGui::PopStyleColor(2);
             if (ImGui::BeginDragDropTarget())
             {
@@ -159,7 +160,32 @@ void SceneHierarchyPanel::DrawComponents(Entity entity)
                 }
                 ImGui::EndDragDropTarget();
             }
+            if (ImGui::TreeNodeEx((void *)typeid(MeshComponent).hash_code(), ImGuiTreeNodeFlags_DefaultOpen,
+                                  "Material"))
+            {
+                ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.05f, 0.05f, 0.05f, 0.54f));
+                ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.05f, 0.05f, 0.05f, 0.54f));
+                auto mesh = AssetManager::GetAsset<Model>(entityComponent.Handle);
+                auto material = AssetManager::GetAsset<Material>(entityComponent.MaterialHandle);
+                std::string materialName = material == nullptr ? "Unknown" : std::string(material->Name);
+                if (mesh != nullptr)
+                    ImGui::Button(mesh->GetDefaultMaterialName(), ImVec2(430.0f, 50.0f));
+                else
+                    ImGui::Button(materialName.c_str(), ImVec2(400.0f, 50.0f));
 
+                ImGui::PopStyleColor(2);
+                if (ImGui::BeginDragDropTarget())
+                {
+                    if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
+                    {
+                        const char *handle = (const char *)payload->Data;
+                        // convert handle to uint64_t(AssetHandle)
+                        entityComponent.MaterialHandle = std::stoull(handle);
+                    }
+                    ImGui::EndDragDropTarget();
+                }
+                ImGui::TreePop();
+            }
             ImGui::TreePop();
         }
 
@@ -251,11 +277,11 @@ void SceneHierarchyPanel::OnImGuiRender()
     // Right-click on blank space
     if (ImGui::BeginPopupContextWindow())
     {
-        if (ImGui::MenuItem("Create Empty Entity")) m_Context->CreateEntity("Empty Entity");
+        if (ImGui::MenuItem(ICON_FA_CUBE "   Create Empty Entity")) m_Context->CreateEntity("Empty Entity");
 
-        if (ImGui::BeginMenu("Add Entity"))
+        if (ImGui::BeginMenu(ICON_FA_PLUS "   Add Entity"))
         {
-            if (ImGui::MenuItem("Camera"))
+            if (ImGui::MenuItem(ICON_FA_VIDEO "  Camera"))
             {
                 auto entity = m_Context->CreateEntity("Camera");
 
@@ -269,7 +295,7 @@ void SceneHierarchyPanel::OnImGuiRender()
             auto dLight = m_Context->GetEntity("Directional Light");
             if (dLight == nullptr)
             {
-                if (ImGui::MenuItem("Directional Light"))
+                if (ImGui::MenuItem(ICON_FA_SUN "  Directional Light"))
                 {
                     auto entity = m_Context->CreateEntity("Directional Light");
 
@@ -277,7 +303,7 @@ void SceneHierarchyPanel::OnImGuiRender()
                     m_SelectionContext = entity;
                 }
             }
-            if (ImGui::MenuItem("Point Light"))
+            if (ImGui::MenuItem(ICON_FA_LIGHTBULB "  Point Light"))
             {
                 auto num = Light::GetNumPointLights() + 1;
                 auto entity = m_Context->CreateEntity("Point Light " + std::to_string(num));
@@ -285,7 +311,7 @@ void SceneHierarchyPanel::OnImGuiRender()
                 entity.AddComponent<PointLightComponent>();
                 m_SelectionContext = entity;
             }
-            if (ImGui::MenuItem("Spot Light"))
+            if (ImGui::MenuItem(ICON_FA_LIGHTBULB "  Spot Light"))
             {
                 auto num = Light::GetNumSpotLights() + 1;
                 auto entity = m_Context->CreateEntity("Spot Light " + std::to_string(num));
@@ -296,9 +322,9 @@ void SceneHierarchyPanel::OnImGuiRender()
             ImGui::Spacing();
             ImGui::Separator();
 
-            if (ImGui::MenuItem("Mesh"))
+            if (ImGui::MenuItem(ICON_FA_CUBE "  Mesh"))
             {
-                auto entity = m_Context->CreateEntity("Mesh");
+                auto entity = m_Context->CreateEntity(" Mesh");
 
                 entity.AddComponent<MeshComponent>();
                 m_SelectionContext = entity;

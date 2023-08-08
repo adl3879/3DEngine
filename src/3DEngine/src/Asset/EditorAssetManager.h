@@ -14,6 +14,8 @@ class EditorAssetManager : public AssetManagerBase
 {
   public:
     virtual AssetRef GetAsset(AssetHandle handle) override;
+    virtual AssetHandle GetAssetHandleFromPath(const std::filesystem::path &path) override;
+    virtual void UnloadAsset(AssetHandle handle) override;
 
     virtual bool IsAssetHandleValid(AssetHandle handle) const override;
     virtual bool IsAssetLoaded(AssetHandle handle) const override;

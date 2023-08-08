@@ -7,6 +7,9 @@
 #include <ImGuizmo.h>
 
 #include "Application.h"
+#include "IconsFontAwesome5.h"
+
+#define FONT_PATH "/home/adeleye/Source/3DEngine/src/Sandbox/Resources/fonts/"
 
 namespace Engine
 {
@@ -28,10 +31,18 @@ void ImGuiLayer::OnAttach()
     io.DisplaySize = ImVec2(windowState.Width, windowState.Height);
 
     float fontSize = 24.0f;
-    io.Fonts->AddFontFromFileTTF(
-        "/home/adeleye/Source/3DEngine/src/Sandbox/Resources/fonts/IBM_Plex_Sans/IBMPlexSans-Bold.ttf", fontSize);
-    io.FontDefault = io.Fonts->AddFontFromFileTTF(
-        "/home/adeleye/Source/3DEngine/src/Sandbox/Resources/fonts/IBM_Plex_Sans/IBMPlexSans-Regular.ttf", fontSize);
+    io.Fonts->AddFontFromFileTTF(FONT_PATH "IBM_Plex_Sans/IBMPlexSans-Bold.ttf", fontSize);
+    io.FontDefault = io.Fonts->AddFontFromFileTTF(FONT_PATH "IBM_Plex_Sans/IBMPlexSans-Regular.ttf", fontSize);
+
+    float iconFontSize = fontSize * 2.0f / 3.0f;
+    // merge in icons from Font Awesome
+    static const ImWchar icons_ranges[] = {ICON_MIN_FA, ICON_MAX_16_FA, 0};
+    ImFontConfig icons_config;
+    icons_config.MergeMode = true;
+    icons_config.PixelSnapH = true;
+    icons_config.GlyphMinAdvanceX = iconFontSize;
+    io.Fonts->AddFontFromFileTTF(FONT_PATH FONT_ICON_FILE_NAME_FAS, iconFontSize, &icons_config, icons_ranges);
+    // use FONT_ICON_FILE_NAME_FAR if you want regular instead of solid
 
     ImGui::StyleColorsDark();
     // ImGui::StyleColorsClassic();

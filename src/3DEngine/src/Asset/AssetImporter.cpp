@@ -6,6 +6,8 @@
 #include "Log.h"
 #include "TextureImporter.h"
 #include "MeshImporter.h"
+#include "SceneImporter.h"
+#include "MaterialImporter.h"
 
 namespace Engine
 {
@@ -14,6 +16,8 @@ using AssetImportFn = std::function<AssetRef(AssetHandle, const AssetMetadata &)
 static std::unordered_map<AssetType, AssetImportFn> s_AssetImportFns = {
     {AssetType::Texture2D, TextureImporter::ImportTexture2D},
     {AssetType::Mesh, MeshImporter::ImportMesh},
+    {AssetType::Scene, SceneImporter::ImportScene},
+    {AssetType::Material, MaterialImporter::ImportMaterial},
 };
 
 AssetRef AssetImporter::ImportAsset(AssetHandle handle, const AssetMetadata &metadata)

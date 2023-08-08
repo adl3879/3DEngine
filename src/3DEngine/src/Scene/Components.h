@@ -52,26 +52,10 @@ struct TransformComponent
     }
 };
 
-struct ModelComponent
-{
-    std::string Path = "Null";
-    std::string Name = std::string();
-    int EntityID;
-    ModelRef Model = nullptr;
-
-    ModelComponent() = default;
-    ModelComponent(const ModelComponent &) = default;
-
-    void Create()
-    {
-        // Model = std::make_shared<Engine::Model>(Path);
-        // LOG_CORE_INFO("Model {0} at {1} Loaded!", Name, Path);
-    }
-};
-
 struct MeshComponent
 {
     AssetHandle Handle = 0;
+    AssetHandle MaterialHandle = 0;
 
     MeshComponent() = default;
     MeshComponent(const MeshComponent &) = default;

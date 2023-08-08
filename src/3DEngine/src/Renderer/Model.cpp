@@ -156,21 +156,30 @@ Mesh Model::ProcessMesh(aiMesh *mesh, const aiScene *scene, const bool loadMater
 
             aiString name;
             mat->Get(AI_MATKEY_NAME, name);
+            m_DefaultMaterial = name.C_Str();
 
             aiString albedoPath, metallicPath, normalPath, roughnessPath, alphaMaskPath;
+            std::array<aiString, 5> materialPaths;
 
-            mat->GetTexture(AI_MATKEY_BASE_COLOR_TEXTURE, &albedoPath);
-            mat->GetTexture(AI_MATKEY_METALLIC_TEXTURE, &metallicPath);
-            mat->GetTexture(AI_MATKEY_ROUGHNESS_TEXTURE, &roughnessPath);
+            mat->GetTexture(AI_MATKEY_BASE_COLOR_TEXTURE, &materialPaths[0]);
+            mat->GetTexture(AI_MATKEY_METALLIC_TEXTURE, &materialPaths[1]);
+            mat->GetTexture(AI_MATKEY_ROUGHNESS_TEXTURE, &materialPaths[3]);
 
-            auto albedoHandle = AssetManager::ImportAsset(GetRelativeTexturePath(albedoPath));
-            auto metallicHandle = AssetManager::ImportAsset(GetRelativeTexturePath(metallicPath));
-            auto normalHandle = AssetManager::ImportAsset(GetRelativeTexturePath(normalPath));
-            auto roughnessHandle = AssetManager::ImportAsset(GetRelativeTexturePath(roughnessPath));
-            auto alphaMaskHandle = AssetManager::ImportAsset(GetRelativeTexturePath(alphaMaskPath));
+            AssetHandle materialHandles[5];
+
+            // TODO: This is a bit of a hack, make it more performant
+            for (auto i = 0; i < materialPaths.size(); ++i)
+            {
+                auto handle = AssetManager::GetAssetHandleFromPath(GetRelativeTexturePath(materialPaths[i]));
+                if (handle > 0)
+                    materialHandles[i] = handle;
+                else
+                    materialHandles[i] = AssetManager::ImportAsset(GetRelativeTexturePath(materialPaths[i]));
+            }
 
             MaterialRef material = std::make_shared<Material>();
-            material->Init(name.C_Str(), albedoHandle, metallicHandle, normalHandle, roughnessHandle, alphaMaskHandle);
+            material->Init(name.C_Str(), materialHandles[0], materialHandles[1], materialHandles[2], materialHandles[3],
+                           materialHandles[4]);
 
             ++m_NumOfMaterials;
             return Mesh(vertexSOA, indices, material);

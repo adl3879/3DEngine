@@ -7,13 +7,14 @@
 #include "PerspectiveCamera.h"
 #include "EditorCamera.h"
 #include "UUID.h"
+#include "Asset.h"
 
 namespace Engine
 {
 class Entity;
 class Camera;
 
-class Scene
+class Scene : public Asset
 {
   public:
     Scene();
@@ -37,6 +38,9 @@ class Scene
 
     const entt::registry &GetRegistry() { return m_Registry; }
 
+  public:
+    virtual AssetType GetType() const override { return AssetType::Scene; }
+
   private:
     entt::registry m_Registry;
     entt::entity m_SelectedEntity = entt::null;
@@ -49,4 +53,6 @@ class Scene
     std::shared_ptr<PerspectiveCamera> m_MainCamera = nullptr;
     std::string m_SceneFilePath = std::string();
 };
+
+using SceneRef = std::shared_ptr<Scene>;
 } // namespace Engine

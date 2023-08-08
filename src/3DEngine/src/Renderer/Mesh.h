@@ -6,6 +6,7 @@
 #include "Vertex.h"
 #include "VertexArray.h"
 #include "Material.h"
+#include "Asset.h"
 
 namespace Engine
 {
@@ -16,8 +17,9 @@ struct Mesh
     Mesh(const struct VertexSOA &vertices, const std::vector<uint32_t> &indices, const MaterialRef &material = nullptr);
 
     void Clear();
-
     auto GetTriangleCount() const { return IndexCount / 3; }
+
+    void SetMaterial(AssetHandle handle);
 
     const std::size_t IndexCount;
     const std::size_t VertexCount;
@@ -26,7 +28,7 @@ struct Mesh
     struct VertexSOA VertexSOA;
     std::vector<uint32_t> Indices;
     VertexArray VAO;
-    MaterialRef Material;
+    MaterialRef Material; // default material
 
     unsigned int VBOs[5];
 
