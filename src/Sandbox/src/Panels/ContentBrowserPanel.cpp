@@ -79,7 +79,7 @@ void ContentBrowserPanel::OnImGuiRender()
     if (m_CurrentDirectory != std::filesystem::path(m_BaseDirectory) && m_Mode == Mode::FileSystem)
     {
         ImGui::SameLine();
-        if (ImGui::Button("<-"))
+        if (ImGui::Button(ICON_FA_CHEVRON_LEFT "   "))
         {
             m_CurrentDirectory = m_CurrentDirectory.parent_path();
         }
@@ -88,7 +88,7 @@ void ContentBrowserPanel::OnImGuiRender()
     if (!m_NodeStack.empty() && m_Mode == Mode::Asset)
     {
         ImGui::SameLine();
-        if (ImGui::Button("<-"))
+        if (ImGui::Button(ICON_FA_CHEVRON_LEFT "   "))
         {
             currentNode = m_NodeStack.back();
             m_NodeStack.pop_back();

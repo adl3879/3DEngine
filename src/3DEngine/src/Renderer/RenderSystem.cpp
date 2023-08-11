@@ -156,7 +156,8 @@ void RenderSystem::RenderModelsWithTextures(Camera &camera, Scene &scene)
 
             const auto &mat = material == nullptr ? mesh.Material : material;
 
-            mat->BindMaterialTextures(3);
+            // mat->BindMaterialTextures(3);
+            // if (material == nullptr) mesh.Material->UnbindMaterialTextures();
 
             modelShader->SetUniform3f("albedoParam", mat->GetMaterialData().Albedo);
             modelShader->SetUniform1f("metallicParam", mat->GetMaterialData().Metallic);

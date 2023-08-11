@@ -41,6 +41,7 @@ class Texture : public Asset
     virtual void SetData(Buffer data) = 0;
 
     virtual void Bind(uint32_t slot = 0) const = 0;
+    virtual void Unbind() const = 0;
 };
 
 class Texture2D : public Texture
@@ -51,6 +52,7 @@ class Texture2D : public Texture
 
     virtual void SetData(Buffer data) override;
     virtual void Bind(uint32_t slot = 0) const override;
+    virtual void Unbind() const override;
 
     virtual uint32_t GetWidth() const override { return m_Specification.Width; }
     virtual uint32_t GetHeight() const override { return m_Specification.Height; }

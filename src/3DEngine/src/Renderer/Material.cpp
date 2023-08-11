@@ -75,6 +75,14 @@ void Material::BindMaterialTextures(uint32_t startIndex) const noexcept
     }
 }
 
+void Material::UnbindMaterialTextures() const noexcept
+{
+    for (const auto &texture : m_Textures)
+    {
+        if (texture != nullptr) texture->Unbind();
+    }
+}
+
 void Material::SetTexture(ParameterType type, AssetHandle textureHandle)
 {
     auto texture = AssetManager::GetAsset<Texture2D>(textureHandle);
