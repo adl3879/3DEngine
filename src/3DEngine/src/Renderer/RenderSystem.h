@@ -41,8 +41,6 @@ class RenderSystem
     unsigned int m_UBOMatrices = 0;
     unsigned int m_SamplerPBRTextures = 0;
 
-    SkyLightPtr m_SkyLight = nullptr;
-
     VertexArray m_QuadVAO;
     VertexArray m_LineVAO;
     VertexArray m_BoundingBoxVAO;

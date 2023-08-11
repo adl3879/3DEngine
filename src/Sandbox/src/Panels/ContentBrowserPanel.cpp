@@ -63,16 +63,18 @@ void ContentBrowserPanel::OnImGuiRender()
     float cellSize = thumbnailSize + padding;
 
     float panelWidth = ImGui::GetContentRegionAvail().x;
+    float dirTreeWidth = panelWidth * 0.15;
     int columnCount = (int)(panelWidth / cellSize);
     if (columnCount < 1) columnCount = 1;
 
-    ImGui::BeginChild("Directory Tree", ImVec2(panelWidth * 0.15f, 0), true, ImGuiWindowFlags_HorizontalScrollbar);
+    ImGui::BeginChild("Directory Tree", ImVec2(dirTreeWidth, 0), true, ImGuiWindowFlags_HorizontalScrollbar);
     DisplayFileHierarchy(m_BaseDirectory);
     ImGui::EndChild();
 
     ImGui::SameLine();
 
-    ImGui::BeginChild("Content Region", ImVec2(panelWidth, 0), false, ImGuiWindowFlags_HorizontalScrollbar);
+    ImGui::BeginChild("Content Region", ImVec2(panelWidth - dirTreeWidth, 0), false,
+                      ImGuiWindowFlags_HorizontalScrollbar);
     const char *label = m_Mode == Mode::Asset ? "Asset" : "File";
     if (ImGui::Button(label)) m_Mode = m_Mode == Mode::Asset ? Mode::FileSystem : Mode::Asset;
 

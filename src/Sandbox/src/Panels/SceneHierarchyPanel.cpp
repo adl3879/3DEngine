@@ -5,7 +5,9 @@
 #include <glm/glm.hpp>
 
 #include "Light.h"
-#include "IconsFontAwesome5.h"
+#include "MaterialEditorPanel.h"
+
+#include <IconsFontAwesome5.h>
 
 namespace Engine
 {
@@ -17,10 +19,14 @@ SceneHierarchyPanel::SceneHierarchyPanel(const std::shared_ptr<Scene> &context)
 
 void SceneHierarchyPanel::DrawEntityNode(Entity entity)
 {
-    auto &tag = entity.GetComponent<TagComponent>().Tag;
+    const auto &tag = entity.GetComponent<TagComponent>().Tag;
 
     auto flags = ((m_SelectionContext == entity) ? ImGuiTreeNodeFlags_Selected : 0) | ImGuiTreeNodeFlags_OpenOnArrow;
-    bool opened = ImGui::TreeNodeEx((void *)(uint64_t)(uint32_t)entity, flags, "%s", tag.c_str());
+    if (ImGui::TreeNodeEx((void *)(uint64_t)(uint32_t)entity, flags, "%s", tag.c_str()))
+    {
+        ImGui::TreePop();
+    };
+    // ImGui::Selectable(tag.c_str(), m_SelectionContext == entity);
     if (ImGui::IsItemClicked()) m_SelectionContext = entity;
 
     bool entityDeleted = false;
@@ -29,8 +35,6 @@ void SceneHierarchyPanel::DrawEntityNode(Entity entity)
         if (ImGui::MenuItem("Delete Entity")) entityDeleted = true;
         ImGui::EndPopup();
     }
-
-    if (opened) ImGui::TreePop();
 
     if (entityDeleted)
     {
@@ -148,7 +152,7 @@ void SceneHierarchyPanel::DrawComponents(Entity entity)
         {
             ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.05f, 0.05f, 0.05f, 0.54f));
             ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.05f, 0.05f, 0.05f, 0.54f));
-            ImGui::Button("Mesh", ImVec2(430.0f, 50.0f));
+            ImGui::Button("Mesh", ImVec2(430.0f, 30.0f));
             ImGui::PopStyleColor(2);
             if (ImGui::BeginDragDropTarget())
             {
@@ -165,31 +169,69 @@ void SceneHierarchyPanel::DrawComponents(Entity entity)
             {
                 ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.05f, 0.05f, 0.05f, 0.54f));
                 ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.05f, 0.05f, 0.05f, 0.54f));
-                auto mesh = AssetManager::GetAsset<Model>(entityComponent.Handle);
-                auto material = AssetManager::GetAsset<Material>(entityComponent.MaterialHandle);
-                std::string materialName = material == nullptr ? "Unknown" : std::string(material->Name);
-                if (mesh != nullptr)
-                    ImGui::Button(mesh->GetDefaultMaterialName(), ImVec2(430.0f, 50.0f));
-                else
-                    ImGui::Button(materialName.c_str(), ImVec2(400.0f, 50.0f));
+                const auto &model = AssetManager::GetAsset<Model>(entityComponent.Handle);
+                const auto &material = AssetManager::GetAsset<Material>(entityComponent.MaterialHandle);
+                if (model != nullptr)
+                {
+                    for (const auto &mesh : model->GetMeshes())
+                    {
+                        bool openModal = false;
+                        if (ImGui::Button(mesh.Material->Name.c_str(), ImVec2(400.0f, 30.0f))) openModal = true;
+
+                        if (openModal) ImGui::OpenPopup("material_popup");
+
+                        if (ImGui::BeginPopup("material_popup"))
+                        {
+                            if (ImGui::MenuItem(ICON_FA_TRASH_RESTORE "   Remove")) entityComponent.MaterialHandle = 0;
+                            if (ImGui::MenuItem(ICON_FA_EDIT "   Open Material Editor"))
+                                MaterialEditorPanel::OpenMaterialEditor(entityComponent.MaterialHandle);
+                            ImGui::EndPopup();
+                        }
+
+                        if (ImGui::BeginDragDropTarget())
+                        {
+                            if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
+                            {
+                                const char *handle = (const char *)payload->Data;
+                                // convert handle to uint64_t(AssetHandle)
+                                entityComponent.MaterialHandle = std::stoull(handle);
+                            }
+                            ImGui::EndDragDropTarget();
+                        }
+                    }
+                }
 
                 ImGui::PopStyleColor(2);
-                if (ImGui::BeginDragDropTarget())
-                {
-                    if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
-                    {
-                        const char *handle = (const char *)payload->Data;
-                        // convert handle to uint64_t(AssetHandle)
-                        entityComponent.MaterialHandle = std::stoull(handle);
-                    }
-                    ImGui::EndDragDropTarget();
-                }
                 ImGui::TreePop();
             }
             ImGui::TreePop();
         }
 
         if (removeComponent) entity.RemoveComponent<MeshComponent>();
+    }
+
+    if (entity.HasComponent<SkyLightComponent>())
+    {
+        if (ImGui::TreeNodeEx((void *)typeid(SkyLightComponent).hash_code(), ImGuiTreeNodeFlags_DefaultOpen,
+                              "SkyLight"))
+        {
+            auto &component = entity.GetComponent<SkyLightComponent>();
+            ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.05f, 0.05f, 0.05f, 0.54f));
+            ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.05f, 0.05f, 0.05f, 0.54f));
+            ImGui::Button("Sky Light", ImVec2(430.0f, 30.0f));
+            ImGui::PopStyleColor(2);
+            if (ImGui::BeginDragDropTarget())
+            {
+                if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
+                {
+                    const char *handleStr = (const char *)payload->Data;
+                    AssetHandle handle = std::stoull(handleStr);
+                    component.Use(handle, 2048);
+                }
+                ImGui::EndDragDropTarget();
+            }
+            ImGui::TreePop();
+        }
     }
 
     if (entity.HasComponent<DirectionalLightComponent>())
@@ -284,11 +326,19 @@ void SceneHierarchyPanel::OnImGuiRender()
             if (ImGui::MenuItem(ICON_FA_VIDEO "  Camera"))
             {
                 auto entity = m_Context->CreateEntity("Camera");
-
                 entity.AddComponent<CameraComponent>();
                 m_SelectionContext = entity;
             }
             ImGui::Spacing();
+            ImGui::Separator();
+
+            if (ImGui::MenuItem(ICON_FA_CLOUD_MOON "  Sky Light"))
+            {
+                auto entity = m_Context->CreateEntity("Sky Light");
+                entity.AddComponent<SkyLightComponent>();
+                entity.RemoveComponent<TransformComponent>();
+                m_SelectionContext = entity;
+            }
             ImGui::Separator();
 
             // check if scene does not contain directional light entity
@@ -335,6 +385,7 @@ void SceneHierarchyPanel::OnImGuiRender()
         ImGui::EndPopup();
     }
 
+    // Add padding around the list
     m_Context->m_Registry.each(
         [this](auto entityId)
         {

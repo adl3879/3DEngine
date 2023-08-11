@@ -20,7 +20,6 @@ struct MaterialData
     glm::vec3 Normal = glm::vec3(0.0f);
     float Metallic = 0.5f;
     float Roughness = 0.5f;
-    bool UseNormalMap = true;
 };
 
 enum ParameterType
@@ -38,7 +37,7 @@ class Material : public Asset
     Material();
 
     void Init(const std::string &name, AssetHandle albedo, AssetHandle metallic, AssetHandle normal,
-              AssetHandle roughness, AssetHandle alphaMask);
+              AssetHandle roughness);
 
     void Init(const std::string_view name, const std::string_view albedoPath, const std::string_view aoPath,
               const std::string_view metallicPath, const std::string_view normalPath,
@@ -61,16 +60,21 @@ class Material : public Asset
 
   public:
     MaterialData GetMaterialData() const { return m_MaterialParam; }
+    bool GetUseNormalMap() const { return m_UseNormalMap; }
     std::array<Texture2DRef, 5> GetTextures() const { return m_Textures; }
     std::array<AssetHandle, 5> GetTextureHandles() const { return m_TextureHandles; }
 
   public:
     void SetTexture(ParameterType type, AssetHandle textureHandle);
     void SetMaterialParam(ParameterType type, std::any param);
+    void SetUseNormalMap(bool useNormalMap) { m_UseNormalMap = useNormalMap; }
 
   public:
-    std::string_view Name;
+    std::string Name;
+
+  private:
     MaterialData m_MaterialParam;
+    bool m_UseNormalMap = true;
 
   private:
     std::array<unsigned int, 5> m_MaterialTextures;

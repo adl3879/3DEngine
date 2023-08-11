@@ -7,6 +7,7 @@
 #include "Shader.h"
 #include "VertexArray.h"
 #include "Camera.h"
+#include "Asset.h"
 
 namespace Engine
 {
@@ -16,7 +17,8 @@ class SkyLight
     SkyLight() = default;
     virtual ~SkyLight() = default;
 
-    void Init(const std::string &path, const std::size_t resolution);
+    void Init(AssetHandle handle, const std::size_t resolution);
+    void Destroy();
     void Render(Camera &camera);
 
   public:
@@ -24,6 +26,9 @@ class SkyLight
     unsigned int GetPrefilterMap() { return m_PreFilterMap; }
     unsigned int GetBrdfLUT() { return m_BrdfLUT; }
     const std::unordered_map<std::string, ShaderPtr> &GetShaders() { return m_Shaders; }
+
+    void BindMaps(int slot = 0) const;
+    void UnBindMaps() const;
 
   private:
     void SetupCube();
@@ -42,5 +47,5 @@ class SkyLight
     std::unordered_map<std::string, ShaderPtr> m_Shaders;
 };
 
-using SkyLightPtr = std::shared_ptr<SkyLight>;
+using SkyLightRef = std::shared_ptr<SkyLight>;
 } // namespace Engine

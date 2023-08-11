@@ -29,6 +29,7 @@ static AssetType GetAssetTypeFromExtension(const std::filesystem::path &path)
     std::vector<std::string> meshExtensions = {".obj", ".fbx", ".dae", ".gltf", ".glb"};
     std::string sceneExtension = ".scene";
     std::string materialExtension = ".material";
+    std::string skyLightExtension = ".hdr";
 
     if (IsInVector(textureExtensions, extension))
         return AssetType::Texture2D;
@@ -38,6 +39,8 @@ static AssetType GetAssetTypeFromExtension(const std::filesystem::path &path)
         return AssetType::Scene;
     else if (extension == materialExtension)
         return AssetType::Material;
+    else if (extension == skyLightExtension)
+        return AssetType::TextureHDRI;
     else
         return AssetType::None;
 }

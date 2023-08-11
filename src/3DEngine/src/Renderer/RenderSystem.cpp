@@ -36,8 +36,8 @@ void RenderSystem::Init()
     SetupScreenQuad();
     SetupTextureSamplers();
 
-    m_SkyLight = std::make_shared<SkyLight>();
-    m_SkyLight->Init("/res/textures/hdr/skyLight.hdr", 2048);
+    // m_SkyLight = std::make_shared<SkyLight>();
+    // m_SkyLight->Init("/res/textures/hdr/skyLight.hdr", 2048);
 
     glEnable(GL_DEBUG_OUTPUT);
     glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
@@ -56,8 +56,18 @@ void RenderSystem::Render(Camera &camera, Scene &scene, const bool globalWirefra
 
     RenderModelsWithTextures(camera, scene);
 
-    glActiveTexture(GL_TEXTURE0);
-    m_SkyLight->Render(camera);
+    // glActiveTexture(GL_TEXTURE0);
+    auto view = scene.GetRegistry().view<SkyLightComponent>();
+    for (auto entity : view)
+    {
+        auto &skyLight = view.get<SkyLightComponent>(entity).Light;
+        if (skyLight != nullptr)
+        {
+            // skyLight->BindMaps();
+            skyLight->Render(camera);
+        }
+    }
+    // m_SkyLight->Render(camera);
 }
 
 void RenderSystem::SetupDefaultState()
@@ -106,14 +116,6 @@ void RenderSystem::SetupScreenQuad()
 
 void RenderSystem::RenderModelsWithTextures(Camera &camera, Scene &scene)
 {
-    // bind pre-computed IBL data
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_CUBE_MAP, m_SkyLight->GetIrradianceMap());
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_CUBE_MAP, m_SkyLight->GetPrefilterMap());
-    glActiveTexture(GL_TEXTURE2);
-    glBindTexture(GL_TEXTURE_2D, m_SkyLight->GetBrdfLUT());
-
     glBindSampler(m_SamplerPBRTextures, 3);
     glBindSampler(m_SamplerPBRTextures, 4);
     glBindSampler(m_SamplerPBRTextures, 5);
@@ -128,7 +130,6 @@ void RenderSystem::RenderModelsWithTextures(Camera &camera, Scene &scene)
         auto [model, transform, visibility] = view.get<MeshComponent, TransformComponent, VisibilityComponent>(entity);
         if (!visibility.IsVisible || model.Handle == 0) continue;
         const auto &entityModel = AssetManager::GetAsset<Model>(model.Handle);
-        auto material = AssetManager::GetAsset<Material>(model.MaterialHandle);
 
         for (auto &mesh : entityModel->GetMeshes())
         {
@@ -154,10 +155,9 @@ void RenderSystem::RenderModelsWithTextures(Camera &camera, Scene &scene)
             modelShader->SetUniformMatrix4fv("projectionViewMatrix", camera.GetProjectionViewMatrix());
             modelShader->SetUniform3f("cameraPosition", camera.GetPosition());
 
+            auto material = AssetManager::GetAsset<Material>(model.MaterialHandle);
             const auto &mat = material == nullptr ? mesh.Material : material;
-
-            // mat->BindMaterialTextures(3);
-            // if (material == nullptr) mesh.Material->UnbindMaterialTextures();
+            mat->BindMaterialTextures(3);
 
             modelShader->SetUniform3f("albedoParam", mat->GetMaterialData().Albedo);
             modelShader->SetUniform1f("metallicParam", mat->GetMaterialData().Metallic);
@@ -169,8 +169,8 @@ void RenderSystem::RenderModelsWithTextures(Camera &camera, Scene &scene)
             Light::SetLightUniforms(*modelShader);
 
             glDrawElements(GL_TRIANGLES, mesh.IndexCount, GL_UNSIGNED_INT, nullptr);
-            glBindTexture(GL_TEXTURE_2D, 0);
 
+            mat->UnbindMaterialTextures();
             mesh.VAO.Unbind();
         }
     }

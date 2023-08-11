@@ -15,7 +15,7 @@ Material::Material()
 }
 
 void Material::Init(const std::string &name, AssetHandle albedo, AssetHandle metallic, AssetHandle normal,
-                    AssetHandle roughness, AssetHandle alphaMask)
+                    AssetHandle roughness)
 {
     Name = name;
 
@@ -73,6 +73,10 @@ void Material::BindMaterialTextures(uint32_t startIndex) const noexcept
         if (texture != nullptr) texture->Bind(index);
         index++;
     }
+    if (m_Textures[ParameterType::NORMAL] != nullptr)
+    {
+        if (!m_UseNormalMap) m_Textures[ParameterType::NORMAL]->Unbind();
+    }
 }
 
 void Material::UnbindMaterialTextures() const noexcept
@@ -87,6 +91,7 @@ void Material::SetTexture(ParameterType type, AssetHandle textureHandle)
 {
     auto texture = AssetManager::GetAsset<Texture2D>(textureHandle);
     m_Textures[type] = texture;
+    m_TextureHandles[type] = textureHandle;
 }
 
 void Material::SetMaterialParam(ParameterType type, std::any param)

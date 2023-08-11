@@ -11,6 +11,7 @@
 #include "Model.h"
 #include "UUID.h"
 #include "Asset.h"
+#include "SkyLight.h"
 
 #include <iostream>
 #include <memory>
@@ -135,6 +136,32 @@ struct SpotLightComponent
 
     SpotLightComponent() = default;
     SpotLightComponent(const SpotLightComponent &) = default;
+};
+
+struct SkyLightComponent
+{
+    AssetHandle TextureHandle = 0;
+    SkyLight *Light = nullptr;
+
+    SkyLightComponent() = default;
+    SkyLightComponent(const SkyLightComponent &) = default;
+
+    ~SkyLightComponent() { Remove(); }
+
+    void Use(AssetHandle handle, const std::size_t resolution)
+    {
+        Remove();
+        TextureHandle = handle;
+        Light = new SkyLight();
+        Light->Init(handle, resolution);
+    }
+
+    void Remove()
+    {
+        // TODO: completely remove and unbind the sky light as if it was never there
+        TextureHandle = 0;
+        Light->Destroy();
+    }
 };
 
 struct VisibilityComponent

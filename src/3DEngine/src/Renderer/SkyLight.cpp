@@ -7,20 +7,20 @@
 #include "Shader.h"
 #include "InputManager.h"
 #include "RenderSystem.h"
+#include "AssetManager.h"
 
 namespace Engine
 {
 // TODO: Allow blurring of cubemap
 
-void SkyLight::Init(const std::string &path, const std::size_t resolution)
+void SkyLight::Init(AssetHandle handle, const std::size_t resolution)
 {
     glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
 
     SetupCube();
 
-    auto fullPath = Utils::Path::GetAbsolute(path);
-
-    auto hdrTexture = ResourceManager::Instance().LoadHDRI(fullPath);
+    TextureHDRIRef hdrTexture = AssetManager::GetAsset<TextureHDRI>(handle);
+    if (hdrTexture == nullptr) return;
 
     m_Shaders["equirectangularToCubemap"] =
         std::make_shared<Shader>("/Resources/shaders/cubemap.vert", "/Resources/shaders/cubemapConverter.frag");
@@ -76,8 +76,7 @@ void SkyLight::Init(const std::string &path, const std::size_t resolution)
     equirectangularToCubemapShader->SetUniform1i("equirectangularMap", 0);
     equirectangularToCubemapShader->SetUniformMatrix4fv("projection", captureProjection);
 
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, hdrTexture);
+    hdrTexture->Bind();
 
     glViewport(0, 0, resolution, resolution); // don't forget to configure the viewport to the capture dimensions.
     glBindFramebuffer(GL_FRAMEBUFFER, captureFBO);
@@ -91,7 +90,8 @@ void SkyLight::Init(const std::string &path, const std::size_t resolution)
 
         RenderCube(); // renders a 1x1 cube
     }
-    glDeleteTextures(1, &hdrTexture);
+    auto textureId = hdrTexture->GetRendererID();
+    glDeleteTextures(1, &textureId);
     equirectangularToCubemapShader->Delete();
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
@@ -194,7 +194,6 @@ void SkyLight::Init(const std::string &path, const std::size_t resolution)
             RenderCube();
         }
     }
-
     prefilterShader->Delete();
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
@@ -231,6 +230,13 @@ void SkyLight::Init(const std::string &path, const std::size_t resolution)
     glViewport(0, 0, windowSize.Width, windowSize.Height);
 }
 
+void SkyLight::Destroy()
+{
+    m_CubeVAO.Unbind();
+    m_QuadVAO.Unbind();
+    UnBindMaps();
+}
+
 void SkyLight::Render(Camera &camera)
 {
     auto cubemap = m_Shaders["cubemap"];
@@ -242,6 +248,27 @@ void SkyLight::Render(Camera &camera)
     glBindTexture(GL_TEXTURE_CUBE_MAP, m_EnvCubemap);
 
     RenderCube();
+}
+
+void SkyLight::BindMaps(int slot) const
+{
+    // bind pre-computed IBL data
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, m_IrradianceMap);
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, m_PreFilterMap);
+    glActiveTexture(GL_TEXTURE2);
+    glBindTexture(GL_TEXTURE_2D, m_BrdfLUT);
+}
+
+void SkyLight::UnBindMaps() const
+{
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+    glActiveTexture(GL_TEXTURE2);
+    glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 void SkyLight::SetupCube()

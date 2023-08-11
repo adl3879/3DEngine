@@ -18,7 +18,6 @@ Texture2DRef TextureImporter::LoadTexture2D(const std::filesystem::path &path)
     int width, height, channels;
     stbi_set_flip_vertically_on_load(1);
     Buffer data;
-
     {
         std::string pathStr = path.string();
         data.Data = stbi_load(pathStr.c_str(), &width, &height, &channels, 0);
@@ -38,6 +37,7 @@ Texture2DRef TextureImporter::LoadTexture2D(const std::filesystem::path &path)
     spec.Height = height;
     switch (channels)
     {
+        case 1: spec.Format = ImageFormat::R8; break;
         case 3: spec.Format = ImageFormat::RGB8; break;
         case 4: spec.Format = ImageFormat::RGBA8; break;
     }

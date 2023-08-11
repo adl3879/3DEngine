@@ -13,6 +13,7 @@ enum class AssetType : uint16_t
 {
     None = 0,
     Texture2D,
+    TextureHDRI,
     Material,
     Mesh,
     Shader,
