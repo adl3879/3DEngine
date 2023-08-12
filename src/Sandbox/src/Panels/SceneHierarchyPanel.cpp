@@ -6,6 +6,7 @@
 
 #include "Light.h"
 #include "MaterialEditorPanel.h"
+#include "ImGuiHelpers.h"
 
 #include <IconsFontAwesome5.h>
 
@@ -69,7 +70,7 @@ void SceneHierarchyPanel::DrawComponents(Entity entity)
         memset(buffer, 0, sizeof(buffer));
         strcpy(buffer, tag.c_str());
 
-        if (ImGui::InputText("Tag", buffer, sizeof(buffer)))
+        if (ImGui::InputText(_labelPrefix("Tag").c_str(), buffer, sizeof(buffer)))
         {
             tag = std::string(buffer);
         }
@@ -81,13 +82,13 @@ void SceneHierarchyPanel::DrawComponents(Entity entity)
                               "Transform"))
         {
             auto &translation = entity.GetComponent<TransformComponent>().Translation;
-            ImGui::DragFloat3("Position", glm::value_ptr(translation), 0.1f);
+            _drawVec3Control("Position", translation, 0.0f);
 
             auto &rotation = entity.GetComponent<TransformComponent>().Rotation;
-            ImGui::DragFloat3("Rotation", glm::value_ptr(rotation), 0.1f);
+            _drawVec3Control("Rotation", rotation, 0.0f);
 
             auto &scale = entity.GetComponent<TransformComponent>().Scale;
-            ImGui::DragFloat3("Scale", glm::value_ptr(scale), 0.1f);
+            _drawVec3Control("Scale", scale, 1.0f);
 
             ImGui::TreePop();
         }
@@ -122,14 +123,16 @@ void SceneHierarchyPanel::DrawComponents(Entity entity)
             ImGui::Separator();
 
             float perspectiveVerticalFOV = glm::degrees(camera.GetPerspectiveVerticalFOV());
-            if (ImGui::DragFloat("Vertical FOV", &perspectiveVerticalFOV))
+            if (ImGui::DragFloat(_labelPrefix("Vertical FOV").c_str(), &perspectiveVerticalFOV))
                 camera.SetPerspectiveVerticalFOV(glm::radians(perspectiveVerticalFOV));
 
             float perspectiveNearClip = camera.GetPerspectiveNearClip();
-            if (ImGui::DragFloat("Near Clip", &perspectiveNearClip)) camera.SetPerspectiveNearClip(perspectiveNearClip);
+            if (ImGui::DragFloat(_labelPrefix("Near Clip").c_str(), &perspectiveNearClip))
+                camera.SetPerspectiveNearClip(perspectiveNearClip);
 
             float perspectiveFarClip = camera.GetPerspectiveFarClip();
-            if (ImGui::DragFloat("Far Clip", &perspectiveFarClip)) camera.SetPerspectiveFarClip(perspectiveFarClip);
+            if (ImGui::DragFloat(_labelPrefix("Far Clip").c_str(), &perspectiveFarClip))
+                camera.SetPerspectiveFarClip(perspectiveFarClip);
 
             ImGui::TreePop();
         }
@@ -152,7 +155,7 @@ void SceneHierarchyPanel::DrawComponents(Entity entity)
         {
             ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.05f, 0.05f, 0.05f, 0.54f));
             ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.05f, 0.05f, 0.05f, 0.54f));
-            ImGui::Button("Mesh", ImVec2(430.0f, 30.0f));
+            ImGui::Button(_labelPrefix("Source").c_str(), ImVec2(ImGui::GetContentRegionAvail().x, 0.0f));
             ImGui::PopStyleColor(2);
             if (ImGui::BeginDragDropTarget())
             {
@@ -176,7 +179,9 @@ void SceneHierarchyPanel::DrawComponents(Entity entity)
                     for (const auto &mesh : model->GetMeshes())
                     {
                         bool openModal = false;
-                        if (ImGui::Button(mesh.Material->Name.c_str(), ImVec2(400.0f, 30.0f))) openModal = true;
+                        if (ImGui::Button(_labelPrefix("Source").c_str(),
+                                          ImVec2(ImGui::GetContentRegionAvail().x, 0.0f)))
+                            openModal = true;
 
                         if (openModal) ImGui::OpenPopup("material_popup");
 
@@ -208,6 +213,17 @@ void SceneHierarchyPanel::DrawComponents(Entity entity)
         }
 
         if (removeComponent) entity.RemoveComponent<MeshComponent>();
+
+        if (entity.HasComponent<VisibilityComponent>())
+        {
+            if (ImGui::TreeNodeEx((void *)typeid(VisibilityComponent).hash_code(), ImGuiTreeNodeFlags_DefaultOpen,
+                                  "Visibility"))
+            {
+                auto &entityComponent = entity.GetComponent<VisibilityComponent>();
+                ImGui::Checkbox(_labelPrefix("Visibility").c_str(), &entityComponent.IsVisible);
+                ImGui::TreePop();
+            }
+        }
     }
 
     if (entity.HasComponent<SkyLightComponent>())
@@ -242,8 +258,8 @@ void SceneHierarchyPanel::DrawComponents(Entity entity)
             auto &entityComponent = entity.GetComponent<DirectionalLightComponent>();
             auto &transform = entity.GetComponent<TransformComponent>();
             entityComponent.Light.Direction = transform.Rotation;
-            ImGui::ColorEdit3("Color", glm::value_ptr(entityComponent.Light.Color));
-            ImGui::DragFloat("Intensity", &entityComponent.Light.Intensity, 1.0f, 0.0f, 10000.0f);
+            ImGui::ColorEdit3(_labelPrefix("Color").c_str(), glm::value_ptr(entityComponent.Light.Color));
+            ImGui::DragFloat(_labelPrefix("Intensity").c_str(), &entityComponent.Light.Intensity, 1.0f, 0.0f, 10000.0f);
 
             Light::SetDirectionalLight(&entityComponent.Light);
 
@@ -259,8 +275,8 @@ void SceneHierarchyPanel::DrawComponents(Entity entity)
             auto &entityComponent = entity.GetComponent<PointLightComponent>();
             auto &transform = entity.GetComponent<TransformComponent>();
             entityComponent.Light.Position = transform.Translation;
-            ImGui::ColorEdit3("Color", glm::value_ptr(entityComponent.Light.Color));
-            ImGui::DragFloat("Intensity", &entityComponent.Light.Intensity, 1.0f, 0.0f, 10000.0f);
+            ImGui::ColorEdit3(_labelPrefix("Color").c_str(), glm::value_ptr(entityComponent.Light.Color));
+            ImGui::DragFloat(_labelPrefix("Intensity").c_str(), &entityComponent.Light.Intensity, 1.0f, 0.0f, 10000.0f);
 
             Light::SetPointLight(entityComponent.Light, entityComponent.Index);
 
@@ -277,24 +293,14 @@ void SceneHierarchyPanel::DrawComponents(Entity entity)
             auto &transform = entity.GetComponent<TransformComponent>();
             entityComponent.Light.Position = transform.Translation;
             entityComponent.Light.Direction = transform.Rotation;
-            ImGui::ColorEdit3("Color", glm::value_ptr(entityComponent.Light.Color));
-            ImGui::DragFloat("Cutoff", &entityComponent.Light.Cutoff, 0.1f, 0.0f, 90.0f);
-            ImGui::DragFloat("Outer Cutoff", &entityComponent.Light.OuterCutoff, 0.1f, 0.0f, 90.0f);
-            ImGui::DragFloat("Intensity", &entityComponent.Light.Intensity, 1.0f, 0.0f, 10000.0f);
+            ImGui::ColorEdit3(_labelPrefix("Color").c_str(), glm::value_ptr(entityComponent.Light.Color));
+            ImGui::DragFloat(_labelPrefix("Cutoff").c_str(), &entityComponent.Light.Cutoff, 0.1f, 0.0f, 90.0f);
+            ImGui::DragFloat(_labelPrefix("Outer Cutoff").c_str(), &entityComponent.Light.OuterCutoff, 0.1f, 0.0f,
+                             90.0f);
+            ImGui::DragFloat(_labelPrefix("Intensity").c_str(), &entityComponent.Light.Intensity, 1.0f, 0.0f, 10000.0f);
 
             Light::SetSpotLight(entityComponent.Light, entityComponent.Index);
 
-            ImGui::TreePop();
-        }
-    }
-
-    if (entity.HasComponent<VisibilityComponent>())
-    {
-        if (ImGui::TreeNodeEx((void *)typeid(VisibilityComponent).hash_code(), ImGuiTreeNodeFlags_DefaultOpen,
-                              "Visibility"))
-        {
-            auto &entityComponent = entity.GetComponent<VisibilityComponent>();
-            ImGui::Checkbox("Visibility", &entityComponent.IsVisible);
             ImGui::TreePop();
         }
     }

@@ -25,3 +25,6 @@
 [submodule "src/3DEngine/vendor/ImGuizmo"]
 	path = src/3DEngine/vendor/ImGuizmo
 	url = git@github.com:TheCherno/ImGuizmo.git
+[submodule "src/3DEngine/vendor/JoltPhysics"]
+	path = src/3DEngine/vendor/JoltPhysics
+	url = git@github.com:jrouwe/JoltPhysics.git

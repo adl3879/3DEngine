@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.17)
 
 project(3DEngine)
 
+include(FetchContent)
+
 set(CMAKE_CXX_STANDARD 20)
 
 # external libraries
@@ -12,6 +14,7 @@ add_subdirectory(vendor/assimp)
 add_subdirectory(vendor/imgui)
 add_subdirectory(vendor/spdlog)
 add_subdirectory(vendor/yaml-cpp)
+# add_subdirectory(vendor/JoltPhysics/Build)
 
 file(GLOB_RECURSE SOURCES 
     "src/*.cpp"
@@ -55,13 +58,15 @@ target_include_directories(${PROJECT_NAME}
     PUBLIC
         ${INCLUDE_DIRS}
         glad glfw assimp imgui glm spdlog yaml-cpp
+        # ${JoltPhysics_SOURCE_DIR}/..
     PRIVATE
 )
 
 target_link_libraries(${PROJECT_NAME} 
     PUBLIC
         glm assimp imgui spdlog yaml-cpp
-        "${CMAKE_CURRENT_SOURCE_DIR}/vendor/lua542/liblua54.a"
+        ${CMAKE_CURRENT_SOURCE_DIR}/vendor/lua542/liblua54.a
+        # Jolt
     PRIVATE 
         glad glfw
 )
