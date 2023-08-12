@@ -30,6 +30,8 @@ void AppLayer::OnAttach()
 
     m_Scene = std::make_shared<Scene>();
     m_SceneHierarchyPanel.SetContext(m_Scene);
+    // attach scene
+    m_Scene->OnAttach();
 
     m_RenderSystem = std::make_shared<RenderSystem>();
     m_RenderSystem->Init();

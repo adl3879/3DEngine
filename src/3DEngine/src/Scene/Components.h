@@ -12,12 +12,15 @@
 #include "UUID.h"
 #include "Asset.h"
 #include "SkyLight.h"
+#include "JoltPhysicsIncludes.h"
 
 #include <iostream>
 #include <memory>
 
 namespace Engine
 {
+using namespace JPH;
+
 struct IDComponent
 {
     UUID ID = 0;
@@ -170,5 +173,16 @@ struct VisibilityComponent
 
     VisibilityComponent() = default;
     VisibilityComponent(const VisibilityComponent &) = default;
+};
+
+struct RigidBodyComponent
+{
+    EMotionType MotionType = EMotionType::Static;
+    uint32_t LayerID = 0;
+
+    float Mass = 1.0f;
+
+    RigidBodyComponent() = default;
+    RigidBodyComponent(const RigidBodyComponent &) = default;
 };
 } // namespace Engine

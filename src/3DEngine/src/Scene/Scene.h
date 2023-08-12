@@ -8,6 +8,7 @@
 #include "EditorCamera.h"
 #include "UUID.h"
 #include "Asset.h"
+#include "PhysicsSystem.h"
 
 namespace Engine
 {
@@ -19,6 +20,8 @@ class Scene : public Asset
   public:
     Scene();
     virtual ~Scene();
+
+    void OnAttach();
 
     Entity CreateEntity(const std::string &name = std::string());
     Entity CreateEntityWithUUID(UUID uuid, const std::string &name = std::string());
@@ -50,6 +53,8 @@ class Scene : public Asset
     friend class SceneSerializer;
 
   private:
+    PhysicsSystemRef m_PhysicsSystem = nullptr;
+
     std::shared_ptr<PerspectiveCamera> m_MainCamera = nullptr;
     std::string m_SceneFilePath = std::string();
 };

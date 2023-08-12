@@ -135,7 +135,6 @@ void ImGuiLayer::SetDarkThemeColors()
     colors[ImGuiCol_ModalWindowDimBg] = ImVec4(1.00f, 0.00f, 0.00f, 0.35f);
 
     colors[ImGuiCol_Header] = ImVec4(0.925f, 0.75f, 0.4666f, 0.6f);
-    // change header text color
     colors[ImGuiCol_HeaderHovered] = ImVec4(0.925f, 0.75f, 0.4666f, 0.6f);
 
     ImGuiStyle &style = ImGui::GetStyle();

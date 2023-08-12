@@ -7,9 +7,24 @@
 
 namespace Engine
 {
-Scene::Scene() {}
+Scene::Scene()
+{
+    //
+    m_PhysicsSystem = std::make_shared<PhysicsSystem>();
+}
 
 Scene::~Scene() {}
+
+void Scene::OnAttach()
+{
+    // setup physics
+    m_PhysicsSystem->Init();
+
+    // auto sphereId = m_PhysicsSystem->CreateSphereBody(glm::vec3(0.0f, 10.0f, 0.0f), 1.0f, 1.0f);
+    // m_PhysicsSystem->GetBodyInterface()->SetLinearVelocity(sphereId, JPH::Vec3(0.0f, -5.0f, 0.0f));
+
+    // m_PhysicsSystem->CreateBoxBody(glm::vec3(0.0f, 10.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), 1.0f);
+}
 
 Entity Scene::CreateEntity(const std::string &name) { return CreateEntityWithUUID(UUID(), name); }
 
@@ -42,6 +57,9 @@ void Scene::DestroyEntity(Entity entity) { m_Registry.destroy(entity); }
 
 void Scene::OnUpdateRuntime(float dt)
 {
+    //
+    m_PhysicsSystem->Update(dt);
+
     // update scripts
     {
         m_Registry.view<NativeScriptComponent>().each(
@@ -89,5 +107,9 @@ void Scene::OnUpdateRuntime(float dt)
     }
 }
 
-void Scene::OnUpdateEditor(float dt, EditorCamera &camera) {}
+void Scene::OnUpdateEditor(float dt, EditorCamera &camera)
+{
+    //
+    m_PhysicsSystem->Update(dt);
+}
 } // namespace Engine

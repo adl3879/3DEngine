@@ -114,7 +114,7 @@
     "**/CVS": true,
     "**/.DS_Store": true,
     "**/Thumbs.db": true,
-    "src/3DEngine/vendor": false
+    "src/3DEngine/vendor": true
   },
   "explorerExclude.backup": {}
 }
