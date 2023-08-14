@@ -4,26 +4,38 @@
 #include "Components.h"
 #include "Light.h"
 #include "RenderSystem.h"
+#include "PhysicsSystem.h"
 
 namespace Engine
 {
-Scene::Scene()
-{
-    //
-    m_PhysicsSystem = std::make_shared<PhysicsSystem>();
-}
+Scene::Scene() {}
 
-Scene::~Scene() {}
+Scene::~Scene()
+{
+    m_Systems = std::vector<SystemRef>();
+
+    // Add systems
+    m_Systems.push_back(std::make_shared<PhysicsSystem>(this));
+}
 
 void Scene::OnAttach()
 {
-    // setup physics
-    m_PhysicsSystem->Init();
+    for (const auto &system : m_Systems) system->Init();
+}
 
-    // auto sphereId = m_PhysicsSystem->CreateSphereBody(glm::vec3(0.0f, 10.0f, 0.0f), 1.0f, 1.0f);
-    // m_PhysicsSystem->GetBodyInterface()->SetLinearVelocity(sphereId, JPH::Vec3(0.0f, -5.0f, 0.0f));
+void Scene::OnDetach()
+{
+    for (const auto &system : m_Systems) system->Exit();
+}
 
-    // m_PhysicsSystem->CreateBoxBody(glm::vec3(0.0f, 10.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), 1.0f);
+void Scene::OnUpdate(float dt)
+{
+    for (const auto &system : m_Systems) system->Update(dt);
+}
+
+void Scene::OnFixedUpdate(float dt)
+{
+    for (const auto &system : m_Systems) system->FixedUpdate(dt);
 }
 
 Entity Scene::CreateEntity(const std::string &name) { return CreateEntityWithUUID(UUID(), name); }
@@ -57,23 +69,8 @@ void Scene::DestroyEntity(Entity entity) { m_Registry.destroy(entity); }
 
 void Scene::OnUpdateRuntime(float dt)
 {
-    //
-    m_PhysicsSystem->Update(dt);
-
     // update scripts
     {
-        m_Registry.view<NativeScriptComponent>().each(
-            [=](auto entity, auto &nsc)
-            {
-                if (!nsc.Instance)
-                {
-                    nsc.Instance = nsc.InstantiateScript();
-                    nsc.Instance->m_Entity = Entity{entity, this};
-                    nsc.Instance->OnCreate();
-                }
-                nsc.Instance->OnUpdate(dt);
-            });
-
         m_Registry.view<LuaScriptComponent>().each(
             [=](auto entity, auto &lsc)
             {
@@ -107,9 +104,5 @@ void Scene::OnUpdateRuntime(float dt)
     }
 }
 
-void Scene::OnUpdateEditor(float dt, EditorCamera &camera)
-{
-    //
-    m_PhysicsSystem->Update(dt);
-}
+void Scene::OnUpdateEditor(float dt, EditorCamera &camera) {}
 } // namespace Engine

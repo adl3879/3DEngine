@@ -110,7 +110,7 @@ void SceneHierarchyPanel::DrawComponents(Entity entity)
             auto &cameraComponent = entity.GetComponent<CameraComponent>();
             auto &camera = cameraComponent.Camera;
 
-            if (ImGui::Checkbox("Primary", &cameraComponent.Primary))
+            if (ImGui::Checkbox(_labelPrefix("Primary").c_str(), &cameraComponent.Primary))
             {
                 auto view = m_Context->m_Registry.view<CameraComponent>();
                 for (auto entity : view)
@@ -119,8 +119,6 @@ void SceneHierarchyPanel::DrawComponents(Entity entity)
                     if (&otherCameraComponent != &cameraComponent) otherCameraComponent.Primary = false;
                 }
             }
-
-            ImGui::Separator();
 
             float perspectiveVerticalFOV = glm::degrees(camera.GetPerspectiveVerticalFOV());
             if (ImGui::DragFloat(_labelPrefix("Vertical FOV").c_str(), &perspectiveVerticalFOV))

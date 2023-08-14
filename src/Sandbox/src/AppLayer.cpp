@@ -58,7 +58,13 @@ void AppLayer::OnUpdate(float deltaTime)
         auto selectedEntity = m_SceneHierarchyPanel.GetSelectedEntity();
     }
 
-    m_Scene->OnUpdateEditor(deltaTime, m_EditorCamera);
+    if (m_SceneState == SceneState::Edit)
+        m_Scene->OnUpdateEditor(deltaTime, m_EditorCamera);
+    else if (m_SceneState == SceneState::Play)
+    {
+        m_Scene->OnUpdate(deltaTime);
+        m_Scene->OnUpdateRuntime(deltaTime);
+    }
 
     auto [mx, my] = ImGui::GetMousePos();
     mx -= m_ViewportBounds[0].x;
@@ -76,6 +82,11 @@ void AppLayer::OnUpdate(float deltaTime)
         m_HoveredEntity = pixelData == 0 ? Entity() : Entity((entt::entity)(pixelData - 1), m_Scene.get());
     }
     m_Framebuffer->Unbind();
+}
+
+void AppLayer::OnFixedUpdate(float dt)
+{
+    if (m_SceneState == SceneState::Play) m_Scene->OnFixedUpdate(dt);
 }
 
 void AppLayer::OnImGuiRender()

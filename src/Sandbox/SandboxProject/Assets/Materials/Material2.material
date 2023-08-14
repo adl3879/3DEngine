@@ -1,8 +1,8 @@
 Material:
   Name: ""
   AlbedoColor: [0, 0, 0]
-  Metallic: 0.134000003
-  Roughness: 0.785000026
+  Metallic: 0.236000001
+  Roughness: 0.651000023
   AO: 0
   AlbedoMap: 15294299809775585858
   MetallicMap: 14362133463429802450

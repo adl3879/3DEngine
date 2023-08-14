@@ -17,8 +17,8 @@ struct Mesh
     Mesh(const struct VertexSOA &vertices, const std::vector<uint32_t> &indices, const MaterialRef &material = nullptr);
 
     void Clear();
-    auto GetTriangleCount() const { return IndexCount / 3; }
 
+    auto GetTriangleCount() const { return IndexCount / 3; }
     void SetMaterial(AssetHandle handle);
 
     const std::size_t IndexCount;

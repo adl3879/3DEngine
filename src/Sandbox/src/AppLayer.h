@@ -19,7 +19,8 @@ class AppLayer : public Layer
 
     virtual void OnAttach() override;
     virtual void OnDetach() override;
-    virtual void OnUpdate(float deltaTime) override;
+    virtual void OnUpdate(float dt) override;
+    virtual void OnFixedUpdate(float dt) override;
     virtual void OnImGuiRender() override;
 
     virtual void OnKeyPressed(InputKey key, bool isRepeat) override;
@@ -74,7 +75,7 @@ class AppLayer : public Layer
     enum class SceneState
     {
         Edit = 0,
-        Play = 1
+        Play
     };
     SceneState m_SceneState = SceneState::Edit;
 

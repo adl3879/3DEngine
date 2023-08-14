@@ -12,15 +12,12 @@
 #include "UUID.h"
 #include "Asset.h"
 #include "SkyLight.h"
-#include "JoltPhysicsIncludes.h"
 
 #include <iostream>
 #include <memory>
 
 namespace Engine
 {
-using namespace JPH;
-
 struct IDComponent
 {
     UUID ID = 0;
@@ -53,6 +50,17 @@ struct TransformComponent
     {
         glm::mat4 rotation = glm::toMat4(glm::quat(Rotation));
         return glm::translate(glm::mat4(1.0f), Translation) * rotation * glm::scale(glm::mat4(1.0f), Scale);
+    }
+
+    void SetTransform(const glm::mat4 &transform)
+    {
+        Translation = glm::vec3(transform[3]);
+        Scale = glm::vec3(glm::length(transform[0]), glm::length(transform[1]), glm::length(transform[2]));
+
+        glm::mat4 rotation = glm::mat4(transform);
+        rotation[3] = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
+
+        Rotation = glm::eulerAngles(glm::quat_cast(rotation));
     }
 };
 
@@ -173,16 +181,5 @@ struct VisibilityComponent
 
     VisibilityComponent() = default;
     VisibilityComponent(const VisibilityComponent &) = default;
-};
-
-struct RigidBodyComponent
-{
-    EMotionType MotionType = EMotionType::Static;
-    uint32_t LayerID = 0;
-
-    float Mass = 1.0f;
-
-    RigidBodyComponent() = default;
-    RigidBodyComponent(const RigidBodyComponent &) = default;
 };
 } // namespace Engine
