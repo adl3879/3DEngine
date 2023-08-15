@@ -39,6 +39,8 @@ class AppLayer : public Layer
     void SaveScene();
     void ResetScene(const std::string &path);
 
+    void DuplicateEntity();
+
     void OnScenePlay();
     void OnSceneStop();
 
@@ -59,7 +61,7 @@ class AppLayer : public Layer
     glm::vec2 m_ViewportBounds[2];
 
     // scene
-    std::shared_ptr<Scene> m_Scene;
+    SceneRef m_ActiveScene, m_EditorScene;
 
     // panels
     SceneHierarchyPanel m_SceneHierarchyPanel;

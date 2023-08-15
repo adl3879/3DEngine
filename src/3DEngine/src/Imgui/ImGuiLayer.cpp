@@ -102,9 +102,7 @@ void ImGuiLayer::SetDarkThemeColors()
     colors[ImGuiCol_Button] = ImVec4(0.05f, 0.05f, 0.05f, 0.54f);
     colors[ImGuiCol_ButtonHovered] = ImVec4(0.19f, 0.19f, 0.19f, 0.54f);
     colors[ImGuiCol_ButtonActive] = ImVec4(0.20f, 0.22f, 0.23f, 1.00f);
-    colors[ImGuiCol_Header] = ImVec4(0.00f, 0.00f, 0.00f, 0.52f);
-    colors[ImGuiCol_HeaderHovered] = ImVec4(0.00f, 0.00f, 0.00f, 0.36f);
-    colors[ImGuiCol_HeaderActive] = ImVec4(0.20f, 0.22f, 0.23f, 0.33f);
+
     colors[ImGuiCol_Separator] = ImVec4(0.5f, 0.5f, 0.5f, 0.4f);
     colors[ImGuiCol_SeparatorHovered] = ImVec4(0.5f, 0.5f, 0.5f, 0.4f);
     colors[ImGuiCol_SeparatorActive] = ImVec4(0.5f, 0.5f, 0.5f, 0.4f);
@@ -136,6 +134,7 @@ void ImGuiLayer::SetDarkThemeColors()
 
     colors[ImGuiCol_Header] = ImVec4(0.925f, 0.75f, 0.4666f, 0.6f);
     colors[ImGuiCol_HeaderHovered] = ImVec4(0.925f, 0.75f, 0.4666f, 0.6f);
+    colors[ImGuiCol_HeaderActive] = ImVec4(0.925f, 0.75f, 0.4666f, 0.6f);
 
     ImGuiStyle &style = ImGui::GetStyle();
     style.WindowPadding = ImVec2(8.00f, 8.00f);

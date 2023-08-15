@@ -366,10 +366,6 @@ void DynamicWorld::SyncEntitiesTransforms()
         JPH::Mat44 joltTransform = bodyInterface.GetWorldTransform(bodyId);
         const auto bodyRotation = bodyInterface.GetRotation(bodyId);
 
-        std::cout << "Step " << m_StepCount << ": Position = (" << position.GetX() << ", " << position.GetY() << ", "
-                  << position.GetZ() << "), Velocity = (" << velocity.GetX() << ", " << velocity.GetY() << ", "
-                  << velocity.GetZ() << ")" << std::endl;
-
         glm::mat4 transform =
             glm::mat4(joltTransform(0, 0), joltTransform(1, 0), joltTransform(2, 0), joltTransform(3, 0),
                       joltTransform(0, 1), joltTransform(1, 1), joltTransform(2, 1), joltTransform(3, 1),

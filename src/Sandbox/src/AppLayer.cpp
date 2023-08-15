@@ -28,10 +28,12 @@ void AppLayer::OnAttach()
 
     m_Framebuffer = std::make_shared<Engine::Framebuffer>(fbSpec);
 
-    m_Scene = std::make_shared<Scene>();
-    m_SceneHierarchyPanel.SetContext(m_Scene);
+    m_EditorScene = std::make_shared<Scene>();
+    m_ActiveScene = m_EditorScene;
+
+    m_SceneHierarchyPanel.SetContext(m_ActiveScene);
     // attach scene
-    m_Scene->OnAttach();
+    m_ActiveScene->OnAttach();
 
     m_RenderSystem = std::make_shared<RenderSystem>();
     m_RenderSystem->Init();
@@ -47,23 +49,24 @@ void AppLayer::OnAttach()
 
 void AppLayer::OnDetach() {}
 
-void AppLayer::OnUpdate(float deltaTime)
+void AppLayer::OnUpdate(float dt)
 {
     // update
-    m_EditorCamera.OnUpdate(deltaTime);
+    m_EditorCamera.OnUpdate(dt);
     m_EditorCamera.SetViewportSize(m_ViewportSize.x, m_ViewportSize.y);
     {
         m_Framebuffer->Bind();
-        m_RenderSystem->Render(m_EditorCamera, *m_Scene);
+        m_RenderSystem->Render(m_EditorCamera, *m_ActiveScene);
         auto selectedEntity = m_SceneHierarchyPanel.GetSelectedEntity();
     }
 
-    if (m_SceneState == SceneState::Edit)
-        m_Scene->OnUpdateEditor(deltaTime, m_EditorCamera);
-    else if (m_SceneState == SceneState::Play)
+    switch (m_SceneState)
     {
-        m_Scene->OnUpdate(deltaTime);
-        m_Scene->OnUpdateRuntime(deltaTime);
+        case SceneState::Edit: m_ActiveScene->OnUpdateEditor(dt, m_EditorCamera); break;
+        case SceneState::Play:
+            m_ActiveScene->OnUpdate(dt);
+            m_ActiveScene->OnUpdateRuntime(dt);
+            break;
     }
 
     auto [mx, my] = ImGui::GetMousePos();
@@ -79,7 +82,7 @@ void AppLayer::OnUpdate(float deltaTime)
         auto pixelData = m_Framebuffer->ReadPixel(1, mouseX, mouseY);
         // LOG_CORE_TRACE("pixel {}", pixelData - 1);
         // removed one because i moved every entity by one
-        m_HoveredEntity = pixelData == 0 ? Entity() : Entity((entt::entity)(pixelData - 1), m_Scene.get());
+        m_HoveredEntity = pixelData == 0 ? Entity() : Entity((entt::entity)(pixelData - 1), m_ActiveScene.get());
     }
     m_Framebuffer->Unbind();
 }
@@ -89,7 +92,7 @@ void AppLayer::OnFixedUpdate(float dt)
     // physic
     if (m_SceneState == SceneState::Play)
     {
-        m_Scene->OnFixedUpdate(dt);
+        m_ActiveScene->OnFixedUpdate(dt);
     }
 }
 
@@ -181,8 +184,10 @@ void AppLayer::OnImGuiRender()
         {
             const char *handle = (const char *)payload->Data;
             ResetScene("");
-            m_Scene = AssetManager::GetAsset<Scene>(std::stoull(handle));
-            m_SceneHierarchyPanel.SetContext(m_Scene);
+            m_EditorScene = AssetManager::GetAsset<Scene>(std::stoull(handle));
+            m_SceneHierarchyPanel.SetContext(m_EditorScene);
+
+            m_ActiveScene = m_EditorScene;
         }
         ImGui::EndDragDropTarget();
     }
@@ -199,7 +204,7 @@ void AppLayer::OnImGuiRender()
     // Gizmos
     auto selectedEntity = m_SceneHierarchyPanel.GetSelectedEntity();
 
-    if (selectedEntity && m_GizmoType != -1)
+    if (selectedEntity && m_GizmoType != -1 && m_SceneState == SceneState::Edit)
     {
         ImGuizmo::SetOrthographic(false);
         ImGuizmo::SetDrawlist();
@@ -276,6 +281,10 @@ void AppLayer::OnKeyPressed(InputKey key, bool isRepeat)
                 SaveScene();
             break;
 
+        case InputKey::D:
+            if (ctrl) DuplicateEntity();
+            break;
+
         default: break;
     }
 }
@@ -311,8 +320,8 @@ void AppLayer::NewScene()
 {
     // TODO: create new scene file
     ResetScene("");
-    m_Scene = std::make_unique<Scene>();
-    m_SceneHierarchyPanel.SetContext(m_Scene);
+    m_ActiveScene = std::make_unique<Scene>();
+    m_SceneHierarchyPanel.SetContext(m_ActiveScene);
 }
 
 void AppLayer::OpenScene()
@@ -333,12 +342,12 @@ void AppLayer::SaveSceneAs()
 
 void AppLayer::SaveScene()
 {
-    if (m_Scene->GetSceneFilePath().empty())
+    if (m_ActiveScene->GetSceneFilePath().empty())
         SaveSceneAs();
     else
     {
-        SceneSerializer serializer(m_Scene);
-        serializer.Serialize(m_Scene->GetSceneFilePath());
+        SceneSerializer serializer(m_ActiveScene);
+        serializer.Serialize(m_ActiveScene->GetSceneFilePath());
     }
 }
 
@@ -350,9 +359,31 @@ void AppLayer::ResetScene(const std::string &path)
     // m_Scene->SetSceneFilePath(path);
 }
 
-void AppLayer::OnScenePlay() { m_SceneState = SceneState::Play; }
+void AppLayer::DuplicateEntity()
+{
+    if (m_SceneState == SceneState::Edit)
+    {
+        Entity selectedEntity = m_SceneHierarchyPanel.GetSelectedEntity();
+        if (selectedEntity) m_ActiveScene->DuplicateEntity(selectedEntity);
+    }
+}
 
-void AppLayer::OnSceneStop() { m_SceneState = SceneState::Edit; }
+void AppLayer::OnScenePlay()
+{
+    m_SceneState = SceneState::Play;
+    m_ActiveScene = Scene::Copy(m_EditorScene);
+
+    m_SceneHierarchyPanel.SetContext(m_ActiveScene);
+}
+
+void AppLayer::OnSceneStop()
+{
+    // TODO: fix screen jittering when stopping
+    m_SceneState = SceneState::Edit;
+    m_ActiveScene = m_EditorScene;
+
+    m_SceneHierarchyPanel.SetContext(m_ActiveScene);
+}
 
 void AppLayer::FileOperations()
 {
@@ -362,17 +393,24 @@ void AppLayer::FileOperations()
         LOG_INFO("Serializing Scene");
         ResetScene(Utils::FileDialogs::m_SelectedFile);
 
-        SceneSerializer serializer(m_Scene);
-        serializer.Deserialize(Utils::FileDialogs::m_SelectedFile);
+        SceneRef newScene = std::make_shared<Scene>();
+        SceneSerializer serializer(newScene);
+        if (serializer.Deserialize(Utils::FileDialogs::m_SelectedFile))
+        {
+            m_EditorScene = newScene;
+            m_SceneHierarchyPanel.SetContext(m_EditorScene);
+
+            m_ActiveScene = m_EditorScene;
+        }
     }
 
     if (Utils::FileDialogs::FileIsSaved("saveScene"))
     {
         // serialize the scene
         LOG_INFO("Serializing Scene");
-        m_Scene->SetSceneFilePath(Utils::FileDialogs::m_SavedFile);
+        m_ActiveScene->SetSceneFilePath(Utils::FileDialogs::m_SavedFile);
 
-        SceneSerializer serializer(m_Scene);
+        SceneSerializer serializer(m_ActiveScene);
         serializer.Serialize(Utils::FileDialogs::m_SavedFile);
     }
 
@@ -396,8 +434,9 @@ void AppLayer::UI_Toolbar()
     ImGui::Begin("##toolbar", nullptr,
                  ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
     auto icon = m_SceneState == SceneState::Edit ? m_IconPlay : m_IconStop;
-    auto size = ImGui::GetWindowHeight() - 4.0f;
+    auto size = ImGui::GetWindowHeight() - 8.0f;
     ImGui::SetCursorPosX((ImGui::GetWindowContentRegionMax().x * 0.5f) - (size * 0.5));
+    ImGui::SetCursorPosY(ImGui::GetWindowContentRegionMax().y * 0.5f - (size * 0.5));
     if (ImGui::ImageButton((ImTextureID)icon, ImVec2{size, size}, ImVec2{0, 0}, ImVec2{1, 1}, 0))
     {
         if (m_SceneState == SceneState::Edit)

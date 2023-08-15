@@ -321,78 +321,81 @@ void SceneHierarchyPanel::OnImGuiRender()
 {
     ImGui::Begin("Scene Hierarchy");
 
-    // Right-click on blank space
-    if (ImGui::BeginPopupContextWindow())
+    if (m_Context)
     {
-        if (ImGui::MenuItem(ICON_FA_CUBE "   Create Empty Entity")) m_Context->CreateEntity("Empty Entity");
-
-        if (ImGui::BeginMenu(ICON_FA_PLUS "   Add Entity"))
+        // Right-click on blank space
+        if (ImGui::BeginPopupContextWindow())
         {
-            if (ImGui::MenuItem(ICON_FA_VIDEO "  Camera"))
-            {
-                auto entity = m_Context->CreateEntity("Camera");
-                entity.AddComponent<CameraComponent>();
-                m_SelectionContext = entity;
-            }
-            ImGui::Spacing();
-            ImGui::Separator();
+            if (ImGui::MenuItem(ICON_FA_CUBE "   Create Empty Entity")) m_Context->CreateEntity("Empty Entity");
 
-            if (ImGui::MenuItem(ICON_FA_CLOUD_MOON "  Sky Light"))
+            if (ImGui::BeginMenu(ICON_FA_PLUS "   Add Entity"))
             {
-                auto entity = m_Context->CreateEntity("Sky Light");
-                entity.AddComponent<SkyLightComponent>();
-                entity.RemoveComponent<TransformComponent>();
-                m_SelectionContext = entity;
-            }
-            ImGui::Separator();
-
-            // check if scene does not contain directional light entity
-            auto dLight = m_Context->GetEntity("Directional Light");
-            if (dLight == nullptr)
-            {
-                if (ImGui::MenuItem(ICON_FA_SUN "  Directional Light"))
+                if (ImGui::MenuItem(ICON_FA_VIDEO "  Camera"))
                 {
-                    auto entity = m_Context->CreateEntity("Directional Light");
-                    entity.AddComponent<DirectionalLightComponent>();
+                    auto entity = m_Context->CreateEntity("Camera");
+                    entity.AddComponent<CameraComponent>();
                     m_SelectionContext = entity;
                 }
-            }
-            if (ImGui::MenuItem(ICON_FA_LIGHTBULB "  Point Light"))
-            {
-                auto num = Light::GetNumPointLights() + 1;
-                auto entity = m_Context->CreateEntity("Point Light " + std::to_string(num));
-                entity.AddComponent<PointLightComponent>();
-                m_SelectionContext = entity;
-            }
-            if (ImGui::MenuItem(ICON_FA_LIGHTBULB "  Spot Light"))
-            {
-                auto num = Light::GetNumSpotLights() + 1;
-                auto entity = m_Context->CreateEntity("Spot Light " + std::to_string(num));
-                entity.AddComponent<SpotLightComponent>();
-                m_SelectionContext = entity;
-            }
-            ImGui::Spacing();
-            ImGui::Separator();
+                ImGui::Spacing();
+                ImGui::Separator();
 
-            if (ImGui::MenuItem(ICON_FA_CUBE "  Mesh"))
-            {
-                auto entity = m_Context->CreateEntity(" Mesh");
-                entity.AddComponent<MeshComponent>();
-                m_SelectionContext = entity;
+                if (ImGui::MenuItem(ICON_FA_CLOUD_MOON "  Sky Light"))
+                {
+                    auto entity = m_Context->CreateEntity("Sky Light");
+                    entity.AddComponent<SkyLightComponent>();
+                    entity.RemoveComponent<TransformComponent>();
+                    m_SelectionContext = entity;
+                }
+                ImGui::Separator();
+
+                // check if scene does not contain directional light entity
+                auto dLight = m_Context->GetEntity("Directional Light");
+                if (dLight == nullptr)
+                {
+                    if (ImGui::MenuItem(ICON_FA_SUN "  Directional Light"))
+                    {
+                        auto entity = m_Context->CreateEntity("Directional Light");
+                        entity.AddComponent<DirectionalLightComponent>();
+                        m_SelectionContext = entity;
+                    }
+                }
+                if (ImGui::MenuItem(ICON_FA_LIGHTBULB "  Point Light"))
+                {
+                    auto num = Light::GetNumPointLights() + 1;
+                    auto entity = m_Context->CreateEntity("Point Light " + std::to_string(num));
+                    entity.AddComponent<PointLightComponent>();
+                    m_SelectionContext = entity;
+                }
+                if (ImGui::MenuItem(ICON_FA_LIGHTBULB "  Spot Light"))
+                {
+                    auto num = Light::GetNumSpotLights() + 1;
+                    auto entity = m_Context->CreateEntity("Spot Light " + std::to_string(num));
+                    entity.AddComponent<SpotLightComponent>();
+                    m_SelectionContext = entity;
+                }
+                ImGui::Spacing();
+                ImGui::Separator();
+
+                if (ImGui::MenuItem(ICON_FA_CUBE "  Mesh"))
+                {
+                    auto entity = m_Context->CreateEntity(" Mesh");
+                    entity.AddComponent<MeshComponent>();
+                    m_SelectionContext = entity;
+                }
+                ImGui::EndPopup();
             }
+
             ImGui::EndPopup();
         }
 
-        ImGui::EndPopup();
+        // Add padding around the list
+        m_Context->m_Registry.each(
+            [this](auto entityId)
+            {
+                Entity entity{entityId, m_Context.get()};
+                DrawEntityNode(entity);
+            });
     }
-
-    // Add padding around the list
-    m_Context->m_Registry.each(
-        [this](auto entityId)
-        {
-            Entity entity{entityId, m_Context.get()};
-            DrawEntityNode(entity);
-        });
     ImGui::End();
 
     ImGui::Begin("Properties");

@@ -22,6 +22,8 @@ struct RigidBodyComponent
     glm::vec3 QueuedForce;
 
     RigidBodyComponent() = default;
+    RigidBodyComponent(const RigidBodyComponent &) = default;
+
     std::shared_ptr<Physics::RigidBody> GetRigidBody() const { return RigidBody; }
 
     void SyncTransformComponent(TransformComponent *tc){};
@@ -35,5 +37,6 @@ struct BoxColliderComponent
     bool IsTrigger = false;
 
     BoxColliderComponent() = default;
+    BoxColliderComponent(const BoxColliderComponent &) = default;
 };
 } // namespace Engine

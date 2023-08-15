@@ -32,6 +32,7 @@ class Scene : public Asset
     Entity CreateEntityWithUUID(UUID uuid, const std::string &name = std::string());
     Entity *GetEntity(const std::string &name);
     void DestroyEntity(Entity entity);
+    Entity DuplicateEntity(Entity entity);
 
     void OnUpdateRuntime(float dt);
     void OnUpdateEditor(float dt, EditorCamera &camera);
@@ -48,6 +49,9 @@ class Scene : public Asset
 
   public:
     virtual AssetType GetType() const override { return AssetType::Scene; }
+
+  public:
+    static std::shared_ptr<Scene> Copy(std::shared_ptr<Scene> src);
 
   private:
     entt::registry m_Registry;
