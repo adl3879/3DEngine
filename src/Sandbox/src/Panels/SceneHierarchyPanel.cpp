@@ -7,8 +7,19 @@
 #include "Light.h"
 #include "MaterialEditorPanel.h"
 #include "ImGuiHelpers.h"
+#include "PhysicsComponents.h"
 
 #include <IconsFontAwesome5.h>
+
+#define ADD_COMPONENT_MENU(componentType, componentName)                                                               \
+    if (!m_SelectionContext.HasComponent<componentType>())                                                             \
+    {                                                                                                                  \
+        if (ImGui::MenuItem(componentName))                                                                            \
+        {                                                                                                              \
+            m_SelectionContext.AddComponent<componentType>();                                                          \
+            ImGui::CloseCurrentPopup();                                                                                \
+        }                                                                                                              \
+    }
 
 namespace Engine
 {
@@ -63,18 +74,6 @@ void SceneHierarchyPanel::DrawEntityNode(Entity entity)
 
 void SceneHierarchyPanel::DrawComponents(Entity entity)
 {
-    if (entity.HasComponent<TagComponent>())
-    {
-        auto &tag = entity.GetComponent<TagComponent>().Tag;
-        char buffer[256];
-        memset(buffer, 0, sizeof(buffer));
-        strcpy(buffer, tag.c_str());
-
-        if (ImGui::InputText(_labelPrefix("Tag").c_str(), buffer, sizeof(buffer)))
-        {
-            tag = std::string(buffer);
-        }
-    }
 
     if (entity.HasComponent<TransformComponent>())
     {
@@ -302,6 +301,8 @@ void SceneHierarchyPanel::DrawComponents(Entity entity)
             ImGui::TreePop();
         }
     }
+
+    // Physics Stuff
 }
 
 void SceneHierarchyPanel::SetContext(const std::shared_ptr<Scene> &context)
@@ -352,7 +353,6 @@ void SceneHierarchyPanel::OnImGuiRender()
                 if (ImGui::MenuItem(ICON_FA_SUN "  Directional Light"))
                 {
                     auto entity = m_Context->CreateEntity("Directional Light");
-
                     entity.AddComponent<DirectionalLightComponent>();
                     m_SelectionContext = entity;
                 }
@@ -361,7 +361,6 @@ void SceneHierarchyPanel::OnImGuiRender()
             {
                 auto num = Light::GetNumPointLights() + 1;
                 auto entity = m_Context->CreateEntity("Point Light " + std::to_string(num));
-
                 entity.AddComponent<PointLightComponent>();
                 m_SelectionContext = entity;
             }
@@ -369,7 +368,6 @@ void SceneHierarchyPanel::OnImGuiRender()
             {
                 auto num = Light::GetNumSpotLights() + 1;
                 auto entity = m_Context->CreateEntity("Spot Light " + std::to_string(num));
-
                 entity.AddComponent<SpotLightComponent>();
                 m_SelectionContext = entity;
             }
@@ -379,7 +377,6 @@ void SceneHierarchyPanel::OnImGuiRender()
             if (ImGui::MenuItem(ICON_FA_CUBE "  Mesh"))
             {
                 auto entity = m_Context->CreateEntity(" Mesh");
-
                 entity.AddComponent<MeshComponent>();
                 m_SelectionContext = entity;
             }
@@ -401,23 +398,38 @@ void SceneHierarchyPanel::OnImGuiRender()
     ImGui::Begin("Properties");
     if (m_SelectionContext)
     {
-        DrawComponents(m_SelectionContext);
+        if (m_SelectionContext.HasComponent<TagComponent>())
+        {
+            auto &tag = m_SelectionContext.GetComponent<TagComponent>().Tag;
+            char buffer[256];
+            memset(buffer, 0, sizeof(buffer));
+            strcpy(buffer, tag.c_str());
 
-        if (ImGui::Button("Add Component")) ImGui::OpenPopup("AddComponent");
+            ImGui::Text("Tag  ");
+            ImGui::SameLine();
+            if (ImGui::InputText("##tag", buffer, sizeof(buffer)))
+            {
+                tag = std::string(buffer);
+            }
+        }
+        ImGui::SameLine();
 
+        float buttonWidth = ImGui::CalcTextSize(ICON_FA_PLUS "   Add Component").x + 20.0f; // Adjust padding as needed
+        ImGui::SetCursorPosX(ImGui::GetContentRegionMax().x - buttonWidth);
+        if (ImGui::Button(ICON_FA_PLUS "   Add Component", ImVec2(buttonWidth, 0))) ImGui::OpenPopup("AddComponent");
+
+        // TODO: refactor this so you dont have to manually list the components
         if (ImGui::BeginPopup("AddComponent"))
         {
-            if (!m_SelectionContext.HasComponent<LuaScriptComponent>())
-            {
-                // TODO: create lua file and bind
-                if (ImGui::MenuItem("Lua Script"))
-                {
-                    m_SelectionContext.AddComponent<LuaScriptComponent>();
-                    ImGui::CloseCurrentPopup();
-                }
-            }
+            ADD_COMPONENT_MENU(LuaScriptComponent, "Lua Script");
+            ADD_COMPONENT_MENU(RigidBodyComponent, "Rigid Body");
+            ADD_COMPONENT_MENU(BoxColliderComponent, "Box Collider");
+
             ImGui::EndPopup();
         }
+        ImGui::Spacing();
+        ImGui::Spacing();
+        DrawComponents(m_SelectionContext);
     }
     ImGui::End();
 }

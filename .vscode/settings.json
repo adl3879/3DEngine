@@ -119,5 +119,5 @@
     "**/Thumbs.db": true,
     "src/3DEngine/vendor": true
   },
-  "explorerExclude.backup": {}
+  "explorerExclude.backup": {},
 }

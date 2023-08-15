@@ -228,7 +228,10 @@ DynamicWorld::DynamicWorld(Scene *scene) : m_StepCount(0), m_Scene(scene)
 
 void DynamicWorld::DrawDebug() {}
 
-void DynamicWorld::SetGravity(const glm::vec3 &gravity) {}
+void DynamicWorld::SetGravity(const glm::vec3 &gravity)
+{
+    // m_JoltPhysicsSystem->SetGravity(JPH::Vec3(gravity.x, gravity.y, gravity.z));
+}
 
 void DynamicWorld::AddRigidBody(RigidBodyRef rb)
 {
@@ -354,7 +357,7 @@ JPH::Ref<JPH::Shape> DynamicWorld::GetJoltShape(const PhysicShapeRef shape)
 
 void DynamicWorld::SyncEntitiesTransforms()
 {
-    const auto &bodyInterface = m_JoltPhysicsSystem->GetBodyInterface();
+    auto &bodyInterface = m_JoltPhysicsSystem->GetBodyInterface();
     for (const auto &body : m_RegisteredBodies)
     {
         auto bodyId = static_cast<JPH::BodyID>(body);
@@ -362,6 +365,10 @@ void DynamicWorld::SyncEntitiesTransforms()
         JPH::Vec3 velocity = bodyInterface.GetLinearVelocity(bodyId);
         JPH::Mat44 joltTransform = bodyInterface.GetWorldTransform(bodyId);
         const auto bodyRotation = bodyInterface.GetRotation(bodyId);
+
+        std::cout << "Step " << m_StepCount << ": Position = (" << position.GetX() << ", " << position.GetY() << ", "
+                  << position.GetZ() << "), Velocity = (" << velocity.GetX() << ", " << velocity.GetY() << ", "
+                  << velocity.GetZ() << ")" << std::endl;
 
         glm::mat4 transform =
             glm::mat4(joltTransform(0, 0), joltTransform(1, 0), joltTransform(2, 0), joltTransform(3, 0),
@@ -380,10 +387,8 @@ void DynamicWorld::SyncEntitiesTransforms()
         Entity entity = Entity{(entt::entity)entId, m_Scene};
 
         auto &transformComponent = entity.GetComponent<TransformComponent>();
-        transformComponent.Translation = pos;
-        // TODO: Fix rotation (allow for quaternions)
-        transformComponent.Rotation = glm::vec3(bodyRotation.GetW(), bodyRotation.GetX(), bodyRotation.GetY());
-        // ? remove this if transform acts weirdly
+
+        // update transform
         transformComponent.SetTransform(transform);
     }
 }
@@ -428,6 +433,8 @@ void DynamicWorld::StepSimulation(float dt)
     {
         LOG_CORE_CRITICAL("Failed to run simulation step!");
     }
+
+    SyncEntitiesTransforms();
 }
 
 void DynamicWorld::Clear()

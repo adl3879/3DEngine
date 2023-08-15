@@ -86,7 +86,11 @@ void AppLayer::OnUpdate(float deltaTime)
 
 void AppLayer::OnFixedUpdate(float dt)
 {
-    if (m_SceneState == SceneState::Play) m_Scene->OnFixedUpdate(dt);
+    // physic
+    if (m_SceneState == SceneState::Play)
+    {
+        m_Scene->OnFixedUpdate(dt);
+    }
 }
 
 void AppLayer::OnImGuiRender()

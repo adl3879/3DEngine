@@ -21,10 +21,7 @@ class PhysicsManager
 
     Physics::DynamicWorld *GetWorld() { return m_World; }
 
-    PhysicsManager()
-    {
-        if (!m_Instance) m_Instance = this;
-    }
+    PhysicsManager() {}
 
     void SetDrawDebug(bool value) { m_DrawDebug = value; }
 
@@ -51,6 +48,5 @@ class PhysicsManager
     bool m_IsRunning = false;
 
     bool m_DrawDebug = false;
-    static PhysicsManager *m_Instance;
 };
 } // namespace Engine

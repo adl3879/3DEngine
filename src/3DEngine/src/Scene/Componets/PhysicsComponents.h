@@ -18,7 +18,7 @@ struct RigidBodyComponent
 {
     Physics::RigidBodyRef RigidBody;
 
-    float Mass;
+    float Mass = 1.0f;
     glm::vec3 QueuedForce;
 
     RigidBodyComponent() = default;

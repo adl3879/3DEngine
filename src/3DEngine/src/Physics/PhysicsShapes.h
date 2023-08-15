@@ -88,13 +88,12 @@ class Cylinder : public PhysicShape
 class MeshShape : public PhysicShape
 {
   private:
-    MeshRef m_Mesh;
+    std::shared_ptr<Mesh> m_Mesh;
 
   public:
-    MeshShape(MeshRef mesh) : m_Mesh(mesh) { m_Type = RigidBodyShapes::MESH; }
-
-    void SetMesh(MeshRef mesh) { m_Mesh = mesh; }
-    MeshRef GetMesh() { return m_Mesh; }
+    MeshShape(std::shared_ptr<Mesh> mesh) : m_Mesh(mesh) { m_Type = RigidBodyShapes::MESH; }
+    void SetMesh(std::shared_ptr<Mesh> mesh) { m_Mesh = mesh; }
+    std::shared_ptr<Mesh> GetMesh() const { return m_Mesh; }
 };
 
 class ConvexHullShape : public PhysicShape

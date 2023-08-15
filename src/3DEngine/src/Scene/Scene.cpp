@@ -5,18 +5,21 @@
 #include "Light.h"
 #include "RenderSystem.h"
 #include "PhysicsSystem.h"
+#include "PhysicsManager.h"
 
 namespace Engine
 {
-Scene::Scene() {}
-
-Scene::~Scene()
+Scene::Scene()
 {
     m_Systems = std::vector<SystemRef>();
+
+    PhysicsManager::Get().Init(this);
 
     // Add systems
     m_Systems.push_back(std::make_shared<PhysicsSystem>(this));
 }
+
+Scene::~Scene() {}
 
 void Scene::OnAttach()
 {

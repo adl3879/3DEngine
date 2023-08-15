@@ -56,16 +56,18 @@ void PhysicsSystem::InitializeShapes()
 
 void PhysicsSystem::InitializeRigidbodies()
 {
-    auto view = m_Scene->GetRegistry().view<TransformComponent>();
+    // this code will be called if i have rigid body component
+    auto view = m_Scene->GetRegistry().view<TransformComponent, RigidBodyComponent>();
     for (auto entity : view)
     {
-        auto transform = view.get<TransformComponent>(entity);
+        auto [transform, rb] = view.get<TransformComponent, RigidBodyComponent>(entity);
         Entity ent = Entity{entity, m_Scene};
         auto &rigidBodyComponent = ent.GetComponent<RigidBodyComponent>();
         Physics::RigidBodyRef rigidBody;
 
         if (rigidBodyComponent.GetRigidBody()) continue;
 
+        // rigidBody will not be registered if it has no shape
         if (ent.HasComponent<BoxColliderComponent>())
         {
             float mass = rigidBodyComponent.Mass;
@@ -85,10 +87,10 @@ void PhysicsSystem::InitializeRigidbodies()
 
 void PhysicsSystem::ApplyForces()
 {
-    auto view = m_Scene->GetRegistry().view<TransformComponent>();
+    auto view = m_Scene->GetRegistry().view<TransformComponent, RigidBodyComponent>();
     for (auto entity : view)
     {
-        auto transform = view.get<TransformComponent>(entity);
+        auto [transform, rb] = view.get<TransformComponent, RigidBodyComponent>(entity);
         Entity ent = Entity{entity, m_Scene};
         auto &rigidBodyComponent = ent.GetComponent<RigidBodyComponent>();
         Physics::RigidBodyRef rigidBody;
