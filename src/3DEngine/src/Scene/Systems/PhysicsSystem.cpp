@@ -76,6 +76,12 @@ void PhysicsSystem::InitializeRigidbodies()
             Physics::BoxRef boxShape = std::make_shared<Physics::Box>(boxComponent.Size);
             rigidBody = std::make_shared<Physics::RigidBody>(mass, transform.Translation, transform.Rotation,
                                                              transform.GetTransform(), boxShape, ent);
+
+            rigidBody->MotionType = rigidBodyComponent.MotionType;
+            rigidBody->LinearDamping = rigidBodyComponent.LinearDamping;
+            rigidBody->AngularDamping = rigidBodyComponent.AngularDamping;
+            rigidBody->IsKinematic = rigidBodyComponent.IsKinematic;
+            rigidBody->UseGravity = rigidBodyComponent.UseGravity;
             PhysicsManager::Get().RegisterBody(rigidBody);
         }
 

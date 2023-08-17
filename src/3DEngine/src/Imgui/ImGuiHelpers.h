@@ -6,7 +6,7 @@
 
 namespace Engine
 {
-static std::string _labelPrefix(const char *const label)
+static std::string _labelPrefix(const char *const label, const char *field = "")
 {
     float width = ImGui::CalcItemWidth();
 
@@ -19,7 +19,7 @@ static std::string _labelPrefix(const char *const label)
     std::string labelID = "##";
     labelID += label;
 
-    return labelID;
+    return field == "" ? labelID : field;
 }
 
 static void _drawVec3Control(const std::string &label, glm::vec3 &values, float resetValue = 0.0f)

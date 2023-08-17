@@ -77,10 +77,11 @@ class AppLayer : public Layer
     enum class SceneState
     {
         Edit = 0,
-        Play
+        Play,
+        Simulate
     };
     SceneState m_SceneState = SceneState::Edit;
 
-    unsigned int m_IconPlay, m_IconStop;
+    unsigned int m_IconPlay, m_IconStop, m_IconPause, m_IconSimulate;
 };
 } // namespace Engine

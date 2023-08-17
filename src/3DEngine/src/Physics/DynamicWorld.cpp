@@ -244,15 +244,22 @@ void DynamicWorld::AddRigidBody(RigidBodyRef rb)
     const bool isMeshShape = rb->GetShape()->GetType() == RigidBodyShapes::MESH;
     if (mass > 0.0f && !isMeshShape)
     {
-        motionType = JPH::EMotionType::Dynamic;
+        if (rb->IsKinematic)
+            motionType = JPH::EMotionType::Kinematic;
+        else
+            motionType = JPH::EMotionType::Dynamic;
     }
+    if (rb->MotionType == MotionType::Static) motionType = JPH::EMotionType::Static;
 
     const auto &startPos = rb->GetPosition();
     const auto &bodyRotation = rb->GetRotation();
     const auto &joltRotation = JPH::Quat(bodyRotation.x, bodyRotation.y, bodyRotation.z, bodyRotation.w);
     const auto &joltPos = JPH::Vec3(startPos.x, startPos.y, startPos.z);
     auto joltShape = GetJoltShape(rb->GetShape());
+
     JPH::BodyCreationSettings bodySettings(joltShape, joltPos, joltRotation, motionType, Layers::MOVING);
+    bodySettings.mLinearDamping = rb->LinearDamping;
+    bodySettings.mAngularDamping = rb->AngularDamping;
 
     if (mass > 0.0f)
     {
@@ -264,6 +271,9 @@ void DynamicWorld::AddRigidBody(RigidBodyRef rb)
     // Create the actual rigid body
     JPH::BodyID body = m_JoltBodyInterface->CreateAndAddBody(bodySettings, JPH::EActivation::Activate);
     m_RegisteredBodies.push_back((uint32_t)body.GetIndexAndSequenceNumber());
+
+    // disable gravity if needed
+    if (!rb->UseGravity) bodyInterface.SetLinearVelocity(body, JPH::Vec3(0.0f, 0.0f, 0.0f));
 }
 
 JPH::Ref<JPH::Shape> DynamicWorld::GetJoltShape(const PhysicShapeRef shape)
@@ -385,6 +395,10 @@ void DynamicWorld::SyncEntitiesTransforms()
         auto &transformComponent = entity.GetComponent<TransformComponent>();
 
         // update transform
+        transformComponent.Translation = pos;
+        transformComponent.Rotation = glm::vec3(rotation.x, rotation.y, rotation.z);
+        transformComponent.Scale = scale;
+
         transformComponent.SetTransform(transform);
     }
 }

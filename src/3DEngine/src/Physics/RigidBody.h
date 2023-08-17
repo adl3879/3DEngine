@@ -10,6 +10,12 @@ namespace Engine
 {
 namespace Physics
 {
+enum class MotionType
+{
+    Static,
+    Dynamic,
+};
+
 class RigidBody
 {
   public:
@@ -35,12 +41,28 @@ class RigidBody
     float Mass;
     glm::mat4 Transform;
 
+    MotionType MotionType;
+    float LinearDamping;
+    float AngularDamping;
+    bool IsKinematic;
+    bool UseGravity;
+
   private:
     PhysicShapeRef m_CollisionShape;
     glm::vec3 m_Position = glm::vec3(0.0f);
     glm::quat m_Rotation = glm::quat(1.0f, 0.0f, 0.0f, 0.0f);
     Entity m_Entity;
 };
+
+static std::string MotionTypeToString(MotionType type)
+{
+    switch (type)
+    {
+        case MotionType::Static: return "Static";
+        case MotionType::Dynamic: return "Dynamic";
+        default: return "Unknown";
+    }
+}
 
 using RigidBodyRef = std::shared_ptr<RigidBody>;
 } // namespace Physics

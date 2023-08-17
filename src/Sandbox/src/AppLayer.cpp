@@ -41,6 +41,8 @@ void AppLayer::OnAttach()
     auto basePath = "/home/adeleye/Source/3DEngine/src/Sandbox/Resources/Icons";
     m_IconPlay = ResourceManager::Instance().LoadTexture(basePath + std::string("/PlayButton.png"));
     m_IconStop = ResourceManager::Instance().LoadTexture(basePath + std::string("/StopButton.png"));
+    m_IconPause = ResourceManager::Instance().LoadTexture(basePath + std::string("/PauseButton.png"));
+    m_IconSimulate = ResourceManager::Instance().LoadTexture(basePath + std::string("/SimulateButton.png"));
 
     m_ContentBrowserPanel = std::make_shared<ContentBrowserPanel>();
 
@@ -443,6 +445,16 @@ void AppLayer::UI_Toolbar()
             OnScenePlay();
         else if (m_SceneState == SceneState::Play)
             OnSceneStop();
+    }
+    ImGui::SameLine();
+    if (ImGui::ImageButton((ImTextureID)m_IconSimulate, ImVec2{size, size}, ImVec2{0, 0}, ImVec2{1, 1}, 0))
+    {
+        // if (m_SceneState == SceneState::Edit) m_SceneState = SceneState::Simulate;
+    }
+    ImGui::SameLine();
+    if (ImGui::ImageButton((ImTextureID)m_IconPause, ImVec2{size, size}, ImVec2{0, 0}, ImVec2{1, 1}, 0))
+    {
+        // if (m_SceneState == SceneState::Play) m_SceneState = SceneState::Pause;
     }
     ImGui::PopStyleVar(2);
     ImGui::PopStyleColor(3);

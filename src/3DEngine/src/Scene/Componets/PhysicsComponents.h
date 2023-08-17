@@ -21,6 +21,12 @@ struct RigidBodyComponent
     float Mass = 1.0f;
     glm::vec3 QueuedForce;
 
+    Physics::MotionType MotionType = Physics::MotionType::Static;
+    float LinearDamping = 0.05f;
+    float AngularDamping = 0.05f;
+    bool IsKinematic = false;
+    bool UseGravity = true;
+
     RigidBodyComponent() = default;
     RigidBodyComponent(const RigidBodyComponent &) = default;
 

@@ -128,8 +128,12 @@ void RenderSystem::RenderModelsWithTextures(Camera &camera, Scene &scene)
     for (auto entity : view)
     {
         auto [model, transform, visibility] = view.get<MeshComponent, TransformComponent, VisibilityComponent>(entity);
-        if (!visibility.IsVisible || model.Handle == 0) continue;
-        const auto &entityModel = AssetManager::GetAsset<Model>(model.Handle);
+
+        if (!visibility.IsVisible) continue;
+        if (model.Handle == 0 && model.ModelResource == nullptr) continue;
+
+        const auto &entityModel =
+            model.ModelResource ? model.ModelResource : AssetManager::GetAsset<Model>(model.Handle);
 
         for (auto &mesh : entityModel->GetMeshes())
         {
@@ -157,6 +161,7 @@ void RenderSystem::RenderModelsWithTextures(Camera &camera, Scene &scene)
 
             auto material = AssetManager::GetAsset<Material>(model.MaterialHandle);
             const auto &mat = material == nullptr ? mesh.Material : material;
+            if (model.ModelResource) mat->SetMaterialParam(ParameterType::ALBEDO, glm::vec3(1, 1, 1));
             mat->BindMaterialTextures(3);
 
             modelShader->SetUniform3f("albedoParam", mat->GetMaterialData().Albedo);
