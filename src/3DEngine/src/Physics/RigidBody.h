@@ -36,6 +36,7 @@ class RigidBody
     Entity GetEntity() const { return m_Entity; }
     glm::vec3 GetPosition() const { return m_Position; }
     glm::quat GetRotation() const { return m_Rotation; }
+    glm::vec3 GetScale() const { return m_Scale; }
 
   public:
     float Mass;
@@ -51,6 +52,7 @@ class RigidBody
     PhysicShapeRef m_CollisionShape;
     glm::vec3 m_Position = glm::vec3(0.0f);
     glm::quat m_Rotation = glm::quat(1.0f, 0.0f, 0.0f, 0.0f);
+    glm::vec3 m_Scale = glm::vec3(1.0f);
     Entity m_Entity;
 };
 

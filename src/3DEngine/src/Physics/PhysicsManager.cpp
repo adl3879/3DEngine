@@ -10,9 +10,9 @@ void PhysicsManager::Step(float dt) { m_World->StepSimulation(dt); }
 
 void PhysicsManager::Reset() { m_World->Clear(); }
 
-void PhysicsManager::DrawDebug()
+void PhysicsManager::DrawDebug(Entity entity)
 {
-    if (m_DrawDebug) m_World->DrawDebug();
+    if (m_DrawDebug) m_World->DrawDebug(entity);
 }
 
 void PhysicsManager::Init(Scene *scene)

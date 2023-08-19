@@ -71,6 +71,9 @@ AssetRegistry:
   - Handle: 9260198605517721820
     FilePath: Textures/hdr/puresky.hdr
     Type: AssetType::TextureHDRI
+  - Handle: 10008670132094646353
+    FilePath: Scenes/physicsTest.scene
+    Type: AssetType::Scene
   - Handle: 10252056129797447072
     FilePath: Models/ChessBoard/Castle_ORM.jpg
     Type: AssetType::Texture2D

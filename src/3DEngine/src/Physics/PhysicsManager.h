@@ -5,6 +5,7 @@
 
 #include "DynamicWorld.h"
 #include "RigidBody.h"
+#include "Entity.h"
 
 namespace Engine
 {
@@ -31,7 +32,7 @@ class PhysicsManager
 
     void Start() { m_IsRunning = true; }
     void Stop() { m_IsRunning = false; }
-    void DrawDebug();
+    void DrawDebug(Entity entity);
     bool IsRunning() { return m_IsRunning; }
     void Step(float dt);
 

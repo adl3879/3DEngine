@@ -68,7 +68,7 @@ class AppLayer : public Layer
     MaterialEditorPanel m_MaterialEditorPanel;
     std::shared_ptr<ContentBrowserPanel> m_ContentBrowserPanel = nullptr;
 
-    RenderSystemPtr m_RenderSystem;
+    RenderSystemRef m_RenderSystem;
 
   private:
     int m_GizmoType = -1;

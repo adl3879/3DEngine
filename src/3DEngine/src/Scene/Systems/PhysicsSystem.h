@@ -11,7 +11,7 @@ class PhysicsSystem : public System
 
     bool Init() override;
     void Update(float dt) override;
-    void Draw() override {}
+    void Draw() override;
     void FixedUpdate(float dt) override;
     void Exit() override;
 

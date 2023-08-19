@@ -4,6 +4,7 @@
 
 #include "Log.h"
 #include "Components.h"
+#include "PhysicsComponents.h"
 #include "Shader.h"
 #include "ResourceManager.h"
 #include "InputManager.h"
@@ -55,6 +56,7 @@ void RenderSystem::Render(Camera &camera, Scene &scene, const bool globalWirefra
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
     RenderModelsWithTextures(camera, scene);
+    // RenderPhysicsDebug(camera, scene);
 
     // glActiveTexture(GL_TEXTURE0);
     auto view = scene.GetRegistry().view<SkyLightComponent>();
@@ -161,7 +163,7 @@ void RenderSystem::RenderModelsWithTextures(Camera &camera, Scene &scene)
 
             auto material = AssetManager::GetAsset<Material>(model.MaterialHandle);
             const auto &mat = material == nullptr ? mesh.Material : material;
-            if (model.ModelResource) mat->SetMaterialParam(ParameterType::ALBEDO, glm::vec3(1, 1, 1));
+            if (model.ModelResource && !material) mat->SetMaterialParam(ParameterType::ALBEDO, glm::vec3(1, 1, 1));
             mat->BindMaterialTextures(3);
 
             modelShader->SetUniform3f("albedoParam", mat->GetMaterialData().Albedo);
@@ -184,6 +186,45 @@ void RenderSystem::RenderModelsWithTextures(Camera &camera, Scene &scene)
 }
 
 void RenderSystem::RenderModelsWithNoTextures(Camera &camera, Scene &scene) const {}
+
+void RenderSystem::RenderPhysicsDebug(Camera &camera, Scene &scene) const
+{
+    auto modelShader = m_Shaders.at("modelShader");
+    auto selectedEntity = scene.GetSelectedEntity();
+    if (selectedEntity == entt::null) return;
+    Entity ent = Entity{selectedEntity, &scene};
+
+    auto model = ent.GetComponent<MeshComponent>();
+    auto transform = ent.GetComponent<TransformComponent>();
+
+    if (model.Handle == 0 && model.ModelResource == nullptr) return;
+    if (ent.HasComponent<RigidBodyComponent>())
+    {
+        const auto &entityModel =
+            model.ModelResource ? model.ModelResource : AssetManager::GetAsset<Model>(model.Handle);
+        for (auto &mesh : entityModel->GetMeshes())
+        {
+            modelShader->Use();
+            mesh.VAO.Bind();
+
+            // clang-format off
+            auto vertices = mesh.VertexSOA;
+            mesh.VAO.SetBufferSubData(0, BufferType::ARRAY, 0, vertices.Positions.size() * sizeof(glm::vec3), &vertices.Positions[0]);
+            mesh.VAO.SetBufferSubData(1, BufferType::ARRAY, 0, vertices.Normals.size() * sizeof(glm::vec3), &vertices.Normals[0]);
+            mesh.VAO.SetBufferSubData(2, BufferType::ARRAY, 0, vertices.Colors.size() * sizeof(glm::vec3), &vertices.Colors[0]);
+            // clang-format on
+
+            modelShader->SetUniformMatrix4fv("model", transform.GetTransform());
+            modelShader->SetUniformMatrix4fv("projectionViewMatrix", camera.GetProjectionViewMatrix());
+
+            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+            glDrawElements(GL_TRIANGLES, mesh.IndexCount, GL_UNSIGNED_INT, nullptr);
+            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+            mesh.VAO.Unbind();
+        }
+    }
+}
 
 void RenderSystem::RenderQuad(Camera &camera)
 {

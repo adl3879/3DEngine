@@ -9,6 +9,7 @@
 
 #include "PhysicsShapes.h"
 #include "RigidBody.h"
+#include "Model.h"
 
 namespace JPH
 {
@@ -37,7 +38,7 @@ class DynamicWorld
     DynamicWorld(Scene *scene);
     virtual ~DynamicWorld() = default;
 
-    void DrawDebug();
+    void DrawDebug(Entity entity);
 
   public:
     void SetGravity(const glm::vec3 &gravity);
@@ -66,6 +67,10 @@ class DynamicWorld
 
   private:
     Scene *m_Scene;
+
+  private:
+    // debug models
+    ModelRef m_DebugCube;
 };
 } // namespace Physics
 } // namespace Engine

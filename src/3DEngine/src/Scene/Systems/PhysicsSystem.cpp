@@ -31,6 +31,8 @@ void PhysicsSystem::Update(float dt)
     // ?
 }
 
+void PhysicsSystem::Draw() {}
+
 void PhysicsSystem::FixedUpdate(float dt)
 {
     InitializeRigidbodies();
@@ -73,7 +75,7 @@ void PhysicsSystem::InitializeRigidbodies()
             float mass = rigidBodyComponent.Mass;
 
             auto &boxComponent = ent.GetComponent<BoxColliderComponent>();
-            Physics::BoxRef boxShape = std::make_shared<Physics::Box>(boxComponent.Size);
+            Physics::BoxRef boxShape = std::make_shared<Physics::Box>(boxComponent.Size * transform.Scale);
             rigidBody = std::make_shared<Physics::RigidBody>(mass, transform.Translation, transform.Rotation,
                                                              transform.GetTransform(), boxShape, ent);
 

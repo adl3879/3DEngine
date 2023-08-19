@@ -54,13 +54,13 @@ struct TransformComponent
 
     void SetTransform(const glm::mat4 &transform)
     {
-        // Translation = glm::vec3(transform[3]);
-        // Scale = glm::vec3(glm::length(transform[0]), glm::length(transform[1]), glm::length(transform[2]));
+        Translation = glm::vec3(transform[3]);
+        Scale = glm::vec3(glm::length(transform[0]), glm::length(transform[1]), glm::length(transform[2]));
 
-        // glm::mat4 rotation = glm::mat4(transform);
-        // rotation[3] = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
+        glm::mat4 rotation = glm::mat4(transform);
+        rotation[3] = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
 
-        // Rotation = glm::eulerAngles(glm::quat_cast(rotation));
+        Rotation = glm::eulerAngles(glm::quat_cast(rotation));
     }
 };
 

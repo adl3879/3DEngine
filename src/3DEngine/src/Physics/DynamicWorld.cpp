@@ -26,7 +26,9 @@
 #include <glm/gtx/matrix_decompose.hpp>
 
 #include "Components.h"
+#include "PhysicsComponents.h"
 #include "Scene.h"
+#include "MeshImporter.h"
 
 #include <iostream>
 
@@ -226,8 +228,6 @@ DynamicWorld::DynamicWorld(Scene *scene) : m_StepCount(0), m_Scene(scene)
     m_JoltJobSystem = new JPH::JobSystemThreadPool(JPH::cMaxPhysicsJobs, JPH::cMaxPhysicsBarriers, availableThreads);
 }
 
-void DynamicWorld::DrawDebug() {}
-
 void DynamicWorld::SetGravity(const glm::vec3 &gravity)
 {
     // m_JoltPhysicsSystem->SetGravity(JPH::Vec3(gravity.x, gravity.y, gravity.z));
@@ -260,7 +260,6 @@ void DynamicWorld::AddRigidBody(RigidBodyRef rb)
     JPH::BodyCreationSettings bodySettings(joltShape, joltPos, joltRotation, motionType, Layers::MOVING);
     bodySettings.mLinearDamping = rb->LinearDamping;
     bodySettings.mAngularDamping = rb->AngularDamping;
-
     if (mass > 0.0f)
     {
         bodySettings.mOverrideMassProperties = JPH::EOverrideMassProperties::CalculateInertia;
@@ -271,9 +270,6 @@ void DynamicWorld::AddRigidBody(RigidBodyRef rb)
     // Create the actual rigid body
     JPH::BodyID body = m_JoltBodyInterface->CreateAndAddBody(bodySettings, JPH::EActivation::Activate);
     m_RegisteredBodies.push_back((uint32_t)body.GetIndexAndSequenceNumber());
-
-    // disable gravity if needed
-    if (!rb->UseGravity) bodyInterface.SetLinearVelocity(body, JPH::Vec3(0.0f, 0.0f, 0.0f));
 }
 
 JPH::Ref<JPH::Shape> DynamicWorld::GetJoltShape(const PhysicShapeRef shape)
@@ -397,9 +393,9 @@ void DynamicWorld::SyncEntitiesTransforms()
         // update transform
         transformComponent.Translation = pos;
         transformComponent.Rotation = glm::vec3(rotation.x, rotation.y, rotation.z);
-        transformComponent.Scale = scale;
+        // transformComponent.Scale = scale;
 
-        transformComponent.SetTransform(transform);
+        // transformComponent.SetTransform(transform);
     }
 }
 
@@ -481,6 +477,19 @@ void DynamicWorld::AddForceToRigidBody(Entity entity, const glm::vec3 &force)
             bodyInterface.AddForce(bodyId, JPH::Vec3(force.x, force.y, force.z));
             return;
         }
+    }
+}
+
+void DynamicWorld::DrawDebug(Entity entity)
+{
+    const auto rigidBodyComponent = entity.GetComponent<RigidBodyComponent>();
+    if (entity.HasComponent<BoxColliderComponent>())
+    {
+        auto model = MeshImporter::LoadModel(Utils::Path::GetAbsolute("/Resources/Models/Cube/scene.gltf"));
+        auto mesh = model->GetMeshes()[0];
+        mesh.VAO.Bind();
+
+        mesh.VAO.Unbind();
     }
 }
 } // namespace Physics
