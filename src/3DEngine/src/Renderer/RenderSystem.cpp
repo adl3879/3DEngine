@@ -6,9 +6,7 @@
 #include "Components.h"
 #include "PhysicsComponents.h"
 #include "Shader.h"
-#include "ResourceManager.h"
 #include "InputManager.h"
-#include "OutlineSystem.h"
 #include "AssetManager.h"
 
 namespace Engine
@@ -63,13 +61,8 @@ void RenderSystem::Render(Camera &camera, Scene &scene, const bool globalWirefra
     for (auto entity : view)
     {
         auto &skyLight = view.get<SkyLightComponent>(entity).Light;
-        if (skyLight != nullptr)
-        {
-            // skyLight->BindMaps();
-            skyLight->Render(camera);
-        }
+        if (skyLight != nullptr) skyLight->Render(camera);
     }
-    // m_SkyLight->Render(camera);
 }
 
 void RenderSystem::SetupDefaultState()
@@ -139,21 +132,7 @@ void RenderSystem::RenderModelsWithTextures(Camera &camera, Scene &scene)
 
         for (auto &mesh : entityModel->GetMeshes())
         {
-            modelShader->Use();
-            mesh.VAO.Bind();
-
-            // entity id should be populated only once
-            if (mesh.VertexSOA.EntityIDs[0] < 0.0f)
-                mesh.VertexSOA.EntityIDs = std::vector<float>(mesh.VertexCount, (int)entity + 1);
-
-            // clang-format off
-            auto vertices = mesh.VertexSOA;
-            mesh.VAO.SetBufferSubData(0, BufferType::ARRAY, 0, vertices.Positions.size() * sizeof(glm::vec3), &vertices.Positions[0]);
-            mesh.VAO.SetBufferSubData(1, BufferType::ARRAY, 0, vertices.Normals.size() * sizeof(glm::vec3), &vertices.Normals[0]);
-            mesh.VAO.SetBufferSubData(2, BufferType::ARRAY, 0, vertices.Colors.size() * sizeof(glm::vec3), &vertices.Colors[0]);
-            mesh.VAO.SetBufferSubData(3, BufferType::ARRAY, 0, vertices.TexCoords.size() * sizeof(glm::vec2), &vertices.TexCoords[0]);
-            mesh.VAO.SetBufferSubData(4, BufferType::ARRAY, 0, vertices.EntityIDs.size() * sizeof(float), &vertices.EntityIDs[0]);
-            // clang-format on
+            modelShader->Bind();
 
             modelShader->SetUniformMatrix4fv("model", transform.GetTransform());
             modelShader->SetUniformMatrix3fv("normalMatrix",
@@ -161,23 +140,18 @@ void RenderSystem::RenderModelsWithTextures(Camera &camera, Scene &scene)
             modelShader->SetUniformMatrix4fv("projectionViewMatrix", camera.GetProjectionViewMatrix());
             modelShader->SetUniform3f("cameraPosition", camera.GetPosition());
 
-            auto material = AssetManager::GetAsset<Material>(model.MaterialHandle);
-            const auto &mat = material == nullptr ? mesh.Material : material;
-            if (model.ModelResource && !material) mat->SetMaterialParam(ParameterType::ALBEDO, glm::vec3(1, 1, 1));
-            mat->BindMaterialTextures(3);
-
-            modelShader->SetUniform3f("albedoParam", mat->GetMaterialData().Albedo);
-            modelShader->SetUniform1f("metallicParam", mat->GetMaterialData().Metallic);
-            modelShader->SetUniform1f("aoParam", 1.0);
-            modelShader->SetUniform1f("roughnessParam", mat->GetMaterialData().Roughness);
-
-            modelShader->SetUniform1i("numOfPointLights", 4);
-
+            modelShader->SetUniform1i("entityId", (int)entity + 1);
             Light::SetLightUniforms(*modelShader);
 
-            glDrawElements(GL_TRIANGLES, mesh.IndexCount, GL_UNSIGNED_INT, nullptr);
+            auto material = AssetManager::GetAsset<Material>(model.MaterialHandle);
+            if (material != nullptr) mesh.Material = material;
+            if (model.ModelResource && !material)
+                mesh.Material->SetMaterialParam(ParameterType::ALBEDO, glm::vec3(1, 1, 1));
 
-            mat->UnbindMaterialTextures();
+            // draw mesh
+            mesh.Draw(modelShader.get(), true);
+
+            mesh.Material->Unbind();
             mesh.VAO.Unbind();
         }
     }
@@ -204,7 +178,7 @@ void RenderSystem::RenderPhysicsDebug(Camera &camera, Scene &scene) const
             model.ModelResource ? model.ModelResource : AssetManager::GetAsset<Model>(model.Handle);
         for (auto &mesh : entityModel->GetMeshes())
         {
-            modelShader->Use();
+            modelShader->Bind();
             mesh.VAO.Bind();
 
             // clang-format off

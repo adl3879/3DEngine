@@ -166,6 +166,14 @@ AssetRef EditorAssetManager::GetAsset(AssetHandle handle)
     return asset;
 }
 
+AssetRef EditorAssetManager::GetAsset(const std::filesystem::path &path)
+{
+    AssetHandle handle = GetAssetHandleFromPath(path);
+    if (handle == 0) handle = ImportAsset(path);
+
+    return GetAsset(handle);
+}
+
 AssetHandle EditorAssetManager::GetAssetHandleFromPath(const std::filesystem::path &path)
 {
     for (auto &[handle, metadata] : m_AssetRegistry)

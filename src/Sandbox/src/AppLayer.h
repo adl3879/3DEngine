@@ -6,6 +6,7 @@
 #include "ContentBrowserPanel.h"
 #include "MaterialEditorPanel.h"
 #include "Project.h"
+#include "Texture.h"
 
 #include <memory>
 
@@ -52,7 +53,6 @@ class AppLayer : public Layer
 
   private:
     std::shared_ptr<Framebuffer> m_Framebuffer;
-    std::shared_ptr<Framebuffer> m_Framebuffer2;
 
     EditorCamera m_EditorCamera;
 
@@ -82,6 +82,6 @@ class AppLayer : public Layer
     };
     SceneState m_SceneState = SceneState::Edit;
 
-    unsigned int m_IconPlay, m_IconStop, m_IconPause, m_IconSimulate;
+    Texture2DRef m_IconPlay, m_IconStop, m_IconPause, m_IconSimulate;
 };
 } // namespace Engine

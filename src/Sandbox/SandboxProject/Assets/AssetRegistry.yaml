@@ -1,7 +1,4 @@
 AssetRegistry:
-  - Handle: 676088992294236359
-    FilePath: Scenes/scene1.scene
-    Type: AssetType::Scene
   - Handle: 760269387233092212
     FilePath: Models/ChessBoard/king_white_base_color.jpg
     Type: AssetType::Texture2D
@@ -113,9 +110,6 @@ AssetRegistry:
   - Handle: 12581167853635737154
     FilePath: Models/ChessBoard/King_white_normal.jpg
     Type: AssetType::Texture2D
-  - Handle: 12743316793560393201
-    FilePath: Scenes/Boxes.scene
-    Type: AssetType::Scene
   - Handle: 12812999897013018592
     FilePath: Models/ChessBoard/Queen_white_ORM.jpg
     Type: AssetType::Texture2D

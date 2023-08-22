@@ -8,15 +8,16 @@
 #include <any>
 #include <filesystem>
 
-#include "Texture.h"
+#include "Texture2D.h"
 #include "Asset.h"
+#include "Shader.h"
 
 namespace Engine
 {
 struct MaterialData
 {
     glm::vec3 Albedo = glm::vec3(0.0f);
-    float AO = 0.0f;
+    float AO = 1.0f;
     glm::vec3 Normal = glm::vec3(0.0f);
     float Metallic = 0.5f;
     float Roughness = 0.5f;
@@ -39,9 +40,9 @@ class Material : public Asset
     void Init(const std::string &name, AssetHandle albedo, AssetHandle metallic, AssetHandle normal,
               AssetHandle roughness);
 
-    void Init(const std::string_view name, const std::string_view albedoPath, const std::string_view aoPath,
-              const std::string_view metallicPath, const std::string_view normalPath,
-              const std::string_view roughnessPath, const std::string_view alphaMaskPath);
+    void Init(const std::string &name, const std::filesystem::path &albedoPath, const std::filesystem::path &aoPath,
+              const std::filesystem::path &metallicPath, const std::filesystem::path &normalPath,
+              const std::filesystem::path &roughnessPath, const std::filesystem::path &alphaMaskPath);
 
     void Init(const std::string_view name, const glm::vec3 &albedo, float ao, const glm::vec3 &normal, float metallic,
               float roughness, const float alpha = 1.0f);
@@ -50,11 +51,9 @@ class Material : public Asset
 
     unsigned int GetParameterTexture(const ParameterType &type) const noexcept;
     Texture2DRef GetTexture(const ParameterType &type) const noexcept { return m_Textures[type]; }
-    void BindMaterialTextures(uint32_t startIndex) const noexcept;
-    void UnbindMaterialTextures() const noexcept;
 
-    auto GetAlphaValue() const noexcept { return m_Alpha; }
-    auto GetAlphaMask() const noexcept { return m_AlphaMaskTexture; }
+    void Bind(Shader *shader) const noexcept;
+    void Unbind() const noexcept;
 
     virtual AssetType GetType() const override { return AssetType::Material; }
 
@@ -80,9 +79,6 @@ class Material : public Asset
     std::array<unsigned int, 5> m_MaterialTextures;
     std::array<Texture2DRef, 5> m_Textures;
     std::array<AssetHandle, 5> m_TextureHandles;
-
-    float m_Alpha;
-    unsigned int m_AlphaMaskTexture;
 
     std::filesystem::path m_MaterialPath;
 };

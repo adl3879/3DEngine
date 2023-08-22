@@ -5,7 +5,6 @@
 #include "Scene.h"
 #include "Shader.h"
 #include "SkyLight.h"
-#include "Framebuffer.h"
 
 #include <unordered_map>
 #include <memory>
@@ -52,7 +51,6 @@ class RenderSystem
 
   private:
     std::shared_ptr<OutlineSystem> m_Outline = nullptr;
-    FramebufferPtr m_FBO = nullptr;
 };
 
 using RenderSystemRef = std::shared_ptr<RenderSystem>;

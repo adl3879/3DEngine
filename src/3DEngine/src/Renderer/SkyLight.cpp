@@ -3,11 +3,11 @@
 #include <glad/glad.h>
 
 #include "PlatformUtils.h"
-#include "ResourceManager.h"
 #include "Shader.h"
 #include "InputManager.h"
 #include "RenderSystem.h"
 #include "AssetManager.h"
+#include "TextureHDRI.h"
 
 namespace Engine
 {
@@ -72,7 +72,7 @@ void SkyLight::Init(AssetHandle handle, const std::size_t resolution)
         glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, -1.0f, 0.0f))};
 
     // convert HDR equirectangular environment map to cubemap equivalent
-    equirectangularToCubemapShader->Use();
+    equirectangularToCubemapShader->Bind();
     equirectangularToCubemapShader->SetUniform1i("equirectangularMap", 0);
     equirectangularToCubemapShader->SetUniformMatrix4fv("projection", captureProjection);
 
@@ -122,7 +122,7 @@ void SkyLight::Init(AssetHandle handle, const std::size_t resolution)
     glBindRenderbuffer(GL_RENDERBUFFER, captureRBO);
     glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, resolution / 16, resolution / 16);
 
-    irradianceShader->Use();
+    irradianceShader->Bind();
     irradianceShader->SetUniform1i("environmentMap", 0);
     irradianceShader->SetUniformMatrix4fv("projection", captureProjection);
 
@@ -164,7 +164,7 @@ void SkyLight::Init(AssetHandle handle, const std::size_t resolution)
 
     glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
 
-    prefilterShader->Use();
+    prefilterShader->Bind();
     prefilterShader->SetUniform1i("environmentMap", 0);
     prefilterShader->SetUniformMatrix4fv("projection", captureProjection);
 
@@ -218,7 +218,7 @@ void SkyLight::Init(AssetHandle handle, const std::size_t resolution)
     glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, resolution, resolution);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_BrdfLUT, 0);
 
-    brdfShader->Use();
+    brdfShader->Bind();
     glViewport(0, 0, resolution, resolution);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     RenderQuad();
@@ -240,7 +240,7 @@ void SkyLight::Destroy()
 void SkyLight::Render(Camera &camera)
 {
     auto cubemap = m_Shaders["cubemap"];
-    cubemap->Use();
+    cubemap->Bind();
     cubemap->SetUniformMatrix4fv("projection", camera.GetProjectionMatrix());
     cubemap->SetUniformMatrix4fv("view", camera.GetViewMatrix());
 

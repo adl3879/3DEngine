@@ -1,6 +1,7 @@
 #pragma once
 
 #include <glm/glm.hpp>
+#include <memory>
 
 namespace Engine
 {
@@ -13,4 +14,5 @@ class Camera
     virtual glm::mat4 GetProjectionMatrix() = 0;
     virtual glm::mat4 GetViewMatrix() = 0;
 };
+using CameraRef = std::shared_ptr<Camera>;
 } // namespace Engine

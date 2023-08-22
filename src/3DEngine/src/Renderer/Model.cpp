@@ -7,7 +7,6 @@
 #include <glm/gtx/quaternion.hpp>
 #include <glm/glm.hpp>
 
-#include "ResourceManager.h"
 #include "PlatformUtils.h"
 #include "AssetManager.h"
 #include "Project.h"
@@ -100,7 +99,6 @@ Mesh Model::ProcessMesh(aiMesh *mesh, const aiScene *scene, const bool loadMater
     for (auto i = 0; i < mesh->mNumVertices; ++i)
     {
         vertexSOA.Colors.emplace_back(glm::vec4(1.0f));
-        vertexSOA.EntityIDs.emplace_back(-1.0f);
         Vertex vertex;
 
         if (mesh->HasPositions())
@@ -184,11 +182,11 @@ Mesh Model::ProcessMesh(aiMesh *mesh, const aiScene *scene, const bool loadMater
                            materialHandles[3]);
 
             ++m_NumOfMaterials;
-            return Mesh(vertexSOA, indices, material);
+            return Mesh(vertices, indices, material);
         }
     }
 
-    return Mesh(vertexSOA, indices);
+    return Mesh(vertices, indices);
 }
 
 std::filesystem::path Model::GetRelativeTexturePath(const aiString &path) const

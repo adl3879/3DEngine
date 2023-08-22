@@ -3,7 +3,7 @@
 #include "Asset.h"
 #include "AssetMetadata.h"
 
-#include "Texture.h"
+#include "TextureHDRI.h"
 #include "Project.h"
 #include "Log.h"
 

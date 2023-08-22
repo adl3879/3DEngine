@@ -6,8 +6,8 @@
 
 #include <ImGuizmo.h>
 #include "Math.h"
-#include "ResourceManager.h"
 #include "AssetManager.h"
+#include "TextureImporter.h"
 
 namespace Engine
 {
@@ -20,13 +20,19 @@ void AppLayer::OnAttach()
     // TODO: load last opened project from a savefile
     Project::Load("/home/adeleye/Source/3DEngine/src/Sandbox/SandboxProject/SandboxProject.3dproj");
 
-    auto fbSpec = FramebufferSpecification{};
-    fbSpec.Attachments = {FramebufferTextureFormat::RGBA8, FramebufferTextureFormat::RED_INTEGER,
-                          FramebufferTextureFormat::Depth};
-    fbSpec.Width = windowState.Width;
-    fbSpec.Height = windowState.Height;
+    // auto fbSpec = FramebufferSpecification{};
+    // fbSpec.Attachments = {FramebufferTextureFormat::RGBA8, FramebufferTextureFormat::RED_INTEGER,
+    //                       FramebufferTextureFormat::Depth};
+    // fbSpec.Width = windowState.Width;
+    // fbSpec.Height = windowState.Height;
 
-    m_Framebuffer = std::make_shared<Engine::Framebuffer>(fbSpec);
+    m_Framebuffer = std::make_shared<Framebuffer>(true, glm::vec2{1280, 900});
+    auto vColorTexture =
+        std::make_shared<Texture2D>(TextureSpecification{.Width = 1280, .Height = 900, .Format = ImageFormat::RGBA8});
+    auto vDepthTexture =
+        std::make_shared<Texture2D>(TextureSpecification{.Width = 1280, .Height = 900, .Format = ImageFormat::Depth});
+    m_Framebuffer->SetTexture(vColorTexture, GL_COLOR_ATTACHMENT0);
+    m_Framebuffer->SetTexture(vDepthTexture, GL_DEPTH_ATTACHMENT);
 
     m_EditorScene = std::make_shared<Scene>();
     m_ActiveScene = m_EditorScene;
@@ -39,10 +45,10 @@ void AppLayer::OnAttach()
     m_RenderSystem->Init();
 
     auto basePath = "/home/adeleye/Source/3DEngine/src/Sandbox/Resources/Icons";
-    m_IconPlay = ResourceManager::Instance().LoadTexture(basePath + std::string("/PlayButton.png"));
-    m_IconStop = ResourceManager::Instance().LoadTexture(basePath + std::string("/StopButton.png"));
-    m_IconPause = ResourceManager::Instance().LoadTexture(basePath + std::string("/PauseButton.png"));
-    m_IconSimulate = ResourceManager::Instance().LoadTexture(basePath + std::string("/SimulateButton.png"));
+    m_IconPlay = TextureImporter::LoadTexture2D(basePath + std::string("/PlayButton.png"));
+    m_IconStop = TextureImporter::LoadTexture2D(basePath + std::string("/StopButton.png"));
+    m_IconPause = TextureImporter::LoadTexture2D(basePath + std::string("/PauseButton.png"));
+    m_IconSimulate = TextureImporter::LoadTexture2D(basePath + std::string("/SimulateButton.png"));
 
     m_ContentBrowserPanel = std::make_shared<ContentBrowserPanel>();
 
@@ -69,6 +75,7 @@ void AppLayer::OnUpdate(float dt)
             m_ActiveScene->OnUpdate(dt);
             m_ActiveScene->OnUpdateRuntime(dt);
             break;
+        default: break;
     }
 
     auto [mx, my] = ImGui::GetMousePos();
@@ -79,13 +86,13 @@ void AppLayer::OnUpdate(float dt)
     int mouseX = (int)mx;
     int mouseY = (int)my;
 
-    if (mouseX >= 0 && mouseY >= 0 && mouseX < (int)viewportSize.x && mouseY < (int)viewportSize.y)
-    {
-        auto pixelData = m_Framebuffer->ReadPixel(1, mouseX, mouseY);
-        // LOG_CORE_TRACE("pixel {}", pixelData - 1);
-        // removed one because i moved every entity by one
-        m_HoveredEntity = pixelData == 0 ? Entity() : Entity((entt::entity)(pixelData - 1), m_ActiveScene.get());
-    }
+    // if (mouseX >= 0 && mouseY >= 0 && mouseX < (int)viewportSize.x && mouseY < (int)viewportSize.y)
+    // {
+    //     auto pixelData = m_Framebuffer->ReadPixel(1, mouseX, mouseY);
+    //     // LOG_CORE_TRACE("pixel {}", pixelData - 1);
+    //     // removed one because i moved every entity by one
+    //     m_HoveredEntity = pixelData == 0 ? Entity() : Entity((entt::entity)(pixelData - 1), m_ActiveScene.get());
+    // }
     m_Framebuffer->Unbind();
 }
 
@@ -175,10 +182,11 @@ void AppLayer::OnImGuiRender()
     auto viewportPanelSize = ImGui::GetContentRegionAvail();
     if (m_ViewportSize != *((glm::vec2 *)&viewportPanelSize))
     {
-        m_Framebuffer->Resize((int)viewportPanelSize.x, (int)viewportPanelSize.y);
+        m_Framebuffer->QueueResize(glm::vec2(viewportPanelSize.x, viewportPanelSize.y));
         m_ViewportSize = {viewportPanelSize.x, viewportPanelSize.y};
     }
-    ImGui::Image((void *)(intptr_t)m_Framebuffer->GetColorAttachment(), ImVec2{m_ViewportSize.x, m_ViewportSize.y});
+    ImGui::Image((void *)(intptr_t)m_Framebuffer->GetTexture(GL_COLOR_ATTACHMENT0)->GetRendererID(),
+                 ImVec2{m_ViewportSize.x, m_ViewportSize.y});
 
     if (ImGui::BeginDragDropTarget())
     {
@@ -435,7 +443,7 @@ void AppLayer::UI_Toolbar()
 
     ImGui::Begin("##toolbar", nullptr,
                  ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
-    auto icon = m_SceneState == SceneState::Edit ? m_IconPlay : m_IconStop;
+    auto icon = m_SceneState == SceneState::Edit ? m_IconPlay->GetRendererID() : m_IconStop->GetRendererID();
     auto size = ImGui::GetWindowHeight() - 8.0f;
     ImGui::SetCursorPosX((ImGui::GetWindowContentRegionMax().x * 0.5f) - (size * 0.5));
     ImGui::SetCursorPosY(ImGui::GetWindowContentRegionMax().y * 0.5f - (size * 0.5));
@@ -447,12 +455,14 @@ void AppLayer::UI_Toolbar()
             OnSceneStop();
     }
     ImGui::SameLine();
-    if (ImGui::ImageButton((ImTextureID)m_IconSimulate, ImVec2{size, size}, ImVec2{0, 0}, ImVec2{1, 1}, 0))
+    if (ImGui::ImageButton((ImTextureID)m_IconSimulate->GetRendererID(), ImVec2{size, size}, ImVec2{0, 0}, ImVec2{1, 1},
+                           0))
     {
         // if (m_SceneState == SceneState::Edit) m_SceneState = SceneState::Simulate;
     }
     ImGui::SameLine();
-    if (ImGui::ImageButton((ImTextureID)m_IconPause, ImVec2{size, size}, ImVec2{0, 0}, ImVec2{1, 1}, 0))
+    if (ImGui::ImageButton((ImTextureID)m_IconPause->GetRendererID(), ImVec2{size, size}, ImVec2{0, 0}, ImVec2{1, 1},
+                           0))
     {
         // if (m_SceneState == SceneState::Play) m_SceneState = SceneState::Pause;
     }

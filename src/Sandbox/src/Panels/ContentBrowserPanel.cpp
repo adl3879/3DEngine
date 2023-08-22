@@ -2,7 +2,6 @@
 
 #include <imgui.h>
 
-#include "ResourceManager.h"
 #include "Project.h"
 #include "TextureImporter.h"
 #include "AssetManager.h"
@@ -253,6 +252,8 @@ void ContentBrowserPanel::OnImGuiRender()
 
 void ContentBrowserPanel::DisplayFileHierarchy(const std::filesystem::path &directory)
 {
+    // TODO: sync with the file system so that they open the same directory
+    namespace fs = std::filesystem;
     if (!fs::exists(directory) || !fs::is_directory(directory)) return;
 
     for (auto &directoryEntry : std::filesystem::directory_iterator(directory))

@@ -7,6 +7,7 @@
 #include "VertexArray.h"
 #include "Material.h"
 #include "Asset.h"
+#include "Shader.h"
 
 namespace Engine
 {
@@ -16,6 +17,7 @@ struct Mesh
          const MaterialRef &material = nullptr);
     Mesh(const struct VertexSOA &vertices, const std::vector<uint32_t> &indices, const MaterialRef &material = nullptr);
 
+    void Draw(Shader *shader, bool bindMaterials);
     void Clear();
 
     auto GetTriangleCount() const { return IndexCount / 3; }
