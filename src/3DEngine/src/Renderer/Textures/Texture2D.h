@@ -9,6 +9,7 @@ class Texture2D : public Texture
   public:
     Texture2D(const TextureSpecification &specification, Buffer data);
     Texture2D(const TextureSpecification &specification);
+    Texture2D(ImageFormat format);
     ~Texture2D();
 
     virtual void SetData(Buffer data) override;
@@ -29,7 +30,7 @@ class Texture2D : public Texture
   private:
     TextureSpecification m_Specification;
     unsigned int m_RendererID = 0;
-    unsigned int m_InternalFormat, m_DataFormat;
+    unsigned int m_InternalFormat, m_DataFormat, m_DataType;
 };
 
 using Texture2DRef = std::shared_ptr<Texture2D>;

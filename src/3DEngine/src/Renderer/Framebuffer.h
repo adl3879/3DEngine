@@ -2,6 +2,7 @@
 
 #include <glm/glm.hpp>
 #include <map>
+#include <memory>
 
 #include "Texture2D.h"
 
@@ -16,9 +17,10 @@ class Framebuffer
     Texture2DRef GetTexture(unsigned int attachment = 0x8CE0) { return m_Textures[(int)attachment]; }
     void SetTexture(Texture2DRef texture, unsigned int attachment = 0x8CE0);
 
-    void Clear();
     void Bind();
     void Unbind();
+    void Clear();
+    void ClearAttachment(uint32_t index, int value);
     void QueueResize(glm::vec2 size);
     glm::vec2 GetSize() const { return m_Size; }
     void SetSize(const glm::vec2 &size) { m_Size = size; }
@@ -39,4 +41,5 @@ class Framebuffer
     Texture2DRef m_Texture;
     bool m_HasRenderBuffer = false;
 };
+using FramebufferRef = std::shared_ptr<Framebuffer>;
 } // namespace Engine

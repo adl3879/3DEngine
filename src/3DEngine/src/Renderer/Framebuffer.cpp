@@ -11,7 +11,7 @@ Framebuffer::Framebuffer(bool hasRenderBuffer, glm::vec2 size)
     m_HasRenderBuffer = hasRenderBuffer;
 
     glGenFramebuffers(1, &m_FramebufferID);
-    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, m_FramebufferID);
+    glBindFramebuffer(GL_FRAMEBUFFER, m_FramebufferID);
 
     // Create render buffer and attach to frame buffer.
     if (m_HasRenderBuffer)
@@ -19,20 +19,16 @@ Framebuffer::Framebuffer(bool hasRenderBuffer, glm::vec2 size)
         glGenRenderbuffers(1, &m_RenderBuffer);
         glBindRenderbuffer(GL_RENDERBUFFER, m_RenderBuffer);
         glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, m_Size.x, m_Size.y);
-        glFramebufferRenderbuffer(GL_DRAW_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, m_RenderBuffer);
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, m_RenderBuffer);
     }
     else
         m_RenderBuffer = -1;
 
     // Unbind
-    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-Framebuffer::~Framebuffer()
-{
-    glDeleteFramebuffers(1, &m_FramebufferID);
-    glDeleteRenderbuffers(1, &m_RenderBuffer);
-}
+Framebuffer::~Framebuffer() {}
 
 void Framebuffer::SetTexture(Texture2DRef texture, unsigned int attachment)
 {
@@ -54,20 +50,27 @@ void Framebuffer::SetTexture(Texture2DRef texture, unsigned int attachment)
     }
 
     if (size > 0) glDrawBuffers(size, &keys[0]);
+
     Unbind();
 }
 
 void Framebuffer::Clear() { glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); }
 
+void Framebuffer::ClearAttachment(uint32_t index, int value)
+{
+    //!
+    glClearTexImage(m_Textures[index]->GetRendererID(), 0, GL_RED_INTEGER, GL_INT, &value);
+}
+
 void Framebuffer::Bind()
 {
     if (ResizeQueued) UpdateSize(m_Size);
 
-    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, m_FramebufferID);
+    glBindFramebuffer(GL_FRAMEBUFFER, m_FramebufferID);
     glViewport(0, 0, m_Size.x, m_Size.y);
 }
 
-void Framebuffer::Unbind() { glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0); }
+void Framebuffer::Unbind() { glBindFramebuffer(GL_FRAMEBUFFER, 0); }
 
 void Framebuffer::QueueResize(glm::vec2 size)
 {
@@ -88,7 +91,7 @@ void Framebuffer::UpdateSize(glm::vec2 size)
 
     // New FBO and RBO.
     glGenFramebuffers(1, &m_FramebufferID);
-    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, m_FramebufferID);
+    glBindFramebuffer(GL_FRAMEBUFFER, m_FramebufferID);
 
     // Recreate resized texture.
     for (auto &t : m_Textures)
@@ -104,11 +107,11 @@ void Framebuffer::UpdateSize(glm::vec2 size)
         glGenRenderbuffers(1, &m_RenderBuffer);
         glBindRenderbuffer(GL_RENDERBUFFER, m_RenderBuffer);
         glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, m_Size.x, m_Size.y);
-        glFramebufferRenderbuffer(GL_DRAW_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, m_RenderBuffer);
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, m_RenderBuffer);
     }
 
     // Unbind.
-    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 int Framebuffer::ReadPixel(uint32_t attachment, const glm::vec2 coords)

@@ -15,8 +15,10 @@ enum class ImageFormat
     None = 0,
     R8,
     RGB8,
+    RGB16,
     RGBA8,
     RGBA32F,
+    RED_INTEGER,
 
     // Depth/stencil formats
     Depth,

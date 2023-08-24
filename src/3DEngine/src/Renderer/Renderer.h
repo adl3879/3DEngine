@@ -6,6 +6,7 @@
 #include "Mesh.h"
 #include "Camera.h"
 #include "RenderList.h"
+#include "VertexArray.h"
 
 namespace Engine
 {
@@ -22,9 +23,14 @@ class Renderer
     static void EndDraw();
 
     // lights
-    // debug
+
+    static void DrawQuad(glm::mat4 transform = glm::mat4());
+
   public:
     static Shader *m_Shader;
+
+  public:
+    static VertexArray *QuadVAO;
 
   private:
     static RenderList m_RenderList;

@@ -7,6 +7,7 @@
 #include "MaterialEditorPanel.h"
 #include "Project.h"
 #include "Texture.h"
+#include "Framebuffer.h"
 
 #include <memory>
 

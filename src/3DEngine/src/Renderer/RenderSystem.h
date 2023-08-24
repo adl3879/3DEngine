@@ -5,6 +5,7 @@
 #include "Scene.h"
 #include "Shader.h"
 #include "SkyLight.h"
+#include "Framebuffer.h"
 
 #include <unordered_map>
 #include <memory>
