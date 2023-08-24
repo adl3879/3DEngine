@@ -6,8 +6,9 @@
 
 #include <ImGuizmo.h>
 #include "Math.h"
-#include "ResourceManager.h"
 #include "AssetManager.h"
+#include "TextureImporter.h"
+#include <IconsFontAwesome5.h>
 
 namespace Engine
 {
@@ -20,23 +21,23 @@ void AppLayer::OnAttach()
     // TODO: load last opened project from a savefile
     Project::Load("/home/adeleye/Source/3DEngine/src/Sandbox/SandboxProject/SandboxProject.3dproj");
 
-    auto fbSpec = FramebufferSpecification{};
-    fbSpec.Attachments = {FramebufferTextureFormat::RGBA8, FramebufferTextureFormat::RED_INTEGER,
-                          FramebufferTextureFormat::Depth};
-    fbSpec.Width = windowState.Width;
-    fbSpec.Height = windowState.Height;
+    m_Framebuffer = std::make_shared<Framebuffer>(true, glm::vec2{1280, 900});
+    auto vDepthTexture = std::make_shared<Texture2D>(TextureSpecification{.Format = ImageFormat::Depth});
+    auto vColorTexture = std::make_shared<Texture2D>(TextureSpecification{.Format = ImageFormat::RGBA8});
+    auto vEntityIdTexture = std::make_shared<Texture2D>(TextureSpecification{.Format = ImageFormat::RED_INTEGER});
+    m_Framebuffer->SetTexture(vDepthTexture, GL_DEPTH_ATTACHMENT);
+    m_Framebuffer->SetTexture(vColorTexture, GL_COLOR_ATTACHMENT0);
+    m_Framebuffer->SetTexture(vEntityIdTexture, GL_COLOR_ATTACHMENT1);
 
-    m_Framebuffer = std::make_shared<Engine::Framebuffer>(fbSpec);
+    m_EditorScene = std::make_shared<Scene>();
+    m_ActiveScene = m_EditorScene;
 
-    m_Scene = std::make_shared<Scene>();
-    m_SceneHierarchyPanel.SetContext(m_Scene);
+    m_SceneHierarchyPanel.SetContext(m_ActiveScene);
+    // attach scene
+    m_ActiveScene->OnAttach();
 
     m_RenderSystem = std::make_shared<RenderSystem>();
     m_RenderSystem->Init();
-
-    auto basePath = "/home/adeleye/Source/3DEngine/src/Sandbox/Resources/Icons";
-    m_IconPlay = ResourceManager::Instance().LoadTexture(basePath + std::string("/PlayButton.png"));
-    m_IconStop = ResourceManager::Instance().LoadTexture(basePath + std::string("/StopButton.png"));
 
     m_ContentBrowserPanel = std::make_shared<ContentBrowserPanel>();
 
@@ -45,18 +46,26 @@ void AppLayer::OnAttach()
 
 void AppLayer::OnDetach() {}
 
-void AppLayer::OnUpdate(float deltaTime)
+void AppLayer::OnUpdate(float dt)
 {
     // update
-    m_EditorCamera.OnUpdate(deltaTime);
+    m_EditorCamera.OnUpdate(dt);
     m_EditorCamera.SetViewportSize(m_ViewportSize.x, m_ViewportSize.y);
     {
         m_Framebuffer->Bind();
-        m_RenderSystem->Render(m_EditorCamera, *m_Scene);
+        m_RenderSystem->Render(m_EditorCamera, *m_ActiveScene);
         auto selectedEntity = m_SceneHierarchyPanel.GetSelectedEntity();
     }
 
-    m_Scene->OnUpdateEditor(deltaTime, m_EditorCamera);
+    switch (m_SceneState)
+    {
+        case SceneState::Edit: m_ActiveScene->OnUpdateEditor(dt, m_EditorCamera); break;
+        case SceneState::Play:
+            m_ActiveScene->OnUpdate(dt);
+            m_ActiveScene->OnUpdateRuntime(dt);
+            break;
+        default: break;
+    }
 
     auto [mx, my] = ImGui::GetMousePos();
     mx -= m_ViewportBounds[0].x;
@@ -68,12 +77,22 @@ void AppLayer::OnUpdate(float deltaTime)
 
     if (mouseX >= 0 && mouseY >= 0 && mouseX < (int)viewportSize.x && mouseY < (int)viewportSize.y)
     {
-        auto pixelData = m_Framebuffer->ReadPixel(1, mouseX, mouseY);
-        // LOG_CORE_TRACE("pixel {}", pixelData - 1);
+        //! fix this!
+        auto pixelData = m_Framebuffer->ReadPixel(1, glm::vec2(mouseX, mouseY));
+        LOG_CORE_TRACE("pixel {}", pixelData);
         // removed one because i moved every entity by one
-        m_HoveredEntity = pixelData == 0 ? Entity() : Entity((entt::entity)(pixelData - 1), m_Scene.get());
+        m_HoveredEntity = pixelData == 0 ? Entity() : Entity((entt::entity)(pixelData - 1), m_ActiveScene.get());
     }
     m_Framebuffer->Unbind();
+}
+
+void AppLayer::OnFixedUpdate(float dt)
+{
+    // physic
+    if (m_SceneState == SceneState::Play)
+    {
+        m_ActiveScene->OnFixedUpdate(dt);
+    }
 }
 
 void AppLayer::OnImGuiRender()
@@ -153,10 +172,11 @@ void AppLayer::OnImGuiRender()
     auto viewportPanelSize = ImGui::GetContentRegionAvail();
     if (m_ViewportSize != *((glm::vec2 *)&viewportPanelSize))
     {
-        m_Framebuffer->Resize((int)viewportPanelSize.x, (int)viewportPanelSize.y);
+        m_Framebuffer->QueueResize(glm::vec2(viewportPanelSize.x, viewportPanelSize.y));
         m_ViewportSize = {viewportPanelSize.x, viewportPanelSize.y};
     }
-    ImGui::Image((void *)(intptr_t)m_Framebuffer->GetColorAttachment(), ImVec2{m_ViewportSize.x, m_ViewportSize.y});
+    ImGui::Image((void *)(intptr_t)m_Framebuffer->GetTexture(GL_COLOR_ATTACHMENT0)->GetRendererID(),
+                 ImVec2{m_ViewportSize.x, m_ViewportSize.y});
 
     if (ImGui::BeginDragDropTarget())
     {
@@ -164,8 +184,10 @@ void AppLayer::OnImGuiRender()
         {
             const char *handle = (const char *)payload->Data;
             ResetScene("");
-            m_Scene = AssetManager::GetAsset<Scene>(std::stoull(handle));
-            m_SceneHierarchyPanel.SetContext(m_Scene);
+            m_EditorScene = AssetManager::GetAsset<Scene>(std::stoull(handle));
+            m_SceneHierarchyPanel.SetContext(m_EditorScene);
+
+            m_ActiveScene = m_EditorScene;
         }
         ImGui::EndDragDropTarget();
     }
@@ -182,7 +204,7 @@ void AppLayer::OnImGuiRender()
     // Gizmos
     auto selectedEntity = m_SceneHierarchyPanel.GetSelectedEntity();
 
-    if (selectedEntity && m_GizmoType != -1)
+    if (selectedEntity && m_GizmoType != -1 && m_SceneState == SceneState::Edit)
     {
         ImGuizmo::SetOrthographic(false);
         ImGuizmo::SetDrawlist();
@@ -259,6 +281,10 @@ void AppLayer::OnKeyPressed(InputKey key, bool isRepeat)
                 SaveScene();
             break;
 
+        case InputKey::D:
+            if (ctrl) DuplicateEntity();
+            break;
+
         default: break;
     }
 }
@@ -294,8 +320,8 @@ void AppLayer::NewScene()
 {
     // TODO: create new scene file
     ResetScene("");
-    m_Scene = std::make_unique<Scene>();
-    m_SceneHierarchyPanel.SetContext(m_Scene);
+    m_ActiveScene = std::make_unique<Scene>();
+    m_SceneHierarchyPanel.SetContext(m_ActiveScene);
 }
 
 void AppLayer::OpenScene()
@@ -316,12 +342,12 @@ void AppLayer::SaveSceneAs()
 
 void AppLayer::SaveScene()
 {
-    if (m_Scene->GetSceneFilePath().empty())
+    if (m_ActiveScene->GetSceneFilePath().empty())
         SaveSceneAs();
     else
     {
-        SceneSerializer serializer(m_Scene);
-        serializer.Serialize(m_Scene->GetSceneFilePath());
+        SceneSerializer serializer(m_ActiveScene);
+        serializer.Serialize(m_ActiveScene->GetSceneFilePath());
     }
 }
 
@@ -333,9 +359,31 @@ void AppLayer::ResetScene(const std::string &path)
     // m_Scene->SetSceneFilePath(path);
 }
 
-void AppLayer::OnScenePlay() { m_SceneState = SceneState::Play; }
+void AppLayer::DuplicateEntity()
+{
+    if (m_SceneState == SceneState::Edit)
+    {
+        Entity selectedEntity = m_SceneHierarchyPanel.GetSelectedEntity();
+        if (selectedEntity) m_ActiveScene->DuplicateEntity(selectedEntity);
+    }
+}
 
-void AppLayer::OnSceneStop() { m_SceneState = SceneState::Edit; }
+void AppLayer::OnScenePlay()
+{
+    m_SceneState = SceneState::Play;
+    m_ActiveScene = Scene::Copy(m_EditorScene);
+
+    m_SceneHierarchyPanel.SetContext(m_ActiveScene);
+}
+
+void AppLayer::OnSceneStop()
+{
+    // TODO: fix screen jittering when stopping
+    m_SceneState = SceneState::Edit;
+    m_ActiveScene = m_EditorScene;
+
+    m_SceneHierarchyPanel.SetContext(m_ActiveScene);
+}
 
 void AppLayer::FileOperations()
 {
@@ -345,17 +393,24 @@ void AppLayer::FileOperations()
         LOG_INFO("Serializing Scene");
         ResetScene(Utils::FileDialogs::m_SelectedFile);
 
-        SceneSerializer serializer(m_Scene);
-        serializer.Deserialize(Utils::FileDialogs::m_SelectedFile);
+        SceneRef newScene = std::make_shared<Scene>();
+        SceneSerializer serializer(newScene);
+        if (serializer.Deserialize(Utils::FileDialogs::m_SelectedFile))
+        {
+            m_EditorScene = newScene;
+            m_SceneHierarchyPanel.SetContext(m_EditorScene);
+
+            m_ActiveScene = m_EditorScene;
+        }
     }
 
     if (Utils::FileDialogs::FileIsSaved("saveScene"))
     {
         // serialize the scene
         LOG_INFO("Serializing Scene");
-        m_Scene->SetSceneFilePath(Utils::FileDialogs::m_SavedFile);
+        m_ActiveScene->SetSceneFilePath(Utils::FileDialogs::m_SavedFile);
 
-        SceneSerializer serializer(m_Scene);
+        SceneSerializer serializer(m_ActiveScene);
         serializer.Serialize(Utils::FileDialogs::m_SavedFile);
     }
 
@@ -378,16 +433,29 @@ void AppLayer::UI_Toolbar()
 
     ImGui::Begin("##toolbar", nullptr,
                  ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
-    auto icon = m_SceneState == SceneState::Edit ? m_IconPlay : m_IconStop;
+    auto icon = m_SceneState == SceneState::Edit ? ICON_FA_PLAY : ICON_FA_STOP;
     auto size = ImGui::GetWindowHeight() - 4.0f;
     ImGui::SetCursorPosX((ImGui::GetWindowContentRegionMax().x * 0.5f) - (size * 0.5));
-    if (ImGui::ImageButton((ImTextureID)icon, ImVec2{size, size}, ImVec2{0, 0}, ImVec2{1, 1}, 0))
+    ImGui::SetCursorPosY(ImGui::GetWindowContentRegionMax().y * 0.5f - (size * 0.5));
+    if (ImGui::Button(icon, ImVec2{size, size}))
     {
         if (m_SceneState == SceneState::Edit)
             OnScenePlay();
         else if (m_SceneState == SceneState::Play)
             OnSceneStop();
     }
+    ImGui::SameLine();
+    if (ImGui::Button(ICON_FA_PAUSE, ImVec2{size, size}))
+    {
+        // if (m_SceneState == SceneState::Play) m_SceneState = SceneState::Pause;
+    }
+    // ImGui::SameLine();
+    // if (ImGui::ImageButton((ImTextureID)m_IconSimulate->GetRendererID(), ImVec2{size, size}, ImVec2{0, 0}, ImVec2{1,
+    // 1},
+    //                        0))
+    // {
+    //     // if (m_SceneState == SceneState::Edit) m_SceneState = SceneState::Simulate;
+    // }
     ImGui::PopStyleVar(2);
     ImGui::PopStyleColor(3);
     ImGui::End();

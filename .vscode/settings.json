@@ -5,6 +5,7 @@
   "cSpell.words": [
     "Assimp",
     "Atten",
+    "Broadphase",
     "Cubemap",
     "dockspace",
     "entt",
@@ -24,6 +25,8 @@
     "Parameteri",
     "RENDERBUFFER",
     "Renderbuffers",
+    "Rigidbodies",
+    "Rigidbody",
     "Scriptable",
     "Skybox",
     "spdlog",
@@ -116,5 +119,5 @@
     "**/Thumbs.db": true,
     "src/3DEngine/vendor": true
   },
-  "explorerExclude.backup": {}
+  "explorerExclude.backup": {},
 }

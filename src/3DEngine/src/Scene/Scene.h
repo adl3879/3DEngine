@@ -9,6 +9,8 @@
 #include "UUID.h"
 #include "Asset.h"
 
+#include "System.h"
+
 namespace Engine
 {
 class Entity;
@@ -20,10 +22,17 @@ class Scene : public Asset
     Scene();
     virtual ~Scene();
 
+    void OnAttach();
+    void OnDetach();
+
+    void OnUpdate(float dt);
+    void OnFixedUpdate(float dt);
+
     Entity CreateEntity(const std::string &name = std::string());
     Entity CreateEntityWithUUID(UUID uuid, const std::string &name = std::string());
     Entity *GetEntity(const std::string &name);
     void DestroyEntity(Entity entity);
+    Entity DuplicateEntity(Entity entity);
 
     void OnUpdateRuntime(float dt);
     void OnUpdateEditor(float dt, EditorCamera &camera);
@@ -41,6 +50,9 @@ class Scene : public Asset
   public:
     virtual AssetType GetType() const override { return AssetType::Scene; }
 
+  public:
+    static std::shared_ptr<Scene> Copy(std::shared_ptr<Scene> src);
+
   private:
     entt::registry m_Registry;
     entt::entity m_SelectedEntity = entt::null;
@@ -52,6 +64,8 @@ class Scene : public Asset
   private:
     std::shared_ptr<PerspectiveCamera> m_MainCamera = nullptr;
     std::string m_SceneFilePath = std::string();
+
+    std::vector<SystemRef> m_Systems;
 };
 
 using SceneRef = std::shared_ptr<Scene>;

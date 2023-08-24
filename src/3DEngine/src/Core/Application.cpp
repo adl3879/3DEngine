@@ -44,7 +44,13 @@ void Application::Run()
         m_DeltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
 
-        for (Layer *layer : m_LayerStack) layer->OnUpdate(m_DeltaTime);
+        for (Layer *layer : m_LayerStack)
+        {
+            layer->OnUpdate(m_DeltaTime);
+
+            float fixedTime = 1 / 90.0f; // TODO: make this configurable
+            layer->OnFixedUpdate(fixedTime);
+        }
 
         m_ImGuiLayer->Begin();
         for (Layer *layer : m_LayerStack) layer->OnImGuiRender();

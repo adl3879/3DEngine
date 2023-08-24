@@ -1,29 +1,74 @@
 Scene: Untitled
 Entities:
-  - Entity: 15063356206115472074
-    TagComponent:
-      Tag: " Mesh"
-    TransformComponent:
-      Translation: [0.955496252, -2.26990223, -0.363019943]
-      Rotation: [0, 0, 0]
-      Scale: [11.3144035, 0.273848116, 11.0665331]
-    MeshComponent:
-      Handle: 7965377243735506135
-  - Entity: 7278886629780992797
-    TagComponent:
-      Tag: " Mesh"
-    TransformComponent:
-      Translation: [2.05655074, 0.0293487348, -0.866106987]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-    MeshComponent:
-      Handle: 7965377243735506135
   - Entity: 5491414618758079770
     TagComponent:
       Tag: " Mesh"
     TransformComponent:
-      Translation: [0, 0, 0]
+      Translation: [0, 0.0826691166, 0]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
     MeshComponent:
       Handle: 3386080780721564564
+      MaterialHandle: 0
+  - Entity: 7278886629780992797
+    TagComponent:
+      Tag: " Mesh"
+    TransformComponent:
+      Translation: [2.53221869, -0.516213596, 2.48701262]
+      Rotation: [0, -0.466557205, 0]
+      Scale: [1, 1, 1.00000012]
+    MeshComponent:
+      Handle: 7965377243735506135
+      MaterialHandle: 0
+  - Entity: 15063356206115472074
+    TagComponent:
+      Tag: " Mesh"
+    TransformComponent:
+      Translation: [0.955496252, -1.44735885, -0.363019943]
+      Rotation: [0, 0, 0]
+      Scale: [11.3144026, 0.100000001, 11.0665331]
+    MeshComponent:
+      Handle: 7965377243735506135
+      MaterialHandle: 1522458270685545197
+  - Entity: 4299362205045666814
+    TagComponent:
+      Tag: Point Light 1
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    PointLightComponent:
+      Color: [1, 1, 1]
+      AmbientIntensity: 1
+  - Entity: 5450965531164211473
+    TagComponent:
+      Tag: Directional Light
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, -0.926488101]
+      Scale: [1, 1, 1]
+    DirectionalLightComponent:
+      Color: [1, 1, 1]
+      AmbientIntensity: 6
+  - Entity: 15431467920310961910
+    TagComponent:
+      Tag: Sky Light
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    SkyLightComponent:
+      TextureHandle: 9260198605517721820
+  - Entity: 4292096197083692917
+    TagComponent:
+      Tag: Camera
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    CameraComponent:
+      Camera:
+        PerspectiveFOV: 4.88692188
+        PerspectiveNear: 0.00999999978
+        PerspectiveFar: 100
+      Primary: false

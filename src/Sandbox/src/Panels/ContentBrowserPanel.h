@@ -5,7 +5,7 @@
 #include <map>
 #include <unordered_map>
 
-#include "Texture.h"
+#include "Texture2D.h"
 
 namespace Engine
 {

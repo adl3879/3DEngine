@@ -7,7 +7,6 @@
 #include <glm/gtx/quaternion.hpp>
 #include <glm/glm.hpp>
 
-#include "ResourceManager.h"
 #include "PlatformUtils.h"
 #include "AssetManager.h"
 #include "Project.h"
@@ -100,7 +99,6 @@ Mesh Model::ProcessMesh(aiMesh *mesh, const aiScene *scene, const bool loadMater
     for (auto i = 0; i < mesh->mNumVertices; ++i)
     {
         vertexSOA.Colors.emplace_back(glm::vec4(1.0f));
-        vertexSOA.EntityIDs.emplace_back(-1.0f);
         Vertex vertex;
 
         if (mesh->HasPositions())
@@ -156,16 +154,18 @@ Mesh Model::ProcessMesh(aiMesh *mesh, const aiScene *scene, const bool loadMater
 
             aiString name;
             mat->Get(AI_MATKEY_NAME, name);
-            m_DefaultMaterial = name.C_Str();
+
+            std::string materialName = name.C_Str();
 
             aiString albedoPath, metallicPath, normalPath, roughnessPath, alphaMaskPath;
             std::array<aiString, 5> materialPaths;
 
-            mat->GetTexture(AI_MATKEY_BASE_COLOR_TEXTURE, &materialPaths[0]);
-            mat->GetTexture(AI_MATKEY_METALLIC_TEXTURE, &materialPaths[1]);
-            mat->GetTexture(AI_MATKEY_ROUGHNESS_TEXTURE, &materialPaths[3]);
+            mat->GetTexture(AI_MATKEY_BASE_COLOR_TEXTURE, &materialPaths[ParameterType::ALBEDO]);
+            mat->GetTexture(AI_MATKEY_METALLIC_TEXTURE, &materialPaths[ParameterType::METALLIC]);
+            mat->GetTexture(aiTextureType_NORMALS, 0, &materialPaths[ParameterType::NORMAL]);
+            mat->GetTexture(AI_MATKEY_ROUGHNESS_TEXTURE, &materialPaths[ParameterType::ROUGHNESS]);
 
-            AssetHandle materialHandles[5];
+            AssetHandle materialHandles[4];
 
             // TODO: This is a bit of a hack, make it more performant
             for (auto i = 0; i < materialPaths.size(); ++i)
@@ -178,15 +178,15 @@ Mesh Model::ProcessMesh(aiMesh *mesh, const aiScene *scene, const bool loadMater
             }
 
             MaterialRef material = std::make_shared<Material>();
-            material->Init(name.C_Str(), materialHandles[0], materialHandles[1], materialHandles[2], materialHandles[3],
-                           materialHandles[4]);
+            material->Init(materialName, materialHandles[0], materialHandles[1], materialHandles[2],
+                           materialHandles[3]);
 
             ++m_NumOfMaterials;
-            return Mesh(vertexSOA, indices, material);
+            return Mesh(vertices, indices, material);
         }
     }
 
-    return Mesh(vertexSOA, indices);
+    return Mesh(vertices, indices);
 }
 
 std::filesystem::path Model::GetRelativeTexturePath(const aiString &path) const

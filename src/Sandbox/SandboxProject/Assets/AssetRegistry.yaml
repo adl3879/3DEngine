@@ -1,19 +1,49 @@
 AssetRegistry:
-  - Handle: 676088992294236359
-    FilePath: Scenes/scene1.scene
-    Type: AssetType::Scene
+  - Handle: 760269387233092212
+    FilePath: Models/ChessBoard/king_white_base_color.jpg
+    Type: AssetType::Texture2D
+  - Handle: 818898346424635203
+    FilePath: Models/ChessBoard/queen_white_base_color.jpg
+    Type: AssetType::Texture2D
+  - Handle: 972174868878898226
+    FilePath: Models/ChessBoard/bishop_white_normal.jpg
+    Type: AssetType::Texture2D
   - Handle: 1003119340370098859
     FilePath: Models/ScifiHelment/SciFiHelmet_BaseColor.png
     Type: AssetType::Texture2D
+  - Handle: 1005281982894483555
+    FilePath: Materials/NewMaterial.material
+    Type: AssetType::Material
   - Handle: 1522458270685545197
     FilePath: Materials/Material2.material
     Type: AssetType::Material
+  - Handle: 1812432746643471117
+    FilePath: Models/ChessBoard/King_white_ORM.jpg
+    Type: AssetType::Texture2D
+  - Handle: 2131774744487972115
+    FilePath: Models/ChessBoard/King_black_normal.jpg
+    Type: AssetType::Texture2D
+  - Handle: 2367103901942299588
+    FilePath: Models/ChessBoard/knight_black_base_color.jpg
+    Type: AssetType::Texture2D
+  - Handle: 3329282498957584978
+    FilePath: Models/ChessBoard/Knight_normal.jpg
+    Type: AssetType::Texture2D
   - Handle: 3386080780721564564
     FilePath: Models/ScifiHelment/SciFiHelmet.gltf
     Type: AssetType::Mesh
+  - Handle: 4244829309563722734
+    FilePath: Scenes/capsuleScene.scene
+    Type: AssetType::Scene
   - Handle: 4998439887420060200
     FilePath: Models/suzanne/scene.gltf
     Type: AssetType::Mesh
+  - Handle: 5469770661546881496
+    FilePath: Textures/rustediron2_metallic.png
+    Type: AssetType::Texture2D
+  - Handle: 5587775067746484268
+    FilePath: Textures/rustediron2_roughness.png
+    Type: AssetType::Texture2D
   - Handle: 6486640012750106344
     FilePath: Scenes/complete.scene
     Type: AssetType::Scene
@@ -23,15 +53,129 @@ AssetRegistry:
   - Handle: 7965377243735506135
     FilePath: Models/boxTextured/scene.gltf
     Type: AssetType::Mesh
+  - Handle: 7986799724359462991
+    FilePath: Models/ChessBoard/Queen_black_normal.jpg
+    Type: AssetType::Texture2D
+  - Handle: 8238698415712778253
+    FilePath: Models/ChessBoard/Queen_white_normal.jpg
+    Type: AssetType::Texture2D
+  - Handle: 8665201117456801007
+    FilePath: Models/ChessBoard/Bishop_white_ORM.jpg
+    Type: AssetType::Texture2D
+  - Handle: 9232036843620677522
+    FilePath: Models/ChessBoard/bishop_white_base_color.jpg
+    Type: AssetType::Texture2D
+  - Handle: 9260198605517721820
+    FilePath: Textures/hdr/puresky.hdr
+    Type: AssetType::TextureHDRI
+  - Handle: 10008670132094646353
+    FilePath: Scenes/physicsTest.scene
+    Type: AssetType::Scene
+  - Handle: 10252056129797447072
+    FilePath: Models/ChessBoard/Castle_ORM.jpg
+    Type: AssetType::Texture2D
+  - Handle: 10562723479069621919
+    FilePath: Models/ChessBoard/Bishop_black_ORM.jpg
+    Type: AssetType::Texture2D
+  - Handle: 10691623684804785562
+    FilePath: Models/ChessBoard/Knight_ORM.jpg
+    Type: AssetType::Texture2D
+  - Handle: 10853948017143324652
+    FilePath: Materials/RedMat.material
+    Type: AssetType::Material
   - Handle: 10862039558867522461
     FilePath: Models/ScifiHelment/SciFiHelmet_MetallicRoughness.png
+    Type: AssetType::Texture2D
+  - Handle: 10936028744025874594
+    FilePath: Textures/hdr/ballroom_4k.hdr
+    Type: AssetType::TextureHDRI
+  - Handle: 11340835680375530714
+    FilePath: Models/ChessBoard/chessboard_normal.jpg
+    Type: AssetType::Texture2D
+  - Handle: 11642085734462112105
+    FilePath: Textures/rustediron2_basecolor.png
     Type: AssetType::Texture2D
   - Handle: 11683034721646259500
     FilePath: Models/suzanne/Suzanne_BaseColor.png
     Type: AssetType::Texture2D
+  - Handle: 12037732300282328583
+    FilePath: Models/ChessBoard/Pawn_normal.jpg
+    Type: AssetType::Texture2D
+  - Handle: 12076812403310617254
+    FilePath: Models/ChessBoard/Castle_normal.jpg
+    Type: AssetType::Texture2D
   - Handle: 12491184812252249983
     FilePath: Models/suzanne/Suzanne_MetallicRoughness.png
     Type: AssetType::Texture2D
-  - Handle: 12743316793560393201
-    FilePath: Scenes/Boxes.scene
-    Type: AssetType::Scene
+  - Handle: 12581167853635737154
+    FilePath: Models/ChessBoard/King_white_normal.jpg
+    Type: AssetType::Texture2D
+  - Handle: 12812999897013018592
+    FilePath: Models/ChessBoard/Queen_white_ORM.jpg
+    Type: AssetType::Texture2D
+  - Handle: 12935420833629702305
+    FilePath: Models/ChessBoard/King_black_ORM.jpg
+    Type: AssetType::Texture2D
+  - Handle: 12947855091228232762
+    FilePath: Models/ChessBoard/queen_black_base_color.jpg
+    Type: AssetType::Texture2D
+  - Handle: 13876980462942504455
+    FilePath: Models/ScifiHelment/SciFiHelmet_Normal.png
+    Type: AssetType::Texture2D
+  - Handle: 13887066766955079982
+    FilePath: Models/ChessBoard/ABeautifulGame.gltf
+    Type: AssetType::Mesh
+  - Handle: 13888701211654997351
+    FilePath: Models/ChessBoard/Chessboard_ORM.jpg
+    Type: AssetType::Texture2D
+  - Handle: 13959544346530052968
+    FilePath: Models/ChessBoard/castle_white_base_color.jpg
+    Type: AssetType::Texture2D
+  - Handle: 14120982221456302503
+    FilePath: Models/Sphere/untitled.fbx
+    Type: AssetType::Mesh
+  - Handle: 14217003659151599828
+    FilePath: Models/ChessBoard/chessboard_base_color.jpg
+    Type: AssetType::Texture2D
+  - Handle: 14362133463429802450
+    FilePath: Textures/planksSpec.png
+    Type: AssetType::Texture2D
+  - Handle: 14541412577139118046
+    FilePath: Models/ChessBoard/bishop_black_normal.jpg
+    Type: AssetType::Texture2D
+  - Handle: 14601658553100947167
+    FilePath: Models/ChessBoard/pawn_black_base_color.jpg
+    Type: AssetType::Texture2D
+  - Handle: 15211372843995337196
+    FilePath: Models/ChessBoard/Pawn_ORM.jpg
+    Type: AssetType::Texture2D
+  - Handle: 15261987762044085580
+    FilePath: Models/ChessBoard/Queen_black_ORM.jpg
+    Type: AssetType::Texture2D
+  - Handle: 15294299809775585858
+    FilePath: Textures/planks.png
+    Type: AssetType::Texture2D
+  - Handle: 15574026655862979428
+    FilePath: Textures/rustediron2_normal.png
+    Type: AssetType::Texture2D
+  - Handle: 15654098451383920044
+    FilePath: Materials/RedMat.material
+    Type: AssetType::Material
+  - Handle: 16285019522686197882
+    FilePath: Models/ChessBoard/castle_black_base_color.jpg
+    Type: AssetType::Texture2D
+  - Handle: 16420518593515749820
+    FilePath: Models/ChessBoard/pawn_white_base_color.jpg
+    Type: AssetType::Texture2D
+  - Handle: 16572017560255591200
+    FilePath: Models/Capsule/untitled.fbx
+    Type: AssetType::Mesh
+  - Handle: 16769245563826682944
+    FilePath: Models/ChessBoard/bishop_black_base_color.jpg
+    Type: AssetType::Texture2D
+  - Handle: 17400702360898289168
+    FilePath: Models/ChessBoard/king_black_base_color.jpg
+    Type: AssetType::Texture2D
+  - Handle: 17895109812886439794
+    FilePath: Models/ChessBoard/knight_white_base_color.jpg
+    Type: AssetType::Texture2D

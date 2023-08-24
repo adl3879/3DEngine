@@ -4,10 +4,9 @@
 
 #include "Log.h"
 #include "Components.h"
+#include "PhysicsComponents.h"
 #include "Shader.h"
-#include "ResourceManager.h"
 #include "InputManager.h"
-#include "OutlineSystem.h"
 #include "AssetManager.h"
 
 namespace Engine
@@ -36,8 +35,8 @@ void RenderSystem::Init()
     SetupScreenQuad();
     SetupTextureSamplers();
 
-    m_SkyLight = std::make_shared<SkyLight>();
-    m_SkyLight->Init("/res/textures/hdr/skyLight.hdr", 2048);
+    // m_SkyLight = std::make_shared<SkyLight>();
+    // m_SkyLight->Init("/res/textures/hdr/skyLight.hdr", 2048);
 
     glEnable(GL_DEBUG_OUTPUT);
     glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
@@ -55,9 +54,15 @@ void RenderSystem::Render(Camera &camera, Scene &scene, const bool globalWirefra
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
     RenderModelsWithTextures(camera, scene);
+    // RenderPhysicsDebug(camera, scene);
 
-    glActiveTexture(GL_TEXTURE0);
-    m_SkyLight->Render(camera);
+    // glActiveTexture(GL_TEXTURE0);
+    auto view = scene.GetRegistry().view<SkyLightComponent>();
+    for (auto entity : view)
+    {
+        auto &skyLight = view.get<SkyLightComponent>(entity).Light;
+        if (skyLight != nullptr) skyLight->Render(camera);
+    }
 }
 
 void RenderSystem::SetupDefaultState()
@@ -106,14 +111,6 @@ void RenderSystem::SetupScreenQuad()
 
 void RenderSystem::RenderModelsWithTextures(Camera &camera, Scene &scene)
 {
-    // bind pre-computed IBL data
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_CUBE_MAP, m_SkyLight->GetIrradianceMap());
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_CUBE_MAP, m_SkyLight->GetPrefilterMap());
-    glActiveTexture(GL_TEXTURE2);
-    glBindTexture(GL_TEXTURE_2D, m_SkyLight->GetBrdfLUT());
-
     glBindSampler(m_SamplerPBRTextures, 3);
     glBindSampler(m_SamplerPBRTextures, 4);
     glBindSampler(m_SamplerPBRTextures, 5);
@@ -126,27 +123,16 @@ void RenderSystem::RenderModelsWithTextures(Camera &camera, Scene &scene)
     for (auto entity : view)
     {
         auto [model, transform, visibility] = view.get<MeshComponent, TransformComponent, VisibilityComponent>(entity);
-        if (!visibility.IsVisible || model.Handle == 0) continue;
-        const auto &entityModel = AssetManager::GetAsset<Model>(model.Handle);
-        auto material = AssetManager::GetAsset<Material>(model.MaterialHandle);
+
+        if (!visibility.IsVisible) continue;
+        if (model.Handle == 0 && model.ModelResource == nullptr) continue;
+
+        const auto &entityModel =
+            model.ModelResource ? model.ModelResource : AssetManager::GetAsset<Model>(model.Handle);
 
         for (auto &mesh : entityModel->GetMeshes())
         {
-            modelShader->Use();
-            mesh.VAO.Bind();
-
-            // entity id should be populated only once
-            if (mesh.VertexSOA.EntityIDs[0] < 0.0f)
-                mesh.VertexSOA.EntityIDs = std::vector<float>(mesh.VertexCount, (int)entity + 1);
-
-            // clang-format off
-            auto vertices = mesh.VertexSOA;
-            mesh.VAO.SetBufferSubData(0, BufferType::ARRAY, 0, vertices.Positions.size() * sizeof(glm::vec3), &vertices.Positions[0]);
-            mesh.VAO.SetBufferSubData(1, BufferType::ARRAY, 0, vertices.Normals.size() * sizeof(glm::vec3), &vertices.Normals[0]);
-            mesh.VAO.SetBufferSubData(2, BufferType::ARRAY, 0, vertices.Colors.size() * sizeof(glm::vec3), &vertices.Colors[0]);
-            mesh.VAO.SetBufferSubData(3, BufferType::ARRAY, 0, vertices.TexCoords.size() * sizeof(glm::vec2), &vertices.TexCoords[0]);
-            mesh.VAO.SetBufferSubData(4, BufferType::ARRAY, 0, vertices.EntityIDs.size() * sizeof(float), &vertices.EntityIDs[0]);
-            // clang-format on
+            modelShader->Bind();
 
             modelShader->SetUniformMatrix4fv("model", transform.GetTransform());
             modelShader->SetUniformMatrix3fv("normalMatrix",
@@ -154,22 +140,18 @@ void RenderSystem::RenderModelsWithTextures(Camera &camera, Scene &scene)
             modelShader->SetUniformMatrix4fv("projectionViewMatrix", camera.GetProjectionViewMatrix());
             modelShader->SetUniform3f("cameraPosition", camera.GetPosition());
 
-            const auto &mat = material == nullptr ? mesh.Material : material;
-
-            mat->BindMaterialTextures(3);
-
-            modelShader->SetUniform3f("albedoParam", mat->GetMaterialData().Albedo);
-            modelShader->SetUniform1f("metallicParam", mat->GetMaterialData().Metallic);
-            modelShader->SetUniform1f("aoParam", 1.0);
-            modelShader->SetUniform1f("roughnessParam", mat->GetMaterialData().Roughness);
-
-            modelShader->SetUniform1i("numOfPointLights", 4);
-
+            modelShader->SetUniform1i("entityId", (int)entity + 1);
             Light::SetLightUniforms(*modelShader);
 
-            glDrawElements(GL_TRIANGLES, mesh.IndexCount, GL_UNSIGNED_INT, nullptr);
-            glBindTexture(GL_TEXTURE_2D, 0);
+            auto material = AssetManager::GetAsset<Material>(model.MaterialHandle);
+            if (material != nullptr) mesh.Material = material;
+            if (model.ModelResource && !material)
+                mesh.Material->SetMaterialParam(ParameterType::ALBEDO, glm::vec3(1, 1, 1));
 
+            // draw mesh
+            mesh.Draw(modelShader.get(), true);
+
+            mesh.Material->Unbind();
             mesh.VAO.Unbind();
         }
     }
@@ -178,6 +160,45 @@ void RenderSystem::RenderModelsWithTextures(Camera &camera, Scene &scene)
 }
 
 void RenderSystem::RenderModelsWithNoTextures(Camera &camera, Scene &scene) const {}
+
+void RenderSystem::RenderPhysicsDebug(Camera &camera, Scene &scene) const
+{
+    auto modelShader = m_Shaders.at("modelShader");
+    auto selectedEntity = scene.GetSelectedEntity();
+    if (selectedEntity == entt::null) return;
+    Entity ent = Entity{selectedEntity, &scene};
+
+    auto model = ent.GetComponent<MeshComponent>();
+    auto transform = ent.GetComponent<TransformComponent>();
+
+    if (model.Handle == 0 && model.ModelResource == nullptr) return;
+    if (ent.HasComponent<RigidBodyComponent>())
+    {
+        const auto &entityModel =
+            model.ModelResource ? model.ModelResource : AssetManager::GetAsset<Model>(model.Handle);
+        for (auto &mesh : entityModel->GetMeshes())
+        {
+            modelShader->Bind();
+            mesh.VAO.Bind();
+
+            // clang-format off
+            auto vertices = mesh.VertexSOA;
+            mesh.VAO.SetBufferSubData(0, BufferType::ARRAY, 0, vertices.Positions.size() * sizeof(glm::vec3), &vertices.Positions[0]);
+            mesh.VAO.SetBufferSubData(1, BufferType::ARRAY, 0, vertices.Normals.size() * sizeof(glm::vec3), &vertices.Normals[0]);
+            mesh.VAO.SetBufferSubData(2, BufferType::ARRAY, 0, vertices.Colors.size() * sizeof(glm::vec3), &vertices.Colors[0]);
+            // clang-format on
+
+            modelShader->SetUniformMatrix4fv("model", transform.GetTransform());
+            modelShader->SetUniformMatrix4fv("projectionViewMatrix", camera.GetProjectionViewMatrix());
+
+            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+            glDrawElements(GL_TRIANGLES, mesh.IndexCount, GL_UNSIGNED_INT, nullptr);
+            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+            mesh.VAO.Unbind();
+        }
+    }
+}
 
 void RenderSystem::RenderQuad(Camera &camera)
 {

@@ -54,6 +54,7 @@ uniform sampler2D aoMap;
 
 uniform int gNumOfPointLights;
 uniform int gNumOfSpotLights;
+uniform int entityId;
 
 const float PI = 3.14159265359;
 
@@ -205,5 +206,5 @@ void main() {
 
     FragColor = vec4(color, 1.0);
 
-    color2 = int(EntityID);
+    color2 = entityId;
 }

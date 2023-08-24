@@ -3,7 +3,7 @@
 #include "Asset.h"
 #include "AssetMetadata.h"
 
-#include "Texture.h"
+#include "Texture2D.h"
 
 namespace Engine
 {

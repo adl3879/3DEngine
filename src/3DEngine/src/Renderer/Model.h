@@ -25,6 +25,7 @@ class Model : public Asset
     Model(const Mesh &mesh) noexcept;
     virtual ~Model() = default;
 
+  public:
     void AttachMesh(const Mesh mesh) noexcept;
 
     // destroy all opengl handles for sub-meshes

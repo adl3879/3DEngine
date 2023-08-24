@@ -18,6 +18,11 @@ class AssetManager
         AssetRef asset = Project::GetActive()->GetAssetManager()->GetAsset(handle);
         return std::static_pointer_cast<T>(asset);
     }
+    template <typename T> static std::shared_ptr<T> GetAsset(const std::filesystem::path &path)
+    {
+        AssetRef asset = Project::GetActive()->GetAssetManager()->GetAsset(path);
+        return std::static_pointer_cast<T>(asset);
+    }
 
     static AssetHandle GetAssetHandleFromPath(const std::filesystem::path &path)
     {

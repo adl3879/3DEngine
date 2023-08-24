@@ -1,6 +1,7 @@
 #include "Mesh.h"
 
 #include <glad/glad.h>
+#include "RenderCommand.h"
 
 namespace Engine
 {
@@ -15,6 +16,14 @@ Mesh::Mesh(const struct VertexSOA &vertices, const std::vector<uint32_t> &indice
       Indices(indices)
 {
     SetupMesh(vertices, indices);
+}
+
+void Mesh::Draw(Shader *shader, bool bindMaterials)
+{
+    if (bindMaterials) Material->Bind(shader);
+
+    VAO.Bind();
+    RenderCommand::DrawElements(RendererEnum::TRIANGLES, IndexCount, RendererEnum::UINT, nullptr);
 }
 
 void Mesh::Clear() {}
@@ -35,7 +44,6 @@ void Mesh::SetupMesh(const std::vector<Vertex> &vertices, const std::vector<uint
     VAO.EnableAttribute(1, 3, vertexSize, reinterpret_cast<void *>(offsetof(Vertex, Normal)));
     VAO.EnableAttribute(2, 3, vertexSize, reinterpret_cast<void *>(offsetof(Vertex, Color)));
     VAO.EnableAttribute(3, 2, vertexSize, reinterpret_cast<void *>(offsetof(Vertex, TexCoords)));
-    VAO.EnableAttribute(4, 1, vertexSize, reinterpret_cast<void *>(offsetof(Vertex, EntityID)));
 
     VAO.Unbind();
 }
@@ -53,8 +61,6 @@ void Mesh::SetupMesh(const struct VertexSOA &vertices, const std::vector<uint32_
     VAO.EnableAttribute(2, 3, 0, nullptr);
     VAO.AttachBuffer(BufferType::ARRAY, vertices.TexCoords.size() * sizeof(glm::vec2), DrawMode::DYNAMIC, nullptr);
     VAO.EnableAttribute(3, 2, 0, nullptr);
-    VAO.AttachBuffer(BufferType::ARRAY, vertices.EntityIDs.size() * sizeof(float), DrawMode::DYNAMIC, nullptr);
-    VAO.EnableAttribute(4, 1, 0, nullptr);
 
     VAO.AttachBuffer(BufferType::ELEMENT, indices.size() * sizeof(uint32_t), DrawMode::STATIC, indices.data());
 

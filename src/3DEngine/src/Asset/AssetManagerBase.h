@@ -13,6 +13,7 @@ class AssetManagerBase
 {
   public:
     virtual AssetRef GetAsset(AssetHandle handle) = 0;
+    virtual AssetRef GetAsset(const std::filesystem::path &path) = 0;
     virtual AssetHandle GetAssetHandleFromPath(const std::filesystem::path &path) = 0;
     virtual void UnloadAsset(AssetHandle handle) = 0;
 

@@ -13,7 +13,8 @@ class Layer
 
     virtual void OnAttach() {}
     virtual void OnDetach() {}
-    virtual void OnUpdate(float deltaTime) {}
+    virtual void OnUpdate(float dt) {}
+    virtual void OnFixedUpdate(float dt) {}
     virtual void OnImGuiRender() {}
 
     virtual void OnKeyPressed(InputKey key, bool isRepeat) {}

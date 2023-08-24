@@ -2,7 +2,6 @@
 
 #include <imgui.h>
 
-#include "ResourceManager.h"
 #include "Project.h"
 #include "TextureImporter.h"
 #include "AssetManager.h"
@@ -63,23 +62,25 @@ void ContentBrowserPanel::OnImGuiRender()
     float cellSize = thumbnailSize + padding;
 
     float panelWidth = ImGui::GetContentRegionAvail().x;
+    float dirTreeWidth = panelWidth * 0.15;
     int columnCount = (int)(panelWidth / cellSize);
     if (columnCount < 1) columnCount = 1;
 
-    ImGui::BeginChild("Directory Tree", ImVec2(panelWidth * 0.15f, 0), true, ImGuiWindowFlags_HorizontalScrollbar);
+    ImGui::BeginChild("Directory Tree", ImVec2(dirTreeWidth, 0), true, ImGuiWindowFlags_HorizontalScrollbar);
     DisplayFileHierarchy(m_BaseDirectory);
     ImGui::EndChild();
 
     ImGui::SameLine();
 
-    ImGui::BeginChild("Content Region", ImVec2(panelWidth, 0), false, ImGuiWindowFlags_HorizontalScrollbar);
+    ImGui::BeginChild("Content Region", ImVec2(panelWidth - dirTreeWidth, 0), false,
+                      ImGuiWindowFlags_HorizontalScrollbar);
     const char *label = m_Mode == Mode::Asset ? "Asset" : "File";
     if (ImGui::Button(label)) m_Mode = m_Mode == Mode::Asset ? Mode::FileSystem : Mode::Asset;
 
     if (m_CurrentDirectory != std::filesystem::path(m_BaseDirectory) && m_Mode == Mode::FileSystem)
     {
         ImGui::SameLine();
-        if (ImGui::Button("<-"))
+        if (ImGui::Button(ICON_FA_CHEVRON_LEFT "   "))
         {
             m_CurrentDirectory = m_CurrentDirectory.parent_path();
         }
@@ -88,7 +89,7 @@ void ContentBrowserPanel::OnImGuiRender()
     if (!m_NodeStack.empty() && m_Mode == Mode::Asset)
     {
         ImGui::SameLine();
-        if (ImGui::Button("<-"))
+        if (ImGui::Button(ICON_FA_CHEVRON_LEFT "   "))
         {
             currentNode = m_NodeStack.back();
             m_NodeStack.pop_back();
@@ -251,6 +252,8 @@ void ContentBrowserPanel::OnImGuiRender()
 
 void ContentBrowserPanel::DisplayFileHierarchy(const std::filesystem::path &directory)
 {
+    // TODO: sync with the file system so that they open the same directory
+    namespace fs = std::filesystem;
     if (!fs::exists(directory) || !fs::is_directory(directory)) return;
 
     for (auto &directoryEntry : std::filesystem::directory_iterator(directory))

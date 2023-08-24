@@ -9,6 +9,7 @@
 #include "Log.h"
 #include "PlatformUtils.h"
 #include "MaterialSerializer.h"
+#include <IconsFontAwesome5.h>
 
 namespace Engine
 {
@@ -34,6 +35,20 @@ void MaterialEditorPanel::OnImGuiRender()
                                                                          : m_CheckerboardTexture;
 
         ImGui::Image((void *)(intptr_t)albedoTexture->GetRendererID(), ImVec2(90, 90), ImVec2(0, 1), ImVec2(1, 0));
+        if (ImGui::BeginDragDropTarget())
+        {
+            if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
+            {
+                const char *handle = (const char *)payload->Data;
+                material->SetTexture(ParameterType::ALBEDO, std::stoull(handle));
+            }
+            ImGui::EndDragDropTarget();
+        }
+        if (ImGui::BeginPopupContextItem("material_texture"))
+        {
+            if (ImGui::MenuItem(ICON_FA_TRASH "   Remove")) material->SetTexture(ParameterType::ALBEDO, 0);
+            ImGui::EndPopup();
+        }
         ImGui::SameLine();
 
         glm::vec3 color = material->GetMaterialData().Albedo;
@@ -48,11 +63,25 @@ void MaterialEditorPanel::OnImGuiRender()
                                                                          : m_CheckerboardTexture;
 
         ImGui::Image((void *)(intptr_t)normalTexture->GetRendererID(), ImVec2(90, 90), ImVec2(0, 1), ImVec2(1, 0));
+        if (ImGui::BeginDragDropTarget())
+        {
+            if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
+            {
+                const char *handle = (const char *)payload->Data;
+                material->SetTexture(ParameterType::NORMAL, std::stoull(handle));
+            }
+            ImGui::EndDragDropTarget();
+        }
+        if (ImGui::BeginPopupContextItem("material_texture"))
+        {
+            if (ImGui::MenuItem(ICON_FA_TRASH "   Remove")) material->SetTexture(ParameterType::NORMAL, 0);
+            ImGui::EndPopup();
+        }
         ImGui::SameLine();
 
-        bool useNormalMap = material->GetMaterialData().UseNormalMap;
+        bool useNormalMap = material->GetUseNormalMap();
         ImGui::Checkbox("Use", &useNormalMap);
-        // material->SetMaterialParam(ParameterType::USE_NORMAL_MAP, useNormalMap);
+        material->SetUseNormalMap(useNormalMap);
 
         ImGui::TreePop();
     }
@@ -63,6 +92,20 @@ void MaterialEditorPanel::OnImGuiRender()
                                    : m_CheckerboardTexture;
 
         ImGui::Image((void *)(intptr_t)metallicTexture->GetRendererID(), ImVec2(90, 90), ImVec2(0, 1), ImVec2(1, 0));
+        if (ImGui::BeginDragDropTarget())
+        {
+            if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
+            {
+                const char *handle = (const char *)payload->Data;
+                material->SetTexture(ParameterType::METALLIC, std::stoull(handle));
+            }
+            ImGui::EndDragDropTarget();
+        }
+        if (ImGui::BeginPopupContextItem("material_texture"))
+        {
+            if (ImGui::MenuItem(ICON_FA_TRASH "   Remove")) material->SetTexture(ParameterType::METALLIC, 0);
+            ImGui::EndPopup();
+        }
         ImGui::SameLine();
         float metallic = material->GetMaterialData().Metallic;
         ImGui::PushItemWidth(200);
@@ -79,6 +122,20 @@ void MaterialEditorPanel::OnImGuiRender()
                                     : m_CheckerboardTexture;
 
         ImGui::Image((void *)(intptr_t)roughnessTexture->GetRendererID(), ImVec2(90, 90), ImVec2(0, 1), ImVec2(1, 0));
+        if (ImGui::BeginDragDropTarget())
+        {
+            if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
+            {
+                const char *handle = (const char *)payload->Data;
+                material->SetTexture(ParameterType::ROUGHNESS, std::stoull(handle));
+            }
+            ImGui::EndDragDropTarget();
+        }
+        if (ImGui::BeginPopupContextItem("material_texture"))
+        {
+            if (ImGui::MenuItem(ICON_FA_TRASH "   Remove")) material->SetTexture(ParameterType::ROUGHNESS, 0);
+            ImGui::EndPopup();
+        }
         ImGui::SameLine();
 
         float roughness = material->GetMaterialData().Roughness;

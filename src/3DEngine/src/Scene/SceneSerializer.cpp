@@ -71,6 +71,7 @@ static void SerializeEntity(YAML::Emitter &out, Entity entity)
 
         auto &meshComponent = entity.GetComponent<MeshComponent>();
         out << YAML::Key << "Handle" << YAML::Value << meshComponent.Handle;
+        out << YAML::Key << "MaterialHandle" << YAML::Value << meshComponent.MaterialHandle;
 
         out << YAML::EndMap; // MeshComponent
     }
@@ -92,6 +93,15 @@ static void SerializeEntity(YAML::Emitter &out, Entity entity)
         out << YAML::EndSeq;
 
         out << YAML::EndMap; // LuaScriptComponent
+    }
+
+    if (entity.HasComponent<SkyLightComponent>())
+    {
+        out << YAML::Key << "SkyLightComponent";
+        out << YAML::BeginMap;
+        const auto &slc = entity.GetComponent<SkyLightComponent>();
+        out << YAML::Key << "TextureHandle" << YAML::Value << slc.TextureHandle;
+        out << YAML::EndMap;
     }
 
     if (entity.HasComponent<DirectionalLightComponent>())
@@ -211,8 +221,10 @@ bool SceneSerializer::Deserialize(const std::string &filepath)
             if (modelComponent)
             {
                 auto handle = modelComponent["Handle"].as<uint64_t>();
+                auto materialHandle = modelComponent["MaterialHandle"].as<uint64_t>();
                 auto &mesh = deserializedEntity.AddComponent<MeshComponent>();
                 mesh.Handle = handle;
+                mesh.MaterialHandle = materialHandle;
             }
 
             auto luaScriptComponent = entity["LuaScriptComponent"];
@@ -225,6 +237,14 @@ bool SceneSerializer::Deserialize(const std::string &filepath)
                     auto name = luaScriptComponent["Names"][i].as<std::string>();
                     lsc.Bind(path, name);
                 }
+            }
+
+            auto skyLightComponent = entity["SkyLightComponent"];
+            if (skyLightComponent)
+            {
+                auto &slc = deserializedEntity.AddComponent<SkyLightComponent>();
+                auto handle = skyLightComponent["TextureHandle"].as<uint64_t>();
+                slc.Use(handle, 2048);
             }
 
             auto directionalLightComponent = entity["DirectionalLightComponent"];

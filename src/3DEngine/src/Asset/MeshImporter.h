@@ -14,7 +14,10 @@ class MeshImporter
   public:
     static ModelRef ImportMesh(AssetHandle handle, const AssetMetadata &metadata)
     {
-        return std::make_shared<Model>(Project::GetAssetDirectory() / metadata.FilePath);
+        return LoadModel(Project::GetAssetDirectory() / metadata.FilePath);
     }
+
+    // for loading models without any material information
+    static ModelRef LoadModel(const std::filesystem::path &path) { return std::make_shared<Model>(path); }
 };
 } // namespace Engine

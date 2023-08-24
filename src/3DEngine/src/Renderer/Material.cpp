@@ -1,6 +1,5 @@
 #include "Material.h"
 
-#include "ResourceManager.h"
 #include "AssetManager.h"
 #include "Texture.h"
 #include "MaterialSerializer.h"
@@ -15,7 +14,7 @@ Material::Material()
 }
 
 void Material::Init(const std::string &name, AssetHandle albedo, AssetHandle metallic, AssetHandle normal,
-                    AssetHandle roughness, AssetHandle alphaMask)
+                    AssetHandle roughness)
 {
     Name = name;
 
@@ -30,20 +29,16 @@ void Material::Init(const std::string &name, AssetHandle albedo, AssetHandle met
     m_TextureHandles[ROUGHNESS] = roughness;
 }
 
-void Material::Init(const std::string_view name, const std::string_view albedoPath, const std::string_view aoPath,
-                    const std::string_view metallicPath, const std::string_view normalPath,
-                    const std::string_view roughnessPath, const std::string_view alphaMaskPath)
+void Material::Init(const std::string &name, const std::filesystem::path &albedoPath,
+                    const std::filesystem::path &aoPath, const std::filesystem::path &metallicPath,
+                    const std::filesystem::path &normalPath, const std::filesystem::path &roughnessPath,
+                    const std::filesystem::path &alphaMaskPath)
 {
-    // TODO: remove if not needed
-    Name = name;
-
-    m_MaterialTextures[ALBEDO] = ResourceManager::Instance().LoadTexture(albedoPath);
-    m_MaterialTextures[AO] = ResourceManager::Instance().LoadTexture(aoPath);
-    m_MaterialTextures[METALLIC] = ResourceManager::Instance().LoadTexture(metallicPath);
-    m_MaterialTextures[NORMAL] = ResourceManager::Instance().LoadTexture(normalPath);
-    m_MaterialTextures[ROUGHNESS] = ResourceManager::Instance().LoadTexture(roughnessPath);
-
-    m_AlphaMaskTexture = ResourceManager::Instance().LoadTexture(alphaMaskPath);
+    m_Textures[ALBEDO] = AssetManager::GetAsset<Texture2D>(albedoPath);
+    m_Textures[AO] = AssetManager::GetAsset<Texture2D>(aoPath);
+    m_Textures[METALLIC] = AssetManager::GetAsset<Texture2D>(metallicPath);
+    m_Textures[NORMAL] = AssetManager::GetAsset<Texture2D>(normalPath);
+    m_Textures[ROUGHNESS] = AssetManager::GetAsset<Texture2D>(roughnessPath);
 }
 
 void Material::Init(const std::string_view name, const glm::vec3 &albedo, float ao, const glm::vec3 &normal,
@@ -56,8 +51,6 @@ void Material::Init(const std::string_view name, const glm::vec3 &albedo, float 
     m_MaterialParam.Normal = normal;
     m_MaterialParam.Metallic = metallic;
     m_MaterialParam.Roughness = roughness;
-
-    m_Alpha = alpha;
 }
 
 unsigned int Material::GetParameterTexture(const ParameterType &type) const noexcept
@@ -65,13 +58,30 @@ unsigned int Material::GetParameterTexture(const ParameterType &type) const noex
     return m_MaterialTextures[type];
 }
 
-void Material::BindMaterialTextures(uint32_t startIndex) const noexcept
+void Material::Bind(Shader *shader) const noexcept
 {
-    int index = startIndex;
+    int index = 3; // start at 3 because 0, 1, 2 are reserved
     for (const auto &texture : m_Textures)
     {
         if (texture != nullptr) texture->Bind(index);
         index++;
+    }
+    if (m_Textures[ParameterType::NORMAL] != nullptr)
+    {
+        if (!m_UseNormalMap) m_Textures[ParameterType::NORMAL]->Unbind();
+    }
+
+    shader->SetUniform3f("albedoParam", m_MaterialParam.Albedo);
+    shader->SetUniform1f("metallicParam", m_MaterialParam.Metallic);
+    shader->SetUniform1f("aoParam", m_MaterialParam.AO);
+    shader->SetUniform1f("roughnessParam", m_MaterialParam.Roughness);
+}
+
+void Material::Unbind() const noexcept
+{
+    for (const auto &texture : m_Textures)
+    {
+        if (texture != nullptr) texture->Unbind();
     }
 }
 
@@ -79,6 +89,7 @@ void Material::SetTexture(ParameterType type, AssetHandle textureHandle)
 {
     auto texture = AssetManager::GetAsset<Texture2D>(textureHandle);
     m_Textures[type] = texture;
+    m_TextureHandles[type] = textureHandle;
 }
 
 void Material::SetMaterialParam(ParameterType type, std::any param)

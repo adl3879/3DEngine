@@ -35,13 +35,12 @@ class RenderSystem
   private:
     void RenderModelsWithTextures(Camera &camera, Scene &scene);
     void RenderModelsWithNoTextures(Camera &camera, Scene &scene) const;
+    void RenderPhysicsDebug(Camera &camera, Scene &scene) const;
     void RenderQuad(Camera &camera);
 
   private:
     unsigned int m_UBOMatrices = 0;
     unsigned int m_SamplerPBRTextures = 0;
-
-    SkyLightPtr m_SkyLight = nullptr;
 
     VertexArray m_QuadVAO;
     VertexArray m_LineVAO;
@@ -53,8 +52,7 @@ class RenderSystem
 
   private:
     std::shared_ptr<OutlineSystem> m_Outline = nullptr;
-    FramebufferPtr m_FBO = nullptr;
 };
 
-using RenderSystemPtr = std::shared_ptr<RenderSystem>;
+using RenderSystemRef = std::shared_ptr<RenderSystem>;
 } // namespace Engine

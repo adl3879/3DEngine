@@ -6,6 +6,8 @@
 #include "ContentBrowserPanel.h"
 #include "MaterialEditorPanel.h"
 #include "Project.h"
+#include "Texture.h"
+#include "Framebuffer.h"
 
 #include <memory>
 
@@ -19,7 +21,8 @@ class AppLayer : public Layer
 
     virtual void OnAttach() override;
     virtual void OnDetach() override;
-    virtual void OnUpdate(float deltaTime) override;
+    virtual void OnUpdate(float dt) override;
+    virtual void OnFixedUpdate(float dt) override;
     virtual void OnImGuiRender() override;
 
     virtual void OnKeyPressed(InputKey key, bool isRepeat) override;
@@ -38,6 +41,8 @@ class AppLayer : public Layer
     void SaveScene();
     void ResetScene(const std::string &path);
 
+    void DuplicateEntity();
+
     void OnScenePlay();
     void OnSceneStop();
 
@@ -49,7 +54,6 @@ class AppLayer : public Layer
 
   private:
     std::shared_ptr<Framebuffer> m_Framebuffer;
-    std::shared_ptr<Framebuffer> m_Framebuffer2;
 
     EditorCamera m_EditorCamera;
 
@@ -58,14 +62,14 @@ class AppLayer : public Layer
     glm::vec2 m_ViewportBounds[2];
 
     // scene
-    std::shared_ptr<Scene> m_Scene;
+    SceneRef m_ActiveScene, m_EditorScene;
 
     // panels
     SceneHierarchyPanel m_SceneHierarchyPanel;
     MaterialEditorPanel m_MaterialEditorPanel;
     std::shared_ptr<ContentBrowserPanel> m_ContentBrowserPanel = nullptr;
 
-    RenderSystemPtr m_RenderSystem;
+    RenderSystemRef m_RenderSystem;
 
   private:
     int m_GizmoType = -1;
@@ -74,10 +78,11 @@ class AppLayer : public Layer
     enum class SceneState
     {
         Edit = 0,
-        Play = 1
+        Play,
+        Simulate
     };
     SceneState m_SceneState = SceneState::Edit;
 
-    unsigned int m_IconPlay, m_IconStop;
+    Texture2DRef m_IconPlay, m_IconStop, m_IconPause, m_IconSimulate;
 };
 } // namespace Engine
