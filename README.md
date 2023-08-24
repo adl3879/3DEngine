@@ -2,7 +2,7 @@
 
 ## My first attempt at making a 3D game engine using OpenGL and C++
 
-I do not have a final name for the engine yet, and I'm currently working on the engine as an educational project, so I can learn more about graphics programming and game engine architecture. I have build most of the engine systems using Cherno's youtube series on game engine development, and I'm currently working on the renderer.
+I do not have a final name for the engine yet, and I'm currently working on the engine as an educational project, so I can learn more about graphics programming and game engine architecture. I have built most of the engine's systems using [Cherno's youtube series on game engine development](https://www.youtube.com/playlist?list=PLlrATfBNZ98dC-V-N3m0Go4deliWHPFwT), and I'm currently working on the renderer.
 
 ![Screenshot](Resources/Screenshots/1.png)
 
