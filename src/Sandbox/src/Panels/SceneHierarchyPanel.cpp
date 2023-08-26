@@ -93,8 +93,8 @@ void SceneHierarchyPanel::DrawComponents(Entity entity)
 
     if (entity.HasComponent<TransformComponent>())
     {
-        if (ImGui::TreeNodeEx((void *)typeid(TransformComponent).hash_code(), ImGuiTreeNodeFlags_DefaultOpen,
-                              "Transform"))
+        _collapsingHeaderStyle();
+        if (ImGui::CollapsingHeader("Transform"))
         {
             auto &translation = entity.GetComponent<TransformComponent>().Translation;
             _drawVec3Control("Position", translation, 0.0f);
@@ -104,15 +104,14 @@ void SceneHierarchyPanel::DrawComponents(Entity entity)
 
             auto &scale = entity.GetComponent<TransformComponent>().Scale;
             _drawVec3Control("Scale", scale, 1.0f);
-
-            ImGui::TreePop();
         }
     }
 
     if (entity.HasComponent<CameraComponent>())
     {
         bool removeComponent = false;
-        if (ImGui::TreeNodeEx((void *)typeid(CameraComponent).hash_code(), ImGuiTreeNodeFlags_DefaultOpen, "Camera"))
+        _collapsingHeaderStyle();
+        if (ImGui::CollapsingHeader("Camera"))
         {
             REMOVABLE_COMPONENT
             auto &cameraComponent = entity.GetComponent<CameraComponent>();
@@ -139,8 +138,6 @@ void SceneHierarchyPanel::DrawComponents(Entity entity)
             float perspectiveFarClip = camera.GetPerspectiveFarClip();
             if (ImGui::DragFloat(_labelPrefix("Far Clip").c_str(), &perspectiveFarClip))
                 camera.SetPerspectiveFarClip(perspectiveFarClip);
-
-            ImGui::TreePop();
         }
 
         if (removeComponent) entity.RemoveComponent<CameraComponent>();
@@ -150,12 +147,15 @@ void SceneHierarchyPanel::DrawComponents(Entity entity)
     {
         bool removeComponent = false;
         auto &entityComponent = entity.GetComponent<MeshComponent>();
-        if (ImGui::TreeNodeEx((void *)typeid(MeshComponent).hash_code(), ImGuiTreeNodeFlags_DefaultOpen, "Mesh"))
+        _collapsingHeaderStyle();
+        if (ImGui::CollapsingHeader("Mesh"))
         {
+            auto meshName = AssetManager::GetAssetName(entityComponent.Handle);
             REMOVABLE_COMPONENT
             ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.05f, 0.05f, 0.05f, 0.54f));
             ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.05f, 0.05f, 0.05f, 0.54f));
-            ImGui::Button(_labelPrefix("Mesh", "Untitled").c_str(), ImVec2(ImGui::GetContentRegionAvail().x, 0.0f));
+            ImGui::Button(_labelPrefix("Mesh", meshName.c_str()).c_str(),
+                          ImVec2(ImGui::GetContentRegionAvail().x, 0.0f));
             ImGui::PopStyleColor(2);
             if (ImGui::BeginDragDropTarget())
             {
@@ -181,7 +181,8 @@ void SceneHierarchyPanel::DrawComponents(Entity entity)
                 for (const auto &mesh : model->GetMeshes())
                 {
                     bool openModal = false;
-                    if (ImGui::Button(_labelPrefix("Material", "Untitled").c_str(),
+                    auto materialName = AssetManager::GetAssetName(entityComponent.MaterialHandle);
+                    if (ImGui::Button(_labelPrefix("Material", materialName.c_str()).c_str(),
                                       ImVec2(ImGui::GetContentRegionAvail().x, 0.0f)))
                         openModal = true;
 
@@ -211,17 +212,15 @@ void SceneHierarchyPanel::DrawComponents(Entity entity)
 
             if (removeComponent) entity.RemoveComponent<MeshComponent>();
             ImGui::PopStyleColor(2);
-            ImGui::TreePop();
         }
 
         if (entity.HasComponent<VisibilityComponent>())
         {
-            if (ImGui::TreeNodeEx((void *)typeid(VisibilityComponent).hash_code(), ImGuiTreeNodeFlags_DefaultOpen,
-                                  "Visibility"))
+            _collapsingHeaderStyle();
+            if (ImGui::CollapsingHeader("Visibility"))
             {
                 auto &entityComponent = entity.GetComponent<VisibilityComponent>();
                 ImGui::Checkbox(_labelPrefix("Visibility").c_str(), &entityComponent.IsVisible);
-                ImGui::TreePop();
             }
         }
     }
@@ -229,8 +228,8 @@ void SceneHierarchyPanel::DrawComponents(Entity entity)
     if (entity.HasComponent<DirectionalLightComponent>())
     {
         bool removeComponent = false;
-        if (ImGui::TreeNodeEx((void *)typeid(DirectionalLightComponent).hash_code(), ImGuiTreeNodeFlags_DefaultOpen,
-                              "DirectionalLight"))
+        _collapsingHeaderStyle();
+        if (ImGui::CollapsingHeader("DirectionalLight"))
         {
             REMOVABLE_COMPONENT
             auto &entityComponent = entity.GetComponent<DirectionalLightComponent>();
@@ -239,8 +238,6 @@ void SceneHierarchyPanel::DrawComponents(Entity entity)
             ImGui::Checkbox(_labelPrefix("Enabled").c_str(), &entityComponent.Enabled);
             ImGui::ColorEdit3(_labelPrefix("Color").c_str(), glm::value_ptr(entityComponent.Light.Color));
             ImGui::DragFloat(_labelPrefix("Intensity").c_str(), &entityComponent.Light.Intensity, 0.1f, 0.0f, 10000.0f);
-
-            ImGui::TreePop();
         }
         if (removeComponent) entity.RemoveComponent<DirectionalLightComponent>();
     }
@@ -248,8 +245,8 @@ void SceneHierarchyPanel::DrawComponents(Entity entity)
     if (entity.HasComponent<PointLightComponent>())
     {
         bool removeComponent = false;
-        if (ImGui::TreeNodeEx((void *)typeid(PointLightComponent).hash_code(), ImGuiTreeNodeFlags_DefaultOpen,
-                              "PointLight"))
+        _collapsingHeaderStyle();
+        if (ImGui::CollapsingHeader("PointLight"))
         {
             REMOVABLE_COMPONENT
             auto &entityComponent = entity.GetComponent<PointLightComponent>();
@@ -258,8 +255,6 @@ void SceneHierarchyPanel::DrawComponents(Entity entity)
             ImGui::Checkbox(_labelPrefix("Enabled").c_str(), &entityComponent.Enabled);
             ImGui::ColorEdit3(_labelPrefix("Color").c_str(), glm::value_ptr(entityComponent.Light.Color));
             ImGui::DragFloat(_labelPrefix("Intensity").c_str(), &entityComponent.Light.Intensity, 0.1f, 0.0f, 10000.0f);
-
-            ImGui::TreePop();
         }
         if (removeComponent) entity.RemoveComponent<PointLightComponent>();
     }
@@ -267,8 +262,8 @@ void SceneHierarchyPanel::DrawComponents(Entity entity)
     if (entity.HasComponent<SpotLightComponent>())
     {
         bool removeComponent = false;
-        if (ImGui::TreeNodeEx((void *)typeid(SpotLightComponent).hash_code(), ImGuiTreeNodeFlags_DefaultOpen,
-                              "SpotLight"))
+        _collapsingHeaderStyle();
+        if (ImGui::CollapsingHeader("SpotLight"))
         {
             REMOVABLE_COMPONENT
             auto &entityComponent = entity.GetComponent<SpotLightComponent>();
@@ -281,8 +276,6 @@ void SceneHierarchyPanel::DrawComponents(Entity entity)
             ImGui::DragFloat(_labelPrefix("Outer Cutoff").c_str(), &entityComponent.Light.OuterCutoff, 0.1f, 0.0f,
                              90.0f);
             ImGui::DragFloat(_labelPrefix("Intensity").c_str(), &entityComponent.Light.Intensity, 0.1f, 0.0f, 10000.0f);
-
-            ImGui::TreePop();
         }
         if (removeComponent) entity.RemoveComponent<SpotLightComponent>();
     }
@@ -291,8 +284,8 @@ void SceneHierarchyPanel::DrawComponents(Entity entity)
     if (entity.HasComponent<RigidBodyComponent>())
     {
         bool removeComponent = false;
-        if (ImGui::TreeNodeEx((void *)typeid(RigidBodyComponent).hash_code(), ImGuiTreeNodeFlags_DefaultOpen,
-                              "Rigid Body"))
+        _collapsingHeaderStyle();
+        if (ImGui::CollapsingHeader("Rigid Body"))
         {
             REMOVABLE_COMPONENT
             // drop down menu for motion type
@@ -329,7 +322,6 @@ void SceneHierarchyPanel::DrawComponents(Entity entity)
                     ImGui::TreePop();
                 }
             }
-            ImGui::TreePop();
         }
         if (removeComponent) entity.RemoveComponent<RigidBodyComponent>();
     }
@@ -337,14 +329,13 @@ void SceneHierarchyPanel::DrawComponents(Entity entity)
     if (entity.HasComponent<BoxColliderComponent>())
     {
         bool removeComponent = false;
-        if (ImGui::TreeNodeEx((void *)typeid(BoxColliderComponent).hash_code(), ImGuiTreeNodeFlags_DefaultOpen,
-                              "Box Collider"))
+        _collapsingHeaderStyle();
+        if (ImGui::CollapsingHeader("Box Collider"))
         {
             REMOVABLE_COMPONENT
             auto &entityComponent = entity.GetComponent<BoxColliderComponent>();
             _drawVec3Control("Size", entityComponent.Size, 0.0f);
             ImGui::Checkbox(_labelPrefix("Is Trigger").c_str(), &entityComponent.IsTrigger);
-            ImGui::TreePop();
         }
         if (removeComponent) entity.RemoveComponent<BoxColliderComponent>();
     }

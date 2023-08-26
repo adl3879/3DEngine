@@ -14,6 +14,9 @@ AssetRegistry:
   - Handle: 1005281982894483555
     FilePath: Materials/NewMaterial.material
     Type: AssetType::Material
+  - Handle: 1135782792607008052
+    FilePath: Textures/skybox/back.jpg
+    Type: AssetType::Texture2D
   - Handle: 1522458270685545197
     FilePath: Materials/Material2.material
     Type: AssetType::Material
@@ -32,6 +35,9 @@ AssetRegistry:
   - Handle: 3386080780721564564
     FilePath: Models/ScifiHelment/SciFiHelmet.gltf
     Type: AssetType::Mesh
+  - Handle: 3630077686676029900
+    FilePath: Textures/skybox/top.jpg
+    Type: AssetType::Texture2D
   - Handle: 4244829309563722734
     FilePath: Scenes/capsuleScene.scene
     Type: AssetType::Scene
@@ -50,6 +56,9 @@ AssetRegistry:
   - Handle: 6657876789123958725
     FilePath: Models/boxTextured/CesiumLogoFlat.png
     Type: AssetType::Texture2D
+  - Handle: 7409135743209827400
+    FilePath: Models/ScifiHelment/SciFiHelmet_AmbientOcclusion.png
+    Type: AssetType::Texture2D
   - Handle: 7965377243735506135
     FilePath: Models/boxTextured/scene.gltf
     Type: AssetType::Mesh
@@ -62,12 +71,18 @@ AssetRegistry:
   - Handle: 8665201117456801007
     FilePath: Models/ChessBoard/Bishop_white_ORM.jpg
     Type: AssetType::Texture2D
+  - Handle: 9199621743224191421
+    FilePath: Textures/skybox/left.jpg
+    Type: AssetType::Texture2D
   - Handle: 9232036843620677522
     FilePath: Models/ChessBoard/bishop_white_base_color.jpg
     Type: AssetType::Texture2D
   - Handle: 9260198605517721820
     FilePath: Textures/hdr/puresky.hdr
     Type: AssetType::TextureHDRI
+  - Handle: 9988660799359468171
+    FilePath: Textures/skybox/right.jpg
+    Type: AssetType::Texture2D
   - Handle: 10008670132094646353
     FilePath: Scenes/physicsTest.scene
     Type: AssetType::Scene
@@ -104,6 +119,9 @@ AssetRegistry:
   - Handle: 12076812403310617254
     FilePath: Models/ChessBoard/Castle_normal.jpg
     Type: AssetType::Texture2D
+  - Handle: 12403683695450835677
+    FilePath: Textures/skybox/bottom.jpg
+    Type: AssetType::Texture2D
   - Handle: 12491184812252249983
     FilePath: Models/suzanne/Suzanne_MetallicRoughness.png
     Type: AssetType::Texture2D
@@ -118,6 +136,9 @@ AssetRegistry:
     Type: AssetType::Texture2D
   - Handle: 12947855091228232762
     FilePath: Models/ChessBoard/queen_black_base_color.jpg
+    Type: AssetType::Texture2D
+  - Handle: 13073749645429705565
+    FilePath: Textures/wall.jpg
     Type: AssetType::Texture2D
   - Handle: 13554769075486812792
     FilePath: Textures/hdr/skyLight.hdr
@@ -175,6 +196,9 @@ AssetRegistry:
     Type: AssetType::Mesh
   - Handle: 16769245563826682944
     FilePath: Models/ChessBoard/bishop_black_base_color.jpg
+    Type: AssetType::Texture2D
+  - Handle: 17084594242853306171
+    FilePath: Textures/skybox/front.jpg
     Type: AssetType::Texture2D
   - Handle: 17400702360898289168
     FilePath: Models/ChessBoard/king_black_base_color.jpg

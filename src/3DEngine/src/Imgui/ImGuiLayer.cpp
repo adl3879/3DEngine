@@ -44,7 +44,7 @@ void ImGuiLayer::OnAttach()
     io.Fonts->AddFontFromFileTTF(FONT_PATH FONT_ICON_FILE_NAME_FAS, iconFontSize, &icons_config, icons_ranges);
     // use FONT_ICON_FILE_NAME_FAR if you want regular instead of solid
 
-    ImGui::StyleColorsDark();
+    // ImGui::StyleColorsDark();
     // ImGui::StyleColorsClassic();
     SetDarkThemeColors();
 
@@ -82,7 +82,7 @@ void ImGuiLayer::SetDarkThemeColors()
     ImVec4 *colors = ImGui::GetStyle().Colors;
     colors[ImGuiCol_Text] = ImVec4(1.00f, 1.00f, 1.00f, 1.00f);
     colors[ImGuiCol_TextDisabled] = ImVec4(0.50f, 0.50f, 0.50f, 1.00f);
-    colors[ImGuiCol_WindowBg] = ImVec4(0.10f, 0.10f, 0.10f, 1.00f);
+    colors[ImGuiCol_WindowBg] = ImVec4(0.15f, 0.15f, 0.15f, 1.00f);
     colors[ImGuiCol_ChildBg] = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
     colors[ImGuiCol_PopupBg] = ImVec4(0.19f, 0.19f, 0.19f, 0.92f);
     colors[ImGuiCol_Border] = ImVec4(0.19f, 0.19f, 0.19f, 0.29f);
@@ -90,8 +90,8 @@ void ImGuiLayer::SetDarkThemeColors()
     colors[ImGuiCol_FrameBg] = ImVec4(0.05f, 0.05f, 0.05f, 0.54f);
     colors[ImGuiCol_FrameBgHovered] = ImVec4(0.19f, 0.19f, 0.19f, 0.54f);
     colors[ImGuiCol_FrameBgActive] = ImVec4(0.20f, 0.22f, 0.23f, 1.00f);
-    colors[ImGuiCol_TitleBg] = ImVec4(0.00f, 0.00f, 0.00f, 1.00f);
-    colors[ImGuiCol_TitleBgActive] = ImVec4(0.06f, 0.06f, 0.06f, 1.00f);
+    colors[ImGuiCol_TitleBg] = ImVec4(0.1f, 0.1f, 0.1f, 1.00f);
+    colors[ImGuiCol_TitleBgActive] = ImVec4(0.08f, 0.08f, 0.08f, 1.00f);
     colors[ImGuiCol_TitleBgCollapsed] = ImVec4(0.00f, 0.00f, 0.00f, 1.00f);
     colors[ImGuiCol_MenuBarBg] = ImVec4(0.14f, 0.14f, 0.14f, 1.00f);
     colors[ImGuiCol_ScrollbarBg] = ImVec4(0.05f, 0.05f, 0.05f, 0.54f);
@@ -137,27 +137,7 @@ void ImGuiLayer::SetDarkThemeColors()
     colors[ImGuiCol_HeaderActive] = ImVec4(0.925f, 0.75f, 0.4666f, 0.6f);
 
     ImGuiStyle &style = ImGui::GetStyle();
-    style.WindowPadding = ImVec2(8.00f, 8.00f);
-    style.FramePadding = ImVec2(5.00f, 2.00f);
-    style.CellPadding = ImVec2(6.00f, 6.00f);
-    style.ItemSpacing = ImVec2(6.00f, 6.00f);
-    style.ItemInnerSpacing = ImVec2(6.00f, 6.00f);
-    style.TouchExtraPadding = ImVec2(0.00f, 0.00f);
-    style.IndentSpacing = 25;
-    style.ScrollbarSize = 15;
-    style.GrabMinSize = 10;
-    style.WindowBorderSize = 1;
-    style.ChildBorderSize = 1;
-    style.PopupBorderSize = 1;
-    style.FrameBorderSize = 1;
-    style.TabBorderSize = 1;
-    style.WindowRounding = 7;
-    style.ChildRounding = 4;
-    style.FrameRounding = 3;
-    style.PopupRounding = 4;
-    style.ScrollbarRounding = 9;
-    style.GrabRounding = 3;
-    style.LogSliderDeadzone = 4;
-    style.TabRounding = 4;
+
+    style.ItemSpacing = ImVec2(6.00f, 8.00f);
 }
 } // namespace Engine

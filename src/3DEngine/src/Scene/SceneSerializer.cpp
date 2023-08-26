@@ -147,16 +147,25 @@ static void SerializeEntity(YAML::Emitter &out, Entity entity)
 
 void SceneSerializer::Serialize(const std::string &filepath)
 {
+    auto environment = m_Scene->GetEnvironment();
+
     YAML::Emitter out;
     out << YAML::BeginMap;
     out << YAML::Key << "Scene" << YAML::Value << "Untitled";
     out << YAML::Key << "Environment" << YAML::Value << YAML::BeginMap;
-    out << YAML::Key << "SkyType" << YAML::Value << SkyTypeToString(m_Scene->GetEnvironment()->CurrentSkyType);
-    out << YAML::Key << "AmbientColor" << YAML::Value << m_Scene->GetEnvironment()->AmbientColor;
-    if (m_Scene->GetEnvironment()->SkyboxHDR)
+    out << YAML::Key << "SkyType" << YAML::Value << SkyTypeToString(environment->CurrentSkyType);
+    out << YAML::Key << "AmbientColor" << YAML::Value << environment->AmbientColor;
+    if (environment->SkyboxHDR)
     {
-        out << YAML::Key << "HDRIHandle" << YAML::Value << m_Scene->GetEnvironment()->SkyboxHDR->GetHandle();
+        out << YAML::Key << "HDRIHandle" << YAML::Value << environment->SkyboxHDR->GetHandle();
     }
+    out << YAML::Key << "SurfaceRadius" << YAML::Value << environment->ProceduralSkybox->SurfaceRadius;
+    out << YAML::Key << "AtmosphereRadius" << YAML::Value << environment->ProceduralSkybox->AtmosphereRadius;
+    out << YAML::Key << "RayleighScattering" << YAML::Value << environment->ProceduralSkybox->RayleighScattering;
+    out << YAML::Key << "MieScattering" << YAML::Value << environment->ProceduralSkybox->MieScattering;
+    out << YAML::Key << "SunIntensity" << YAML::Value << environment->ProceduralSkybox->SunIntensity;
+    out << YAML::Key << "CenterPoint" << YAML::Value << environment->ProceduralSkybox->CenterPoint;
+    out << YAML::Key << "SunDirection" << YAML::Value << environment->ProceduralSkybox->SunDirection;
     out << YAML::EndMap;
 
     out << YAML::Key << "Entities" << YAML::Value << YAML::BeginSeq;
@@ -198,8 +207,24 @@ bool SceneSerializer::Deserialize(const std::string &filepath)
 
         m_Scene->GetEnvironment()->CurrentSkyType = SkyTypeFromString(skyType);
         m_Scene->GetEnvironment()->AmbientColor = ambientColor;
-        m_Scene->GetEnvironment()->SkyboxHDR = std::make_shared<SkyLight>();
-        m_Scene->GetEnvironment()->SkyboxHDR->Init(hdriHandle, 2048);
+
+        if (SkyTypeFromString(skyType) == SkyType::SkyboxHDR)
+        {
+            m_Scene->GetEnvironment()->SkyboxHDR = std::make_shared<SkyLight>();
+            m_Scene->GetEnvironment()->SkyboxHDR->Init(hdriHandle, 2048);
+        }
+
+        if (SkyTypeFromString(skyType) == SkyType::ProceduralSky)
+        {
+            auto &proceduralSkybox = m_Scene->GetEnvironment()->ProceduralSkybox;
+            proceduralSkybox->SurfaceRadius = environment["SurfaceRadius"].as<float>();
+            proceduralSkybox->AtmosphereRadius = environment["AtmosphereRadius"].as<float>();
+            proceduralSkybox->RayleighScattering = environment["RayleighScattering"].as<glm::vec3>();
+            proceduralSkybox->MieScattering = environment["MieScattering"].as<glm::vec3>();
+            proceduralSkybox->SunIntensity = environment["SunIntensity"].as<float>();
+            proceduralSkybox->CenterPoint = environment["CenterPoint"].as<glm::vec3>();
+            proceduralSkybox->SunDirection = environment["SunDirection"].as<glm::vec3>();
+        }
     }
 
     auto entities = data["Entities"];

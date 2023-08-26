@@ -15,37 +15,6 @@ YAML::Emitter &operator<<(YAML::Emitter &out, const std::string_view &v)
     return out;
 }
 
-namespace Utils
-{
-static bool IsInVector(const std::vector<std::string> &vector, const std::string &value)
-{
-    return std::find(vector.begin(), vector.end(), value) != vector.end();
-}
-
-static AssetType GetAssetTypeFromExtension(const std::filesystem::path &path)
-{
-    std::string extension = path.extension().string();
-    std::vector<std::string> textureExtensions = {".png", ".jpg", ".jpeg", ".bmp", ".tga"};
-    std::vector<std::string> meshExtensions = {".obj", ".fbx", ".dae", ".gltf", ".glb"};
-    std::string sceneExtension = ".scene";
-    std::string materialExtension = ".material";
-    std::string skyLightExtension = ".hdr";
-
-    if (IsInVector(textureExtensions, extension))
-        return AssetType::Texture2D;
-    else if (IsInVector(meshExtensions, extension))
-        return AssetType::Mesh;
-    else if (extension == sceneExtension)
-        return AssetType::Scene;
-    else if (extension == materialExtension)
-        return AssetType::Material;
-    else if (extension == skyLightExtension)
-        return AssetType::TextureHDRI;
-    else
-        return AssetType::None;
-}
-} // namespace Utils
-
 bool EditorAssetManager::IsAssetHandleValid(AssetHandle handle) const
 {
     return handle != 0 && m_AssetRegistry.find(handle) != m_AssetRegistry.end();
@@ -180,12 +149,20 @@ AssetHandle EditorAssetManager::GetAssetHandleFromPath(const std::filesystem::pa
     {
         if (metadata.FilePath == path) return handle;
     }
-    return 0;
+    // if it does not find it load it and return the handle
+    return ImportAsset(path);
 }
 
 void EditorAssetManager::UnloadAsset(AssetHandle handle)
 {
     m_AssetRegistry.erase(handle);
     SerializeAssetRegistry();
+}
+
+std::string EditorAssetManager::GetAssetName(AssetHandle handle) const
+{
+    auto asset = m_AssetRegistry.find(handle);
+    if (asset == m_AssetRegistry.end()) return "Unknown";
+    return asset->second.FilePath.filename().stem().string();
 }
 } // namespace Engine

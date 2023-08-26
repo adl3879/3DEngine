@@ -30,7 +30,7 @@ static void _drawVec3Control(const std::string &label, glm::vec3 &values, float 
 
     // TODO: make font size (24.0f) a global
     float lineHeight = 24.0f + style.FramePadding.y * 2.0f;
-    ImVec2 buttonSize = {lineHeight + 3.0f, lineHeight};
+    ImVec2 buttonSize = {3.0f, lineHeight};
 
     float width = ImGui::CalcItemWidth();
 
@@ -51,7 +51,7 @@ static void _drawVec3Control(const std::string &label, glm::vec3 &values, float 
     ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4{0.9f, 0.2f, 0.2f, 1.0f});
     ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4{0.8f, 0.1f, 0.15f, 1.0f});
     ImGui::PushFont(boldFont);
-    if (ImGui::Button("X", buttonSize)) values.x = resetValue;
+    if (ImGui::Button("", buttonSize)) values.x = resetValue;
     ImGui::PopFont();
     ImGui::PopStyleColor(3);
 
@@ -65,7 +65,7 @@ static void _drawVec3Control(const std::string &label, glm::vec3 &values, float 
     ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4{0.3f, 0.8f, 0.3f, 1.0f});
     ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4{0.2f, 0.7f, 0.2f, 1.0f});
     ImGui::PushFont(boldFont);
-    if (ImGui::Button("Y", buttonSize)) values.y = resetValue;
+    if (ImGui::Button("", buttonSize)) values.y = resetValue;
     ImGui::PopFont();
     ImGui::PopStyleColor(3);
 
@@ -79,7 +79,7 @@ static void _drawVec3Control(const std::string &label, glm::vec3 &values, float 
     ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4{0.2f, 0.35f, 0.9f, 1.0f});
     ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4{0.1f, 0.25f, 0.8f, 1.0f});
     ImGui::PushFont(boldFont);
-    if (ImGui::Button("Z", buttonSize)) values.z = resetValue;
+    if (ImGui::Button("", buttonSize)) values.z = resetValue;
     ImGui::PopFont();
     ImGui::PopStyleColor(3);
 
@@ -92,5 +92,19 @@ static void _drawVec3Control(const std::string &label, glm::vec3 &values, float 
     ImGui::Spacing();
 
     ImGui::PopID();
+}
+
+static void _collapsingHeaderStyle()
+{
+    ImGuiStyle &style = ImGui::GetStyle();
+
+    // Customize the style for a normal state
+    ImVec4 normalHeaderBgColor = ImVec4(0.2f, 0.2f, 0.2f, 1.0f);
+    style.Colors[ImGuiCol_Header] = normalHeaderBgColor;
+
+    // Customize the style for a hovered/clicked state
+    ImVec4 hoveredHeaderBgColor = ImVec4(0.3f, 0.3f, 0.3f, 1.0f);
+    style.Colors[ImGuiCol_HeaderHovered] = hoveredHeaderBgColor;
+    ImGui::SetNextItemOpen(true, ImGuiCond_Once);
 }
 } // namespace Engine

@@ -51,12 +51,10 @@ void ProceduralSky::Draw(glm::mat4 projection, glm::mat4 view)
     skyShader->SetUniformMatrix4fv("View", view);
 
     RenderCommand::Disable(RendererEnum::DEPTH_TEST);
-    RenderCommand::Disable(RendererEnum::FACE_CULL);
 
     glBindVertexArray(VAO);
     glDrawArrays(GL_TRIANGLES, 0, 6);
 
     RenderCommand::Enable(RendererEnum::DEPTH_TEST);
-    RenderCommand::Enable(RendererEnum::FACE_CULL);
 }
 } // namespace Engine

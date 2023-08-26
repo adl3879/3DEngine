@@ -21,7 +21,7 @@ class Environment
   public:
     Environment();
 
-    SkyType CurrentSkyType = SkyType::SkyboxHDR;
+    SkyType CurrentSkyType = SkyType::ProceduralSky;
 
     glm::vec4 AmbientColor = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
     SkyLightRef SkyboxHDR;
