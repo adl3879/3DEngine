@@ -5,16 +5,16 @@
 #include "PlatformUtils.h"
 #include "Shader.h"
 #include "InputManager.h"
-#include "RenderSystem.h"
 #include "AssetManager.h"
+#include "ShaderManager.h"
 #include "TextureHDRI.h"
 
 namespace Engine
 {
 // TODO: Allow blurring of cubemap
-
 void SkyLight::Init(AssetHandle handle, const std::size_t resolution)
 {
+    m_EnvironmentHandle = handle;
     glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
 
     SetupCube();
@@ -142,6 +142,7 @@ void SkyLight::Init(AssetHandle handle, const std::size_t resolution)
     }
     irradianceShader->Delete();
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 
     /*---------------------------------------------------------------------------------------------------------------------------------------------*/
     /*---------------------------------------------------------------------------------------------------------------------------------------------*/
@@ -196,6 +197,7 @@ void SkyLight::Init(AssetHandle handle, const std::size_t resolution)
     }
     prefilterShader->Delete();
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 
     /*---------------------------------------------------------------------------------------------------------------------------------------------*/
     /*---------------------------------------------------------------------------------------------------------------------------------------------*/
@@ -204,7 +206,6 @@ void SkyLight::Init(AssetHandle handle, const std::size_t resolution)
 
     // generate 2D LUT from BRDF equations
     glGenTextures(1, &m_BrdfLUT);
-
     glBindTexture(GL_TEXTURE_2D, m_BrdfLUT);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RG16F, resolution, resolution, 0, GL_RG, GL_FLOAT, nullptr);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -225,6 +226,7 @@ void SkyLight::Init(AssetHandle handle, const std::size_t resolution)
 
     brdfShader->Delete();
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glBindTexture(GL_TEXTURE_2D, 0);
 
     auto windowSize = InputManager::Instance().GetWindowState();
     glViewport(0, 0, windowSize.Width, windowSize.Height);
@@ -232,17 +234,17 @@ void SkyLight::Init(AssetHandle handle, const std::size_t resolution)
 
 void SkyLight::Destroy()
 {
-    m_CubeVAO.Unbind();
-    m_QuadVAO.Unbind();
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
     UnBindMaps();
 }
 
-void SkyLight::Render(Camera &camera)
+void SkyLight::Render(const glm::mat4 &projection, const glm::mat4 &view)
 {
     auto cubemap = m_Shaders["cubemap"];
     cubemap->Bind();
-    cubemap->SetUniformMatrix4fv("projection", camera.GetProjectionMatrix());
-    cubemap->SetUniformMatrix4fv("view", camera.GetViewMatrix());
+    cubemap->SetUniformMatrix4fv("projection", projection);
+    cubemap->SetUniformMatrix4fv("view", view);
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_CUBE_MAP, m_EnvCubemap);
@@ -252,12 +254,11 @@ void SkyLight::Render(Camera &camera)
 
 void SkyLight::BindMaps(int slot) const
 {
-    // bind pre-computed IBL data
-    glActiveTexture(GL_TEXTURE0);
+    glActiveTexture(0);
     glBindTexture(GL_TEXTURE_CUBE_MAP, m_IrradianceMap);
-    glActiveTexture(GL_TEXTURE1);
+    glActiveTexture(1);
     glBindTexture(GL_TEXTURE_CUBE_MAP, m_PreFilterMap);
-    glActiveTexture(GL_TEXTURE2);
+    glActiveTexture(2);
     glBindTexture(GL_TEXTURE_2D, m_BrdfLUT);
 }
 

@@ -11,6 +11,7 @@
 
 namespace Engine
 {
+class Texture2D;
 class Shader
 {
   public:
@@ -31,6 +32,7 @@ class Shader
     void SetUniform1f(uint32_t location, float value);
     void SetUniform1i(std::string id, int value);
     void SetUniform1i(uint32_t location, int value);
+    void SetUniformTex(const std::string &name, Texture2D *texture, unsigned int slot);
 
     int FindUniformLocation(const std::string &uniform);
 

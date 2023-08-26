@@ -4,18 +4,14 @@
 
 namespace Engine
 {
-DirectionalLight *Light::s_DirectionalLightProps = nullptr;
-std::map<int, PointLight> Light::s_PointLightPropsMap = {};
-std::map<int, SpotLight> Light::s_SpotLightPropsMap = {};
-
 void Light::SetLightUniforms(Shader &shader)
 {
     // directional
-    if (s_DirectionalLightProps != nullptr)
+    if (m_DirectionalLightProps)
     {
         shader.SetUniform3f("gDirectionalLight.Color",
-                            s_DirectionalLightProps->Color * s_DirectionalLightProps->Intensity);
-        shader.SetUniform3f("gDirectionalLight.Direction", s_DirectionalLightProps->Direction);
+                            m_DirectionalLightProps->Color * m_DirectionalLightProps->Intensity);
+        shader.SetUniform3f("gDirectionalLight.Direction", m_DirectionalLightProps->Direction);
     }
     else
     {
@@ -25,67 +21,85 @@ void Light::SetLightUniforms(Shader &shader)
 
     // point
     {
-        auto it = s_PointLightPropsMap.begin();
-        for (unsigned int i = 0; i < s_PointLightPropsMap.size(); i++)
+        auto it = m_PointLightPropsMap.begin();
+        for (unsigned int i = 0; i < m_PointLightPropsMap.size(); i++)
         {
-            char buffer[100];
-            SNPRINTF(buffer, sizeof(buffer), "gPointLights[%d].Color", i);
-            shader.SetUniform3f(buffer, it->second.Color * it->second.Intensity);
-            SNPRINTF(buffer, sizeof(buffer), "gPointLights[%d].Position", i);
-            shader.SetUniform3f(buffer, it->second.Position);
-
+            if (it->second)
+            {
+                char buffer[100];
+                SNPRINTF(buffer, sizeof(buffer), "gPointLights[%d].Color", i);
+                shader.SetUniform3f(buffer, it->second->Color * it->second->Intensity);
+                SNPRINTF(buffer, sizeof(buffer), "gPointLights[%d].Position", i);
+                shader.SetUniform3f(buffer, it->second->Position);
+            }
+            else
+            {
+                char buffer[100];
+                SNPRINTF(buffer, sizeof(buffer), "gPointLights[%d].Color", i);
+                shader.SetUniform3f(buffer, glm::vec3(0.0f, 0.0f, 0.0f));
+                SNPRINTF(buffer, sizeof(buffer), "gPointLights[%d].Position", i);
+                shader.SetUniform3f(buffer, glm::vec3(0.0f, 0.0f, 0.0f));
+            }
             it++;
         }
-        shader.SetUniform1i("gNumOfPointLights", s_PointLightPropsMap.size());
+        shader.SetUniform1i("gNumOfPointLights", m_PointLightPropsMap.size());
     }
 
     // spot
     {
-        auto it = s_SpotLightPropsMap.begin();
-        for (unsigned int i = 0; i < s_SpotLightPropsMap.size(); i++)
+        auto it = m_SpotLightPropsMap.begin();
+        for (unsigned int i = 0; i < m_SpotLightPropsMap.size(); i++)
         {
-            char buffer[100];
-            SNPRINTF(buffer, sizeof(buffer), "gSpotLights[%d].Color", i);
-            shader.SetUniform3f(buffer, it->second.Color * it->second.Intensity);
-            SNPRINTF(buffer, sizeof(buffer), "gSpotLights[%d].Direction", i);
-            shader.SetUniform3f(buffer, it->second.Direction);
-            SNPRINTF(buffer, sizeof(buffer), "gSpotLights[%d].Position", i);
-            shader.SetUniform3f(buffer, it->second.Position);
-            SNPRINTF(buffer, sizeof(buffer), "gSpotLights[%d].Cutoff", i);
-            shader.SetUniform1f(buffer, glm::cos(glm::radians(it->second.Cutoff)));
-            SNPRINTF(buffer, sizeof(buffer), "gSpotLights[%d].OuterCutoff", i);
-            shader.SetUniform1f(buffer, glm::cos(glm::radians(it->second.OuterCutoff)));
-
+            if (it->second)
+            {
+                char buffer[100];
+                SNPRINTF(buffer, sizeof(buffer), "gSpotLights[%d].Color", i);
+                shader.SetUniform3f(buffer, it->second->Color * it->second->Intensity);
+                SNPRINTF(buffer, sizeof(buffer), "gSpotLights[%d].Direction", i);
+                shader.SetUniform3f(buffer, it->second->Direction);
+                SNPRINTF(buffer, sizeof(buffer), "gSpotLights[%d].Position", i);
+                shader.SetUniform3f(buffer, it->second->Position);
+                SNPRINTF(buffer, sizeof(buffer), "gSpotLights[%d].Cutoff", i);
+                shader.SetUniform1f(buffer, glm::cos(glm::radians(it->second->Cutoff)));
+                SNPRINTF(buffer, sizeof(buffer), "gSpotLights[%d].OuterCutoff", i);
+                shader.SetUniform1f(buffer, glm::cos(glm::radians(it->second->OuterCutoff)));
+            }
+            else
+            {
+                char buffer[100];
+                SNPRINTF(buffer, sizeof(buffer), "gSpotLights[%d].Color", i);
+                shader.SetUniform3f(buffer, glm::vec3(0.0f, 0.0f, 0.0f));
+                SNPRINTF(buffer, sizeof(buffer), "gSpotLights[%d].Direction", i);
+                shader.SetUniform3f(buffer, glm::vec3(0.0f, 0.0f, 0.0f));
+                SNPRINTF(buffer, sizeof(buffer), "gSpotLights[%d].Position", i);
+                shader.SetUniform3f(buffer, glm::vec3(0.0f, 0.0f, 0.0f));
+                SNPRINTF(buffer, sizeof(buffer), "gSpotLights[%d].Cutoff", i);
+                shader.SetUniform1f(buffer, 0.0f);
+                SNPRINTF(buffer, sizeof(buffer), "gSpotLights[%d].OuterCutoff", i);
+                shader.SetUniform1f(buffer, 0.0f);
+            }
             it++;
         }
-        shader.SetUniform1i("gNumOfSpotLights", s_SpotLightPropsMap.size());
+        shader.SetUniform1i("gNumOfSpotLights", m_SpotLightPropsMap.size());
     }
 }
 
 void Light::Reset()
 {
-    s_DirectionalLightProps = nullptr;
-    s_PointLightPropsMap.clear();
-    s_SpotLightPropsMap.clear();
+    m_DirectionalLightProps = nullptr;
+    m_PointLightPropsMap.clear();
+    m_SpotLightPropsMap.clear();
 }
 
-void Light::SetDirectionalLight(DirectionalLight *directionalLight) { s_DirectionalLightProps = directionalLight; }
+void Light::SetDirectionalLight(DirectionalLight *directionalLight) { m_DirectionalLightProps = directionalLight; }
 
-void Light::SetPointLight(const PointLight &pointLight, int index) { s_PointLightPropsMap[index] = pointLight; }
+void Light::SetPointLight(PointLight *pointLight, int index) { m_PointLightPropsMap[index] = pointLight; }
 
-void Light::SetSpotLight(const SpotLight &spotlight, int index) { s_SpotLightPropsMap[index] = spotlight; }
+void Light::SetSpotLight(SpotLight *spotlight, int index) { m_SpotLightPropsMap[index] = spotlight; }
 
-void Light::RemoveDirectionalLight() { s_DirectionalLightProps = nullptr; }
+void Light::RemoveDirectionalLight() { m_DirectionalLightProps = nullptr; }
 
-void Light::RemovePointLight(int index)
-{
-    auto it = s_PointLightPropsMap.find(index);
-    s_PointLightPropsMap.erase(it);
-}
+void Light::RemovePointLight(int index) { m_PointLightPropsMap[index] = nullptr; }
 
-void Light::RemoveSpotLight(int index)
-{
-    auto it = s_SpotLightPropsMap.find(index);
-    s_SpotLightPropsMap.erase(it);
-}
+void Light::RemoveSpotLight(int index) { m_SpotLightPropsMap[index] = nullptr; }
 } // namespace Engine

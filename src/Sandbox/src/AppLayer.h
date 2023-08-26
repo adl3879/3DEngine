@@ -2,9 +2,9 @@
 
 #include "Engine.h"
 #include "SceneHierarchyPanel.h"
-#include "RenderSystem.h"
 #include "ContentBrowserPanel.h"
 #include "MaterialEditorPanel.h"
+#include "EnvironmentPanel.h"
 #include "Project.h"
 #include "Texture.h"
 #include "Framebuffer.h"
@@ -67,9 +67,8 @@ class AppLayer : public Layer
     // panels
     SceneHierarchyPanel m_SceneHierarchyPanel;
     MaterialEditorPanel m_MaterialEditorPanel;
+    EnvironmentPanel m_EnvironmentPanel;
     std::shared_ptr<ContentBrowserPanel> m_ContentBrowserPanel = nullptr;
-
-    RenderSystemRef m_RenderSystem;
 
   private:
     int m_GizmoType = -1;

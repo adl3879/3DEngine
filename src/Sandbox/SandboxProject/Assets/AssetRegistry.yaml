@@ -119,6 +119,9 @@ AssetRegistry:
   - Handle: 12947855091228232762
     FilePath: Models/ChessBoard/queen_black_base_color.jpg
     Type: AssetType::Texture2D
+  - Handle: 13554769075486812792
+    FilePath: Textures/hdr/skyLight.hdr
+    Type: AssetType::TextureHDRI
   - Handle: 13876980462942504455
     FilePath: Models/ScifiHelment/SciFiHelmet_Normal.png
     Type: AssetType::Texture2D

@@ -147,7 +147,6 @@ void MaterialEditorPanel::OnImGuiRender()
         ImGui::TreePop();
     }
 
-    ImGui::Separator();
     if (ImGui::Button("Save and Quit"))
     {
         auto mat = AssetManager::GetRegistry()[s_MaterialHandle];

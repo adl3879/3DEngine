@@ -129,14 +129,16 @@ struct LuaScriptComponent
 struct DirectionalLightComponent
 {
     DirectionalLight Light{};
+    bool Enabled = true;
 
-    DirectionalLightComponent() { Light::SetDirectionalLight(&Light); }
+    DirectionalLightComponent() = default;
     DirectionalLightComponent(const DirectionalLightComponent &) = default;
 };
 
 struct PointLightComponent
 {
     int Index = 0;
+    bool Enabled = true;
     PointLight Light;
 
     PointLightComponent() = default;
@@ -146,36 +148,11 @@ struct PointLightComponent
 struct SpotLightComponent
 {
     int Index = 0;
+    bool Enabled = true;
     SpotLight Light;
 
     SpotLightComponent() = default;
     SpotLightComponent(const SpotLightComponent &) = default;
-};
-
-struct SkyLightComponent
-{
-    AssetHandle TextureHandle = 0;
-    SkyLight *Light = nullptr;
-
-    SkyLightComponent() = default;
-    SkyLightComponent(const SkyLightComponent &) = default;
-
-    ~SkyLightComponent() { Remove(); }
-
-    void Use(AssetHandle handle, const std::size_t resolution)
-    {
-        Remove();
-        TextureHandle = handle;
-        Light = new SkyLight();
-        Light->Init(handle, resolution);
-    }
-
-    void Remove()
-    {
-        // TODO: completely remove and unbind the sky light as if it was never there
-        TextureHandle = 0;
-        Light->Destroy();
-    }
 };
 
 struct VisibilityComponent

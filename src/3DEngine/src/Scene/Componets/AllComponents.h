@@ -17,7 +17,7 @@ using AllComponents =
                    // scripting
                    LuaScriptComponent, TransformComponent, MeshComponent, CameraComponent,
                    // lights
-                   PointLightComponent, DirectionalLightComponent, SpotLightComponent, SkyLightComponent,
+                   PointLightComponent, DirectionalLightComponent, SpotLightComponent,
                    // physics
                    RigidBodyComponent, BoxColliderComponent>;
 
@@ -25,7 +25,7 @@ using AllComponentsExceptIDAndTag =
     ComponentExceptIDAndTagGroup<VisibilityComponent, LuaScriptComponent, TransformComponent, MeshComponent,
                                  CameraComponent,
                                  // lights
-                                 PointLightComponent, DirectionalLightComponent, SpotLightComponent, SkyLightComponent,
+                                 PointLightComponent, DirectionalLightComponent, SpotLightComponent,
                                  // physics
                                  RigidBodyComponent, BoxColliderComponent>;
 } // namespace Engine

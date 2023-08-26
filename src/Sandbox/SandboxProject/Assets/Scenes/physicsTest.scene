@@ -1,25 +1,16 @@
 Scene: Untitled
+Environment:
+  SkyType: Skybox HDR
+  AmbientColor: [0, 0, 0, 1]
+  HDRIHandle: 9260198605517721820
 Entities:
-  - Entity: 6994857119509608331
+  - Entity: 5517600620790712006
     TagComponent:
-      Tag: " Mesh"
+      Tag: Sky Light
     TransformComponent:
-      Translation: [-1.85463595, 1.71838176, -1.79028201]
+      Translation: [0, 0, 0]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
-    MeshComponent:
-      Handle: 7965377243735506135
-      MaterialHandle: 0
-  - Entity: 5129492531498468596
-    TagComponent:
-      Tag: " Mesh"
-    TransformComponent:
-      Translation: [0, -1.51282084, 0]
-      Rotation: [0, 0, 0]
-      Scale: [5.30365229, 0.154371843, 6.65394449]
-    MeshComponent:
-      Handle: 7965377243735506135
-      MaterialHandle: 0
   - Entity: 782898186849582471
     TagComponent:
       Tag: Directional Light
@@ -30,12 +21,23 @@ Entities:
     DirectionalLightComponent:
       Color: [1, 1, 1]
       AmbientIntensity: 5
-  - Entity: 5517600620790712006
+  - Entity: 5129492531498468596
     TagComponent:
-      Tag: Sky Light
+      Tag: " Mesh"
     TransformComponent:
-      Translation: [0, 0, 0]
+      Translation: [0, -1.51282084, 0]
+      Rotation: [0, 0, 0]
+      Scale: [5.30365229, 0.154371843, 6.65394449]
+    MeshComponent:
+      Handle: 7965377243735506135
+      MaterialHandle: 0
+  - Entity: 6994857119509608331
+    TagComponent:
+      Tag: " Mesh"
+    TransformComponent:
+      Translation: [-1.85463595, 1.71838176, -1.79028201]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
-    SkyLightComponent:
-      TextureHandle: 9260198605517721820
+    MeshComponent:
+      Handle: 7965377243735506135
+      MaterialHandle: 0

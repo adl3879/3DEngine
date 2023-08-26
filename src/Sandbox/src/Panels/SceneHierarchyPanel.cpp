@@ -69,18 +69,18 @@ void SceneHierarchyPanel::DrawEntityNode(Entity entity)
         if (entity.HasComponent<DirectionalLightComponent>())
         {
             auto &light = entity.GetComponent<DirectionalLightComponent>();
-            Light::RemoveDirectionalLight();
+            m_Context->GetLights()->RemoveDirectionalLight();
         }
         // if entity is point light or spot light, remove it from light list
         if (entity.HasComponent<PointLightComponent>())
         {
             auto &pointLight = entity.GetComponent<PointLightComponent>();
-            Light::RemovePointLight(pointLight.Index);
+            m_Context->GetLights()->RemovePointLight(pointLight.Index);
         }
         if (entity.HasComponent<SpotLightComponent>())
         {
             auto &spotLight = entity.GetComponent<SpotLightComponent>();
-            Light::RemoveSpotLight(spotLight.Index);
+            m_Context->GetLights()->RemoveSpotLight(spotLight.Index);
         }
 
         if (m_SelectionContext == entity) m_SelectionContext = {};
@@ -226,33 +226,6 @@ void SceneHierarchyPanel::DrawComponents(Entity entity)
         }
     }
 
-    if (entity.HasComponent<SkyLightComponent>())
-    {
-        bool removeComponent = false;
-        if (ImGui::TreeNodeEx((void *)typeid(SkyLightComponent).hash_code(), ImGuiTreeNodeFlags_DefaultOpen,
-                              "SkyLight"))
-        {
-            REMOVABLE_COMPONENT
-            auto &component = entity.GetComponent<SkyLightComponent>();
-            ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.05f, 0.05f, 0.05f, 0.54f));
-            ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.05f, 0.05f, 0.05f, 0.54f));
-            ImGui::Button(_labelPrefix("Sky Light", "Environment").c_str(), ImVec2(430.0f, 30.0f));
-            ImGui::PopStyleColor(2);
-            if (ImGui::BeginDragDropTarget())
-            {
-                if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
-                {
-                    const char *handleStr = (const char *)payload->Data;
-                    AssetHandle handle = std::stoull(handleStr);
-                    component.Use(handle, 2048);
-                }
-                ImGui::EndDragDropTarget();
-            }
-            ImGui::TreePop();
-        }
-        if (removeComponent) entity.RemoveComponent<SkyLightComponent>();
-    }
-
     if (entity.HasComponent<DirectionalLightComponent>())
     {
         bool removeComponent = false;
@@ -263,10 +236,9 @@ void SceneHierarchyPanel::DrawComponents(Entity entity)
             auto &entityComponent = entity.GetComponent<DirectionalLightComponent>();
             auto &transform = entity.GetComponent<TransformComponent>();
             entityComponent.Light.Direction = transform.Rotation;
+            ImGui::Checkbox(_labelPrefix("Enabled").c_str(), &entityComponent.Enabled);
             ImGui::ColorEdit3(_labelPrefix("Color").c_str(), glm::value_ptr(entityComponent.Light.Color));
-            ImGui::DragFloat(_labelPrefix("Intensity").c_str(), &entityComponent.Light.Intensity, 1.0f, 0.0f, 10000.0f);
-
-            Light::SetDirectionalLight(&entityComponent.Light);
+            ImGui::DragFloat(_labelPrefix("Intensity").c_str(), &entityComponent.Light.Intensity, 0.1f, 0.0f, 10000.0f);
 
             ImGui::TreePop();
         }
@@ -283,10 +255,9 @@ void SceneHierarchyPanel::DrawComponents(Entity entity)
             auto &entityComponent = entity.GetComponent<PointLightComponent>();
             auto &transform = entity.GetComponent<TransformComponent>();
             entityComponent.Light.Position = transform.Translation;
+            ImGui::Checkbox(_labelPrefix("Enabled").c_str(), &entityComponent.Enabled);
             ImGui::ColorEdit3(_labelPrefix("Color").c_str(), glm::value_ptr(entityComponent.Light.Color));
-            ImGui::DragFloat(_labelPrefix("Intensity").c_str(), &entityComponent.Light.Intensity, 1.0f, 0.0f, 10000.0f);
-
-            Light::SetPointLight(entityComponent.Light, entityComponent.Index);
+            ImGui::DragFloat(_labelPrefix("Intensity").c_str(), &entityComponent.Light.Intensity, 0.1f, 0.0f, 10000.0f);
 
             ImGui::TreePop();
         }
@@ -304,13 +275,12 @@ void SceneHierarchyPanel::DrawComponents(Entity entity)
             auto &transform = entity.GetComponent<TransformComponent>();
             entityComponent.Light.Position = transform.Translation;
             entityComponent.Light.Direction = transform.Rotation;
+            ImGui::Checkbox(_labelPrefix("Enabled").c_str(), &entityComponent.Enabled);
             ImGui::ColorEdit3(_labelPrefix("Color").c_str(), glm::value_ptr(entityComponent.Light.Color));
             ImGui::DragFloat(_labelPrefix("Cutoff").c_str(), &entityComponent.Light.Cutoff, 0.1f, 0.0f, 90.0f);
             ImGui::DragFloat(_labelPrefix("Outer Cutoff").c_str(), &entityComponent.Light.OuterCutoff, 0.1f, 0.0f,
                              90.0f);
-            ImGui::DragFloat(_labelPrefix("Intensity").c_str(), &entityComponent.Light.Intensity, 1.0f, 0.0f, 10000.0f);
-
-            Light::SetSpotLight(entityComponent.Light, entityComponent.Index);
+            ImGui::DragFloat(_labelPrefix("Intensity").c_str(), &entityComponent.Light.Intensity, 0.1f, 0.0f, 10000.0f);
 
             ImGui::TreePop();
         }
@@ -414,15 +384,6 @@ void SceneHierarchyPanel::OnImGuiRender()
                 ImGui::Spacing();
                 ImGui::Separator();
 
-                if (ImGui::MenuItem(ICON_FA_CLOUD_MOON "  Sky Light"))
-                {
-                    auto entity = m_Context->CreateEntity("Sky Light");
-                    entity.AddComponent<SkyLightComponent>();
-                    entity.RemoveComponent<TransformComponent>();
-                    m_SelectionContext = entity;
-                }
-                ImGui::Separator();
-
                 // check if scene does not contain directional light entity
                 auto dLight = m_Context->GetEntity("Directional Light");
                 if (dLight == nullptr)
@@ -436,14 +397,14 @@ void SceneHierarchyPanel::OnImGuiRender()
                 }
                 if (ImGui::MenuItem(ICON_FA_LIGHTBULB "  Point Light"))
                 {
-                    auto num = Light::GetNumPointLights() + 1;
+                    auto num = m_Context->GetLights()->GetNumPointLights() + 1;
                     auto entity = m_Context->CreateEntity("Point Light " + std::to_string(num));
                     entity.AddComponent<PointLightComponent>();
                     m_SelectionContext = entity;
                 }
                 if (ImGui::MenuItem(ICON_FA_LIGHTBULB "  Spot Light"))
                 {
-                    auto num = Light::GetNumSpotLights() + 1;
+                    auto num = m_Context->GetLights()->GetNumSpotLights() + 1;
                     auto entity = m_Context->CreateEntity("Spot Light " + std::to_string(num));
                     entity.AddComponent<SpotLightComponent>();
                     m_SelectionContext = entity;
@@ -455,7 +416,7 @@ void SceneHierarchyPanel::OnImGuiRender()
                 {
                     if (ImGui::MenuItem(ICON_FA_CUBE "  Empty Mesh"))
                     {
-                        auto entity = m_Context->CreateEntity(" Mesh");
+                        auto entity = m_Context->CreateEntity("Mesh");
                         entity.AddComponent<MeshComponent>();
                         m_SelectionContext = entity;
                     }

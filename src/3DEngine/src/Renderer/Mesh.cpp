@@ -24,6 +24,9 @@ void Mesh::Draw(Shader *shader, bool bindMaterials)
 
     VAO.Bind();
     RenderCommand::DrawElements(RendererEnum::TRIANGLES, IndexCount, RendererEnum::UINT, nullptr);
+
+    Material->Unbind();
+    VAO.Unbind();
 }
 
 void Mesh::Clear() {}
