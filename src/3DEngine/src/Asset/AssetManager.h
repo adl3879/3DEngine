@@ -40,5 +40,15 @@ class AssetManager
     {
         return Project::GetActive()->GetEditorAssetManager()->ImportAsset(path);
     }
+
+    static AssetHandle AddAsset(AssetRef asset)
+    {
+        return Project::GetActive()->GetEditorAssetManager()->AddAsset(asset);
+    }
+
+    static bool IsAssetHandleValid(AssetHandle handle)
+    {
+        return Project::GetActive()->GetEditorAssetManager()->IsAssetHandleValid(handle);
+    }
 };
 } // namespace Engine

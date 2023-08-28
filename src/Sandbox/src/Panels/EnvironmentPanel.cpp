@@ -25,7 +25,7 @@ void EnvironmentPanel::OnImGuiRender()
             ImGui::ColorEdit3(_labelPrefix("Color").c_str(), glm::value_ptr(environment->AmbientColor));
         }
 
-        if (environment->CurrentSkyType == SkyType::SkyboxHDR)
+        if (environment->CurrentSkyType == SkyType::SkyboxHDR && environment->SkyboxHDR)
         {
             auto skyName = AssetManager::GetAssetName(environment->SkyboxHDR->GetHandle());
             ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.05f, 0.05f, 0.05f, 0.54f));

@@ -295,7 +295,16 @@ void AppLayer::OnMouseButtonPressed(MouseButton button)
     // Mouse picking
     if (button == MouseButton::Left && !ImGuizmo::IsOver() && !Input.IsKeyPressed(InputKey::LeftAlt))
     {
-        if (m_ViewportHovered) m_SceneHierarchyPanel.SetSelectedEntity(m_HoveredEntity);
+        if (m_ViewportHovered)
+        {
+            m_SceneHierarchyPanel.SetSelectedEntity(m_HoveredEntity);
+            if ((int)m_HoveredEntity > 0)
+            {
+                const auto &mesh = m_HoveredEntity.GetComponent<MeshComponent>();
+                auto defaultHandle = AssetManager::GetAsset<Model>(mesh.Handle)->GetDefaultMaterialHandle();
+                MaterialEditorPanel::OpenMaterialEditor(mesh.MaterialHandle ? mesh.MaterialHandle : defaultHandle);
+            }
+        }
     }
 }
 

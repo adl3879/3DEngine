@@ -65,6 +65,11 @@ void Material::Bind(Shader *shader) const noexcept
     if (m_Textures[ParameterType::METALLIC]) m_Textures[ParameterType::METALLIC]->Bind(5);
     if (m_Textures[ParameterType::ROUGHNESS]) m_Textures[ParameterType::ROUGHNESS]->Bind(6);
 
+    shader->SetUniform1i("albedoMap", 3);
+    shader->SetUniform1i("normalMap", 4);
+    shader->SetUniform1i("metallicMap", 5);
+    shader->SetUniform1i("roughnessMap", 6);
+
     shader->SetUniform3f("albedoParam", m_MaterialParam.Albedo);
     shader->SetUniform1f("metallicParam", m_MaterialParam.Metallic);
     shader->SetUniform1f("aoParam", m_MaterialParam.AO);

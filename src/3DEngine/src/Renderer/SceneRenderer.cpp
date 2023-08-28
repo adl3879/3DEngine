@@ -22,10 +22,9 @@ void SceneRenderer::Init()
     pbrShader->SetUniform1i("irradianceMap", 0);
     pbrShader->SetUniform1i("prefilterMap", 1);
     pbrShader->SetUniform1i("brdfLUT", 2);
-    pbrShader->SetUniform1i("albedoMap", 3);
-    pbrShader->SetUniform1i("normalMap", 4);
-    pbrShader->SetUniform1i("metallicMap", 5);
-    pbrShader->SetUniform1i("roughnessMap", 6);
+
+    m_ShadingBuffer = Framebuffer::CreateRef(true, glm::vec2(1280, 720));
+    m_ShadingBuffer->SetTexture(std::make_shared<Texture2D>(ImageFormat::Depth), GL_DEPTH_ATTACHMENT);
 }
 
 void SceneRenderer::Cleanup() {}
@@ -54,7 +53,7 @@ void SceneRenderer::RenderScene(Scene &scene)
         RenderCommand::SetClearColor(environment->AmbientColor);
         RenderCommand::Clear();
     }
-    if (environment->CurrentSkyType == SkyType::ProceduralSky)
+    else if (environment->CurrentSkyType == SkyType::ProceduralSky)
     {
         environment->ProceduralSkybox->Draw(m_Projection, m_View);
     }
@@ -73,7 +72,9 @@ void SceneRenderer::RenderScene(Scene &scene)
         for (auto &mesh : entityModel->GetMeshes())
         {
             auto material = AssetManager::GetAsset<Material>(model.MaterialHandle);
-            if (material != nullptr) mesh.Material = material;
+            if (material == nullptr)
+                material = AssetManager::GetAsset<Material>(entityModel->GetDefaultMaterialHandle());
+            mesh.Material = material;
             if (model.ModelResource && !material)
                 mesh.Material->SetMaterialParam(ParameterType::ALBEDO, glm::vec3(1, 1, 1));
 
@@ -85,14 +86,17 @@ void SceneRenderer::RenderScene(Scene &scene)
     }
     Renderer::Flush(pbrShader, false);
 
-    if (environment->CurrentSkyType == SkyType::SkyboxHDR && environment->SkyboxHDR != nullptr)
+    if (environment->SkyboxHDR != nullptr)
     {
-        scene.GetEnvironment()->SkyboxHDR->BindMaps();
-        environment->SkyboxHDR->Render(m_Projection, m_View);
-    }
-    else
-    {
-        scene.GetEnvironment()->SkyboxHDR->Destroy();
+        if (environment->CurrentSkyType == SkyType::SkyboxHDR)
+        {
+            scene.GetEnvironment()->SkyboxHDR->BindMaps();
+            environment->SkyboxHDR->Render(m_Projection, m_View);
+        }
+        else
+            scene.GetEnvironment()->SkyboxHDR->Destroy();
     }
 }
+
+void SceneRenderer::ShadowPass(Scene &scene) {}
 } // namespace Engine

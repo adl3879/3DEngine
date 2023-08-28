@@ -45,6 +45,16 @@ AssetHandle EditorAssetManager::ImportAsset(const std::filesystem::path &path)
     return handle;
 }
 
+AssetHandle EditorAssetManager::AddAsset(AssetRef asset)
+{
+    AssetHandle handle; // generates new asset
+    AssetMetadata metadata;
+    metadata.Type = asset->GetType();
+    m_LoadedAssets[handle] = asset;
+    m_AssetRegistry[handle] = metadata;
+    return handle;
+}
+
 const AssetMetadata &EditorAssetManager::GetMetadata(AssetHandle handle) const
 {
     static AssetMetadata s_NullMetadata;

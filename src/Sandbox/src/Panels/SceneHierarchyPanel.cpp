@@ -161,9 +161,7 @@ void SceneHierarchyPanel::DrawComponents(Entity entity)
             {
                 if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
                 {
-                    // TODO: check if payload is a handle or a path, if path, convert to handle by loading asset
                     const char *handle = (const char *)payload->Data;
-                    // convert handle to uint64_t(AssetHandle)
                     entityComponent.Handle = std::stoull(handle);
                 }
                 ImGui::EndDragDropTarget();
@@ -193,7 +191,12 @@ void SceneHierarchyPanel::DrawComponents(Entity entity)
                         // TODO: check if payload is a handle or a path, if path, convert to handle by loading asset
                         if (ImGui::MenuItem(ICON_FA_TRASH_RESTORE "   Remove")) entityComponent.MaterialHandle = 0;
                         if (ImGui::MenuItem(ICON_FA_EDIT "   Open Material Editor"))
-                            MaterialEditorPanel::OpenMaterialEditor(entityComponent.MaterialHandle);
+                        {
+                            auto handle = entityComponent.MaterialHandle ? entityComponent.MaterialHandle
+                                                                         : model->GetDefaultMaterialHandle();
+                            MaterialEditorPanel::OpenMaterialEditor(handle,
+                                                                    handle == model->GetDefaultMaterialHandle());
+                        }
                         ImGui::EndPopup();
                     }
 

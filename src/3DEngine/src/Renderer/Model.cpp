@@ -15,7 +15,8 @@
 
 namespace Engine
 {
-Model::Model(const std::filesystem::path &path, const bool flipWindingOrder, const bool loadMaterial) : m_Path(path)
+Model::Model(const std::filesystem::path &path, const bool flipWindingOrder, const bool loadMaterial)
+    : m_Path(path), m_DefaultMaterialHandle(0)
 {
     // auto fullPath = Utils::Path::GetAbsolute(std::string(path));
     if (!LoadModel(path, flipWindingOrder, loadMaterial)) LOG_CORE_ERROR("Failed to load model: {0}", path.string());
@@ -180,6 +181,9 @@ Mesh Model::ProcessMesh(aiMesh *mesh, const aiScene *scene, const bool loadMater
             MaterialRef material = std::make_shared<Material>();
             material->Init(materialName, materialHandles[0], materialHandles[1], materialHandles[2],
                            materialHandles[3]);
+
+            auto defaultMaterialHandle = AssetManager::AddAsset(material);
+            m_DefaultMaterialHandle = defaultMaterialHandle;
 
             ++m_NumOfMaterials;
             return Mesh(vertices, indices, material);

@@ -20,7 +20,12 @@ class SceneRenderer
     void RenderScene(Scene &scene);
 
   private:
+    void ShadowPass(Scene &scene);
+
+  private:
     glm::mat4 m_Projection, m_View;
     glm::vec3 m_CameraPosition;
+
+    FramebufferRef m_ShadingBuffer;
 };
 } // namespace Engine

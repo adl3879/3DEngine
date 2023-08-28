@@ -38,9 +38,6 @@ AssetRegistry:
   - Handle: 3630077686676029900
     FilePath: Textures/skybox/top.jpg
     Type: AssetType::Texture2D
-  - Handle: 4244829309563722734
-    FilePath: Scenes/capsuleScene.scene
-    Type: AssetType::Scene
   - Handle: 4998439887420060200
     FilePath: Models/suzanne/scene.gltf
     Type: AssetType::Mesh

@@ -23,6 +23,7 @@ class EditorAssetManager : public AssetManagerBase
     virtual bool IsAssetLoaded(AssetHandle handle) const override;
 
     AssetHandle ImportAsset(const std::filesystem::path &path);
+    AssetHandle AddAsset(AssetRef asset);
 
     const AssetMetadata &GetMetadata(AssetHandle handle) const;
     const AssetRegistry &GetAssetRegistry() const { return m_AssetRegistry; }

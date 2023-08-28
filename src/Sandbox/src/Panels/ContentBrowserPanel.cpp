@@ -256,7 +256,16 @@ void ContentBrowserPanel::OnImGuiRender()
             ImGui::PopStyleColor();
             if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
             {
-                if (directoryEntry.is_directory()) m_CurrentDirectory /= path.filename();
+                if (directoryEntry.is_directory())
+                    m_CurrentDirectory /= path.filename();
+                else
+                {
+                    if (path.extension() == ".material")
+                    {
+                        auto materialHandle = AssetManager::GetAssetHandleFromPath(relativePath);
+                        MaterialEditorPanel::OpenMaterialEditor(materialHandle);
+                    }
+                }
             }
 
             ImGui::TextWrapped(filenameString.c_str());
@@ -319,7 +328,7 @@ void ContentBrowserPanel::DisplayFileHierarchy(const std::filesystem::path &dire
                 if (ImGui::MenuItem(ICON_FA_FILE_IMPORT "   Import"))
                 {
                     auto relativePath = std::filesystem::relative(entryPath, Project::GetAssetDirectory());
-                    Project::GetActive()->GetEditorAssetManager()->ImportAsset(relativePath);
+                    AssetManager::ImportAsset(relativePath);
                 }
                 ImGui::EndPopup();
             }

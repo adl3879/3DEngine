@@ -32,7 +32,7 @@ class Model : public Asset
     void Delete();
 
     auto GetMeshes() const noexcept { return m_Meshes; }
-    auto GetDefaultMaterialName() const { return m_DefaultMaterial; }
+    AssetHandle GetDefaultMaterialHandle() const { return m_DefaultMaterialHandle; }
 
     virtual AssetType GetType() const override { return AssetType::Mesh; }
 
@@ -48,8 +48,9 @@ class Model : public Asset
 
   private:
     std::string m_Path;
-    const char *m_DefaultMaterial;
     size_t m_NumOfMaterials;
+
+    AssetHandle m_DefaultMaterialHandle;
 };
 
 using ModelRef = std::shared_ptr<Model>;
