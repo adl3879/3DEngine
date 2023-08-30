@@ -9,12 +9,15 @@
 #include "Log.h"
 #include "PlatformUtils.h"
 #include "MaterialSerializer.h"
+#include "ImGuiHelpers.h"
+
 #include <IconsFontAwesome5.h>
 
 namespace Engine
 {
 AssetHandle MaterialEditorPanel::s_MaterialHandle = 0;
 bool MaterialEditorPanel::s_ShowMaterialEditor = false;
+bool MaterialEditorPanel::s_IsDefaultMaterial = false;
 
 MaterialEditorPanel::MaterialEditorPanel()
 {
@@ -29,7 +32,8 @@ void MaterialEditorPanel::OnImGuiRender()
     ImGui::Begin("Material Editor", &s_ShowMaterialEditor);
     auto material = AssetManager::GetAsset<Material>(s_MaterialHandle);
 
-    if (ImGui::TreeNodeEx("Albedo", ImGuiTreeNodeFlags_DefaultOpen, "Albedo"))
+    _collapsingHeaderStyle();
+    if (ImGui::CollapsingHeader("Albedo"))
     {
         auto albedoTexture = material->GetTexture(ParameterType::ALBEDO) ? material->GetTexture(ParameterType::ALBEDO)
                                                                          : m_CheckerboardTexture;
@@ -54,10 +58,9 @@ void MaterialEditorPanel::OnImGuiRender()
         glm::vec3 color = material->GetMaterialData().Albedo;
         ImGui::ColorEdit3("Color", glm::value_ptr(color), ImGuiColorEditFlags_NoInputs);
         material->SetMaterialParam(ParameterType::ALBEDO, color);
-
-        ImGui::TreePop();
     }
-    if (ImGui::TreeNodeEx("Normal", ImGuiTreeNodeFlags_DefaultOpen, "Normal"))
+    _collapsingHeaderStyle();
+    if (ImGui::CollapsingHeader("Normal"))
     {
         auto normalTexture = material->GetTexture(ParameterType::NORMAL) ? material->GetTexture(ParameterType::NORMAL)
                                                                          : m_CheckerboardTexture;
@@ -82,10 +85,9 @@ void MaterialEditorPanel::OnImGuiRender()
         bool useNormalMap = material->GetUseNormalMap();
         ImGui::Checkbox("Use", &useNormalMap);
         material->SetUseNormalMap(useNormalMap);
-
-        ImGui::TreePop();
     }
-    if (ImGui::TreeNodeEx("Metallic", ImGuiTreeNodeFlags_DefaultOpen, "Metallic"))
+    _collapsingHeaderStyle();
+    if (ImGui::CollapsingHeader("Metallic"))
     {
         auto metallicTexture = material->GetTexture(ParameterType::METALLIC)
                                    ? material->GetTexture(ParameterType::METALLIC)
@@ -112,10 +114,9 @@ void MaterialEditorPanel::OnImGuiRender()
         ImGui::SliderFloat("Metallic", &metallic, 0.0f, 1.0f);
         ImGui::PopItemWidth();
         material->SetMaterialParam(ParameterType::METALLIC, metallic);
-
-        ImGui::TreePop();
     }
-    if (ImGui::TreeNodeEx("Roughness", ImGuiTreeNodeFlags_DefaultOpen, "Roughness"))
+    _collapsingHeaderStyle();
+    if (ImGui::CollapsingHeader("Roughness"))
     {
         auto roughnessTexture = material->GetTexture(ParameterType::ROUGHNESS)
                                     ? material->GetTexture(ParameterType::ROUGHNESS)
@@ -143,25 +144,37 @@ void MaterialEditorPanel::OnImGuiRender()
         ImGui::SliderFloat("Roughness", &roughness, 0.0f, 1.0f);
         ImGui::PopItemWidth();
         material->SetMaterialParam(ParameterType::ROUGHNESS, roughness);
-
-        ImGui::TreePop();
     }
 
-    ImGui::Separator();
-    if (ImGui::Button("Save and Quit"))
+    if (!s_ShowMaterialEditor)
     {
-        auto mat = AssetManager::GetRegistry()[s_MaterialHandle];
-        MaterialSerializer serializer(material);
-        serializer.Serialize(Project::GetAssetDirectory() / mat.FilePath);
-        s_ShowMaterialEditor = false;
+        if (s_IsDefaultMaterial)
+        {
+            // TODO: pop up that asks to create a new material from default
+        }
+        else
+        {
+            // TODO: pop up that asks to save if not saved
+            // auto mat = AssetManager::GetRegistry()[s_MaterialHandle];
+            // MaterialSerializer serializer(material);
+            // serializer.Serialize(Project::GetAssetDirectory() / mat.FilePath);
+            // s_ShowMaterialEditor = false;
+        }
+        LOG_CORE_INFO("Material window closed!");
     }
 
     ImGui::End();
 }
 
-void MaterialEditorPanel::OpenMaterialEditor(AssetHandle handle)
+void MaterialEditorPanel::OpenMaterialEditor(AssetHandle handle, bool isDefaultMaterial)
 {
-    s_ShowMaterialEditor = true;
-    s_MaterialHandle = handle;
+    if (AssetManager::IsAssetHandleValid(handle))
+    {
+        s_IsDefaultMaterial = isDefaultMaterial;
+        s_ShowMaterialEditor = true;
+        s_MaterialHandle = handle;
+    }
+    else
+        LOG_CORE_ERROR("MaterialEditorPanel::OpenMaterialEditor - Invalid asset handle!");
 }
 } // namespace Engine

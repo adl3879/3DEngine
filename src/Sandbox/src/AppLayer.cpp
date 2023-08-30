@@ -22,22 +22,17 @@ void AppLayer::OnAttach()
     Project::Load("/home/adeleye/Source/3DEngine/src/Sandbox/SandboxProject/SandboxProject.3dproj");
 
     m_Framebuffer = std::make_shared<Framebuffer>(true, glm::vec2{1280, 900});
-    auto vDepthTexture = std::make_shared<Texture2D>(TextureSpecification{.Format = ImageFormat::Depth});
-    auto vColorTexture = std::make_shared<Texture2D>(TextureSpecification{.Format = ImageFormat::RGBA8});
-    auto vEntityIdTexture = std::make_shared<Texture2D>(TextureSpecification{.Format = ImageFormat::RED_INTEGER});
-    m_Framebuffer->SetTexture(vDepthTexture, GL_DEPTH_ATTACHMENT);
-    m_Framebuffer->SetTexture(vColorTexture, GL_COLOR_ATTACHMENT0);
-    m_Framebuffer->SetTexture(vEntityIdTexture, GL_COLOR_ATTACHMENT1);
+    m_Framebuffer->SetTexture(std::make_shared<Texture2D>(ImageFormat::Depth), GL_DEPTH_ATTACHMENT);
+    m_Framebuffer->SetTexture(std::make_shared<Texture2D>(ImageFormat::RGBA8), GL_COLOR_ATTACHMENT0);
+    m_Framebuffer->SetTexture(std::make_shared<Texture2D>(ImageFormat::RED_INTEGER), GL_COLOR_ATTACHMENT1);
 
     m_EditorScene = std::make_shared<Scene>();
     m_ActiveScene = m_EditorScene;
 
     m_SceneHierarchyPanel.SetContext(m_ActiveScene);
+    m_EnvironmentPanel.SetContext(m_ActiveScene);
     // attach scene
     m_ActiveScene->OnAttach();
-
-    m_RenderSystem = std::make_shared<RenderSystem>();
-    m_RenderSystem->Init();
 
     m_ContentBrowserPanel = std::make_shared<ContentBrowserPanel>();
 
@@ -51,11 +46,11 @@ void AppLayer::OnUpdate(float dt)
     // update
     m_EditorCamera.OnUpdate(dt);
     m_EditorCamera.SetViewportSize(m_ViewportSize.x, m_ViewportSize.y);
-    {
-        m_Framebuffer->Bind();
-        m_RenderSystem->Render(m_EditorCamera, *m_ActiveScene);
-        auto selectedEntity = m_SceneHierarchyPanel.GetSelectedEntity();
-    }
+
+    m_Framebuffer->Bind();
+    auto selectedEntity = m_SceneHierarchyPanel.GetSelectedEntity();
+
+    m_ActiveScene->OnUpdate(dt);
 
     switch (m_SceneState)
     {
@@ -77,9 +72,7 @@ void AppLayer::OnUpdate(float dt)
 
     if (mouseX >= 0 && mouseY >= 0 && mouseX < (int)viewportSize.x && mouseY < (int)viewportSize.y)
     {
-        //! fix this!
         auto pixelData = m_Framebuffer->ReadPixel(1, glm::vec2(mouseX, mouseY));
-        LOG_CORE_TRACE("pixel {}", pixelData);
         // removed one because i moved every entity by one
         m_HoveredEntity = pixelData == 0 ? Entity() : Entity((entt::entity)(pixelData - 1), m_ActiveScene.get());
     }
@@ -160,6 +153,7 @@ void AppLayer::OnImGuiRender()
     FileOperations();
 
     m_SceneHierarchyPanel.OnImGuiRender();
+    m_EnvironmentPanel.OnImGuiRender();
     m_MaterialEditorPanel.OnImGuiRender();
     m_ContentBrowserPanel->OnImGuiRender();
 
@@ -186,6 +180,7 @@ void AppLayer::OnImGuiRender()
             ResetScene("");
             m_EditorScene = AssetManager::GetAsset<Scene>(std::stoull(handle));
             m_SceneHierarchyPanel.SetContext(m_EditorScene);
+            m_EnvironmentPanel.SetContext(m_EditorScene);
 
             m_ActiveScene = m_EditorScene;
         }
@@ -300,7 +295,16 @@ void AppLayer::OnMouseButtonPressed(MouseButton button)
     // Mouse picking
     if (button == MouseButton::Left && !ImGuizmo::IsOver() && !Input.IsKeyPressed(InputKey::LeftAlt))
     {
-        if (m_ViewportHovered) m_SceneHierarchyPanel.SetSelectedEntity(m_HoveredEntity);
+        if (m_ViewportHovered)
+        {
+            m_SceneHierarchyPanel.SetSelectedEntity(m_HoveredEntity);
+            if ((int)m_HoveredEntity > 0)
+            {
+                const auto &mesh = m_HoveredEntity.GetComponent<MeshComponent>();
+                auto defaultHandle = AssetManager::GetAsset<Model>(mesh.Handle)->GetDefaultMaterialHandle();
+                MaterialEditorPanel::OpenMaterialEditor(mesh.MaterialHandle ? mesh.MaterialHandle : defaultHandle);
+            }
+        }
     }
 }
 
@@ -322,6 +326,7 @@ void AppLayer::NewScene()
     ResetScene("");
     m_ActiveScene = std::make_unique<Scene>();
     m_SceneHierarchyPanel.SetContext(m_ActiveScene);
+    m_EnvironmentPanel.SetContext(m_ActiveScene);
 }
 
 void AppLayer::OpenScene()
@@ -353,7 +358,6 @@ void AppLayer::SaveScene()
 
 void AppLayer::ResetScene(const std::string &path)
 {
-    Light::Reset();
     m_EditorCamera = EditorCamera(-45.0f, 1.778f, 0.1f, 100.0f);
     // m_Scene = std::make_unique<Scene>();
     // m_Scene->SetSceneFilePath(path);
@@ -374,6 +378,7 @@ void AppLayer::OnScenePlay()
     m_ActiveScene = Scene::Copy(m_EditorScene);
 
     m_SceneHierarchyPanel.SetContext(m_ActiveScene);
+    m_EnvironmentPanel.SetContext(m_ActiveScene);
 }
 
 void AppLayer::OnSceneStop()
@@ -383,6 +388,7 @@ void AppLayer::OnSceneStop()
     m_ActiveScene = m_EditorScene;
 
     m_SceneHierarchyPanel.SetContext(m_ActiveScene);
+    m_EnvironmentPanel.SetContext(m_ActiveScene);
 }
 
 void AppLayer::FileOperations()
@@ -399,6 +405,7 @@ void AppLayer::FileOperations()
         {
             m_EditorScene = newScene;
             m_SceneHierarchyPanel.SetContext(m_EditorScene);
+            m_EnvironmentPanel.SetContext(m_EditorScene);
 
             m_ActiveScene = m_EditorScene;
         }
@@ -422,14 +429,14 @@ void AppLayer::FileOperations()
 
 void AppLayer::UI_Toolbar()
 {
-    ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{0, 2});
-    ImGui::PushStyleVar(ImGuiStyleVar_ItemInnerSpacing, ImVec2{0, 0});
-    ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{0, 0, 0, 0});
-    auto &colors = ImGui::GetStyle().Colors;
-    const auto &buttonHovered = colors[ImGuiCol_ButtonHovered];
-    ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4{buttonHovered.x, buttonHovered.y, buttonHovered.z, 0.5f});
-    const auto &buttonActive = colors[ImGuiCol_ButtonActive];
-    ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4{buttonActive.x, buttonActive.y, buttonActive.z, 0.5f});
+    // ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{0, 2});
+    // ImGui::PushStyleVar(ImGuiStyleVar_ItemInnerSpacing, ImVec2{0, 0});
+    // ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{0, 0, 0, 0});
+    // auto &colors = ImGui::GetStyle().Colors;
+    // const auto &buttonHovered = colors[ImGuiCol_ButtonHovered];
+    // ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4{buttonHovered.x, buttonHovered.y, buttonHovered.z, 0.5f});
+    // const auto &buttonActive = colors[ImGuiCol_ButtonActive];
+    // ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4{buttonActive.x, buttonActive.y, buttonActive.z, 0.5f});
 
     ImGui::Begin("##toolbar", nullptr,
                  ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
@@ -449,15 +456,8 @@ void AppLayer::UI_Toolbar()
     {
         // if (m_SceneState == SceneState::Play) m_SceneState = SceneState::Pause;
     }
-    // ImGui::SameLine();
-    // if (ImGui::ImageButton((ImTextureID)m_IconSimulate->GetRendererID(), ImVec2{size, size}, ImVec2{0, 0}, ImVec2{1,
-    // 1},
-    //                        0))
-    // {
-    //     // if (m_SceneState == SceneState::Edit) m_SceneState = SceneState::Simulate;
-    // }
-    ImGui::PopStyleVar(2);
-    ImGui::PopStyleColor(3);
+    // ImGui::PopStyleVar(2);
+    // ImGui::PopStyleColor(3);
     ImGui::End();
 }
 } // namespace Engine

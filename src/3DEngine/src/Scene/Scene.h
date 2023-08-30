@@ -8,6 +8,8 @@
 #include "EditorCamera.h"
 #include "UUID.h"
 #include "Asset.h"
+#include "Environment.h"
+#include "Light.h"
 
 #include "System.h"
 
@@ -15,6 +17,7 @@ namespace Engine
 {
 class Entity;
 class Camera;
+class SceneRenderer;
 
 class Scene : public Asset
 {
@@ -27,6 +30,7 @@ class Scene : public Asset
 
     void OnUpdate(float dt);
     void OnFixedUpdate(float dt);
+    void Draw();
 
     Entity CreateEntity(const std::string &name = std::string());
     Entity CreateEntityWithUUID(UUID uuid, const std::string &name = std::string());
@@ -47,6 +51,11 @@ class Scene : public Asset
 
     const entt::registry &GetRegistry() { return m_Registry; }
 
+    EnvironmentRef GetEnvironment() { return m_Environment; }
+    void SetEnvironment(EnvironmentRef environment) { m_Environment = environment; }
+
+    LightRef GetLights() { return m_Lights; }
+
   public:
     virtual AssetType GetType() const override { return AssetType::Scene; }
 
@@ -62,8 +71,14 @@ class Scene : public Asset
     friend class SceneSerializer;
 
   private:
-    std::shared_ptr<PerspectiveCamera> m_MainCamera = nullptr;
+    std::shared_ptr<PerspectiveCamera> m_MainCamera;
+    std::shared_ptr<EditorCamera> m_EditorCamera;
+    std::shared_ptr<Light> m_Lights;
+
     std::string m_SceneFilePath = std::string();
+    SceneRenderer *m_SceneRenderer;
+
+    EnvironmentRef m_Environment;
 
     std::vector<SystemRef> m_Systems;
 };

@@ -7,6 +7,7 @@
 #include "Mesh.h"
 #include "Shaders/ShaderManager.h"
 #include "Material.h"
+#include "Light.h"
 
 namespace Engine
 {
@@ -43,20 +44,21 @@ class RenderList
     void Flush(Shader *shader, bool depthOnly = false)
     {
         shader->Bind();
-        const uint32_t entityIdUniformLocation = shader->FindUniformLocation("u_EntityID");
-        const uint32_t modelMatrixUniformLocation = shader->FindUniformLocation("u_Model");
+        const uint32_t entityIdUniformLocation = shader->FindUniformLocation("entityId");
+        const uint32_t modelMatrixUniformLocation = shader->FindUniformLocation("model");
         for (auto &i : m_RenderList)
         {
             if (!depthOnly) i.first->Bind(shader);
-
             for (auto &m : i.second)
             {
-                // shader->SetUniformMatrix4fv(modelMatrixUniformLocation, m.transform);
-                // shader->SetUniform1i(entityIdUniformLocation, m.entityId + 1);
-                m.Mesh->Draw(shader, false);
+                shader->SetUniformMatrix4fv(modelMatrixUniformLocation, m.Transform);
+                shader->SetUniform1i(entityIdUniformLocation, m.EntityId + 1);
+                shader->SetUniformMatrix3fv("normalMatrix", glm::transpose(glm::inverse(glm::mat3(m.Transform))));
+
+                m.Mesh->Draw(shader, true);
             }
         }
-
+        shader->Unbind();
         m_RenderList.clear();
     }
 

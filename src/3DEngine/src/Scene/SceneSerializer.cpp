@@ -14,6 +14,12 @@ YAML::Emitter &operator<<(YAML::Emitter &out, const glm::vec3 &v)
     out << YAML::BeginSeq << v.x << v.y << v.z << YAML::EndSeq;
     return out;
 }
+YAML::Emitter &operator<<(YAML::Emitter &out, const glm::vec4 &v)
+{
+    out << YAML::Flow;
+    out << YAML::BeginSeq << v.x << v.y << v.z << v.w << YAML::EndSeq;
+    return out;
+}
 
 static void SerializeEntity(YAML::Emitter &out, Entity entity)
 {
@@ -95,21 +101,13 @@ static void SerializeEntity(YAML::Emitter &out, Entity entity)
         out << YAML::EndMap; // LuaScriptComponent
     }
 
-    if (entity.HasComponent<SkyLightComponent>())
-    {
-        out << YAML::Key << "SkyLightComponent";
-        out << YAML::BeginMap;
-        const auto &slc = entity.GetComponent<SkyLightComponent>();
-        out << YAML::Key << "TextureHandle" << YAML::Value << slc.TextureHandle;
-        out << YAML::EndMap;
-    }
-
     if (entity.HasComponent<DirectionalLightComponent>())
     {
         out << YAML::Key << "DirectionalLightComponent";
         out << YAML::BeginMap;
 
         auto &dlc = entity.GetComponent<DirectionalLightComponent>();
+        out << YAML::Key << "Enabled" << YAML::Value << dlc.Enabled;
         out << YAML::Key << "Color" << YAML::Value << dlc.Light.Color;
         out << YAML::Key << "AmbientIntensity" << YAML::Value << dlc.Light.Intensity;
 
@@ -122,6 +120,7 @@ static void SerializeEntity(YAML::Emitter &out, Entity entity)
         out << YAML::BeginMap;
 
         auto &plc = entity.GetComponent<PointLightComponent>();
+        out << YAML::Key << "Enabled" << YAML::Value << plc.Enabled;
         out << YAML::Key << "Color" << YAML::Value << plc.Light.Color;
         out << YAML::Key << "AmbientIntensity" << YAML::Value << plc.Light.Intensity;
 
@@ -134,6 +133,7 @@ static void SerializeEntity(YAML::Emitter &out, Entity entity)
         out << YAML::BeginMap;
 
         auto &slc = entity.GetComponent<SpotLightComponent>();
+        out << YAML::Key << "Enabled" << YAML::Value << slc.Enabled;
         out << YAML::Key << "Color" << YAML::Value << slc.Light.Color;
         out << YAML::Key << "AmbientIntensity" << YAML::Value << slc.Light.Intensity;
         out << YAML::Key << "Cutoff" << YAML::Value << slc.Light.Cutoff;
@@ -147,9 +147,27 @@ static void SerializeEntity(YAML::Emitter &out, Entity entity)
 
 void SceneSerializer::Serialize(const std::string &filepath)
 {
+    auto environment = m_Scene->GetEnvironment();
+
     YAML::Emitter out;
     out << YAML::BeginMap;
     out << YAML::Key << "Scene" << YAML::Value << "Untitled";
+    out << YAML::Key << "Environment" << YAML::Value << YAML::BeginMap;
+    out << YAML::Key << "SkyType" << YAML::Value << SkyTypeToString(environment->CurrentSkyType);
+    out << YAML::Key << "AmbientColor" << YAML::Value << environment->AmbientColor;
+    if (environment->SkyboxHDR)
+    {
+        out << YAML::Key << "HDRIHandle" << YAML::Value << environment->SkyboxHDR->GetHandle();
+    }
+    out << YAML::Key << "SurfaceRadius" << YAML::Value << environment->ProceduralSkybox->SurfaceRadius;
+    out << YAML::Key << "AtmosphereRadius" << YAML::Value << environment->ProceduralSkybox->AtmosphereRadius;
+    out << YAML::Key << "RayleighScattering" << YAML::Value << environment->ProceduralSkybox->RayleighScattering;
+    out << YAML::Key << "MieScattering" << YAML::Value << environment->ProceduralSkybox->MieScattering;
+    out << YAML::Key << "SunIntensity" << YAML::Value << environment->ProceduralSkybox->SunIntensity;
+    out << YAML::Key << "CenterPoint" << YAML::Value << environment->ProceduralSkybox->CenterPoint;
+    out << YAML::Key << "SunDirection" << YAML::Value << environment->ProceduralSkybox->SunDirection;
+    out << YAML::EndMap;
+
     out << YAML::Key << "Entities" << YAML::Value << YAML::BeginSeq;
     m_Scene->m_Registry.each(
         [&](auto entityId)
@@ -179,6 +197,35 @@ bool SceneSerializer::Deserialize(const std::string &filepath)
 
     std::string sceneName = data["Scene"].as<std::string>();
     LOG_CORE_TRACE("Deserializing scene from file: {0}", sceneName);
+
+    auto environment = data["Environment"];
+    if (environment)
+    {
+        auto skyType = environment["SkyType"].as<std::string>();
+        auto ambientColor = environment["AmbientColor"].as<glm::vec4>();
+        auto hdriHandle = environment["HDRIHandle"].as<uint64_t>();
+
+        m_Scene->GetEnvironment()->CurrentSkyType = SkyTypeFromString(skyType);
+        m_Scene->GetEnvironment()->AmbientColor = ambientColor;
+
+        if (SkyTypeFromString(skyType) == SkyType::SkyboxHDR)
+        {
+            m_Scene->GetEnvironment()->SkyboxHDR = std::make_shared<SkyLight>();
+            m_Scene->GetEnvironment()->SkyboxHDR->Init(hdriHandle, 2048);
+        }
+
+        if (SkyTypeFromString(skyType) == SkyType::ProceduralSky)
+        {
+            auto &proceduralSkybox = m_Scene->GetEnvironment()->ProceduralSkybox;
+            proceduralSkybox->SurfaceRadius = environment["SurfaceRadius"].as<float>();
+            proceduralSkybox->AtmosphereRadius = environment["AtmosphereRadius"].as<float>();
+            proceduralSkybox->RayleighScattering = environment["RayleighScattering"].as<glm::vec3>();
+            proceduralSkybox->MieScattering = environment["MieScattering"].as<glm::vec3>();
+            proceduralSkybox->SunIntensity = environment["SunIntensity"].as<float>();
+            proceduralSkybox->CenterPoint = environment["CenterPoint"].as<glm::vec3>();
+            proceduralSkybox->SunDirection = environment["SunDirection"].as<glm::vec3>();
+        }
+    }
 
     auto entities = data["Entities"];
     if (entities)
@@ -239,14 +286,6 @@ bool SceneSerializer::Deserialize(const std::string &filepath)
                 }
             }
 
-            auto skyLightComponent = entity["SkyLightComponent"];
-            if (skyLightComponent)
-            {
-                auto &slc = deserializedEntity.AddComponent<SkyLightComponent>();
-                auto handle = skyLightComponent["TextureHandle"].as<uint64_t>();
-                slc.Use(handle, 2048);
-            }
-
             auto directionalLightComponent = entity["DirectionalLightComponent"];
             if (directionalLightComponent)
             {
@@ -269,7 +308,6 @@ bool SceneSerializer::Deserialize(const std::string &filepath)
                 plc.Light.Color = pointLightComponent["Color"].as<glm::vec3>();
                 plc.Light.Position = tc.Translation;
                 plc.Light.Intensity = pointLightComponent["AmbientIntensity"].as<float>();
-                Light::SetPointLight(plc.Light, plc.Index);
             }
 
             auto spotLightComponent = entity["SpotLightComponent"];
@@ -287,7 +325,6 @@ bool SceneSerializer::Deserialize(const std::string &filepath)
                 slc.Light.Intensity = spotLightComponent["AmbientIntensity"].as<float>();
                 slc.Light.Cutoff = spotLightComponent["Cutoff"].as<float>();
                 slc.Light.OuterCutoff = spotLightComponent["OuterCutoff"].as<float>();
-                Light::SetSpotLight(slc.Light, slc.Index);
             }
         }
     }

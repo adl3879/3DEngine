@@ -14,6 +14,11 @@ class Framebuffer
     Framebuffer(bool hasRenderBuffer, glm::vec2 size);
     ~Framebuffer();
 
+    static std::shared_ptr<Framebuffer> CreateRef(bool hasRenderBuffer, glm::vec2 size)
+    {
+        return std::make_shared<Framebuffer>(hasRenderBuffer, size);
+    }
+
     Texture2DRef GetTexture(unsigned int attachment = 0x8CE0) { return m_Textures[(int)attachment]; }
     void SetTexture(Texture2DRef texture, unsigned int attachment = 0x8CE0);
 

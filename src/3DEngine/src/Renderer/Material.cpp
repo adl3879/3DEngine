@@ -60,16 +60,15 @@ unsigned int Material::GetParameterTexture(const ParameterType &type) const noex
 
 void Material::Bind(Shader *shader) const noexcept
 {
-    int index = 3; // start at 3 because 0, 1, 2 are reserved
-    for (const auto &texture : m_Textures)
-    {
-        if (texture != nullptr) texture->Bind(index);
-        index++;
-    }
-    if (m_Textures[ParameterType::NORMAL] != nullptr)
-    {
-        if (!m_UseNormalMap) m_Textures[ParameterType::NORMAL]->Unbind();
-    }
+    if (m_Textures[ParameterType::ALBEDO]) m_Textures[ParameterType::ALBEDO]->Bind(3);
+    if (m_Textures[ParameterType::NORMAL]) m_Textures[ParameterType::NORMAL]->Bind(4);
+    if (m_Textures[ParameterType::METALLIC]) m_Textures[ParameterType::METALLIC]->Bind(5);
+    if (m_Textures[ParameterType::ROUGHNESS]) m_Textures[ParameterType::ROUGHNESS]->Bind(6);
+
+    shader->SetUniform1i("albedoMap", 3);
+    shader->SetUniform1i("normalMap", 4);
+    shader->SetUniform1i("metallicMap", 5);
+    shader->SetUniform1i("roughnessMap", 6);
 
     shader->SetUniform3f("albedoParam", m_MaterialParam.Albedo);
     shader->SetUniform1f("metallicParam", m_MaterialParam.Metallic);
@@ -81,7 +80,7 @@ void Material::Unbind() const noexcept
 {
     for (const auto &texture : m_Textures)
     {
-        if (texture != nullptr) texture->Unbind();
+        if (texture) texture->Unbind();
     }
 }
 

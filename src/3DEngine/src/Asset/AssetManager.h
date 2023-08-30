@@ -31,9 +31,24 @@ class AssetManager
 
     static void UnloadAsset(AssetHandle handle) { Project::GetActive()->GetEditorAssetManager()->UnloadAsset(handle); }
 
+    static std::string GetAssetName(AssetHandle handle)
+    {
+        return Project::GetActive()->GetEditorAssetManager()->GetAssetName(handle);
+    }
+
     static AssetHandle ImportAsset(const std::filesystem::path &path)
     {
         return Project::GetActive()->GetEditorAssetManager()->ImportAsset(path);
+    }
+
+    static AssetHandle AddAsset(AssetRef asset)
+    {
+        return Project::GetActive()->GetEditorAssetManager()->AddAsset(asset);
+    }
+
+    static bool IsAssetHandleValid(AssetHandle handle)
+    {
+        return Project::GetActive()->GetEditorAssetManager()->IsAssetHandleValid(handle);
     }
 };
 } // namespace Engine

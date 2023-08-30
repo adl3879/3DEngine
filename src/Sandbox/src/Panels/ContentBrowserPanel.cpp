@@ -50,19 +50,19 @@ ContentBrowserPanel::ContentBrowserPanel()
 
     RefreshAssetTree();
 
-    m_Mode = Mode::Asset;
+    m_Mode = Mode::FileSystem;
 }
 
 void ContentBrowserPanel::OnImGuiRender()
 {
     ImGui::Begin("Content Browser");
 
-    static float padding = 20.0f;
-    static float thumbnailSize = 150.0f;
+    static float padding = 30.0f;
+    static float thumbnailSize = 160.0f;
     float cellSize = thumbnailSize + padding;
 
     float panelWidth = ImGui::GetContentRegionAvail().x;
-    float dirTreeWidth = panelWidth * 0.15;
+    float dirTreeWidth = panelWidth * 0.18;
     int columnCount = (int)(panelWidth / cellSize);
     if (columnCount < 1) columnCount = 1;
 
@@ -121,9 +121,20 @@ void ContentBrowserPanel::OnImGuiRender()
             ImGui::PushID(name.c_str());
             ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
             Texture2DRef icon = isDirectory ? m_DirectoryIcon : m_FileIcon;
-            ImGui::ImageButton((ImTextureID)icon->GetRendererID(), {thumbnailSize, thumbnailSize}, {0, 1}, {1, 0});
-
             auto completePath = m_AssetCurrentDirectory / std::filesystem::path(name);
+            auto extension = completePath.extension().string();
+
+            if (extension == ".png" || extension == ".jpg" || extension == ".jpeg" || extension == ".tga")
+                icon = AssetManager::GetAsset<Texture2D>(m_AssetHandles[completePath.string()]);
+
+            if (icon)
+            {
+                ImGui::ImageButton((ImTextureID)icon->GetRendererID(), {thumbnailSize, thumbnailSize}, {0, 1}, {1, 0});
+            }
+            else
+            {
+                ImGui::Button("No Thumbnail", {thumbnailSize, thumbnailSize});
+            }
 
             if (!isDirectory && ImGui::BeginPopupContextItem())
             {
@@ -182,8 +193,23 @@ void ContentBrowserPanel::OnImGuiRender()
         {
             if (ImGui::BeginMenu(ICON_FA_PLUS "  Add Item"))
             {
+                if (ImGui::MenuItem(ICON_FA_FOLDER "   New Folder"))
+                {
+                };
+                if (ImGui::MenuItem(ICON_FA_FILE "   New File"))
+                {
+                };
+                ImGui::Separator();
                 if (ImGui::MenuItem(ICON_FA_PHOTO_VIDEO "   Scene")) OpenCreateFilePopup(AssetType::Scene);
                 if (ImGui::MenuItem(ICON_FA_PAINT_BRUSH "   Material")) OpenCreateFilePopup(AssetType::Material);
+                ImGui::EndPopup();
+            }
+            if (ImGui::BeginMenu(ICON_FA_FILE_IMPORT "   Import"))
+            {
+                if (ImGui::MenuItem(ICON_FA_IMAGE "   2D Texture"))
+                {
+                    // TODO: copy image file and load
+                }
                 ImGui::EndPopup();
             }
             if (ImGui::MenuItem(ICON_FA_FOLDER_OPEN "   Open in File Browser"))
@@ -196,20 +222,23 @@ void ContentBrowserPanel::OnImGuiRender()
             const auto &path = directoryEntry.path();
             std::string filenameString = path.filename().string();
 
+            auto relativePath = std::filesystem::relative(path, Project::GetAssetDirectory());
+            auto assetHandle = AssetManager::GetAssetHandleFromPath(relativePath).ToString();
+
             ImGui::PushID(filenameString.c_str());
             Texture2DRef icon = directoryEntry.is_directory() ? m_DirectoryIcon : m_FileIcon;
             ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
+
+            if (path.extension() == ".png" || path.extension() == ".jpg" || path.extension() == ".jpeg")
+                icon = AssetManager::GetAsset<Texture2D>(relativePath);
+
             ImGui::ImageButton((ImTextureID)icon->GetRendererID(), {thumbnailSize, thumbnailSize}, {0, 1}, {1, 0});
 
             if (!directoryEntry.is_directory() && ImGui::BeginPopupContextItem())
             {
-                if (ImGui::MenuItem(ICON_FA_FILE_IMPORT "   Import"))
-                {
-                    auto relativePath = std::filesystem::relative(path, Project::GetAssetDirectory());
-                    AssetManager::ImportAsset(relativePath);
-                }
                 if (ImGui::MenuItem(ICON_FA_TRASH "   Delete"))
                 {
+                    AssetManager::UnloadAsset(std::stoull(assetHandle));
                     std::filesystem::remove(path);
                 }
                 ImGui::EndPopup();
@@ -217,9 +246,9 @@ void ContentBrowserPanel::OnImGuiRender()
 
             if (ImGui::BeginDragDropSource())
             {
-                auto relativePath = std::filesystem::relative(path, Project::GetAssetDirectory());
-                const char *itemPath = relativePath.c_str();
-                ImGui::SetDragDropPayload("CONTENT_BROWSER_ITEM", itemPath, (strlen(itemPath) + 1) * sizeof(char *));
+
+                ImGui::SetDragDropPayload("CONTENT_BROWSER_ITEM", assetHandle.c_str(),
+                                          (strlen(assetHandle.c_str()) + 1) * sizeof(char *));
                 ImGui::Button(relativePath.c_str());
                 ImGui::EndDragDropSource();
             }
@@ -227,22 +256,29 @@ void ContentBrowserPanel::OnImGuiRender()
             ImGui::PopStyleColor();
             if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
             {
-                if (directoryEntry.is_directory()) m_CurrentDirectory /= path.filename();
+                if (directoryEntry.is_directory())
+                    m_CurrentDirectory /= path.filename();
+                else
+                {
+                    if (path.extension() == ".material")
+                    {
+                        auto materialHandle = AssetManager::GetAssetHandleFromPath(relativePath);
+                        MaterialEditorPanel::OpenMaterialEditor(materialHandle);
+                    }
+                }
             }
 
             ImGui::TextWrapped(filenameString.c_str());
-
             ImGui::NextColumn();
 
             ImGui::PopID();
         }
     }
 
-    ImGui::Columns(1);
-    ImGui::EndChild();
-
     // ImGui::SliderFloat("Thumbnail Size", &thumbnailSize, 16, 512);
     // ImGui::SliderFloat("Padding", &padding, 0, 32);
+    ImGui::Columns(1);
+    ImGui::EndChild();
 
     CreateFilePopup();
 
@@ -267,10 +303,11 @@ void ContentBrowserPanel::DisplayFileHierarchy(const std::filesystem::path &dire
         // Check if the entry is a directory
         if (fs::is_directory(entryPath))
         {
-            bool treeNodeOpen = ImGui::TreeNodeEx(entryPath.filename().string().c_str(),
-                                                  ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick,
-                                                  !isOpen ? ICON_FA_FOLDER "  %s" : ICON_FA_FOLDER_OPEN "  %s",
-                                                  entryPath.filename().string().c_str());
+            auto path = entryPath.filename().string();
+            auto flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick;
+            bool treeNodeOpen = ImGui::TreeNodeEx(
+                path.c_str(), flags, !isOpen ? ICON_FA_FOLDER "  %s" : ICON_FA_FOLDER_OPEN "  %s", path.c_str());
+            // if (entryPath == m_CurrentDirectory) treeNodeOpen = true;
 
             if (treeNodeOpen)
             {
@@ -291,7 +328,7 @@ void ContentBrowserPanel::DisplayFileHierarchy(const std::filesystem::path &dire
                 if (ImGui::MenuItem(ICON_FA_FILE_IMPORT "   Import"))
                 {
                     auto relativePath = std::filesystem::relative(entryPath, Project::GetAssetDirectory());
-                    Project::GetActive()->GetEditorAssetManager()->ImportAsset(relativePath);
+                    AssetManager::ImportAsset(relativePath);
                 }
                 ImGui::EndPopup();
             }

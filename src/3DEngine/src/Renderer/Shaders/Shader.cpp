@@ -8,6 +8,7 @@
 
 #include "Log.h"
 #include "PlatformUtils.h"
+#include "Texture2D.h"
 
 namespace Engine
 {
@@ -153,5 +154,11 @@ void Shader::SetUniform3f(std::string id, glm::vec3 vector)
 {
     int addr = FindUniformLocation(id);
     if (addr != -1) glUniform3f(addr, vector.x, vector.y, vector.z);
+}
+
+void Shader::SetUniformTex(const std::string &name, Texture2D *texture, unsigned int slot)
+{
+    SetUniform1i(name, slot);
+    texture->Bind(slot);
 }
 } // namespace Engine

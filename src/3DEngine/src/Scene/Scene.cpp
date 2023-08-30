@@ -3,9 +3,10 @@
 #include "Entity.h"
 #include "AllComponents.h"
 #include "Light.h"
-#include "RenderSystem.h"
 #include "PhysicsSystem.h"
+#include "SceneRenderer.h"
 #include "PhysicsManager.h"
+#include "Components.h"
 
 namespace Engine
 {
@@ -78,11 +79,17 @@ std::shared_ptr<Scene> Scene::Copy(std::shared_ptr<Scene> src)
 Scene::Scene()
 {
     m_Systems = std::vector<SystemRef>();
+    m_EditorCamera = std::make_shared<EditorCamera>(-45.0f, 1.778f, 0.1f, 100.0f);
+    m_Environment = std::make_shared<Environment>();
+    m_Lights = std::make_shared<Light>();
 
     PhysicsManager::Get().Init(this);
 
     // Add systems
     m_Systems.push_back(std::make_shared<PhysicsSystem>(this));
+
+    m_SceneRenderer = new SceneRenderer();
+    m_SceneRenderer->Init();
 }
 
 Scene::~Scene() {}
@@ -100,6 +107,28 @@ void Scene::OnDetach()
 void Scene::OnUpdate(float dt)
 {
     for (const auto &system : m_Systems) system->Update(dt);
+
+    auto view = m_Registry.view<DirectionalLightComponent>();
+    for (auto entity : view)
+    {
+        auto &light = view.get<DirectionalLightComponent>(entity);
+        m_Lights->SetDirectionalLight(light.Enabled ? &light.Light : nullptr);
+    }
+
+    auto pointLightView = m_Registry.view<PointLightComponent>();
+    for (auto entity : pointLightView)
+    {
+        auto &light = pointLightView.get<PointLightComponent>(entity);
+        m_Lights->SetPointLight(light.Enabled ? &light.Light : nullptr, light.Index);
+    }
+
+    auto spotLightView = m_Registry.view<SpotLightComponent>();
+    for (auto entity : spotLightView)
+    {
+        auto &light = spotLightView.get<SpotLightComponent>(entity);
+        auto spotLight = light.Enabled ? light.Light : SpotLight();
+        m_Lights->SetSpotLight(light.Enabled ? &light.Light : nullptr, light.Index);
+    }
 }
 
 void Scene::OnFixedUpdate(float dt)
@@ -171,16 +200,27 @@ void Scene::OnUpdateRuntime(float dt)
             auto [cameraComponent, transformComponent] = view.get<CameraComponent, TransformComponent>(entity);
             if (cameraComponent.Primary)
             {
+                // TODO: fix runtime camera
                 cameraComponent.Camera.SetPosition(transformComponent.Translation);
                 cameraComponent.Camera.SetRotation(transformComponent.Rotation);
 
                 m_MainCamera = std::make_shared<PerspectiveCamera>(cameraComponent.Camera);
             }
-            cameraTransform = view.get<TransformComponent>(entity).GetTransform();
         }
+    }
+
+    if (m_MainCamera != nullptr)
+    {
+        m_SceneRenderer->BeginRenderScene(m_MainCamera->GetProjectionMatrix(), m_MainCamera->GetViewMatrix(),
+                                          m_MainCamera->GetPosition());
+        m_SceneRenderer->RenderScene(*this);
     }
 }
 
-void Scene::OnUpdateEditor(float dt, EditorCamera &camera) {}
+void Scene::OnUpdateEditor(float dt, EditorCamera &camera)
+{
+    m_SceneRenderer->BeginRenderScene(camera.GetProjectionMatrix(), camera.GetViewMatrix(), camera.GetPosition());
+    m_SceneRenderer->RenderScene(*this);
+}
 
 } // namespace Engine
