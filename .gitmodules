@@ -1,30 +1,28 @@
-[submodule "src/3DEngine/vendor/imgui"]
-	path = src/3DEngine/vendor/imgui
-	url = git@github.com:ocornut/imgui.git
-
-[submodule "src/3DEngine/vendor/glfw"]
-	path = src/3DEngine/vendor/glfw
-	url = https://github.com/glfw/glfw
-
-[submodule "src/3DEngine/vendor/glm"]
-	path = src/3DEngine/vendor/glm
-	url = https://github.com/g-truc/glm
-
-[submodule "src/3DEngine/vendor/assimp"]
-	path = src/3DEngine/vendor/assimp
-	url = https://github.com/assimp/assimp.git
-[submodule "src/3DEngine/vendor/LuaBridge"]
-	path = src/3DEngine/vendor/LuaBridge
-	url = git@github.com:vinniefalco/LuaBridge.git
-[submodule "src/3DEngine/vendor/spdlog"]
-	path = src/3DEngine/vendor/spdlog
-	url = git@github.com:gabime/spdlog.git
-[submodule "src/3DEngine/vendor/yaml-cpp"]
-	path = src/3DEngine/vendor/yaml-cpp
-	url = git@github.com:jbeder/yaml-cpp.git
-[submodule "src/3DEngine/vendor/ImGuizmo"]
-	path = src/3DEngine/vendor/ImGuizmo
-	url = git@github.com:TheCherno/ImGuizmo.git
-[submodule "src/3DEngine/vendor/JoltPhysics"]
-	path = src/3DEngine/vendor/JoltPhysics
-	url = git@github.com:jrouwe/JoltPhysics.git
+[submodule "Hazel/vendor/spdlog"]
+	path = Hazel/vendor/spdlog
+	url = ../../gabime/spdlog.git
+	branch = v1.x
+[submodule "Hazel/vendor/GLFW"]
+	path = Hazel/vendor/GLFW
+	url = ../../TheCherno/glfw.git
+	branch = master
+[submodule "Hazel/vendor/imgui"]
+	path = Hazel/vendor/imgui
+	url = ../../TheCherno/imgui.git
+	branch = docking
+[submodule "Hazel/vendor/glm"]
+	path = Hazel/vendor/glm
+	url = ../../g-truc/glm.git
+	branch = master
+[submodule "Hazel/vendor/yaml-cpp"]
+	path = Hazel/vendor/yaml-cpp
+	url = https://github.com/thecherno/yaml-cpp
+[submodule "Hazel/vendor/ImGuizmo"]
+	path = Hazel/vendor/ImGuizmo
+	url = https://github.com/thecherno/imguizmo
+[submodule "Hazel/vendor/Box2D"]
+	path = Hazel/vendor/Box2D
+	url = https://github.com/thecherno/box2d
+[submodule "3DEngine/vendor/imgui"]
+	path = 3DEngine/vendor/imgui
+	url = https://github.com/ocornut/imgui.git

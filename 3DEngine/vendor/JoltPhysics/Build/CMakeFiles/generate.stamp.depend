@@ -1,0 +1,12 @@
+# CMake generation dependency list for this directory.
+C:/Program Files/CMake/share/cmake-3.27/Modules/CMakeDependentOption.cmake
+C:/Program Files/CMake/share/cmake-3.27/Modules/CheckIPOSupported.cmake
+C:/Program Files/CMake/share/cmake-3.27/Modules/CheckIPOSupported/CMakeLists-C.txt.in
+C:/Program Files/CMake/share/cmake-3.27/Modules/CheckIPOSupported/CMakeLists-CXX.txt.in
+C:/Program Files/CMake/share/cmake-3.27/Modules/CheckIPOSupported/foo.c
+C:/Program Files/CMake/share/cmake-3.27/Modules/CheckIPOSupported/foo.cpp
+C:/Program Files/CMake/share/cmake-3.27/Modules/CheckIPOSupported/main.c
+C:/Program Files/CMake/share/cmake-3.27/Modules/CheckIPOSupported/main.cpp
+C:/Source/3DEngine/CMakeFiles/cmake.verify_globs
+C:/Source/3DEngine/src/3DEngine/vendor/JoltPhysics/Build/CMakeLists.txt
+C:/Source/3DEngine/src/3DEngine/vendor/JoltPhysics/Jolt/Jolt.cmake

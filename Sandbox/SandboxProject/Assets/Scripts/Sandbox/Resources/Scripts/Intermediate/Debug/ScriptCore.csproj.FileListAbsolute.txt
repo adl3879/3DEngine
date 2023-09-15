@@ -1,0 +1,6 @@
+C:\Source\3DEngine\Sandbox\SandboxProject\Assets\Scripts\Sandbox\Resources\Scripts\Intermediate\Debug\ScriptCore.csproj.AssemblyReference.cache
+C:\Source\3DEngine\Sandbox\SandboxProject\Assets\Scripts\Sandbox\Resources\Scripts\Intermediate\Debug\ScriptCore.csproj.CoreCompileInputs.cache
+C:\Source\3DEngine\Sandbox\SandboxProject\Assets\Scripts\Sandbox\Resources\Scripts\Intermediate\Debug\ScriptCore.dll
+C:\Source\3DEngine\Sandbox\SandboxProject\Assets\Scripts\Sandbox\Resources\Scripts\Intermediate\Debug\ScriptCore.pdb
+C:\Source\3DEngine\Sandbox\SandboxProject\Assets\Scripts\Sandbox\Resources\Scripts\ScriptCore.dll
+C:\Source\3DEngine\Sandbox\SandboxProject\Assets\Scripts\Sandbox\Resources\Scripts\ScriptCore.pdb
