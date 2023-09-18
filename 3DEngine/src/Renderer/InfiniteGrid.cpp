@@ -35,13 +35,14 @@ void InfiniteGrid::Init()
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *)(3 * sizeof(float)));
 }
 
-void InfiniteGrid::Draw(glm::mat4 projection, glm::mat4 view) 
+void InfiniteGrid::Draw(glm::mat4 projection, glm::mat4 view, glm::vec3 cameraPos) 
 {
 	Shader *skyShader = ShaderManager::GetShader("Resources/shaders/infiniteGrid");
 	skyShader->Bind();
 
 	skyShader->SetUniformMatrix4fv("Projection", projection);
 	skyShader->SetUniformMatrix4fv("View", view);
+	skyShader->SetUniform3f("CameraPos", cameraPos);
 
 	glBindVertexArray(VAO);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
