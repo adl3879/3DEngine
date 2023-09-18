@@ -34,7 +34,7 @@
 #define REMOVABLE_COMPONENT                                                                                            \
     if (ImGui::BeginPopupContextItem())                                                                                \
     {                                                                                                                  \
-        if (ImGui::MenuItem("Remove")) removeComponent = true;                                               \
+        if (ImGui::MenuItem("Remove")) removeComponent = true;                                                         \
         ImGui::EndPopup();                                                                                             \
     }
 
@@ -118,14 +118,6 @@ void SceneHierarchyPanel::DrawEntityNode(Entity entity)
 			Entity payloadEntity = *(const Entity *)payload->Data;
 			ParentComponent &pc = payloadEntity.GetComponent<ParentComponent>(); 
             auto payloadId = payloadEntity.GetComponent<IDComponent>().ID;
-
-			// add as child to target
-            if (payloadId != parentComponent.Parent)
-            {
-                auto p = m_Context->GetEntityByUUID(payloadEntity.GetComponent<ParentComponent>().Parent);
-                p.GetComponent<ParentComponent>().RemoveChild(payloadId);
-                parentComponent.Children.push_back(payloadId);
-            }
 		}
         ImGui::EndDragDropTarget();
 	}

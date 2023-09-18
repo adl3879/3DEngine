@@ -15,6 +15,7 @@ class MaterialImporter
     static MaterialRef ImportMaterial(AssetHandle handle, const AssetMetadata &metadata)
     {
         MaterialRef material = std::make_shared<Material>();
+		material->Handle = handle;
         MaterialSerializer serializer(material);
         serializer.Deserialize(Project::GetAssetDirectory() / metadata.FilePath);
 

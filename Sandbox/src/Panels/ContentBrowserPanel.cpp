@@ -58,7 +58,7 @@ void ContentBrowserPanel::OnImGuiRender()
 {
     ImGui::Begin("Content Browser");
 
-    static float padding = 30.0f;
+    static float padding = 50.0f;
     static float thumbnailSize = 160.0f;
     float cellSize = thumbnailSize + padding;
 
@@ -75,6 +75,25 @@ void ContentBrowserPanel::OnImGuiRender()
 
     ImGui::BeginChild("Content Region", ImVec2(panelWidth - dirTreeWidth, 0), false,
                       ImGuiWindowFlags_HorizontalScrollbar);
+
+	ImGui::Begin("##content_browser_toolbar", nullptr, 
+		ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoScrollbar);
+
+	ImGui::Text("Content Browser");
+	ImGui::SameLine();
+	ImGui::TextColored({0.5f, 0.5f, 0.5f, 1.0f}, "%s", m_CurrentDirectory.string().c_str());
+
+	ImGui::SameLine();
+
+	// volume slider to control tumbnail size
+	// float to right
+	ImGui::SetCursorPosX(ImGui::GetWindowWidth() - 150);
+
+	ImGui::SliderFloat("##thumbnail_size", &thumbnailSize, 100, 512);
+
+
+    ImGui::End();
+
     const char *label = m_Mode == Mode::Asset ? "Asset" : "File";
     if (ImGui::Button(label)) m_Mode = m_Mode == Mode::Asset ? Mode::FileSystem : Mode::Asset;
 
