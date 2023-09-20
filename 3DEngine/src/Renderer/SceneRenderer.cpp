@@ -45,13 +45,9 @@ void SceneRenderer::BeginRenderScene(const glm::mat4 &projection, const glm::mat
 
 void SceneRenderer::RenderScene(Scene &scene)
 {
-    auto pbrShader = ShaderManager::GetShader("Resources/shaders/PBR");
-    pbrShader->Bind();
-    pbrShader->SetUniformMatrix4fv("projectionViewMatrix", m_Projection * m_View);
-    pbrShader->SetUniform3f("cameraPosition", m_CameraPosition);
-
 
     auto environment = scene.GetEnvironment();
+
     if (environment->CurrentSkyType == SkyType::ClearColor)
     {
         RenderCommand::SetClearColor(environment->AmbientColor);
@@ -61,7 +57,20 @@ void SceneRenderer::RenderScene(Scene &scene)
     {
         environment->ProceduralSkybox->Draw(m_Projection, m_View);
     }
-    
+    else if (environment->SkyboxHDR != nullptr)
+    {
+		if (environment->CurrentSkyType == SkyType::SkyboxHDR)
+		{
+			scene.GetEnvironment()->SkyboxHDR->BindMaps();
+			environment->SkyboxHDR->Render(m_Projection, m_View);
+		}
+		else scene.GetEnvironment()->SkyboxHDR->Destroy();
+    }
+
+    auto pbrShader = ShaderManager::GetShader("Resources/shaders/PBR");
+    pbrShader->Bind();
+    pbrShader->SetUniformMatrix4fv("projectionViewMatrix", m_Projection * m_View);
+    pbrShader->SetUniform3f("cameraPosition", m_CameraPosition);
 	auto view = scene.GetRegistry().view<MeshComponent, TransformComponent, VisibilityComponent>();
     for (auto &e : view)
     {
@@ -91,17 +100,7 @@ void SceneRenderer::RenderScene(Scene &scene)
     }
     Renderer::Flush(pbrShader, false);
 
-	if (environment->SkyboxHDR != nullptr)
-    {
-        if (environment->CurrentSkyType == SkyType::SkyboxHDR)
-        {
-            scene.GetEnvironment()->SkyboxHDR->BindMaps();
-            environment->SkyboxHDR->Render(m_Projection, m_View);
-        }
-        else scene.GetEnvironment()->SkyboxHDR->Destroy();
-    }
-
-	if (!scene.IsPlaying()) InfiniteGrid::Draw(m_Projection, m_View);
+	if (!scene.IsPlaying()) InfiniteGrid::Draw(m_Projection, m_View, m_CameraPosition);
 }
 
 void SceneRenderer::ShadowPass(Scene &scene) {}

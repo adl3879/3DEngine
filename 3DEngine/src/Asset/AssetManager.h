@@ -50,5 +50,10 @@ class AssetManager
     {
         return Project::GetActive()->GetEditorAssetManager()->IsAssetHandleValid(handle);
     }
+
+	static bool IsAssetLoaded(AssetHandle handle)
+	{
+        return Project::GetActive()->GetEditorAssetManager()->IsAssetLoaded(handle);
+	}
 };
 } // namespace Engine

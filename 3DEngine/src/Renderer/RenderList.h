@@ -52,7 +52,14 @@ class RenderList
             {
                 shader->SetUniformMatrix4fv(modelMatrixUniformLocation, m.Transform);
                 shader->SetUniform1i(entityIdUniformLocation, m.EntityId + 1);
-                shader->SetUniformMatrix3fv("normalMatrix", glm::transpose(glm::inverse(glm::mat3(m.Transform))));
+                //shader->SetUniformMatrix3fv("normalMatrix", glm::transpose(glm::inverse(glm::mat3(m.Transform))));
+
+				/*const auto &mat = m.Mesh->Material;
+				shader->SetUniform1i("hasAlbedoMap", mat->HasMaterialMap(ParameterType::ALBEDO));
+                shader->SetUniform1i("hasNormalMap", mat->HasMaterialMap(ParameterType::NORMAL));
+                shader->SetUniform1i("hasMetallicMap", mat->HasMaterialMap(ParameterType::METALLIC));
+                shader->SetUniform1i("hasRoughnessMap", mat->HasMaterialMap(ParameterType::ROUGHNESS));
+                shader->SetUniform1i("hasAoMap", mat->HasMaterialMap(ParameterType::AO));*/
 
                 m.Mesh->Draw(shader, true);
             }

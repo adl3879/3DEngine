@@ -76,8 +76,7 @@ project "3DEngine"
 			"%{Library.WinSock}",
 			"%{Library.WinMM}",
 			"%{Library.WinVersion}",
-			-- "%{Library.BCrypt}",
-			"Bcrypt.lib"
+			"Bcrypt.lib",
 		}
 
 	filter "configurations:Debug"

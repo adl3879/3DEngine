@@ -9,7 +9,7 @@ namespace Engine
 struct AssetMetadata
 {
     AssetType Type = AssetType::None;
-    std::filesystem::path FilePath = "/Assets";
+    std::filesystem::path FilePath;
 
     operator bool() const { return Type != AssetType::None; }
 };

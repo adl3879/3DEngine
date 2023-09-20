@@ -15,7 +15,7 @@ void Light::SetLightUniforms(Shader &shader)
     }
     else
     {
-        shader.SetUniform3f("gDirectionalLight.Base.Color", glm::vec3(0.0f, 0.0f, 0.0f));
+        shader.SetUniform3f("gDirectionalLight.Color", glm::vec3(0.0f, 0.0f, 0.0f));
         shader.SetUniform3f("gDirectionalLight.Direction", glm::vec3(0.0f, 0.0f, 0.0f));
     }
 

@@ -7,6 +7,7 @@
 #include "Log.h"
 #include "Entity.h"
 #include "ScriptEngine.h"
+#include "MaterialSerializer.h"
 
 #include <yaml-cpp/yaml.h>
 
@@ -320,13 +321,16 @@ void SceneSerializer::Serialize(const std::string &filepath)
     {
         out << YAML::Key << "HDRIHandle" << YAML::Value << environment->SkyboxHDR->GetHandle();
     }
-    out << YAML::Key << "SurfaceRadius" << YAML::Value << environment->ProceduralSkybox->SurfaceRadius;
-    out << YAML::Key << "AtmosphereRadius" << YAML::Value << environment->ProceduralSkybox->AtmosphereRadius;
-    out << YAML::Key << "RayleighScattering" << YAML::Value << environment->ProceduralSkybox->RayleighScattering;
-    out << YAML::Key << "MieScattering" << YAML::Value << environment->ProceduralSkybox->MieScattering;
-    out << YAML::Key << "SunIntensity" << YAML::Value << environment->ProceduralSkybox->SunIntensity;
-    out << YAML::Key << "CenterPoint" << YAML::Value << environment->ProceduralSkybox->CenterPoint;
-    out << YAML::Key << "SunDirection" << YAML::Value << environment->ProceduralSkybox->SunDirection;
+    if (environment->ProceduralSkybox)
+    {
+        out << YAML::Key << "SurfaceRadius" << YAML::Value << environment->ProceduralSkybox->SurfaceRadius;
+        out << YAML::Key << "AtmosphereRadius" << YAML::Value << environment->ProceduralSkybox->AtmosphereRadius;
+        out << YAML::Key << "RayleighScattering" << YAML::Value << environment->ProceduralSkybox->RayleighScattering;
+        out << YAML::Key << "MieScattering" << YAML::Value << environment->ProceduralSkybox->MieScattering;
+        out << YAML::Key << "SunIntensity" << YAML::Value << environment->ProceduralSkybox->SunIntensity;
+        out << YAML::Key << "CenterPoint" << YAML::Value << environment->ProceduralSkybox->CenterPoint;
+        out << YAML::Key << "SunDirection" << YAML::Value << environment->ProceduralSkybox->SunDirection;
+    }
     out << YAML::EndMap;
 
     out << YAML::Key << "Entities" << YAML::Value << YAML::BeginSeq;
@@ -340,6 +344,20 @@ void SceneSerializer::Serialize(const std::string &filepath)
         });
     out << YAML::EndSeq;
     out << YAML::EndMap;
+
+	// serialize materials
+	for (const auto& [handle, metadata] : AssetManager::GetRegistry())
+	{
+        if (AssetManager::IsAssetLoaded(handle) && metadata.Type == AssetType::Material)
+        {
+            auto material = AssetManager::GetAsset<Material>(handle);
+            if (material)
+            {
+                MaterialSerializer serializer(material);
+                serializer.Serialize(Project::GetAssetDirectory() / metadata.FilePath);
+            }
+        }
+	}
 
     std::ofstream fout(filepath);
     fout << out.c_str();
@@ -364,7 +382,9 @@ bool SceneSerializer::Deserialize(const std::string &filepath)
     {
         auto skyType = environment["SkyType"].as<std::string>();
         auto ambientColor = environment["AmbientColor"].as<glm::vec4>();
-        auto hdriHandle = environment["HDRIHandle"].as<uint64_t>();
+        AssetHandle hdriHandle;
+		if (environment["HDRIHandle"])
+			hdriHandle = environment["HDRIHandle"].as<uint64_t>();
 
         m_Scene->GetEnvironment()->CurrentSkyType = SkyTypeFromString(skyType);
         m_Scene->GetEnvironment()->AmbientColor = ambientColor;

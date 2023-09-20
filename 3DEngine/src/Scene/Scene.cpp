@@ -97,6 +97,8 @@ Scene::Scene()
 
     m_SceneRenderer = new SceneRenderer();
     m_SceneRenderer->Init();
+
+	m_Lights->RemoveDirectionalLight();
 }
 
 Scene::~Scene() {}
@@ -105,6 +107,7 @@ void Scene::OnAttach()
 {
     ScriptEngine::Init();
     for (const auto &system : m_Systems) system->Init();
+
 }
 
 void Scene::OnDetach()

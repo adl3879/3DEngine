@@ -4,6 +4,8 @@
 #include "Texture.h"
 #include "MaterialSerializer.h"
 
+#include "Log.h"
+
 namespace Engine
 {
 Material::Material()
@@ -14,7 +16,7 @@ Material::Material()
 }
 
 void Material::Init(const std::string &name, AssetHandle albedo, AssetHandle metallic, AssetHandle normal,
-                    AssetHandle roughness)
+                    AssetHandle roughness, AssetHandle ao)
 {
     Name = name;
 
@@ -22,11 +24,13 @@ void Material::Init(const std::string &name, AssetHandle albedo, AssetHandle met
     m_Textures[METALLIC] = AssetManager::GetAsset<Texture2D>(metallic);
     m_Textures[NORMAL] = AssetManager::GetAsset<Texture2D>(normal);
     m_Textures[ROUGHNESS] = AssetManager::GetAsset<Texture2D>(roughness);
+    m_Textures[AO] = AssetManager::GetAsset<Texture2D>(ao);
 
     m_TextureHandles[ALBEDO] = albedo;
     m_TextureHandles[METALLIC] = metallic;
     m_TextureHandles[NORMAL] = normal;
     m_TextureHandles[ROUGHNESS] = roughness;
+    m_TextureHandles[AO] = ao;
 }
 
 void Material::Init(const std::string &name, const std::filesystem::path &albedoPath,
@@ -64,24 +68,63 @@ void Material::Bind(Shader *shader) const noexcept
     if (m_Textures[ParameterType::NORMAL]) m_Textures[ParameterType::NORMAL]->Bind(4);
     if (m_Textures[ParameterType::METALLIC]) m_Textures[ParameterType::METALLIC]->Bind(5);
     if (m_Textures[ParameterType::ROUGHNESS]) m_Textures[ParameterType::ROUGHNESS]->Bind(6);
+    if (m_Textures[ParameterType::AO]) m_Textures[ParameterType::AO]->Bind(7);
 
     shader->SetUniform1i("albedoMap", 3);
     shader->SetUniform1i("normalMap", 4);
     shader->SetUniform1i("metallicMap", 5);
     shader->SetUniform1i("roughnessMap", 6);
+    shader->SetUniform1f("aoMap", 7);
 
     shader->SetUniform3f("albedoParam", m_MaterialParam.Albedo);
     shader->SetUniform1f("metallicParam", m_MaterialParam.Metallic);
     shader->SetUniform1f("aoParam", m_MaterialParam.AO);
     shader->SetUniform1f("roughnessParam", m_MaterialParam.Roughness);
 }
-
+ 
 void Material::Unbind() const noexcept
 {
     for (const auto &texture : m_Textures)
     {
         if (texture) texture->Unbind();
     }
+}
+
+bool Material::Reset(ParameterType type)
+{
+	if (IsDefault)
+	{
+        return false;
+	}
+
+    MaterialRef mat = std::make_shared<Material>();
+	MaterialSerializer serializer(mat);
+    auto filePath = Project::GetAssetDirectory() / AssetManager::GetRegistry()[Handle].FilePath;
+    serializer.Deserialize(filePath);
+	
+	if (type == ParameterType::ALBEDO)
+		m_MaterialParam.Albedo = mat->GetMaterialData().Albedo;
+	else if (type == ParameterType::AO)
+		m_MaterialParam.AO = mat->GetMaterialData().AO;
+	else if (type == ParameterType::METALLIC)
+		m_MaterialParam.Metallic = mat->GetMaterialData().Metallic;
+    else if (type == ParameterType::NORMAL)
+    {
+		m_MaterialParam.Normal = mat->GetMaterialData().Normal;
+		m_UseNormalMap = mat->GetUseNormalMap();
+    }
+	else if (type == ParameterType::ROUGHNESS)
+		m_MaterialParam.Roughness = mat->GetMaterialData().Roughness;
+
+	m_MaterialTextures[type] = mat->GetParameterTexture(type);
+
+    return true;
+}
+
+int Material::HasMaterialMap(ParameterType type) const 
+{
+	if (m_Textures[type]) return 1;
+	return 0;
 }
 
 void Material::SetTexture(ParameterType type, AssetHandle textureHandle)

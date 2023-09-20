@@ -103,23 +103,31 @@ Mesh Model::ProcessMesh(aiMesh *mesh, const aiScene *scene, const bool loadMater
             vertex.Position.y = mesh->mVertices[i].y;
             vertex.Position.z = mesh->mVertices[i].z;
         }
-
-        if (mesh->HasNormals())
+		if (mesh->HasNormals())
         {
             vertex.Normal.x = mesh->mNormals[i].x;
             vertex.Normal.y = mesh->mNormals[i].y;
             vertex.Normal.z = mesh->mNormals[i].z;
         }
+        if (mesh->mTangents)
+        {
+            vertex.Tangent.x = mesh->mTangents[i].x;
+            vertex.Tangent.y = mesh->mTangents[i].y;
+            vertex.Tangent.z = mesh->mTangents[i].z;
+        }
+		if (mesh->mBitangents)
+		{
+            vertex.Bitangent.x = mesh->mBitangents[i].x;
+            vertex.Bitangent.y = mesh->mBitangents[i].y;
+            vertex.Bitangent.z = mesh->mBitangents[i].z;
+		}
 
+        vertex.TexCoords = glm::vec2(0.0f);
         if (mesh->HasTextureCoords(0) && loadMaterial)
         {
             // Just take the first set of texture coords (since we could have up to 8)
             vertex.TexCoords.x = mesh->mTextureCoords[0][i].x;
             vertex.TexCoords.y = mesh->mTextureCoords[0][i].y;
-        }
-        else
-        {
-            vertex.TexCoords = glm::vec2(0.0f);
         }
 
         vertices.push_back(vertex);
@@ -152,10 +160,11 @@ Mesh Model::ProcessMesh(aiMesh *mesh, const aiScene *scene, const bool loadMater
             aiString albedoPath, metallicPath, normalPath, roughnessPath, alphaMaskPath;
             std::array<aiString, 5> materialPaths;
 
-             mat->GetTexture(AI_MATKEY_BASE_COLOR_TEXTURE, &materialPaths[ParameterType::ALBEDO]);
+			mat->GetTexture(AI_MATKEY_BASE_COLOR_TEXTURE, &materialPaths[ParameterType::ALBEDO]);
             mat->GetTexture(AI_MATKEY_METALLIC_TEXTURE, &materialPaths[ParameterType::METALLIC]);
             mat->GetTexture(aiTextureType_NORMALS, 0, &materialPaths[ParameterType::NORMAL]);
             mat->GetTexture(AI_MATKEY_ROUGHNESS_TEXTURE, &materialPaths[ParameterType::ROUGHNESS]);
+            mat->GetTexture(aiTextureType_LIGHTMAP, 0, &materialPaths[ParameterType::AO]);
 
             AssetHandle materialHandles[5];
 
@@ -170,8 +179,9 @@ Mesh Model::ProcessMesh(aiMesh *mesh, const aiScene *scene, const bool loadMater
             }
 
             MaterialRef material = std::make_shared<Material>();
-            material->Init(materialName, materialHandles[0], materialHandles[1], materialHandles[2],
-                           materialHandles[3]);
+            material->Init(materialName, materialHandles[0], materialHandles[1], materialHandles[2], materialHandles[3],
+                           materialHandles[4]);
+			material->IsDefault = true;
 
             auto defaultMaterialHandle = AssetManager::AddAsset(material);
             m_DefaultMaterialHandle = defaultMaterialHandle;

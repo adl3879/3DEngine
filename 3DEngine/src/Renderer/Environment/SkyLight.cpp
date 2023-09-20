@@ -245,9 +245,6 @@ void SkyLight::Render(const glm::mat4 &projection, const glm::mat4 &view)
     cubemap->SetUniformMatrix4fv("projection", projection);
     cubemap->SetUniformMatrix4fv("view", view);
 
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_CUBE_MAP, m_EnvCubemap);
-
     RenderCube();
 }
 
