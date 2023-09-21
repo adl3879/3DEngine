@@ -4,12 +4,13 @@
 #define MAX_SPOT_LIGHTS 5
 
 layout (location = 0) out vec4 FragColor;
-layout (location = 1) out int color2;
+layout (location = 1) out int EntityId;
+layout (location = 2) out vec4 BrightColor;
 
 in vec2 TexCoords;
 in vec3 WorldPosition;
 in vec3 Normal;
-in float EntityID;
+in mat3 TBN;
 
 struct DirectionalLight {
     vec3 Direction;
@@ -55,6 +56,12 @@ uniform sampler2D aoMap;
 uniform int gNumOfPointLights;
 uniform int gNumOfSpotLights;
 uniform int entityId;
+
+uniform int hasAlbedoMap;
+uniform int hasNormalMap;
+uniform int hasMetallicMap;
+uniform int hasRoughnessMap;
+uniform int hasAoMap;
 
 const float PI = 3.14159265359;
 
@@ -125,21 +132,38 @@ vec3 calcReflectanceEquation(vec3 L, vec3 V, vec3 N, vec3 albedo, float metallic
     return (kD * albedo / PI + specular) * NdotL;
 }
 
-void main() {
+void main() {    
     // material parameters from textures
-    vec3 albedo = pow(texture(albedoMap, TexCoords).rgb, vec3(2.2));
-    float metallic = texture(metallicMap, TexCoords).r;
-    float roughness = texture(roughnessMap, TexCoords).r;
-    float ao = texture(aoMap, TexCoords).r;
-
-    albedo = mix(albedo, albedoParam, 0.5);
-    metallic = mix(metallic, metallicParam, 0.5);
-    roughness = mix(roughness, roughnessParam, 0.5);
-    ao = mix(ao, aoParam, 0.5);
+    vec3 albedo = albedoParam;
+    if (hasAlbedoMap == 1) {
+        albedo =  pow(texture(albedoMap, TexCoords).rgb, vec3(2.2));
+        albedo = mix(albedo, albedoParam, 0.5);
+    }
+    float metallic = metallicParam;
+    if (hasMetallicMap == 1) {
+        metallic = texture(metallicMap, TexCoords).r;
+        metallic = mix(metallic, metallicParam, 0.5);
+    }
+    float roughness = roughnessParam;
+    if (hasRoughnessMap == 1) {
+        roughness = texture(roughnessMap, TexCoords).r;
+        roughness = mix(roughness, roughnessParam, 0.5);
+    }
+    float ao = aoParam;
+    if (hasAoMap == 1) {
+        ao = texture(aoMap, TexCoords).r;
+        ao = mix(ao, aoParam, 0.5);
+    }
+    vec3 normal = vec3(0.5, 0.5, 1.0);
+    if (hasNormalMap == 1) {
+        normal = texture(normalMap, TexCoords).rgb;
+    }
+    normal = normal * 2.0 - 1.0;
+    normal = TBN * normalize(normal); // add TBN
     
-    vec3 N = normalize(Normal);
+    vec3 N = normalize(normal);
     vec3 V = normalize(cameraPosition - WorldPosition);
-    vec3 R = reflect(-V, N); 
+    vec3 R = reflect(-V, N);
 
     // calculate reflectance at normal incidence; if dia-electric (like plastic) use F0 
     // of 0.04 and if it's a metal, use the albedo color as F0 (metallic workflow)    
@@ -186,10 +210,10 @@ void main() {
     vec3 F = fresnelSchlickRoughness(max(dot(N, V), 0.0), F0, roughness);
     
     vec3 kS = F;
-    vec3 kD = vec3(1.0) - kS;
-    kD *= 1.0 - metallic;     
+    vec3 kD = 1.0 - kS;
+    kD *= 1.0 - metallic;
     
-    vec3 irradiance = texture(irradianceMap, N).rgb;
+    vec3 irradiance = mix(texture(irradianceMap, N).rgb, vec3(0.1f), 0.9f);
     vec3 diffuse = irradiance * albedo;
     
     // sample both the pre-filter map and the BRDF lut and combine them together as per the Split-Sum approximation to get the IBL specular part.
@@ -198,13 +222,26 @@ void main() {
     vec2 brdf = texture(brdfLUT, vec2(max(dot(N, V), 0.0), roughness)).rg;
     vec3 specular = prefilteredColor * (F * brdf.x + brdf.y);
     
-    vec3 amb = kD * diffuse + specular; // * ao;
-    
-    vec3 color = amb * 0.5 + Lo;  
+    vec3 amb = (kD * (diffuse + specular)) * aoParam; // * ao;
+    vec3 color = amb + Lo;
+
     color = color / (color + vec3(1.0));
-    color = pow(color, vec3(1.0/2.2));
+    
+    const float gamma = 2.2;
+    color = vec3(1.0) - exp(-color * 1);
+    // gamma correct
+    color = pow(color, vec3(1.0 / gamma));
+
+    //color = mix(color, normal, 1);
 
     FragColor = vec4(color, 1.0);
 
-    color2 = entityId;
+    EntityId = entityId;
+
+    float brightness = dot(color, vec3(0.2126, 0.7152, 0.0722));
+    if (brightness > 1.0) {
+        BrightColor = vec4(color, 1.0);
+    } else {
+        BrightColor = vec4(0.0, 0.0, 0.0, 1.0);
+    }
 }

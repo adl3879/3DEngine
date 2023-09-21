@@ -1,0 +1,11 @@
+Material:
+  Name: Texture
+  AlbedoColor: [0, 0, 0]
+  Metallic: 0.337000012
+  Roughness: 0.504999995
+  AO: 1
+  AlbedoMap: 6657876789123958725
+  MetallicMap: 0
+  RoughnessMap: 0
+  AOMap: 0
+  NormalMap: 0

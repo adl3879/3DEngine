@@ -123,6 +123,7 @@ vec3 scatter(vec3 o, vec3 d, float L, vec3 Lo) {
 
 uniform mat4 Projection;
 uniform mat4 View;
+
 void main()
 {
 	// Might add camera position in here.

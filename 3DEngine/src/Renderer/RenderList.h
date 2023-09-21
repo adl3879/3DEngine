@@ -8,6 +8,7 @@
 #include "Shaders/ShaderManager.h"
 #include "Material.h"
 #include "Light.h"
+#include "AssetManager.h"
 
 namespace Engine
 {
@@ -31,7 +32,7 @@ class RenderList
 
     void AddToRenderList(MeshRef mesh, glm::mat4 &transform, const int32_t entityId = -1)
     {
-        MaterialRef material = mesh->Material;
+        MaterialRef material = AssetManager::GetAsset<Material>(mesh->DefaultMaterialHandle) ;
         if (m_RenderList.find(material) == m_RenderList.end())
         {
             m_RenderList[material] = std::vector<RenderMesh>();
@@ -54,12 +55,12 @@ class RenderList
                 shader->SetUniform1i(entityIdUniformLocation, m.EntityId + 1);
                 //shader->SetUniformMatrix3fv("normalMatrix", glm::transpose(glm::inverse(glm::mat3(m.Transform))));
 
-				/*const auto &mat = m.Mesh->Material;
+				MaterialRef mat = AssetManager::GetAsset<Material>(m.Mesh->DefaultMaterialHandle);
 				shader->SetUniform1i("hasAlbedoMap", mat->HasMaterialMap(ParameterType::ALBEDO));
                 shader->SetUniform1i("hasNormalMap", mat->HasMaterialMap(ParameterType::NORMAL));
                 shader->SetUniform1i("hasMetallicMap", mat->HasMaterialMap(ParameterType::METALLIC));
                 shader->SetUniform1i("hasRoughnessMap", mat->HasMaterialMap(ParameterType::ROUGHNESS));
-                shader->SetUniform1i("hasAoMap", mat->HasMaterialMap(ParameterType::AO));*/
+                shader->SetUniform1i("hasAoMap", mat->HasMaterialMap(ParameterType::AO));
 
                 m.Mesh->Draw(shader, true);
             }
@@ -67,7 +68,7 @@ class RenderList
         shader->Unbind();
         m_RenderList.clear();
     }
-
+	 
   private:
     RenderListMap m_RenderList;
 };

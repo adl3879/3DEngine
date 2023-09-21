@@ -20,15 +20,15 @@ Entities:
       Children:
         []
     TransformComponent:
-      Translation: [-1.92890513, 0.573938608, 0.156774864]
+      Translation: [-1.92890477, 1.9276998, 0.156774908]
       Rotation: [4.96377027e-07, 1.48700631, 1.95875653e-08]
       Scale: [1, 1, 1]
-      LocalTranslation: [-0.759544373, -0.0624861717, 0.156774864]
+      LocalTranslation: [-0.759544015, 1.29127502, 0.156774908]
       LocalRotation: [4.9637714e-07, 1.48700631, 1.95875209e-08]
       LocalScale: [0.99999994, 1, 0.99999994]
     MeshComponent:
-      Handle: 13636195627716880000
-      MaterialHandle: 10853948017143324652
+      Handle: 3386080780721564564
+      MaterialHandle: 0
   - Entity: 13328442023261359953
     TagComponent:
       Tag: Mesh
@@ -38,7 +38,7 @@ Entities:
       Children:
         []
     TransformComponent:
-      Translation: [-0.125222698, 0.63642478, 0]
+      Translation: [1.05386031, 2.34877038, 0]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
       LocalTranslation: [0, 0, 0]
@@ -50,7 +50,7 @@ Entities:
         []
     MeshComponent:
       Handle: 7965377243735506135
-      MaterialHandle: 0
+      MaterialHandle: 3036480792179110296
   - Entity: 7661830119412518581
     TagComponent:
       Tag: Camera
@@ -72,3 +72,44 @@ Entities:
         PerspectiveNear: 0.100000001
         PerspectiveFar: 100
       Primary: true
+  - Entity: 545587712019635827
+    TagComponent:
+      Tag: Mesh
+    ParentComponent:
+      Parent: 399241890730687142
+      HasParent: false
+      Children:
+        []
+    TransformComponent:
+      Translation: [-0.125222698, 0.63642478, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      LocalTranslation: [0, 0, 0]
+      LocalRotation: [0, 0, 0]
+      LocalScale: [1, 1, 1]
+    ScriptComponent:
+      ClassName: Sandbox.Player
+      ScriptFields:
+        []
+    MeshComponent:
+      Handle: 7965377243735506135
+      MaterialHandle: 1005281982894483555
+  - Entity: 11094981603925323575
+    TagComponent:
+      Tag: Directional Light
+    ParentComponent:
+      Parent: 5739691373169750960
+      HasParent: false
+      Children:
+        []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [4.12973634e-07, -0.0788691342, 1.52525001e-06]
+      Scale: [0.999999762, 1, 0.999999762]
+      LocalTranslation: [0, 0, 0]
+      LocalRotation: [0, 0, 0]
+      LocalScale: [1, 1, 1]
+    DirectionalLightComponent:
+      Enabled: true
+      Color: [1, 1, 1]
+      AmbientIntensity: 14.3000002

@@ -97,8 +97,6 @@ Scene::Scene()
 
     m_SceneRenderer = new SceneRenderer();
     m_SceneRenderer->Init();
-
-	m_Lights->RemoveDirectionalLight();
 }
 
 Scene::~Scene() {}
@@ -107,7 +105,6 @@ void Scene::OnAttach()
 {
     ScriptEngine::Init();
     for (const auto &system : m_Systems) system->Init();
-
 }
 
 void Scene::OnDetach()
@@ -305,14 +302,14 @@ void Scene::OnUpdateRuntime(float dt)
     {
         m_SceneRenderer->BeginRenderScene(m_MainCamera->GetProjectionMatrix(), m_MainCamera->GetViewMatrix(),
                                           m_MainCamera->GetPosition());
-        m_SceneRenderer->RenderScene(*this);
+        m_SceneRenderer->RenderScene(*this, *m_Framebuffer);
     }
 }
 
 void Scene::OnUpdateEditor(float dt, EditorCamera &camera)
 {
     m_SceneRenderer->BeginRenderScene(camera.GetProjectionMatrix(), camera.GetViewMatrix(), camera.GetPosition());
-    m_SceneRenderer->RenderScene(*this);
+    m_SceneRenderer->RenderScene(*this, *m_Framebuffer);
 }
 
 } // namespace Engine

@@ -13,7 +13,7 @@ static GLenum ImageFormatToGLDataFormat(ImageFormat format)
         case ImageFormat::R8: return GL_RED;
         case ImageFormat::RGB8: return GL_RGB;
         case ImageFormat::RGBA8: return GL_RGBA;
-        case ImageFormat::RGB16: return GL_RGB;
+        case ImageFormat::RGB16: return GL_RGBA;
         case ImageFormat::RED_INTEGER: return GL_RED_INTEGER;
         case ImageFormat::Depth: return GL_DEPTH_COMPONENT;
         default: break;
@@ -123,8 +123,8 @@ void Texture2D::SetData(Buffer data)
 
 void Texture2D::Bind(uint32_t slot) const
 {
-    glActiveTexture(GL_TEXTURE0 + slot);
-    glBindTexture(GL_TEXTURE_2D, m_RendererID);
+    // bind at slot
+	glBindTextureUnit(slot, m_RendererID);
 }
 
 void Texture2D::Unbind() const { glBindTexture(GL_TEXTURE_2D, 0); }

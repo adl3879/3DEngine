@@ -13,8 +13,8 @@ namespace Engine
 {
 struct Mesh
 {
-    Mesh(const std::vector<Vertex> &vertices, const std::vector<uint32_t> &indices,
-         const MaterialRef &material = nullptr);
+    Mesh() = default;
+    Mesh(const std::vector<Vertex> &vertices, const std::vector<uint32_t> &indices, AssetHandle materialHandle = 0);
 
     void Draw(Shader *shader, bool bindMaterials);
     void Clear();
@@ -27,7 +27,9 @@ struct Mesh
     std::vector<Vertex> Vertices;
     std::vector<uint32_t> Indices;
     VertexArray VAO;
-    MaterialRef Material; // default material
+
+    AssetHandle DefaultMaterialHandle; // default material
+	AssetHandle MaterialHandle; // material override
 
     unsigned int VBOs[5];
 

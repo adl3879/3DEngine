@@ -16,11 +16,11 @@ namespace Engine
 {
 struct MaterialData
 {
-    glm::vec3 Albedo = glm::vec3(1.0f);
+    glm::vec3 Albedo = glm::vec3(0.0f);
     float AO = 1.0f;
     glm::vec3 Normal = glm::vec3(0.0f);
-    float Metallic = 0.6f;
-    float Roughness = 0.6f;
+    float Metallic = 0.0f;
+    float Roughness = 0.9f;
 };
 
 enum ParameterType

@@ -145,6 +145,12 @@ void Shader::SetUniformMatrix3fv(std::string id, glm::mat3 matrix)
     if (addr != -1) glUniformMatrix3fv(addr, 1, GL_FALSE, glm::value_ptr(matrix));
 }
 
+void Shader::SetUniform2f(std::string id, glm::vec2 vector)
+{
+	int addr = FindUniformLocation(id);
+	if (addr != -1) glUniform2f(addr, vector.x, vector.y);
+}
+
 void Shader::SetUniform3f(std::string id, glm::vec3 vector)
 {
     int addr = FindUniformLocation(id);

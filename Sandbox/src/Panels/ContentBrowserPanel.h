@@ -33,10 +33,16 @@ class ContentBrowserPanel
     void CreateFilePopup();
     void OpenCreateFilePopup(AssetType type);
 
+	// Search
+	void Search(const std::string& query);
+	void DrawFileAssetBrowser(std::filesystem::directory_entry directoryEntry);
+
   private:
     std::filesystem::path m_BaseDirectory;
     std::filesystem::path m_CurrentDirectory, m_AssetCurrentDirectory;
     std::unordered_map<std::size_t, bool> m_NodeOpenStatusMap;
+	std::vector<std::filesystem::path> m_DirectoryStack;
+	std::vector<std::filesystem::directory_entry> m_CurrentDirectoryEntries;
 
     Texture2DRef m_DirectoryIcon, m_FileIcon;
     std::map<std::string, AssetHandle> m_AssetHandles;
@@ -51,5 +57,6 @@ class ContentBrowserPanel
     };
 
     Mode m_Mode = Mode::Asset;
+    std::string m_SearchQuery;
 };
 } // namespace Engine

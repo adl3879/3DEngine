@@ -1,42 +1,37 @@
-#version 330 core
+#version 460 core
 
-layout (location = 0) in vec3 aPos;
-
-layout(location = 0) out float near;
-layout(location = 1) out float far;
-layout(location = 2) out vec3 nearPoint;
-layout(location = 3) out vec3 farPoint;
-layout(location = 4) out mat4 fragView;
-layout(location = 8) out mat4 fragProj;
+layout (location=0) out vec2 uv;
+layout (location=1) out vec2 out_camPos;
 
 uniform mat4 Projection;
 uniform mat4 View;
+uniform vec3 CameraPos;
 
-// Grid position are in xy clipped space
-vec3 gridPlane[6] = vec3[](
-  vec3(1, 1, 0), vec3(-1, -1, 0), vec3(-1, 1, 0),
-  vec3(-1, -1, 0), vec3(1, 1, 0), vec3(1, -1, 0)
+float gridSize = 100.0;
+
+const vec3 pos[4] = vec3[4](
+	vec3(-1.0, 0.0, -1.0),
+	vec3( 1.0, 0.0, -1.0),
+	vec3( 1.0, 0.0,  1.0),
+	vec3(-1.0, 0.0,  1.0)
 );
 
-vec3 UnprojectPoint(float x, float y, float z, mat4 view, mat4 projection) {
-  mat4 viewInv = inverse(view);
-  mat4 projInv = inverse(projection);
-  vec4 unprojectedPoint =  viewInv * projInv * vec4(x, y, z, 1.0);
-  return unprojectedPoint.xyz / unprojectedPoint.w;
-}
+const int indices[6] = int[6](
+	0, 1, 2, 2, 3, 0
+);
 
 void main()
 {
-  vec3 p = gridPlane[gl_VertexID].xyz;
+	mat4 MVP = Projection * View;
 
-  fragProj = Projection;
-  fragView = View;
+	int idx = indices[gl_VertexID];
+	vec3 position = pos[idx] * gridSize;
+	
+	position.x += CameraPos.x;
+	position.z += CameraPos.z;
 
-  near = gl_DepthRange.near;
-  far = gl_DepthRange.far;
+	out_camPos = CameraPos.xz;
 
-  nearPoint = UnprojectPoint(p.x, p.y, 0.0, View, Projection).xyz;
-  farPoint = UnprojectPoint(p.x, p.y, 1.0, View, Projection).xyz;
-
-  gl_Position = vec4(p, 1.0);
+	gl_Position = MVP * vec4(position, 1.0);
+	uv = position.xz;
 }

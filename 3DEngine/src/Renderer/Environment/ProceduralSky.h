@@ -22,9 +22,6 @@ class ProceduralSky
 
     glm::vec3 CenterPoint = glm::vec3(0.f, -SurfaceRadius, 0.f);
     glm::vec3 SunDirection = glm::vec3(0.20000f, 0.95917f, 0.20000f);
-
-    unsigned int VAO;
-    unsigned int VBO;
 };
 using ProceduralSkyRef = std::shared_ptr<ProceduralSky>;
 } // namespace Engine

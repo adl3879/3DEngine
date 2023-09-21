@@ -1,5 +1,7 @@
 #include "Renderer.h"
 
+#include "RenderCommand.h"
+
 namespace Engine
 {
 Shader *Renderer::m_Shader = nullptr;
@@ -28,6 +30,21 @@ std::vector<RVertex> QuadVertices
 void Renderer::Init()
 {
     //
+    QuadVAO = new VertexArray();
+    QuadVAO->Init();
+
+	QuadVAO->Bind();
+
+    QuadVAO->AttachBuffer(BufferType::ARRAY, QuadVertices.size() * sizeof(RVertex), DrawMode::STATIC,
+                          QuadVertices.data());
+
+    // vertex attributes
+    const static auto vertexSize = sizeof(RVertex);
+    QuadVAO->EnableAttribute(0, 3, vertexSize, reinterpret_cast<void *>(0));
+    QuadVAO->EnableAttribute(1, 3, vertexSize, reinterpret_cast<void *>(offsetof(RVertex, UV)));
+    QuadVAO->EnableAttribute(2, 3, vertexSize, reinterpret_cast<void *>(offsetof(RVertex, Normal)));
+
+    QuadVAO->Unbind();
 }
 
 void Renderer::SubmitMesh(MeshRef mesh, glm::mat4 &transform, const int32_t entityId)
@@ -43,18 +60,7 @@ void Renderer::EndDraw() {}
 
 void Renderer::DrawQuad(glm::mat4 transform)
 {
-    QuadVAO->Init();
-    QuadVAO->Bind();
-
-    QuadVAO->AttachBuffer(BufferType::ARRAY, QuadVertices.size() * sizeof(RVertex), DrawMode::STATIC,
-                          QuadVertices.data());
-
-    // vertex attributes
-    const static auto vertexSize = sizeof(RVertex);
-    QuadVAO->EnableAttribute(0, 3, vertexSize, reinterpret_cast<void *>(0));
-    QuadVAO->EnableAttribute(1, 3, vertexSize, reinterpret_cast<void *>(offsetof(RVertex, UV)));
-    QuadVAO->EnableAttribute(2, 3, vertexSize, reinterpret_cast<void *>(offsetof(RVertex, Normal)));
-
-    QuadVAO->Unbind();
+	QuadVAO->Bind();
+	RenderCommand::DrawArrays(0, 6);
 }
 } // namespace Engine

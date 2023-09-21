@@ -5,20 +5,21 @@
 
 namespace Engine
 {
-Mesh::Mesh(const std::vector<Vertex> &vertices, const std::vector<uint32_t> &indices, const MaterialRef &material)
-    : IndexCount(indices.size()), VertexCount(vertices.size()), Material(material), Vertices(vertices), Indices(indices)
+Mesh::Mesh(const std::vector<Vertex> &vertices, const std::vector<uint32_t> &indices, AssetHandle materialHandle)
+    : IndexCount(indices.size()), VertexCount(vertices.size()), 
+	DefaultMaterialHandle(materialHandle), Vertices(vertices), Indices(indices)
 {
     SetupMesh(vertices, indices);
 }
 
 void Mesh::Draw(Shader *shader, bool bindMaterials)
 {
-    if (bindMaterials) Material->Bind(shader);
+    //if (bindMaterials) Material->Bind(shader);
 
     VAO.Bind();
     RenderCommand::DrawElements(RendererEnum::TRIANGLES, IndexCount, RendererEnum::UINT, nullptr);
 
-    Material->Unbind();
+    //Material->Unbind();
     VAO.Unbind();
 }
 

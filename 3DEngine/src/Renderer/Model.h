@@ -20,8 +20,7 @@ class Model : public Asset
   public:
     Model() = default;
     Model(const std::filesystem::path &path, const bool flipWindingOrder = false, const bool loadMaterial = true);
-    Model(const std::vector<Vertex> &vertices, std::vector<unsigned int> &indices,
-          const MaterialRef &material) noexcept;
+    Model(const std::vector<Vertex> &vertices, std::vector<unsigned int> &indices, AssetHandle materialHandle) noexcept;
     Model(const Mesh &mesh) noexcept;
     virtual ~Model() = default;
 
@@ -32,7 +31,6 @@ class Model : public Asset
     void Delete();
 
     auto GetMeshes() const noexcept { return m_Meshes; }
-    AssetHandle GetDefaultMaterialHandle() const { return m_DefaultMaterialHandle; }
 
     virtual AssetType GetType() const override { return AssetType::Mesh; }
 
@@ -49,8 +47,6 @@ class Model : public Asset
   private:
     std::string m_Path;
     size_t m_NumOfMaterials;
-
-    AssetHandle m_DefaultMaterialHandle;
 };
 
 using ModelRef = std::shared_ptr<Model>;

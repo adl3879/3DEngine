@@ -15,6 +15,7 @@ class TextureHDRI : public Texture
     virtual void Bind(uint32_t slot = 0) const override;
     virtual void Unbind() const override;
 
+	virtual glm::vec2 GetSize() const override { return glm::vec2(m_Specification.Width, m_Specification.Height); }
     virtual uint32_t GetWidth() const override { return m_Specification.Width; }
     virtual uint32_t GetHeight() const override { return m_Specification.Height; }
     virtual uint32_t GetRendererID() const override { return m_RendererID; }

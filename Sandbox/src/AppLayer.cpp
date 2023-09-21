@@ -8,6 +8,8 @@
 #include "Math/IMath.h"
 #include "AssetManager.h"
 #include "TextureImporter.h"
+#include "Utils/FileDialogs.h"
+
 #include <IconsFontAwesome5.h>
 
 namespace Engine
@@ -51,9 +53,10 @@ void AppLayer::OnDetach() {}
 void AppLayer::OnUpdate(float dt)
 {
     // update
-    if (m_ViewportFocused) m_EditorCamera.OnUpdate(dt);
+    m_EditorCamera.OnUpdate(dt);
     m_EditorCamera.SetViewportSize(m_ViewportSize.x, m_ViewportSize.y);
 	m_ActiveScene->SetViewportSize(m_ViewportSize.x, m_ViewportSize.y);
+    m_ActiveScene->SetFramebuffer(m_Framebuffer);
 
     m_Framebuffer->Bind();
     auto selectedEntity = m_SceneHierarchyPanel.GetSelectedEntity();
@@ -81,7 +84,8 @@ void AppLayer::OnUpdate(float dt)
     if (mouseX >= 0 && mouseY >= 0 && mouseX < (int)viewportSize.x && mouseY < (int)viewportSize.y)
     {
         auto pixelData = m_Framebuffer->ReadPixel(1, glm::vec2(mouseX, mouseY));
-        // removed one because i moved every entity by one
+        //LOG_CORE_INFO("Pixel Data: {0}", pixelData);
+        //removed one because i moved every entity by one
         m_HoveredEntity = pixelData == 0 ? Entity() : Entity((entt::entity)(pixelData - 1), m_ActiveScene.get());
     }
     m_Framebuffer->Unbind();
@@ -147,7 +151,7 @@ void AppLayer::OnImGuiRender()
             if (ImGui::MenuItem("Open...", "Ctrl+O")) OpenScene();
             ImGui::Separator();
             if (ImGui::MenuItem("New Project", "Ctrl+Shift+N")) NewProject();
-            if (ImGui::MenuItem("Open Project", "Ctrl+Shift+O")) return;
+            if (ImGui::MenuItem("Open Project", "Ctrl+Shift+O")) OpenProject();
             ImGui::Separator();
             if (ImGui::MenuItem("Save...", "Ctrl+S")) SaveScene();
             if (ImGui::MenuItem("Save As...", "Ctrl+Shift+S")) SaveSceneAs();
@@ -296,7 +300,7 @@ void AppLayer::OnKeyPressed(InputKey key, bool isRepeat)
 
 void AppLayer::OnMouseScrolled(double xOffset, double yOffset)
 {
-    if (m_ViewportFocused || m_ViewportHovered) m_EditorCamera.OnMouseScrolled(xOffset, yOffset);
+    if (m_ViewportHovered) m_EditorCamera.OnMouseScrolled(xOffset, yOffset);
 }
 
 void AppLayer::OnMouseButtonPressed(MouseButton button)
@@ -310,9 +314,9 @@ void AppLayer::OnMouseButtonPressed(MouseButton button)
             m_SceneHierarchyPanel.SetSelectedEntity(m_HoveredEntity);
             if ((int)m_HoveredEntity > 0)
             {
-                const auto &mesh = m_HoveredEntity.GetComponent<MeshComponent>();
+                /*const auto &mesh = m_HoveredEntity.GetComponent<MeshComponent>();
                 auto defaultHandle = AssetManager::GetAsset<Model>(mesh.Handle)->GetDefaultMaterialHandle();
-                MaterialEditorPanel::OpenMaterialEditor(mesh.MaterialHandle ? mesh.MaterialHandle : defaultHandle);
+                MaterialEditorPanel::OpenMaterialEditor(mesh.MaterialHandle ? mesh.MaterialHandle : defaultHandle);*/
             }
         }
     }
@@ -320,9 +324,22 @@ void AppLayer::OnMouseButtonPressed(MouseButton button)
 
 void AppLayer::NewProject()
 {
+	auto path = FileDialogs::SaveFile("3D Engine Project (*.3dproj)\0*.3dproj\0");
+	if (!path.empty())
+	{
+		Project::New(path);
+		Project::Load(path);
+	}
 }
 
-void AppLayer::OpenProject() {}
+void AppLayer::OpenProject() 
+{
+	auto path = FileDialogs::OpenFile("3D Engine Project (*.3dproj)\0*.3dproj\0");
+	if (!path.empty())
+	{
+		Project::Load(path);
+	}
+}
 
 void AppLayer::NewScene()
 {
@@ -335,10 +352,30 @@ void AppLayer::NewScene()
 
 void AppLayer::OpenScene()
 {
+	// Fix later
+	auto path = FileDialogs::OpenFile("3D Engine Scene (*.scene)\0*.scene\0");
+	if (!path.empty())
+	{
+        ResetScene("");
+		
+        auto handle = AssetManager::ImportAsset(path);
+        m_EditorScene = AssetManager::GetAsset<Scene>(handle);
+        m_SceneHierarchyPanel.SetContext(m_EditorScene);
+        m_EnvironmentPanel.SetContext(m_EditorScene);
+
+        m_ActiveScene = m_EditorScene;
+	}
 }
 
 void AppLayer::SaveSceneAs()
 {
+	auto path = FileDialogs::SaveFile("3D Engine Scene (*.scene)\0*.scene\0");
+	if (!path.empty())
+	{
+		m_ActiveScene->SetSceneFilePath(path);
+		SceneSerializer serializer(m_ActiveScene);
+		serializer.Serialize(path);
+	}
 }
 
 void AppLayer::SaveScene()

@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <memory>
+#include <glm/glm.hpp>
 
 #include "Shader.h"
 #include "Buffer.h"
@@ -39,6 +40,7 @@ class Texture : public Asset
 
     virtual const TextureSpecification &GetSpecification() const = 0;
 
+    virtual glm::vec2 GetSize() const = 0;
     virtual uint32_t GetWidth() const = 0;
     virtual uint32_t GetHeight() const = 0;
     virtual uint32_t GetRendererID() const = 0;

@@ -244,6 +244,7 @@ void SceneHierarchyPanel::DrawComponents(Entity entity)
 
     if (entity.HasComponent<CameraComponent>())
     {
+		ImGui::PushID("Camera");
         bool removeComponent = false;
         _collapsingHeaderStyle();
         if (ImGui::CollapsingHeader("Camera"))
@@ -276,6 +277,7 @@ void SceneHierarchyPanel::DrawComponents(Entity entity)
         }
 
         if (removeComponent) entity.RemoveComponent<CameraComponent>();
+		ImGui::PopID();
     }
 
 	if (entity.HasComponent<MeshComponent>())
@@ -309,38 +311,48 @@ void SceneHierarchyPanel::DrawComponents(Entity entity)
             const auto &material = AssetManager::GetAsset<Material>(entityComponent.MaterialHandle);
             if (model != nullptr)
             {
-                for (const auto &mesh : model->GetMeshes())
+                if (ImGui::TreeNodeEx((void *)typeid(MeshComponent).hash_code(), ImGuiTreeNodeFlags_DefaultOpen,
+                                      "Material"))
                 {
-                    bool openModal = false;
-                    auto materialName = AssetManager::GetAssetName(entityComponent.MaterialHandle);
-                    ImGui::PushStyleVar(ImGuiStyleVar_ButtonTextAlign, ImVec2(0.0f, 0.5f));
-                    ImGui::Button(_labelPrefix("Material", materialName.c_str()), ImVec2(-1, 0));
-                    ImGui::PopStyleVar();
-
-                    if (ImGui::BeginPopupContextItem())
+                    int i = 0;
+                    for (const auto &mesh : model->GetMeshes())
                     {
-                        // TODO: check if payload is a handle or a path, if path, convert to handle by loading asset
-                        if (ImGui::MenuItem(ICON_FA_TRASH_RESTORE "   Remove")) entityComponent.MaterialHandle = 0;
-                        if (ImGui::MenuItem(ICON_FA_EDIT "   Open Material Editor"))
-                        {
-                            auto handle = entityComponent.MaterialHandle ? entityComponent.MaterialHandle
-                                                                         : model->GetDefaultMaterialHandle();
-                            auto isDefault = handle == model->GetDefaultMaterialHandle();
-                            MaterialEditorPanel::OpenMaterialEditor(handle, isDefault);
-                        }
-                        ImGui::EndPopup();
-                    }
 
-                    if (ImGui::BeginDragDropTarget())
-                    {
-                        if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
+                        bool openModal = false;
+                        auto materialName = AssetManager::GetAssetName(entityComponent.MaterialHandle);
+                        ImGui::PushID((materialName + std::to_string(i)).c_str());
+                        ImGui::PushStyleVar(ImGuiStyleVar_ButtonTextAlign, ImVec2(0.0f, 0.5f));
+                        ImGui::Button(_labelPrefix("Name", materialName.c_str()), ImVec2(-1, 0));
+                        ImGui::PopStyleVar();
+
+                        if (ImGui::BeginPopupContextItem())
                         {
-                            const char *handle = (const char *)payload->Data;
-                            // convert handle to uint64_t(AssetHandle)
-                            entityComponent.MaterialHandle = std::stoull(handle);
+                            // TODO: check if payload is a handle or a path, if path, convert to handle by loading asset
+                            if (ImGui::MenuItem(ICON_FA_TRASH_RESTORE "   Remove")) entityComponent.MaterialHandle = 0;
+                            if (ImGui::MenuItem(ICON_FA_EDIT "   Open Material Editor"))
+                            {
+                                /*auto handle = entityComponent.MaterialHandle ? entityComponent.MaterialHandle
+                                                                             : model->GetDefaultMaterialHandle();
+                                auto isDefault = handle == model->GetDefaultMaterialHandle();*/
+                                MaterialEditorPanel::OpenMaterialEditor(mesh.DefaultMaterialHandle, true);
+                            }
+                            ImGui::EndPopup();
                         }
-                        ImGui::EndDragDropTarget();
+
+                        if (ImGui::BeginDragDropTarget())
+                        {
+                            if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
+                            {
+                                const char *handle = (const char *)payload->Data;
+                                // convert handle to uint64_t(AssetHandle)
+                                entityComponent.MaterialHandle = std::stoull(handle);
+                            }
+                            ImGui::EndDragDropTarget();
+                        }
+                        i++;
+                        ImGui::PopID();
                     }
+					ImGui::TreePop();
                 }
             }
 

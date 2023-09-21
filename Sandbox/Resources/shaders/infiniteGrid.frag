@@ -1,50 +1,85 @@
-layout(location = 0) in float near; //0.01
-layout(location = 1) in float far; //100
-layout(location = 2) in vec3 nearPoint;
-layout(location = 3) in vec3 farPoint;
-layout(location = 4) in mat4 fragView;
-layout(location = 8) in mat4 fragProj;
+#version 460 core
 
-layout(location = 0) out vec4 outColor;
+layout (location=0) in vec2 uv;
+layout (location=1) in vec2 camPos;
+layout (location=0) out vec4 out_FragColor;
 
-vec4 grid(vec3 fragPos3D, float scale, bool drawAxis) {
-  vec2 coord = fragPos3D.xz * scale;
-  vec2 derivative = fwidth(coord);
-  vec2 grid = abs(fract(coord - 0.5) - 0.5) / derivative;
+// extents of grid in world coordinates
+float gridSize = 70.0;
 
-  float line = min(grid.x, grid.y);
+// size of one cell
+float gridCellSize = 2;
 
-  float minimumz = min(derivative.y, 1);
-  float minimumx = min(derivative.x, 1);
-  vec4 color = vec4(0.8, 0.8, 0.8, 1.0 - min(line, 1.0));
-  
-  return color;
+// color of thin lines
+vec4 gridColorThin = vec4(0.6, 0.6, 0.6, 0.8);
+
+// color of thick lines (every tenth line)
+vec4 gridColorThick = vec4(0.4, 0.4, 0.4, 0.8);
+
+// minimum number of pixels between cell lines before LOD switch should occur. 
+const float gridMinPixelsBetweenCells = 2.0;
+
+float log10(float x)
+{
+	return log(x) / log(10.0);
 }
 
-float computeDepth(vec3 pos) {
-  vec4 clip_space_pos = fragProj * fragView * vec4(pos.xyz, 1.0);
-  return (clip_space_pos.z / clip_space_pos.w);
+float satf(float x)
+{
+	return clamp(x, 0.0, 1.0);
 }
 
-float computeLinearDepth(vec3 pos) {
-  vec4 clip_space_pos = fragProj * fragView * vec4(pos.xyz, 1.0);
-  float clip_space_depth = (clip_space_pos.z / clip_space_pos.w) * 2.0 - 1.0; // put back between -1 and 1
-  float linearDepth = (2.0 * near * far) / (far + near - clip_space_depth * (far - near)); // get linear value between 0.01 and 100
-  return linearDepth / far; // normalize
+vec2 satv(vec2 x)
+{
+	return clamp(x, vec2(0.0), vec2(1.0));
 }
 
-void main() {
-  float t = -nearPoint.y / (farPoint.y - nearPoint.y);
-  vec3 fragPos3D = nearPoint + t * (farPoint - nearPoint);
+float max2(vec2 v)
+{
+	return max(v.x, v.y);
+}
 
-  //gl_FragDepth = computeDepth(fragPos3D);
-  gl_FragDepth = ((gl_DepthRange.diff * computeDepth(fragPos3D)) +
-                near + far) / 2.0;
+vec4 gridColor(vec2 uv, vec2 camPos)
+{
+	vec2 dudv = vec2(
+		length(vec2(dFdx(uv.x), dFdy(uv.x))),
+		length(vec2(dFdx(uv.y), dFdy(uv.y)))
+	);
 
-  float linearDepth = computeLinearDepth(fragPos3D);
+	float lodLevel = max(0.0, log10((length(dudv) * gridMinPixelsBetweenCells) / gridCellSize) + 1.0);
+	float lodFade = fract(lodLevel);
 
-  float fading = max(0, (0.5 - linearDepth));
+	// cell sizes for lod0, lod1 and lod2
+	float lod0 = gridCellSize * pow(10.0, floor(lodLevel));
+	float lod1 = lod0 * 10.0;
+	float lod2 = lod1 * 10.0;
 
-  outColor = (grid(fragPos3D, 0.5, true)) * float(t > 0); // adding multiple resolution for the grid
-  outColor.a *= fading;
+	// each anti-aliased line covers up to 4 pixels
+	dudv *= 2.0;
+
+	// Update grid coordinates for subsequent alpha calculations (centers each anti-aliased line)
+  uv += dudv / 2.0F;
+
+	// calculate absolute distances to cell line centers for each lod and pick max X/Y to get coverage alpha value
+	float lod0a = max2( vec2(1.0) - abs(satv(mod(uv, lod0) / dudv) * 2.0 - vec2(1.0)) );
+	float lod1a = max2( vec2(1.0) - abs(satv(mod(uv, lod1) / dudv) * 2.0 - vec2(1.0)) );
+	float lod2a = max2( vec2(1.0) - abs(satv(mod(uv, lod2) / dudv) * 2.0 - vec2(1.0)) );
+
+	uv -= camPos;
+
+	// blend between falloff colors to handle LOD transition
+	vec4 c = lod2a > 0.0 ? gridColorThick : lod1a > 0.0 ? mix(gridColorThick, gridColorThin, lodFade) : gridColorThin;
+
+	// calculate opacity falloff based on distance to grid extents
+	float opacityFalloff = (1.0 - satf(length(uv) / gridSize));
+
+	// blend between LOD level alphas and scale with opacity falloff
+	c.a *= (lod2a > 0.0 ? lod2a : lod1a > 0.0 ? lod1a : (lod0a * (1.0-lodFade))) * opacityFalloff;
+
+	return c;
+}
+
+void main()
+{
+  out_FragColor = gridColor(uv, camPos);
 }

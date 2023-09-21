@@ -17,15 +17,18 @@ class SceneRenderer
     void Cleanup();
 
     void BeginRenderScene(const glm::mat4 &projection, const glm::mat4 &view, const glm::vec3 &cameraPosition);
-    void RenderScene(Scene &scene);
+    void RenderScene(Scene &scene, Framebuffer &framebuffer);
 
   private:
     void ShadowPass(Scene &scene);
+
+	void EnvironmentPass(Scene &scene);
 
   private:
     glm::mat4 m_Projection, m_View;
     glm::vec3 m_CameraPosition;
 
     FramebufferRef m_ShadingBuffer;
+	FramebufferRef m_HDRBuffer;
 };
 } // namespace Engine

@@ -15,16 +15,15 @@
 namespace Engine
 {
 Model::Model(const std::filesystem::path &path, const bool flipWindingOrder, const bool loadMaterial)
-    : m_Path(path.string()), m_DefaultMaterialHandle(0)
+    : m_Path(path.string())
 {
     // auto fullPath = Utils::Path::GetAbsolute(std::string(path));
     if (!LoadModel(path, flipWindingOrder, loadMaterial)) LOG_CORE_ERROR("Failed to load model: {0}", path.string());
 }
 
-Model::Model(const std::vector<Vertex> &vertices, std::vector<unsigned int> &indices,
-             const MaterialRef &material) noexcept
+Model::Model(const std::vector<Vertex> &vertices, std::vector<unsigned int> &indices, AssetHandle materialHandle) noexcept
 {
-    m_Meshes.emplace_back(vertices, indices, material);
+    m_Meshes.emplace_back(vertices, indices, materialHandle);
 }
 
 Model::Model(const Mesh &mesh) noexcept { m_Meshes.push_back(mesh); }
@@ -182,16 +181,14 @@ Mesh Model::ProcessMesh(aiMesh *mesh, const aiScene *scene, const bool loadMater
             material->Init(materialName, materialHandles[0], materialHandles[1], materialHandles[2], materialHandles[3],
                            materialHandles[4]);
 			material->IsDefault = true;
-
-            auto defaultMaterialHandle = AssetManager::AddAsset(material);
-            m_DefaultMaterialHandle = defaultMaterialHandle;
+			material->Handle = AssetManager::AddAsset(material);
 
             ++m_NumOfMaterials;
-            return Mesh(vertices, indices, material);
+            return Mesh(vertices, indices, material->Handle);
         }
     }
 
-    return Mesh(vertices, indices);
+    return Mesh(vertices, indices, 0);
 }
 
 std::filesystem::path Model::GetRelativeTexturePath(const aiString &path) const

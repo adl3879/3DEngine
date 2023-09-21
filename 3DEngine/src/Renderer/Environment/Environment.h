@@ -6,6 +6,7 @@
 
 #include "SkyLight.h"
 #include "ProceduralSky.h"
+#include "PostFX/Bloom.h"
 
 namespace Engine
 {
@@ -26,6 +27,9 @@ class Environment
     glm::vec4 AmbientColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
     SkyLightRef SkyboxHDR;
     ProceduralSkyRef ProceduralSkybox;
+
+	bool BloomEnabled = true;
+    BloomRef BloomEffect;
 };
 
 static std::string SkyTypeToString(SkyType type)

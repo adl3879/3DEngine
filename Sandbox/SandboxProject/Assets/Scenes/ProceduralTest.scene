@@ -1,0 +1,47 @@
+Scene: Untitled
+Environment:
+  SkyType: Procedural Sky
+  AmbientColor: [1, 1, 1, 1]
+  SurfaceRadius: 6360000
+  AtmosphereRadius: 6380000
+  RayleighScattering: [5.80000005e-06, 1.35e-05, 3.3100001e-05]
+  MieScattering: [1.99999995e-05, 1.99999995e-05, 1.99999995e-05]
+  SunIntensity: 2
+  CenterPoint: [0, -6360000, 0]
+  SunDirection: [0.200000003, 0.959169984, 0.200000003]
+Entities:
+  - Entity: 54999617046113187
+    TagComponent:
+      Tag: Empty Entity
+    ParentComponent:
+      Parent: 1202706947603296997
+      HasParent: false
+      Children: []
+    TransformComponent:
+      Translation: [0, 0.510354757, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      LocalTranslation: [0, 0, 0]
+      LocalRotation: [0, 0, 0]
+      LocalScale: [1, 1, 1]
+    MeshComponent:
+      Handle: 7965377243735506135
+      MaterialHandle: 0
+  - Entity: 12104402130920804
+    TagComponent:
+      Tag: Directional Light
+    ParentComponent:
+      Parent: 2326499581968747089
+      HasParent: false
+      Children: []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [-2.52168584, -0.586492002, -1.09042776]
+      Scale: [0.999998987, 0.999997675, 0.999997973]
+      LocalTranslation: [0, 0, 0]
+      LocalRotation: [0, 0, 0]
+      LocalScale: [1, 1, 1]
+    DirectionalLightComponent:
+      Enabled: true
+      Color: [1, 1, 1]
+      AmbientIntensity: 10.8999996

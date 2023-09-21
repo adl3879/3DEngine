@@ -64,6 +64,8 @@ unsigned int Material::GetParameterTexture(const ParameterType &type) const noex
 
 void Material::Bind(Shader *shader) const noexcept
 {
+    shader->Bind();
+
     if (m_Textures[ParameterType::ALBEDO]) m_Textures[ParameterType::ALBEDO]->Bind(3);
     if (m_Textures[ParameterType::NORMAL]) m_Textures[ParameterType::NORMAL]->Bind(4);
     if (m_Textures[ParameterType::METALLIC]) m_Textures[ParameterType::METALLIC]->Bind(5);
@@ -84,10 +86,10 @@ void Material::Bind(Shader *shader) const noexcept
  
 void Material::Unbind() const noexcept
 {
-    for (const auto &texture : m_Textures)
+    /*for (const auto &texture : m_Textures)
     {
         if (texture) texture->Unbind();
-    }
+    }*/
 }
 
 bool Material::Reset(ParameterType type)

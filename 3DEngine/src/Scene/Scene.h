@@ -71,6 +71,8 @@ class Scene : public Asset
     EnvironmentRef GetEnvironment() { return m_Environment; }
     void SetEnvironment(EnvironmentRef environment) { m_Environment = environment; }
 
+	void SetFramebuffer(FramebufferRef framebuffer) { m_Framebuffer = framebuffer; }
+
     LightRef GetLights() { return m_Lights; }
 
 	void SetViewportSize(int x, int y) { m_ViewportSize = glm::vec2(x, y) ; }
@@ -104,6 +106,7 @@ class Scene : public Asset
     std::string m_SceneFilePath = std::string();
     SceneRenderer *m_SceneRenderer;
 
+	FramebufferRef m_Framebuffer;
     EnvironmentRef m_Environment;
 
     std::vector<SystemRef> m_Systems;
