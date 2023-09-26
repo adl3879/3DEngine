@@ -317,6 +317,12 @@ void SceneSerializer::Serialize(const std::string &filepath)
     out << YAML::Key << "Environment" << YAML::Value << YAML::BeginMap;
     out << YAML::Key << "SkyType" << YAML::Value << SkyTypeToString(environment->CurrentSkyType);
     out << YAML::Key << "AmbientColor" << YAML::Value << environment->AmbientColor;
+
+	// Bloom
+    out << YAML::Key << "BloomEnabled" << YAML::Value << environment->BloomEnabled;
+    out << YAML::Key << "Exposure" << YAML::Value << environment->Exposure;
+    out << YAML::Key << "BloomIntensity" << YAML::Value << environment->BloomIntensity;
+
     if (environment->SkyboxHDR)
     {
         out << YAML::Key << "HDRIHandle" << YAML::Value << environment->SkyboxHDR->GetHandle();
@@ -383,11 +389,17 @@ bool SceneSerializer::Deserialize(const std::string &filepath)
         auto skyType = environment["SkyType"].as<std::string>();
         auto ambientColor = environment["AmbientColor"].as<glm::vec4>();
         AssetHandle hdriHandle;
-		if (environment["HDRIHandle"])
-			hdriHandle = environment["HDRIHandle"].as<uint64_t>();
+		if (environment["HDRIHandle"]) hdriHandle = environment["HDRIHandle"].as<uint64_t>();
 
         m_Scene->GetEnvironment()->CurrentSkyType = SkyTypeFromString(skyType);
         m_Scene->GetEnvironment()->AmbientColor = ambientColor;
+
+		if (environment["BloomEnabled"]) 
+			m_Scene->GetEnvironment()->BloomEnabled = environment["BloomEnabled"].as<bool>();
+		if (environment["Exposure"]) 
+			m_Scene->GetEnvironment()->Exposure = environment["Exposure"].as<float>();
+        if (environment["BloomIntensity"])
+			m_Scene->GetEnvironment()->BloomIntensity = environment["BloomIntensity"].as<float>();
 
         if (SkyTypeFromString(skyType) == SkyType::SkyboxHDR)
         {

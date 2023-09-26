@@ -30,11 +30,13 @@ class Model : public Asset
     // destroy all opengl handles for sub-meshes
     void Delete();
 
-    auto GetMeshes() const noexcept { return m_Meshes; }
+    std::vector<Mesh> GetMeshes() { return m_Meshes; }
 
     virtual AssetType GetType() const override { return AssetType::Mesh; }
 
-  protected:
+	void SetMeshHandle(int id, AssetHandle handle);
+
+  private:
     std::vector<Mesh> m_Meshes;
 
   private:

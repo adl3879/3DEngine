@@ -76,6 +76,12 @@ class Scene : public Asset
     LightRef GetLights() { return m_Lights; }
 
 	void SetViewportSize(int x, int y) { m_ViewportSize = glm::vec2(x, y) ; }
+    void SetViewportMousePos(int x, int y) { m_ViewportMousePos = glm::ivec2(x, y); }
+
+	void SetHoveredEntity(entt::entity entity) { m_HoveredEntity = entity; }
+	entt::entity GetHoveredEntity() const { return m_HoveredEntity; }
+
+	glm::vec2 GetViewportMousePos() { return m_ViewportMousePos; }
 
   public:
     virtual AssetType GetType() const override { return AssetType::Scene; }
@@ -91,6 +97,7 @@ class Scene : public Asset
   private:
     entt::registry m_Registry;
     entt::entity m_SelectedEntity = entt::null;
+	entt::entity m_HoveredEntity = entt::null;
 
 	std::unordered_map<UUID, entt::entity> m_EntityMap;
 
@@ -112,6 +119,7 @@ class Scene : public Asset
     std::vector<SystemRef> m_Systems;
 
 	glm::vec2 m_ViewportSize = glm::vec2(0.0f);
+    glm::ivec2 m_ViewportMousePos;
 };
 
 using SceneRef = std::shared_ptr<Scene>;

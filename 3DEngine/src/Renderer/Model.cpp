@@ -35,6 +35,11 @@ void Model::Delete()
     for (auto &mesh : m_Meshes) mesh.VAO.Delete();
 }
 
+void Model::SetMeshHandle(int id, AssetHandle handle)
+{
+	m_Meshes[id].MaterialHandle = handle;
+}
+
 bool Model::LoadModel(const std::filesystem::path &path, const bool flipWindingOrder, const bool loadMaterial)
 {
     Assimp::Importer importer;

@@ -28,7 +28,7 @@ class SceneRenderer
     glm::mat4 m_Projection, m_View;
     glm::vec3 m_CameraPosition;
 
-    FramebufferRef m_ShadingBuffer;
 	FramebufferRef m_HDRBuffer;
+    FramebufferRef m_ShadingBuffer;
 };
 } // namespace Engine

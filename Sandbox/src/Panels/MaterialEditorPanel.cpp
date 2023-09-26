@@ -89,6 +89,12 @@ void MaterialEditorPanel::OnImGuiRender()
         glm::vec3 color = material->GetMaterialData().Albedo;
         ImGui::ColorEdit3("Color", glm::value_ptr(color), ImGuiColorEditFlags_NoInputs);
         material->SetMaterialParam(ParameterType::ALBEDO, color);
+
+		ImGui::SameLine();
+		float emissiveValue = material->GetMaterialData().Emissive;
+		ImGui::PushItemWidth(200);
+        ImGui::DragFloat("Emissive", &emissiveValue, 0.5, 1);
+        material->SetEmissiveValue(emissiveValue);
     }
     ImGui::PopID();
 

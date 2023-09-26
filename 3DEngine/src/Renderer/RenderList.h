@@ -9,6 +9,7 @@
 #include "Material.h"
 #include "Light.h"
 #include "AssetManager.h"
+#include "Log.h"
 
 namespace Engine
 {
@@ -32,7 +33,8 @@ class RenderList
 
     void AddToRenderList(MeshRef mesh, glm::mat4 &transform, const int32_t entityId = -1)
     {
-        MaterialRef material = AssetManager::GetAsset<Material>(mesh->DefaultMaterialHandle) ;
+        MaterialRef material = AssetManager::GetAsset<Material>(mesh->MaterialHandle > 0 ? 
+			mesh->MaterialHandle : mesh->DefaultMaterialHandle);
         if (m_RenderList.find(material) == m_RenderList.end())
         {
             m_RenderList[material] = std::vector<RenderMesh>();

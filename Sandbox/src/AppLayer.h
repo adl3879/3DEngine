@@ -69,7 +69,6 @@ class AppLayer : public Layer
 
   private:
     int m_GizmoType = -1;
-    Entity m_HoveredEntity;
 
     enum class SceneState
     {

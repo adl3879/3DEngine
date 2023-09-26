@@ -306,7 +306,7 @@ void SceneHierarchyPanel::DrawComponents(Entity entity)
             ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.05f, 0.05f, 0.05f, 0.54f));
 
             auto modelEntity = entity.GetComponent<MeshComponent>();
-            const auto &model = modelEntity.ModelResource ? modelEntity.ModelResource
+            ModelRef model = modelEntity.ModelResource ? modelEntity.ModelResource
                                                           : AssetManager::GetAsset<Model>(entityComponent.Handle);
             const auto &material = AssetManager::GetAsset<Material>(entityComponent.MaterialHandle);
             if (model != nullptr)
@@ -315,14 +315,15 @@ void SceneHierarchyPanel::DrawComponents(Entity entity)
                                       "Material"))
                 {
                     int i = 0;
-                    for (const auto &mesh : model->GetMeshes())
+                    for (Mesh &mesh : model->GetMeshes())
                     {
-
                         bool openModal = false;
-                        auto materialName = AssetManager::GetAssetName(entityComponent.MaterialHandle);
+                        std::string label = "[Material " + std::to_string(i) + "]";
+                        auto materialName = AssetManager::GetAssetName(mesh.MaterialHandle);
+
                         ImGui::PushID((materialName + std::to_string(i)).c_str());
                         ImGui::PushStyleVar(ImGuiStyleVar_ButtonTextAlign, ImVec2(0.0f, 0.5f));
-                        ImGui::Button(_labelPrefix("Name", materialName.c_str()), ImVec2(-1, 0));
+                        ImGui::Button(_labelPrefix(label.c_str(), materialName.c_str()), ImVec2(-1, 0));
                         ImGui::PopStyleVar();
 
                         if (ImGui::BeginPopupContextItem())
@@ -345,7 +346,11 @@ void SceneHierarchyPanel::DrawComponents(Entity entity)
                             {
                                 const char *handle = (const char *)payload->Data;
                                 // convert handle to uint64_t(AssetHandle)
-                                entityComponent.MaterialHandle = std::stoull(handle);
+                                //entityComponent.MaterialHandle = std::stoull(handle);
+								//mesh.MaterialHandle = std::stoull(handle);
+                                //mesh.SetHandle(std::stoull(handle));
+                                model->SetMeshHandle(i, std::stoull(handle));
+								LOG_CORE_INFO(mesh.MaterialHandle);
                             }
                             ImGui::EndDragDropTarget();
                         }
@@ -357,7 +362,7 @@ void SceneHierarchyPanel::DrawComponents(Entity entity)
             }
 
             if (removeComponent) entity.RemoveComponent<MeshComponent>();
-            ImGui::PopStyleColor(2);
+            ImGui::PopStyleColor(2);                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
         }
 
         if (entity.HasComponent<VisibilityComponent>())

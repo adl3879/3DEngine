@@ -28,7 +28,6 @@ void AppLayer::OnAttach()
     m_Framebuffer = std::make_shared<Framebuffer>(true, glm::vec2{1280, 900});
     m_Framebuffer->SetTexture(std::make_shared<Texture2D>(ImageFormat::Depth), GL_DEPTH_ATTACHMENT);
     m_Framebuffer->SetTexture(std::make_shared<Texture2D>(ImageFormat::RGBA8), GL_COLOR_ATTACHMENT0);
-    m_Framebuffer->SetTexture(std::make_shared<Texture2D>(ImageFormat::RED_INTEGER), GL_COLOR_ATTACHMENT1);
 
 	stepForwardIcon = TextureImporter::LoadTexture2D("Resources/Textures/StepForward.png")->GetRendererID();
 	playIcon = TextureImporter::LoadTexture2D("Resources/Textures/Play.png")->GetRendererID();
@@ -58,7 +57,6 @@ void AppLayer::OnUpdate(float dt)
 	m_ActiveScene->SetViewportSize(m_ViewportSize.x, m_ViewportSize.y);
     m_ActiveScene->SetFramebuffer(m_Framebuffer);
 
-    m_Framebuffer->Bind();
     auto selectedEntity = m_SceneHierarchyPanel.GetSelectedEntity();
 
     m_ActiveScene->OnUpdate(dt);
@@ -82,13 +80,9 @@ void AppLayer::OnUpdate(float dt)
     int mouseY = (int)my;
 
     if (mouseX >= 0 && mouseY >= 0 && mouseX < (int)viewportSize.x && mouseY < (int)viewportSize.y)
-    {
-        auto pixelData = m_Framebuffer->ReadPixel(1, glm::vec2(mouseX, mouseY));
-        //LOG_CORE_INFO("Pixel Data: {0}", pixelData);
-        //removed one because i moved every entity by one
-        m_HoveredEntity = pixelData == 0 ? Entity() : Entity((entt::entity)(pixelData - 1), m_ActiveScene.get());
-    }
-    m_Framebuffer->Unbind();
+        m_ActiveScene->SetViewportMousePos(mouseX, mouseY);
+	else
+		m_ActiveScene->SetViewportMousePos(-1, -1);
 }
 
 void AppLayer::OnFixedUpdate(float dt)
@@ -311,13 +305,8 @@ void AppLayer::OnMouseButtonPressed(MouseButton button)
     {
         if (m_ViewportHovered)
         {
-            m_SceneHierarchyPanel.SetSelectedEntity(m_HoveredEntity);
-            if ((int)m_HoveredEntity > 0)
-            {
-                /*const auto &mesh = m_HoveredEntity.GetComponent<MeshComponent>();
-                auto defaultHandle = AssetManager::GetAsset<Model>(mesh.Handle)->GetDefaultMaterialHandle();
-                MaterialEditorPanel::OpenMaterialEditor(mesh.MaterialHandle ? mesh.MaterialHandle : defaultHandle);*/
-            }
+			m_SceneHierarchyPanel.SetSelectedEntity({m_ActiveScene->GetHoveredEntity(), 
+				m_ActiveScene.get()});
         }
     }
 }

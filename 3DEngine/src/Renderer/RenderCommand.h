@@ -23,7 +23,8 @@ enum class RendererEnum
     FACE_CULL,
     STATIC_DRAW,
     DYNAMIC_DRAW,
-    STREAM_DRAW
+    STREAM_DRAW,
+	BLEND,
 };
 
 class RenderCommand

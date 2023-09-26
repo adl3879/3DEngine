@@ -71,6 +71,9 @@ AssetRegistry:
   - Handle: 2501302521495496428
     FilePath: Models/Sponza/8750083169368950601.jpg
     Type: AssetType::Texture2D
+  - Handle: 2551192793644421259
+    FilePath: Scenes/bloomTest.scene
+    Type: AssetType::Scene
   - Handle: 2554098332790855830
     FilePath: Models/Sponza/14650633544276105767.jpg
     Type: AssetType::Texture2D

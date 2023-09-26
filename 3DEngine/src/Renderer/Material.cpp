@@ -82,6 +82,7 @@ void Material::Bind(Shader *shader) const noexcept
     shader->SetUniform1f("metallicParam", m_MaterialParam.Metallic);
     shader->SetUniform1f("aoParam", m_MaterialParam.AO);
     shader->SetUniform1f("roughnessParam", m_MaterialParam.Roughness);
+    shader->SetUniform1f("emissiveParam", m_MaterialParam.Emissive);
 }
  
 void Material::Unbind() const noexcept

@@ -88,33 +88,32 @@ vec4 blur9(sampler2D image, vec2 uv, vec2 resolution, vec2 direction) {
 void main()
 {
   vec4 outputColor = texture(u_Source, UV).rgba;
-  if (u_Stage == 0) // Threshold
-  {
-    outputColor = Threshold(outputColor, UV);
-  }
-  else if (u_Stage == 1) // Downsampling
-  {
-    outputColor = DownsampleBox13Tap(UV);
-  }
-  else if (u_Stage == 2) // Blur
-  {
-    outputColor = blur9(u_Source, UV, u_SourceSize, u_BlurDirection);
-  }
-  else if (u_Stage == 3) // Copy
-  {
-    outputColor = texture(u_Source, UV);
-  }
-  else if (u_Stage == 4) // Upsampling + combine
-  {
-    outputColor += Upsample(UV) / 2.0;
-  }
-  else if (u_Stage == 5) // Final combine
-  {
-    outputColor += texture(u_Source2, UV);
+  // if (u_Stage == 0) // Threshold
+  // {
+  //   outputColor = Threshold(outputColor, UV);
+  // }
+  // else if (u_Stage == 1) // Downsampling
+  // {
+  //   outputColor = DownsampleBox13Tap(UV);
+  // }
+  // else if (u_Stage == 2) // Blur
+  // {
+  //   outputColor = blur9(u_Source, UV, u_SourceSize, u_BlurDirection);
+  // }
+  // else if (u_Stage == 3) // Copy
+  // {
+  //   outputColor = texture(u_Source, UV);
+  // }
+  // else if (u_Stage == 4) // Upsampling + combine
+  // {
+  //   outputColor += Upsample(UV) / 2.0;
+  // }
+  // else if (u_Stage == 5) // Final combine
+  // {
+  //   outputColor += texture(u_Source2, UV);
 
-    vec3 color = outputColor.rgb;
-    outputColor = vec4(color, 1.0);//vec4(acesOperator(outputColor.rgb), 1.0f);
-  }
+  //   vec3 color = outputColor.rgb;
+  //   outputColor = vec4(color, 1.0);//vec4(acesOperator(outputColor.rgb), 1.0f);
+  // }
   FragColor = outputColor;
-  FragColor = vec4(1, 0, 1, 0);
 }

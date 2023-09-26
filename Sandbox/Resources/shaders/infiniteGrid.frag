@@ -11,10 +11,10 @@ float gridSize = 70.0;
 float gridCellSize = 2;
 
 // color of thin lines
-vec4 gridColorThin = vec4(0.6, 0.6, 0.6, 0.8);
+vec4 gridColorThin = vec4(0.1, 0.1, 0.1, 1.0);
 
 // color of thick lines (every tenth line)
-vec4 gridColorThick = vec4(0.4, 0.4, 0.4, 0.8);
+vec4 gridColorThick = vec4(0.1, 0.1, 0.1, 1.0);
 
 // minimum number of pixels between cell lines before LOD switch should occur. 
 const float gridMinPixelsBetweenCells = 2.0;
@@ -55,7 +55,7 @@ vec4 gridColor(vec2 uv, vec2 camPos)
 	float lod2 = lod1 * 10.0;
 
 	// each anti-aliased line covers up to 4 pixels
-	dudv *= 2.0;
+	dudv *= 3.0;
 
 	// Update grid coordinates for subsequent alpha calculations (centers each anti-aliased line)
   uv += dudv / 2.0F;

@@ -1,8 +1,7 @@
 Scene: Untitled
 Environment:
-  SkyType: Skybox HDR
-  AmbientColor: [1, 1, 1, 1]
-  HDRIHandle: 16082765807972036144
+  SkyType: Clear Color
+  AmbientColor: [0, 0, 0, 1]
   SurfaceRadius: 6360000
   AtmosphereRadius: 6380000
   RayleighScattering: [5.80000005e-06, 1.35e-05, 3.3100001e-05]
@@ -47,4 +46,22 @@ Entities:
       LocalScale: [1, 1, 1]
     MeshComponent:
       Handle: 3386080780721564564
+      MaterialHandle: 0
+  - Entity: 740341420470332309
+    TagComponent:
+      Tag: Mesh
+    ParentComponent:
+      Parent: 5693201969179316588
+      HasParent: false
+      Children:
+        []
+    TransformComponent:
+      Translation: [0, 3.05203962, 2.54332089]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      LocalTranslation: [0, 0, 0]
+      LocalRotation: [0, 0, 0]
+      LocalScale: [1, 1, 1]
+    MeshComponent:
+      Handle: 14120982221456302503
       MaterialHandle: 0

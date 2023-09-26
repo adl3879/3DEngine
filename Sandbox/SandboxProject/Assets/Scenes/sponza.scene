@@ -1,8 +1,7 @@
 Scene: Untitled
 Environment:
-  SkyType: Skybox HDR
+  SkyType: Procedural Sky
   AmbientColor: [1, 1, 1, 1]
-  HDRIHandle: 9260198605517721820
   SurfaceRadius: 6360000
   AtmosphereRadius: 6380000
   RayleighScattering: [5.80000005e-06, 1.35e-05, 3.3100001e-05]
@@ -20,9 +19,9 @@ Entities:
       Children:
         []
     TransformComponent:
-      Translation: [0.873216748, 0.615194559, -0.0644126087]
-      Rotation: [-3.14159274, 0.18859598, -3.14159274]
-      Scale: [0.194076747, 0.181902021, 0.181901902]
+      Translation: [0.876592338, 0.615194559, -0.0186485928]
+      Rotation: [-3.14159274, 0.188595429, -3.14159274]
+      Scale: [0.194076195, 0.181902021, 0.18190138]
       LocalTranslation: [0, 0, 0]
       LocalRotation: [0, 0, 0]
       LocalScale: [1, 1, 1]
@@ -38,14 +37,14 @@ Entities:
       Children:
         - 16958323301758071396
     TransformComponent:
-      Translation: [0.873216748, 0.615194559, -0.0644126087]
-      Rotation: [-3.14159203, 1.49716413, -3.14159203]
-      Scale: [0.194076762, 0.181902021, 0.181901917]
+      Translation: [0.876592338, 0.615194559, -0.0186485928]
+      Rotation: [-3.14159203, 1.49716496, -3.14159203]
+      Scale: [0.194076195, 0.181902021, 0.18190138]
       LocalTranslation: [0, 0, 0]
       LocalRotation: [0, 0, 0]
       LocalScale: [1, 1, 1]
     MeshComponent:
-      Handle: 4998439887420060200
+      Handle: 14120982221456302503
       MaterialHandle: 0
   - Entity: 6418186308163185553
     TagComponent:
@@ -65,7 +64,7 @@ Entities:
     DirectionalLightComponent:
       Enabled: true
       Color: [0.993846178, 0.993846178, 0.993846178]
-      AmbientIntensity: 10.3999996
+      AmbientIntensity: 5.80000019
   - Entity: 16347091876983879294
     TagComponent:
       Tag: Mesh
@@ -75,7 +74,7 @@ Entities:
       Children:
         []
     TransformComponent:
-      Translation: [0, 0.193774462, 0]
+      Translation: [0, 0.193774462, 0.180340901]
       Rotation: [0, 0, 0]
       Scale: [0.00270001404, 0.00270001404, 0.0029563359]
       LocalTranslation: [0, 0, 0]
@@ -84,3 +83,22 @@ Entities:
     MeshComponent:
       Handle: 1981949544312548204
       MaterialHandle: 0
+  - Entity: 2014476786741849632
+    TagComponent:
+      Tag: Point Light 2
+    ParentComponent:
+      Parent: 8656705332485802060
+      HasParent: false
+      Children:
+        []
+    TransformComponent:
+      Translation: [-1.19778287, 0.446184754, 0.126896933]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      LocalTranslation: [0, 0, 0]
+      LocalRotation: [0, 0, 0]
+      LocalScale: [1, 1, 1]
+    PointLightComponent:
+      Enabled: false
+      Color: [0.457060605, 0.972307682, 0.305155039]
+      AmbientIntensity: 27

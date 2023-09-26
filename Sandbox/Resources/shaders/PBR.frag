@@ -40,6 +40,7 @@ uniform vec3 albedoParam;
 uniform float metallicParam;
 uniform float roughnessParam;
 uniform float aoParam;
+uniform float emissiveParam;
 
 // IBL
 uniform samplerCube irradianceMap;
@@ -132,13 +133,16 @@ vec3 calcReflectanceEquation(vec3 L, vec3 V, vec3 N, vec3 albedo, float metallic
     return (kD * albedo / PI + specular) * NdotL;
 }
 
-void main() {    
+void main() {
     // material parameters from textures
     vec3 albedo = albedoParam;
     if (hasAlbedoMap == 1) {
         albedo =  pow(texture(albedoMap, TexCoords).rgb, vec3(2.2));
         albedo = mix(albedo, albedoParam, 0.5);
     }
+    // add emissive value to final albedo
+    albedo *= emissiveParam;
+
     float metallic = metallicParam;
     if (hasMetallicMap == 1) {
         metallic = texture(metallicMap, TexCoords).r;
@@ -227,10 +231,10 @@ void main() {
 
     color = color / (color + vec3(1.0));
     
-    const float gamma = 2.2;
-    color = vec3(1.0) - exp(-color * 1);
-    // gamma correct
-    color = pow(color, vec3(1.0 / gamma));
+    // const float gamma = 2.2;
+    // color = vec3(1.0) - exp(-color * 1);
+    // // gamma correct
+    // color = pow(color, vec3(1.0 / gamma));
 
     //color = mix(color, normal, 1);
 
@@ -238,10 +242,12 @@ void main() {
 
     EntityId = entityId;
 
-    float brightness = dot(color, vec3(0.2126, 0.7152, 0.0722));
-    if (brightness > 1.0) {
-        BrightColor = vec4(color, 1.0);
-    } else {
-        BrightColor = vec4(0.0, 0.0, 0.0, 1.0);
-    }
+    BrightColor = FragColor;
+
+    // float brightness = dot(color, vec3(0.2126, 0.7152, 0.0722));
+    // if (brightness > 1.0) {
+    //     BrightColor = vec4(color, 1.0);
+    // } else {
+    //     BrightColor = vec4(0.0, 0.0, 0.0, 1.0);
+    // }
 }

@@ -1,6 +1,7 @@
 #include "Framebuffer.h"
 
 #include <glad/glad.h>
+#include "Log.h"
 
 namespace Engine
 {
@@ -32,7 +33,7 @@ Framebuffer::~Framebuffer() {}
 
 Texture2DRef Framebuffer::GetTexture(unsigned int attachment)
 {
-	return m_Textures[(int)attachment];
+	return m_Textures[attachment];
 }
 
 void Framebuffer::SetTexture(Texture2DRef texture, unsigned int attachment)
@@ -73,6 +74,7 @@ void Framebuffer::Bind()
 
     glBindFramebuffer(GL_FRAMEBUFFER, m_FramebufferID);
     glViewport(0, 0, m_Size.x, m_Size.y);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 void Framebuffer::Unbind() { glBindFramebuffer(GL_FRAMEBUFFER, 0); }

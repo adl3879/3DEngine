@@ -19,6 +19,8 @@ struct Mesh
     void Draw(Shader *shader, bool bindMaterials);
     void Clear();
 
+	void SetHandle(AssetHandle h) { MaterialHandle = h; }
+
     auto GetTriangleCount() const { return IndexCount / 3; }
 
     const std::size_t IndexCount;
@@ -29,7 +31,7 @@ struct Mesh
     VertexArray VAO;
 
     AssetHandle DefaultMaterialHandle; // default material
-	AssetHandle MaterialHandle; // material override
+	AssetHandle MaterialHandle = 0; // material override
 
     unsigned int VBOs[5];
 

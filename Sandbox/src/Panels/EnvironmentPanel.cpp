@@ -11,6 +11,7 @@ EnvironmentPanel::EnvironmentPanel() {}
 void EnvironmentPanel::OnImGuiRender()
 {
     auto environment = m_Context->GetEnvironment();
+
     ImGui::Begin("Environment");
     _collapsingHeaderStyle();
     if (ImGui::CollapsingHeader("Sky"))
@@ -64,6 +65,14 @@ void EnvironmentPanel::OnImGuiRender()
             _drawVec3Control("Mie Scattering", environment->ProceduralSkybox->MieScattering);
         }
     }
+
+	_collapsingHeaderStyle();
+	if (ImGui::CollapsingHeader("Bloom"))
+	{
+		ImGui::Checkbox(_labelPrefix("Enabled"), &environment->BloomEnabled);
+		ImGui::DragFloat(_labelPrefix("Intensity"), &environment->BloomIntensity, 0.01f, 0.0f, 0.0f, "%.2f");
+		ImGui::DragFloat(_labelPrefix("Exposure"), &environment->Exposure, 0.01f, 0.0f, 0.0f, "%.2f");
+	}
     ImGui::End();
 }
 } // namespace Engine

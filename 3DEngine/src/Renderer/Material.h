@@ -21,6 +21,8 @@ struct MaterialData
     glm::vec3 Normal = glm::vec3(0.0f);
     float Metallic = 0.0f;
     float Roughness = 0.9f;
+
+	float Emissive = 1.0;
 };
 
 enum ParameterType
@@ -71,6 +73,7 @@ class Material : public Asset
     void SetTexture(ParameterType type, AssetHandle textureHandle);
     void SetMaterialParam(ParameterType type, std::any param);
     void SetUseNormalMap(bool useNormalMap) { m_UseNormalMap = useNormalMap; }
+    void SetEmissiveValue(float value) { m_MaterialParam.Emissive = value; }
 
   public:
     std::string Name;

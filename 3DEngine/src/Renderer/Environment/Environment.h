@@ -28,8 +28,10 @@ class Environment
     SkyLightRef SkyboxHDR;
     ProceduralSkyRef ProceduralSkybox;
 
+	BloomRendererRef Bloom;
 	bool BloomEnabled = true;
-    BloomRef BloomEffect;
+	float Exposure = 1.2f;
+	float BloomIntensity = 0.04f;
 };
 
 static std::string SkyTypeToString(SkyType type)

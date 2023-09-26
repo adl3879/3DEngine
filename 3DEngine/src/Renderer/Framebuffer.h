@@ -57,5 +57,6 @@ class Framebuffer
     Texture2DRef m_Texture;
     bool m_HasRenderBuffer = false;
 };
+
 using FramebufferRef = std::shared_ptr<Framebuffer>;
 } // namespace Engine

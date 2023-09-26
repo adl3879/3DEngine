@@ -18,7 +18,7 @@ class ProceduralSky
     float AtmosphereRadius = 6380e3f;
     glm::vec3 RayleighScattering = glm::vec3(58e-7f, 135e-7f, 331e-7f);
     glm::vec3 MieScattering = glm::vec3(2e-5f);
-    float SunIntensity = 2.0;
+    float SunIntensity = 0.3;
 
     glm::vec3 CenterPoint = glm::vec3(0.f, -SurfaceRadius, 0.f);
     glm::vec3 SunDirection = glm::vec3(0.20000f, 0.95917f, 0.20000f);

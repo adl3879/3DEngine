@@ -1,49 +1,49 @@
 Scene: Untitled
 Environment:
-  SkyType: Procedural Sky
-  AmbientColor: [1, 1, 1, 1]
+  SkyType: Clear Color
+  AmbientColor: [0, 0, 0, 1]
   SurfaceRadius: 6360000
   AtmosphereRadius: 6380000
   RayleighScattering: [5.80000005e-06, 1.35e-05, 3.3100001e-05]
   MieScattering: [1.99999995e-05, 1.99999995e-05, 1.99999995e-05]
-  SunIntensity: 2
+  SunIntensity: 0.300000012
   CenterPoint: [0, -6360000, 0]
   SunDirection: [0.200000003, 0.959169984, 0.200000003]
 Entities:
-  - Entity: 4147384860771181554
-    TagComponent:
-      Tag: Point Light 1
-    ParentComponent:
-      Parent: 6408289350453119396
-      HasParent: false
-      Children:
-        []
-    TransformComponent:
-      Translation: [0, 1.55281925, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-      LocalTranslation: [0, 0, 0]
-      LocalRotation: [0, 0, 0]
-      LocalScale: [1, 1, 1]
-    PointLightComponent:
-      Enabled: true
-      Color: [0.780322731, 0.740108848, 0.93230772]
-      AmbientIntensity: 11.8000002
-  - Entity: 2496004703442245832
+  - Entity: 7915598961528579174
     TagComponent:
       Tag: Mesh
     ParentComponent:
-      Parent: 5494814005532068044
+      Parent: 12946259729782805411
       HasParent: false
       Children:
         []
     TransformComponent:
-      Translation: [0, 0.333570957, 0]
+      Translation: [0, 0, 0]
       Rotation: [0, 0, 0]
-      Scale: [10.0891991, 0.216988653, 10.4177551]
+      Scale: [1, 1, 1]
       LocalTranslation: [0, 0, 0]
       LocalRotation: [0, 0, 0]
       LocalScale: [1, 1, 1]
     MeshComponent:
       Handle: 7965377243735506135
       MaterialHandle: 0
+  - Entity: 7030737615781274526
+    TagComponent:
+      Tag: Directional Light
+    ParentComponent:
+      Parent: 7871269066337022268
+      HasParent: false
+      Children:
+        []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [2.06366014, -0.623144746, -0.774150312]
+      Scale: [0.999999881, 1, 1.00000036]
+      LocalTranslation: [0, 0, 0]
+      LocalRotation: [0, 0, 0]
+      LocalScale: [1, 1, 1]
+    DirectionalLightComponent:
+      Enabled: true
+      Color: [1, 1, 1]
+      AmbientIntensity: 5.4000001
