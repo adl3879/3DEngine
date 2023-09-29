@@ -13,5 +13,6 @@ class HDRIImporter
 {
   public:
     static TextureHDRIRef ImportHDRI(AssetHandle handle, const AssetMetadata &metadata);
+	static TextureHDRIRef LoadHDRI(const std::filesystem::path &path);
 };
 } // namespace Engine

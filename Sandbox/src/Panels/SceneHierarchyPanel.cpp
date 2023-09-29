@@ -308,7 +308,7 @@ void SceneHierarchyPanel::DrawComponents(Entity entity)
             auto modelEntity = entity.GetComponent<MeshComponent>();
             ModelRef model = modelEntity.ModelResource ? modelEntity.ModelResource
                                                           : AssetManager::GetAsset<Model>(entityComponent.Handle);
-            const auto &material = AssetManager::GetAsset<Material>(entityComponent.MaterialHandle);
+            //const auto &material = AssetManager::GetAsset<Material>(entityComponent.MaterialHandle);
             if (model != nullptr)
             {
                 if (ImGui::TreeNodeEx((void *)typeid(MeshComponent).hash_code(), ImGuiTreeNodeFlags_DefaultOpen,
@@ -329,7 +329,7 @@ void SceneHierarchyPanel::DrawComponents(Entity entity)
                         if (ImGui::BeginPopupContextItem())
                         {
                             // TODO: check if payload is a handle or a path, if path, convert to handle by loading asset
-                            if (ImGui::MenuItem(ICON_FA_TRASH_RESTORE "   Remove")) entityComponent.MaterialHandle = 0;
+                            //if (ImGui::MenuItem(ICON_FA_TRASH_RESTORE "   Remove")) entityComponent.MaterialHandle = 0;
                             if (ImGui::MenuItem(ICON_FA_EDIT "   Open Material Editor"))
                             {
                                 /*auto handle = entityComponent.MaterialHandle ? entityComponent.MaterialHandle
@@ -795,12 +795,38 @@ void SceneHierarchyPanel::OnImGuiRender()
     ImGui::Begin("Scene Hierarchy");
     if (m_Context)
     {
+		if (ImGui::Button(ICON_FA_PLUS)) ImGui::OpenPopup("addEntity");
+        ImGui::SameLine();
+
+        ImGui::PushItemWidth(-1.0f);
+        static char searchStr[128] = "";
+        ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(5, 5));
+        ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 10.0f);
+        ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(0.05f, 0.05f, 0.05f, 0.54f));
+        if (ImGui::InputTextWithHint("##Search", ICON_FA_SEARCH "  Search", searchStr, IM_ARRAYSIZE(searchStr)))
+        {
+			//Search(searchStr);
+        }
+        ImGui::PopStyleColor();
+        ImGui::PopStyleVar(2);
+		ImGui::PopItemWidth();
+
         // Right-click on blank space
         if (ImGui::BeginPopupContextWindow())
         {
             CreateEntityPopup();
             ImGui::EndPopup();
         }
+
+		if (ImGui::BeginPopup("addEntity"))
+		{
+            CreateEntityPopup();
+            ImGui::EndPopup();
+		}
+
+		ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 10);
+		//ImGui::Separator();
+        //ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 10);
 
         // Add padding around the list
 		m_Context->m_Registry.each(

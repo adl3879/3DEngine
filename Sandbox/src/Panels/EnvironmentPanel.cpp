@@ -3,6 +3,7 @@
 #include <imgui.h>
 #include "ImGuiHelpers.h"
 #include "AssetManager.h"
+#include "Log.h"
 
 namespace Engine
 {
@@ -40,10 +41,11 @@ void EnvironmentPanel::OnImGuiRender()
             {
                 if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
                 {
-                    const char *handleStr = (const char *)payload->Data;
-                    AssetHandle handle = std::stoull(handleStr);
-                    m_Context->GetEnvironment()->SkyboxHDR = std::make_shared<SkyLight>();
-                    m_Context->GetEnvironment()->SkyboxHDR->Init(handle, 2048);
+                    const char *hdrPath = (const char *)payload->Data;
+                    if (Utils::GetAssetTypeFromExtension(hdrPath) == AssetType::SkyLight)
+                    {
+                        m_Context->GetEnvironment()->SkyboxHDR = AssetManager::GetAsset<SkyLight>(hdrPath);
+                    }
                 }
                 ImGui::EndDragDropTarget();
             }

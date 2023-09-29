@@ -6,6 +6,7 @@ in vec2 TexCoords;
 
 uniform sampler2D scene;
 uniform sampler2D bloomBlur;
+uniform sampler2D outlineTexture;
 uniform float exposure;
 uniform float bloomStrength = 0.04f;
 uniform int bloomEnabled;
@@ -20,7 +21,9 @@ vec3 bloom()
 {
   vec3 hdrColor = texture(scene, TexCoords).rgb;
   vec3 bloomColor = texture(bloomBlur, TexCoords).rgb;
-  return mix(hdrColor, bloomColor, bloomStrength); // linear interpolation
+  //return mix(hdrColor, bloomColor, bloomStrength); // linear interpolation
+  
+  return hdrColor + bloomColor * bloomStrength; // additive blending
 }
 
 void main()
@@ -38,7 +41,9 @@ void main()
   const float gamma = 2.2;
   result = pow(result, vec3(1.0 / gamma));
   
-  FragColor = vec4(result, 1.0);
+  vec4 outlineColor = texture(outlineTexture, TexCoords);
 
-  //FragColor = texture(bloomBlur, TexCoords);
+  FragColor = mix(vec4(result, 1.0), outlineColor, outlineColor.a);
+
+  //FragColor = texture(scene, TexCoords);
 }

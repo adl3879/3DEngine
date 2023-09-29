@@ -30,5 +30,7 @@ class SceneRenderer
 
 	FramebufferRef m_HDRBuffer;
     FramebufferRef m_ShadingBuffer;
+	FramebufferRef m_OutlineBuffer;
+    FramebufferRef m_Edge;
 };
 } // namespace Engine

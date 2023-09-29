@@ -28,7 +28,7 @@ void ImGuiLayer::OnAttach()
     auto windowState = InputManager::Instance().GetWindowState();
     io.DisplaySize = ImVec2(windowState.Width, windowState.Height);
 
-    float fontSize = 24.0f;
+    float fontSize = 26.0f;
     io.Fonts->AddFontFromFileTTF("Resources/fonts/IBM_Plex_Sans/IBMPlexSans-Bold.ttf", fontSize);
     io.FontDefault = io.Fonts->AddFontFromFileTTF("Resources/fonts/IBM_Plex_Sans/IBMPlexSans-Regular.ttf", fontSize);
 

@@ -258,7 +258,7 @@ static void SerializeEntity(YAML::Emitter &out, Entity entity)
 
         auto &meshComponent = entity.GetComponent<MeshComponent>();
         out << YAML::Key << "Handle" << YAML::Value << meshComponent.Handle;
-        out << YAML::Key << "MaterialHandle" << YAML::Value << meshComponent.MaterialHandle;
+        //out << YAML::Key << "MaterialHandle" << YAML::Value << meshComponent.MaterialHandle;
 
         out << YAML::EndMap; // MeshComponent
     }
@@ -403,8 +403,7 @@ bool SceneSerializer::Deserialize(const std::string &filepath)
 
         if (SkyTypeFromString(skyType) == SkyType::SkyboxHDR)
         {
-            m_Scene->GetEnvironment()->SkyboxHDR = std::make_shared<SkyLight>();
-            m_Scene->GetEnvironment()->SkyboxHDR->Init(hdriHandle, 2048);
+            m_Scene->GetEnvironment()->SkyboxHDR = AssetManager::GetAsset<SkyLight>(hdriHandle);
         }
 
         if (SkyTypeFromString(skyType) == SkyType::ProceduralSky)
@@ -532,10 +531,10 @@ bool SceneSerializer::Deserialize(const std::string &filepath)
             if (modelComponent)
             {
                 auto handle = modelComponent["Handle"].as<uint64_t>();
-                auto materialHandle = modelComponent["MaterialHandle"].as<uint64_t>();
+                //auto materialHandle = modelComponent["MaterialHandle"].as<uint64_t>();
                 auto &mesh = deserializedEntity.AddComponent<MeshComponent>();
                 mesh.Handle = handle;
-                mesh.MaterialHandle = materialHandle;
+                //mesh.MaterialHandle = materialHandle;
             }
 
             auto directionalLightComponent = entity["DirectionalLightComponent"];

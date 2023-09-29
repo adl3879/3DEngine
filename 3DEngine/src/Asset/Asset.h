@@ -22,6 +22,7 @@ enum class AssetType : uint16_t
     Script,
     Scene,
     Prefab,
+	SkyLight,
 };
 
 std::string_view AssetTypeToString(AssetType type);

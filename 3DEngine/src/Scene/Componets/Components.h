@@ -110,7 +110,7 @@ struct TransformComponent
 struct MeshComponent
 {
     AssetHandle Handle = 0;
-    AssetHandle MaterialHandle = 0;
+    std::vector<AssetHandle> MaterialHandles;
 
     // only for built-in meshes
     ModelRef ModelResource = nullptr;

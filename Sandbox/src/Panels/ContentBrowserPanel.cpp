@@ -65,8 +65,8 @@ void ContentBrowserPanel::OnImGuiRender()
 {
     ImGui::Begin("Content Browser");
 
-    static float padding = 50.0f;
-    static float thumbnailSize = 160.0f;
+    static float padding = 40.0f;
+    static float thumbnailSize = 150.0f;
     float cellSize = thumbnailSize + padding;
 
     float panelWidth = ImGui::GetContentRegionAvail().x;
@@ -74,9 +74,21 @@ void ContentBrowserPanel::OnImGuiRender()
     int columnCount = (int)(panelWidth / cellSize);
     if (columnCount < 1) columnCount = 1;
 
+    ImGui::PushStyleColor(ImGuiCol_ChildBg, ImVec4(0.05f, 0.05f, 0.05f, 0.54f));
     ImGui::BeginChild("Directory Tree", ImVec2(dirTreeWidth, 0), true, ImGuiWindowFlags_HorizontalScrollbar);
-    DisplayFileHierarchy(m_BaseDirectory);
-    ImGui::EndChild();
+    if (ImGui::TreeNodeEx(ICON_FA_HOME "  Root Directory", ImGuiTreeNodeFlags_DefaultOpen))
+    {
+        if (ImGui::IsItemClicked())
+        {
+            m_CurrentDirectory = m_BaseDirectory;
+            m_NodeStack.clear();
+        }
+        DisplayFileHierarchy(m_BaseDirectory);
+        ImGui::TreePop();
+    }
+    
+	ImGui::EndChild();
+	ImGui::PopStyleColor();
 
     ImGui::SameLine();
 
@@ -128,10 +140,12 @@ void ContentBrowserPanel::OnImGuiRender()
    
 	ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(5, 5));
 	ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 10.0f);
+	ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(0.05f, 0.05f, 0.05f, 0.54f));
 	if (ImGui::InputTextWithHint("##Search", ICON_FA_SEARCH  "  Search", searchStr, IM_ARRAYSIZE(searchStr)))
 	{
 		Search(searchStr);
 	}
+	ImGui::PopStyleColor();
 	ImGui::PopStyleVar(2);
 
 	ImGui::PopItemWidth();
@@ -278,8 +292,6 @@ void ContentBrowserPanel::OnImGuiRender()
 		}
     }
 
-    // ImGui::SliderFloat("Thumbnail Size", &thumbnailSize, 16, 512);
-    // ImGui::SliderFloat("Padding", &padding, 0, 32);
     ImGui::Columns(1);
     ImGui::EndChild();
 
@@ -291,15 +303,12 @@ void ContentBrowserPanel::OnImGuiRender()
 
 void ContentBrowserPanel::DisplayFileHierarchy(const std::filesystem::path &directory)
 {
-    // TODO: sync with the file system so that they open the same directory
     namespace fs = std::filesystem;
     if (!fs::exists(directory) || !fs::is_directory(directory)) return;
 
     for (auto &directoryEntry : std::filesystem::directory_iterator(directory))
     {
         const fs::path &entryPath = directoryEntry.path();
-
-		if (entryPath.stem() == "AssetRegistry") continue;
 
         // Get the hash of the node label
         std::size_t labelHash = std::hash<std::string>{}(entryPath.filename().string());
@@ -309,10 +318,38 @@ void ContentBrowserPanel::DisplayFileHierarchy(const std::filesystem::path &dire
         if (fs::is_directory(entryPath))
         {
             auto path = entryPath.filename().string();
-            auto flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick;
+            int flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick;
+
+			// check if entryPath is a child of m_CurrentDirectory
+			if (m_CurrentDirectory == entryPath)
+            {
+				flags |= ImGuiTreeNodeFlags_Selected;
+            }
+
+			// check if entryPath is a leaf folder
+			bool isLeaf = true;
+			for (const auto& p : fs::recursive_directory_iterator(entryPath))
+			{
+				if (p.is_directory())
+				{
+					isLeaf = false;
+					break;
+				}
+			}
+            if (isLeaf) flags |= ImGuiTreeNodeFlags_Leaf;
+			
+			// change selection color
+            ImGui::PushStyleColor(ImGuiCol_HeaderHovered, ImVec4(0.925f, 0.75f, 0.4666f, 0.6f));
+            ImGui::PushStyleColor(ImGuiCol_HeaderActive, ImVec4(0.925f, 0.75f, 0.4666f, 0.6f));
+			ImGui::PushStyleColor(ImGuiCol_Header, ImVec4(0.925f, 0.75f, 0.4666f, 0.6f));
+
             bool treeNodeOpen = ImGui::TreeNodeEx(
-                path.c_str(), flags, !isOpen ? ICON_FA_FOLDER "  %s" : ICON_FA_FOLDER_OPEN "  %s", path.c_str());
-            // if (entryPath == m_CurrentDirectory) treeNodeOpen = true;
+                path.c_str(), flags, !isOpen || isLeaf ? ICON_FA_FOLDER "  %s" : ICON_FA_FOLDER_OPEN "  %s", path.c_str());
+
+            ImGui::PopStyleColor(3);
+
+			// if treenode is selected
+            if (ImGui::IsItemClicked()) m_CurrentDirectory = entryPath;
 
             if (treeNodeOpen)
             {
@@ -320,24 +357,7 @@ void ContentBrowserPanel::DisplayFileHierarchy(const std::filesystem::path &dire
                 DisplayFileHierarchy(entryPath);
                 ImGui::TreePop();
             }
-            else
-                isOpen = false;
-        }
-        else if (fs::is_regular_file(entryPath))
-        {
-            ImGui::TreeNodeEx(entryPath.filename().string().c_str(), ImGuiTreeNodeFlags_Leaf, ICON_FA_FILE "  %s",
-                              entryPath.filename().string().c_str());
-
-            if (ImGui::BeginPopupContextItem())
-            {
-                if (ImGui::MenuItem(ICON_FA_FILE_IMPORT "   Import"))
-                {
-                    auto relativePath = std::filesystem::relative(entryPath, Project::GetAssetDirectory());
-                    AssetManager::ImportAsset(relativePath);
-                }
-                ImGui::EndPopup();
-            }
-            ImGui::TreePop();
+            else isOpen = false;
         }
     }
 }
@@ -401,7 +421,7 @@ void ContentBrowserPanel::Search(const std::string &query)
 void ContentBrowserPanel::DrawFileAssetBrowser(std::filesystem::directory_entry directoryEntry) 
 {
     static float padding = 50.0f;
-    static float thumbnailSize = 160.0f;
+    static float thumbnailSize = 120.0f;
     float cellSize = thumbnailSize + padding;
 
     float panelWidth = ImGui::GetContentRegionAvail().x;
@@ -434,7 +454,9 @@ void ContentBrowserPanel::DrawFileAssetBrowser(std::filesystem::directory_entry 
     }
 
     ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
-    ImGui::ImageButton((void *)(intptr_t)icon->GetRendererID(), {thumbnailSize, thumbnailSize}, {0, 1}, {1, 0});
+	//ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(thumbnailSize / 2, thumbnailSize / 2));
+    ImGui::ImageButton((void *)(intptr_t)icon->GetRendererID(), {thumbnailSize, thumbnailSize}, {0, 1}, {1, 0}, 15);
+	//ImGui::PopStyleVar();
     ImGui::PopStyleColor();
 
     if (!directoryEntry.is_directory() && ImGui::BeginPopupContextItem())
@@ -449,9 +471,8 @@ void ContentBrowserPanel::DrawFileAssetBrowser(std::filesystem::directory_entry 
 
     if (ImGui::BeginDragDropSource())
     {
-        auto assetHandle = AssetManager::GetAssetHandleFromPath(relativePath).ToString();
-        ImGui::SetDragDropPayload("CONTENT_BROWSER_ITEM", assetHandle.c_str(),
-                                    (strlen(assetHandle.c_str()) + 1) * sizeof(char *));
+        ImGui::SetDragDropPayload("CONTENT_BROWSER_ITEM", relativePath.string().c_str(),
+                                    (strlen(relativePath.string().c_str()) + 1) * sizeof(char *));
         ImGui::Button(relativePath.string().c_str());
         ImGui::EndDragDropSource();
     }

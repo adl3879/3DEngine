@@ -4,21 +4,23 @@
 #include <memory>
 #include <unordered_map>
 #include <glm/glm.hpp>
+#include <filesystem>
 
 #include "Shader.h"
 #include "VertexArray.h"
 #include "Camera.h"
 #include "Asset.h"
+#include "Log.h"
 
 namespace Engine
 {
-class SkyLight
+class SkyLight  : public Asset
 {
   public:
     SkyLight() = default;
     virtual ~SkyLight() = default;
 
-    void Init(AssetHandle handle, const std::size_t resolution);
+    void Init(const std::filesystem::path &hdrPath, const std::size_t resolution);
     void Destroy();
     void Render(const glm::mat4 &projection, const glm::mat4 &view);
 
@@ -28,10 +30,17 @@ class SkyLight
     unsigned int GetBrdfLUT() { return m_BrdfLUT; }
     const std::unordered_map<std::string, ShaderPtr> &GetShaders() { return m_Shaders; }
 
-    AssetHandle GetHandle() const { return m_EnvironmentHandle; }
+    AssetHandle GetHandle() const { 
+		LOG_CORE_TRACE(Handle);
+		return Handle;
+	}
 
     void BindMaps(int slot = 0) const;
     void UnBindMaps() const;
+
+  public:
+    static AssetType GetStaticType() { return AssetType::SkyLight; }
+    virtual AssetType GetType() const override { return GetStaticType(); }
 
   private:
     void SetupCube();
@@ -48,7 +57,6 @@ class SkyLight
     VertexArray m_QuadVAO{};
 
     std::unordered_map<std::string, ShaderPtr> m_Shaders;
-    AssetHandle m_EnvironmentHandle;
 };
 
 using SkyLightRef = std::shared_ptr<SkyLight>;

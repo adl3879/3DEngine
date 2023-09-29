@@ -148,13 +148,12 @@ AssetRef EditorAssetManager::GetAsset(AssetHandle handle)
 AssetRef EditorAssetManager::GetAsset(const std::filesystem::path &path)
 {
     AssetHandle handle = GetAssetHandleFromPath(path);
-    if (handle == 0) handle = ImportAsset(path);
-
     return GetAsset(handle);
 }
 
 AssetHandle EditorAssetManager::GetAssetHandleFromPath(const std::filesystem::path &path)
 {
+	// can make faster by using a map of path to handle
     for (auto &[handle, metadata] : m_AssetRegistry)
     {
         if (metadata.FilePath == path) return handle;

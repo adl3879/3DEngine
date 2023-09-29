@@ -7,9 +7,12 @@
 #include "InfiniteGrid.h"
 #include "Renderer.h"
 #include "PostFX/Bloom.h"
+#include "PostFX/Bloom2.h"
 
 namespace Engine
 {
+std::unique_ptr<Bloom> bloom = std::make_unique<Bloom>(5);
+
 void SceneRenderer::Init()
 {
     glEnable(GL_DEBUG_OUTPUT);
@@ -23,18 +26,23 @@ void SceneRenderer::Init()
 
     auto pbrShader = ShaderManager::GetShader("Resources/shaders/PBR");
     pbrShader->SetUniform1i("irradianceMap", 0);
-    pbrShader->SetUniform1i("prefilterMap", 1);
+    pbrShader->SetUniform1i("prefilterMap", 1); 
     pbrShader->SetUniform1i("brdfLUT", 2);
-
-   /* m_ShadingBuffer = std::make_shared<Framebuffer>(true, glm::vec2(1280, 720));
-    m_ShadingBuffer->SetTexture(std::make_shared<Texture2D>(ImageFormat::Depth), GL_DEPTH_ATTACHMENT);*/
 
 	// hdr buffer
 	m_ShadingBuffer = std::make_shared<Framebuffer>(false, glm::vec2(1280, 720));
     m_ShadingBuffer->SetTexture(std::make_shared<Texture2D>(ImageFormat::Depth), GL_DEPTH_ATTACHMENT);
 	m_ShadingBuffer->SetTexture(std::make_shared<Texture2D>(ImageFormat::RGB16), GL_COLOR_ATTACHMENT0);
 	m_ShadingBuffer->SetTexture(std::make_shared<Texture2D>(ImageFormat::RED_INTEGER), GL_COLOR_ATTACHMENT1);
-	m_ShadingBuffer->SetTexture(std::make_shared<Texture2D>(ImageFormat::RGB16), GL_COLOR_ATTACHMENT2);
+
+	// outline
+    m_OutlineBuffer = std::make_shared<Framebuffer>(false, glm::vec2(1280, 720));
+	m_OutlineBuffer->SetTexture(std::make_shared<Texture2D>(ImageFormat::Depth), GL_DEPTH_ATTACHMENT);
+    m_OutlineBuffer->SetTexture(std::make_shared<Texture2D>(ImageFormat::RGBA8), GL_COLOR_ATTACHMENT0);
+	
+	m_Edge = std::make_shared<Framebuffer>(false, glm::vec2(1280, 720));
+    m_Edge->SetTexture(std::make_shared<Texture2D>(ImageFormat::Depth), GL_DEPTH_ATTACHMENT);
+    m_Edge->SetTexture(std::make_shared<Texture2D>(ImageFormat::RGBA8), GL_COLOR_ATTACHMENT0);
 
 	InfiniteGrid::Init();
     Renderer::Init();
@@ -90,15 +98,56 @@ void SceneRenderer::RenderScene(Scene &scene, Framebuffer &framebuffer)
     Renderer::Flush(pbrShader, false);
 	if (!scene.IsPlaying()) InfiniteGrid::Draw(m_Projection, m_View, m_CameraPosition);
 
+	// weird?
 	auto mouse = scene.GetViewportMousePos();
     int pixel = m_ShadingBuffer->ReadPixel(1, mouse);
     scene.SetHoveredEntity((entt::entity)(pixel - 1));
 
 	m_ShadingBuffer->Unbind();
 
-	m_ShadingBuffer->QueueResize(framebuffer.GetSize());
+	// outline
+	auto outlineShader = ShaderManager::GetShader("Resources/shaders/outline");
+    outlineShader->Bind();
+    outlineShader->SetUniformMatrix4fv("projectionViewMatrix", m_Projection * m_View);
 
-	Texture2DRef finalOutput = m_ShadingBuffer->GetTexture(GL_COLOR_ATTACHMENT0);
+	m_OutlineBuffer->Bind();
+    for (auto &e : view)
+    {
+        if (e != scene.GetSelectedEntity()) continue;
+		auto [model, transform] = view.get<MeshComponent, TransformComponent>(e);
+
+		if (model.Handle == 0 && model.ModelResource == nullptr) continue;
+
+		const auto &entityModel =
+			model.ModelResource ? model.ModelResource : AssetManager::GetAsset<Model>(model.Handle);
+
+		for (auto &mesh : entityModel->GetMeshes())
+		{
+			auto trnsfrm = transform.GetTransform();
+			Renderer::SubmitMesh(std::make_shared<Mesh>(mesh), trnsfrm, (int)e);
+		}
+    }
+	Renderer::Flush(outlineShader, false);
+    m_OutlineBuffer->Unbind();
+
+	m_Edge->Bind();
+	auto edgeShader = ShaderManager::GetShader("Resources/shaders/edgeDetection");
+	edgeShader->Bind();
+	edgeShader->SetUniform1i("mask", 0);
+	// dimensions
+    edgeShader->SetUniform1f("width", m_Edge->GetSize().x);
+	edgeShader->SetUniform1f("height", m_Edge->GetSize().y);
+	
+	m_OutlineBuffer->GetTexture()->Bind(0);
+
+	Renderer::DrawQuad();
+	m_Edge->Unbind();
+
+	m_ShadingBuffer->QueueResize(framebuffer.GetSize());
+	m_OutlineBuffer->QueueResize(framebuffer.GetSize());
+	m_Edge->QueueResize(framebuffer.GetSize());
+
+	Texture2DRef finalOutput = m_ShadingBuffer->GetTexture();
 	environment->Bloom->RenderBloomTexture(finalOutput->GetRendererID(), 0.005);
 
 	framebuffer.Bind();
@@ -107,6 +156,7 @@ void SceneRenderer::RenderScene(Scene &scene, Framebuffer &framebuffer)
     quadShader->Bind();
     quadShader->SetUniform1i("scene", 0);
     quadShader->SetUniform1i("bloomBlur", 1);
+    quadShader->SetUniform1i("outlineTexture", 2);
 
     quadShader->SetUniform1f("bloomStrength", environment->BloomIntensity);
     quadShader->SetUniform1f("exposure", environment->Exposure);
@@ -114,16 +164,17 @@ void SceneRenderer::RenderScene(Scene &scene, Framebuffer &framebuffer)
 
 	finalOutput->Bind(0);
 	glBindTextureUnit(1, environment->Bloom->BloomTexture());
+	m_Edge->GetTexture()->Bind(2);
 
-    Renderer::DrawQuad();
-
+    Renderer::DrawQuad(); 
+	 
 	framebuffer.Unbind();
 }
 
 void SceneRenderer::ShadowPass(Scene &scene) {}
 
 void SceneRenderer::EnvironmentPass(Scene &scene) 
-{
+{ 
     auto environment = scene.GetEnvironment();
 
     if (environment->CurrentSkyType == SkyType::ClearColor)

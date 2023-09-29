@@ -7,18 +7,17 @@
 #include "AssetManager.h"
 #include "ShaderManager.h"
 #include "TextureHDRI.h"
+#include "HDRIImporter.h"
 
 namespace Engine
 {
 // TODO: Allow blurring of cubemap
-void SkyLight::Init(AssetHandle handle, const std::size_t resolution)
+void SkyLight::Init(const std::filesystem::path &hdrPath, const std::size_t resolution)
 {
-    m_EnvironmentHandle = handle;
     glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
-
     SetupCube();
 
-    TextureHDRIRef hdrTexture = AssetManager::GetAsset<TextureHDRI>(handle);
+	TextureHDRIRef hdrTexture = HDRIImporter::LoadHDRI(hdrPath);
     if (hdrTexture == nullptr) return;
 
     m_Shaders["equirectangularToCubemap"] =
@@ -63,12 +62,12 @@ void SkyLight::Init(AssetHandle handle, const std::size_t resolution)
 
     glm::mat4 captureProjection = glm::perspective(glm::radians(90.0f), 1.0f, 0.1f, 10.0f);
     glm::mat4 captureViews[] = {
-        glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f)),
-        glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f)),
-        glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f)),
-        glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f)),
-        glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, -1.0f, 0.0f)),
-        glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, -1.0f, 0.0f))};
+        glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f),	glm::vec3(0.0f, -1.0f, 0.0f)),
+        glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(-1.0f, 0.0f, 0.0f),	glm::vec3(0.0f, -1.0f, 0.0f)),
+        glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f),	glm::vec3(0.0f, 0.0f, 1.0f)),
+        glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f),	glm::vec3(0.0f, 0.0f, -1.0f)),
+        glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f),	glm::vec3(0.0f, -1.0f, 0.0f)),
+        glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f),	glm::vec3(0.0f, -1.0f, 0.0f))};
 
     // convert HDR equirectangular environment map to cubemap equivalent
     equirectangularToCubemapShader->Bind();

@@ -1,6 +1,7 @@
 #include "Bloom.h"
 
 #include "Renderer.h"
+#include "Log.h"
 
 #include <glad/glad.h>
 
@@ -13,11 +14,11 @@ bool BloomRenderer::Init(unsigned int windowWidth, unsigned int windowHeight)
     mSrcViewportSizeFloat = glm::vec2((float)windowWidth, (float)windowHeight);
 
     // Framebuffer
-    const unsigned int num_bloom_mips = 5; // Experiment with this value
+    const unsigned int num_bloom_mips = 10; // Experiment with this value
     bool status = mFBO.Init(windowWidth, windowHeight, num_bloom_mips);
     if (!status)
     {
-        //std::cerr << "Failed to initialize bloom FBO - cannot create bloom renderer!\n";
+		LOG_CORE_ERROR("Failed to initialize bloom FBO - cannot create bloom renderer!");
         return false;
     }
 
@@ -130,5 +131,4 @@ void BloomRenderer::RenderUpsamples(float filterRadius)
 
     mUpsampleShader->Unbind();
 }
-
 } // namespace Engine

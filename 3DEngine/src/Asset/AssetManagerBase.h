@@ -48,7 +48,7 @@ static AssetType GetAssetTypeFromExtension(const std::filesystem::path &path)
     else if (extension == materialExtension)
         return AssetType::Material;
     else if (extension == skyLightExtension)
-        return AssetType::TextureHDRI;
+        return AssetType::SkyLight;
     else
         return AssetType::None;
 }
