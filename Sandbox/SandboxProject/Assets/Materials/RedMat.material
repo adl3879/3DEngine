@@ -1,0 +1,11 @@
+Material:
+  Name: ""
+  AlbedoColor: [0.15030539, 0.498461545, 0]
+  Metallic: 0
+  Roughness: 0.92900002
+  AO: 1
+  AlbedoMap: 0
+  MetallicMap: 0
+  RoughnessMap: 0
+  AOMap: 0
+  NormalMap: 0

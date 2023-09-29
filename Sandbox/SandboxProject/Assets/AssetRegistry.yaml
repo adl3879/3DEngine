@@ -1,0 +1,13 @@
+AssetRegistry:
+  - Handle: 9714859716754876985
+    FilePath: Textures/hdr/puresky.hdr
+    Type: AssetType::SkyLight
+  - Handle: 10029343109414798325
+    FilePath: Textures/hdr/skyLight.hdr
+    Type: AssetType::SkyLight
+  - Handle: 12915618021030849998
+    FilePath: Textures/hdr/Stonewall_Ref.hdr
+    Type: AssetType::SkyLight
+  - Handle: 17514114571549259816
+    FilePath: Textures/hdr/ballroom_4k.hdr
+    Type: AssetType::SkyLight
