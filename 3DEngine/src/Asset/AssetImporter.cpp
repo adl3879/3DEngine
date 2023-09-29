@@ -9,6 +9,7 @@
 #include "SceneImporter.h"
 #include "MaterialImporter.h"
 #include "HDRIImporter.h"
+#include "SkyLightImporter.h"
 
 namespace Engine
 {
@@ -16,10 +17,10 @@ using AssetImportFn = std::function<AssetRef(AssetHandle, const AssetMetadata &)
 
 static std::unordered_map<AssetType, AssetImportFn> s_AssetImportFns = {
     {AssetType::Texture2D, TextureImporter::ImportTexture2D},
-    {AssetType::TextureHDRI, HDRIImporter::ImportHDRI},
     {AssetType::Mesh, MeshImporter::ImportMesh},
     {AssetType::Scene, SceneImporter::ImportScene},
     {AssetType::Material, MaterialImporter::ImportMaterial},
+	{AssetType::SkyLight, SkyLightImporter::ImportSkyLight},
 };
 
 AssetRef AssetImporter::ImportAsset(AssetHandle handle, const AssetMetadata &metadata)
