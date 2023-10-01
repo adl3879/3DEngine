@@ -1,13 +1,34 @@
 AssetRegistry:
-  - Handle: 9714859716754876985
-    FilePath: Textures/hdr/puresky.hdr
+  - Handle: 841001324403422579
+    FilePath: Models/ScifiHelment/SciFiHelmet_Normal.png
+    Type: AssetType::Texture2D
+  - Handle: 3599094910311310209
+    FilePath: Models/ScifiHelment/SciFiHelmet_MetallicRoughness.png
+    Type: AssetType::Texture2D
+  - Handle: 3665661369623653193
+    FilePath: Materials/helmet.material
+    Type: AssetType::Material
+  - Handle: 7173811087350262617
+    FilePath: Textures/hdr/ballroom_4k.hdr
     Type: AssetType::SkyLight
-  - Handle: 10029343109414798325
+  - Handle: 9025215151775488898
     FilePath: Textures/hdr/skyLight.hdr
     Type: AssetType::SkyLight
-  - Handle: 12915618021030849998
-    FilePath: Textures/hdr/Stonewall_Ref.hdr
-    Type: AssetType::SkyLight
-  - Handle: 17514114571549259816
-    FilePath: Textures/hdr/ballroom_4k.hdr
+  - Handle: 9341792963926230390
+    FilePath: Models/ScifiHelment/SciFiHelmet_BaseColor.png
+    Type: AssetType::Texture2D
+  - Handle: 12851553850516286361
+    FilePath: Scenes/shiny_helmet.material
+    Type: AssetType::Material
+  - Handle: 13411511752208729974
+    FilePath: Models/ScifiHelment/SciFiHelmet_AmbientOcclusion.png
+    Type: AssetType::Texture2D
+  - Handle: 14153901584894239449
+    FilePath: Models/ScifiHelment/SciFiHelmet.gltf
+    Type: AssetType::Mesh
+  - Handle: 17162677733896637482
+    FilePath: Scenes/helmet2.scene
+    Type: AssetType::Scene
+  - Handle: 18130279306217325161
+    FilePath: Textures/hdr/puresky.hdr
     Type: AssetType::SkyLight

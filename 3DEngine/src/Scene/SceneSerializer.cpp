@@ -156,7 +156,7 @@ static void SerializeEntity(YAML::Emitter &out, Entity entity)
 		out << YAML::Key << "HasParent" << YAML::Value << parent.HasParent;
 		out << YAML::Key << "Children" << YAML::Value;
 		out << YAML::BeginSeq; // Children
-		for (auto child : parent.Children) out << child;
+		for (const auto &child : parent.Children) out << child;
         out << YAML::EndSeq; // Children
 
 		out << YAML::EndMap; // ParentComponent
@@ -258,7 +258,13 @@ static void SerializeEntity(YAML::Emitter &out, Entity entity)
 
         auto &meshComponent = entity.GetComponent<MeshComponent>();
         out << YAML::Key << "Handle" << YAML::Value << meshComponent.Handle;
-        //out << YAML::Key << "MaterialHandle" << YAML::Value << meshComponent.MaterialHandle;
+        out << YAML::Key << "MaterialHandles";
+        out << YAML::BeginMap; // MaterialHandles
+		for (const auto& [key, val] : meshComponent.MaterialHandles)
+		{
+            out << YAML::Key << key << YAML::Value << val;
+		}
+        out << YAML::EndMap; // Materialandles
 
         out << YAML::EndMap; // MeshComponent
     }
@@ -325,7 +331,7 @@ void SceneSerializer::Serialize(const std::string &filepath)
 
     if (environment->SkyboxHDR)
     {
-        out << YAML::Key << "HDRIHandle" << YAML::Value << environment->SkyboxHDR->GetHandle();
+        out << YAML::Key << "HDRIHandle" << YAML::Value << environment->SkyboxHDR->Handle;
     }
     if (environment->ProceduralSkybox)
     {
@@ -335,7 +341,7 @@ void SceneSerializer::Serialize(const std::string &filepath)
         out << YAML::Key << "MieScattering" << YAML::Value << environment->ProceduralSkybox->MieScattering;
         out << YAML::Key << "SunIntensity" << YAML::Value << environment->ProceduralSkybox->SunIntensity;
         out << YAML::Key << "CenterPoint" << YAML::Value << environment->ProceduralSkybox->CenterPoint;
-        out << YAML::Key << "SunDirection" << YAML::Value << environment->ProceduralSkybox->SunDirection;
+        out << YAML::Key << "SunDirection" << YAML::Value << environment->ProceduralSkybox->SunDirection;  
     }
     out << YAML::EndMap;
 
@@ -531,9 +537,19 @@ bool SceneSerializer::Deserialize(const std::string &filepath)
             if (modelComponent)
             {
                 auto handle = modelComponent["Handle"].as<uint64_t>();
-                //auto materialHandle = modelComponent["MaterialHandle"].as<uint64_t>();
                 auto &mesh = deserializedEntity.AddComponent<MeshComponent>();
                 mesh.Handle = handle;
+
+				ModelRef model = AssetManager::GetAsset<Model>(mesh.Handle);
+                auto materialHandles = modelComponent["MaterialHandles"];
+				for (auto handle : materialHandles)
+				{
+                    auto key = handle.first.as<std::string>();
+					auto value = handle.second.as<uint64_t>();
+                    model->SetMaterialHandle(std::stoi(key), value);
+					mesh.MaterialHandles[std::stoi(key)] = value;
+				}
+
                 //mesh.MaterialHandle = materialHandle;
             }
 

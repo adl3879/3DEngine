@@ -30,7 +30,7 @@ void EnvironmentPanel::OnImGuiRender()
         if (environment->CurrentSkyType == SkyType::SkyboxHDR)
         {
             std::string skyName;
-            skyName = environment->SkyboxHDR ? AssetManager::GetAssetName(environment->SkyboxHDR->GetHandle())
+            skyName = environment->SkyboxHDR ? environment->SkyboxHDR->GetHdrPath().stem().string()
                           : "No Skybox HDR";
             
 			ImGui::PushStyleVar(ImGuiStyleVar_ButtonTextAlign, ImVec2(0.0f, 0.5f));

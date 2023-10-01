@@ -11,15 +11,8 @@
 
 namespace Engine
 {
-// TODO: Allow blurring of cubemap
-void SkyLight::Init(const std::filesystem::path &hdrPath, const std::size_t resolution)
+SkyLight::SkyLight(const std::filesystem::path &hdrPath) : m_HdrPath(hdrPath) 
 {
-    glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
-    SetupCube();
-
-	TextureHDRIRef hdrTexture = HDRIImporter::LoadHDRI(hdrPath);
-    if (hdrTexture == nullptr) return;
-
     m_Shaders["equirectangularToCubemap"] =
         std::make_shared<Shader>("Resources/shaders/cubemap.vert", "Resources/shaders/cubemapConverter.frag");
     m_Shaders["cubemap"] =
@@ -29,13 +22,23 @@ void SkyLight::Init(const std::filesystem::path &hdrPath, const std::size_t reso
     m_Shaders["prefilter"] =
         std::make_shared<Shader>("Resources/shaders/cubemap.vert", "Resources/shaders/prefilter.frag");
     m_Shaders["brdf"] = std::make_shared<Shader>("Resources/shaders/brdf.vert", "Resources/shaders/brdf.frag");
+}
+
+// TODO: Allow blurring of cubemap
+void SkyLight::Init(const std::size_t resolution)
+{
+    glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
+    SetupCube();
+
+	TextureHDRIRef hdrTexture = HDRIImporter::LoadHDRI(m_HdrPath);
+    if (hdrTexture == nullptr) return;
 
     m_Shaders["cubemap"]->SetUniform1i("environmentMap", 0);
 
-    auto equirectangularToCubemapShader = m_Shaders["equirectangularToCubemap"];
-    auto irradianceShader = m_Shaders["irradiance"];
-    auto prefilterShader = m_Shaders["prefilter"];
-    auto brdfShader = m_Shaders["brdf"];
+    ShaderPtr equirectangularToCubemapShader = m_Shaders["equirectangularToCubemap"];
+    ShaderPtr irradianceShader = m_Shaders["irradiance"];
+    ShaderPtr prefilterShader = m_Shaders["prefilter"];
+    ShaderPtr brdfShader = m_Shaders["brdf"];
 
     unsigned int captureFBO, captureRBO;
     glGenFramebuffers(1, &captureFBO);
@@ -167,8 +170,8 @@ void SkyLight::Init(const std::filesystem::path &hdrPath, const std::size_t reso
     prefilterShader->SetUniform1i("environmentMap", 0);
     prefilterShader->SetUniformMatrix4fv("projection", captureProjection);
 
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_CUBE_MAP, m_EnvCubemap);
+    /*glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, m_EnvCubemap);*/
 
     glBindFramebuffer(GL_FRAMEBUFFER, captureFBO);
     const unsigned int maxMipLevels = 5;
@@ -243,6 +246,9 @@ void SkyLight::Render(const glm::mat4 &projection, const glm::mat4 &view)
     cubemap->Bind();
     cubemap->SetUniformMatrix4fv("projection", projection);
     cubemap->SetUniformMatrix4fv("view", view);
+
+	glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, m_EnvCubemap);
 
     RenderCube();
 }

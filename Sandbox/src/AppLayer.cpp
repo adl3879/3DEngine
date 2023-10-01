@@ -181,9 +181,9 @@ void AppLayer::OnImGuiRender()
     {
         if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
         {
-            const char *handle = (const char *)payload->Data;
+            const char *path = (const char *)payload->Data;
             ResetScene("");
-            m_EditorScene = AssetManager::GetAsset<Scene>(std::stoull(handle));
+            m_EditorScene = AssetManager::GetAsset<Scene>(path);
             m_SceneHierarchyPanel.SetContext(m_EditorScene);
             m_EnvironmentPanel.SetContext(m_EditorScene);
 

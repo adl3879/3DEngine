@@ -14,8 +14,8 @@
 
 namespace Engine
 {
-Model::Model(const std::filesystem::path &path, const bool flipWindingOrder, const bool loadMaterial)
-    : m_Path(path.string())
+Model::Model(std::filesystem::path path, const bool flipWindingOrder, const bool loadMaterial)
+    : m_Path(path.parent_path())
 {
     // auto fullPath = Utils::Path::GetAbsolute(std::string(path));
     if (!LoadModel(path, flipWindingOrder, loadMaterial)) LOG_CORE_ERROR("Failed to load model: {0}", path.string());
@@ -35,7 +35,7 @@ void Model::Delete()
     for (auto &mesh : m_Meshes) mesh.VAO.Delete();
 }
 
-void Model::SetMeshHandle(int id, AssetHandle handle)
+void Model::SetMaterialHandle(int id, AssetHandle handle)
 {
 	m_Meshes[id].MaterialHandle = handle;
 }
@@ -70,9 +70,6 @@ bool Model::LoadModel(const std::filesystem::path &path, const bool flipWindingO
 
         return false;
     }
-
-    m_Path = path.string().substr(0, path.string().find_last_of('/'));
-    m_Path += "/";
 
     ProcessNode(scene->mRootNode, scene, loadMaterial);
 
@@ -175,11 +172,9 @@ Mesh Model::ProcessMesh(aiMesh *mesh, const aiScene *scene, const bool loadMater
             // TODO: This is a bit of a hack, make it more performant
             for (auto i = 0; i < materialPaths.size(); ++i)
             {
+                auto u = GetRelativeTexturePath(materialPaths[i]);
                 auto handle = AssetManager::GetAssetHandleFromPath(GetRelativeTexturePath(materialPaths[i]));
-                if (handle > 0)
-                    materialHandles[i] = handle;
-                else
-                    materialHandles[i] = AssetManager::ImportAsset(GetRelativeTexturePath(materialPaths[i]));
+                materialHandles[i] = handle;
             }
 
             MaterialRef material = std::make_shared<Material>();
@@ -196,10 +191,10 @@ Mesh Model::ProcessMesh(aiMesh *mesh, const aiScene *scene, const bool loadMater
     return Mesh(vertices, indices, 0);
 }
 
-std::filesystem::path Model::GetRelativeTexturePath(const aiString &path) const
+std::filesystem::path Model::GetRelativeTexturePath(const aiString &path)
 {
     if (path.C_Str()[0] != '\0')
-        return std::filesystem::relative(m_Path + path.C_Str(), Project::GetAssetDirectory());
+        return std::filesystem::relative(m_Path / path.C_Str(), Project::GetAssetDirectory());
     else
         return std::filesystem::path();
 }

@@ -9,7 +9,6 @@ namespace Engine
 {
 Texture2DRef TextureImporter::ImportTexture2D(AssetHandle handle, const AssetMetadata &metadata)
 {
-    auto p = Project::GetAssetDirectory() / metadata.FilePath;
     return LoadTexture2D(Project::GetAssetDirectory() / metadata.FilePath);
 }
 

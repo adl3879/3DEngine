@@ -1,0 +1,11 @@
+Material:
+  Name: SciFiHelmet
+  AlbedoColor: [0, 0, 0]
+  Metallic: 0.67900002
+  Roughness: 0.60799998
+  AO: 1
+  AlbedoMap: 9341792963926230390
+  MetallicMap: 3599094910311310209
+  RoughnessMap: 3599094910311310209
+  AOMap: 13411511752208729974
+  NormalMap: 841001324403422579

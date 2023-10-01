@@ -25,10 +25,10 @@ class Environment
     SkyType CurrentSkyType = SkyType::ProceduralSky;
 
     glm::vec4 AmbientColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
-    SkyLightRef SkyboxHDR;
-    ProceduralSkyRef ProceduralSkybox;
+    SkyLightRef SkyboxHDR = nullptr;
+    ProceduralSkyRef ProceduralSkybox = nullptr;
 
-	BloomRendererRef Bloom;
+	BloomRendererRef Bloom = nullptr;
 	bool BloomEnabled = true;
 	float Exposure = 1.2f;
 	float BloomIntensity = 0.04f;

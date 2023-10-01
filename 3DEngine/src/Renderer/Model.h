@@ -19,7 +19,7 @@ class Model : public Asset
 {
   public:
     Model() = default;
-    Model(const std::filesystem::path &path, const bool flipWindingOrder = false, const bool loadMaterial = true);
+    Model(std::filesystem::path path, const bool flipWindingOrder = false, const bool loadMaterial = true);
     Model(const std::vector<Vertex> &vertices, std::vector<unsigned int> &indices, AssetHandle materialHandle) noexcept;
     Model(const Mesh &mesh) noexcept;
     virtual ~Model() = default;
@@ -34,7 +34,7 @@ class Model : public Asset
 
     virtual AssetType GetType() const override { return AssetType::Mesh; }
 
-	void SetMeshHandle(int id, AssetHandle handle);
+	void SetMaterialHandle(int id, AssetHandle handle);
 
   private:
     std::vector<Mesh> m_Meshes;
@@ -44,10 +44,10 @@ class Model : public Asset
     void ProcessNode(aiNode *node, const aiScene *scene, const bool loadMaterial);
     Mesh ProcessMesh(aiMesh *mesh, const aiScene *scene, const bool loadMaterial);
 
-    std::filesystem::path GetRelativeTexturePath(const aiString &path) const;
+    std::filesystem::path GetRelativeTexturePath(const aiString &path);
 
   private:
-    std::string m_Path;
+    std::filesystem::path m_Path;
     size_t m_NumOfMaterials;
 };
 

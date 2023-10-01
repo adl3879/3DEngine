@@ -1,0 +1,54 @@
+Scene: Untitled
+Environment:
+  SkyType: Skybox HDR
+  AmbientColor: [1, 1, 1, 1]
+  BloomEnabled: false
+  Exposure: 1.20000005
+  BloomIntensity: 0.0399999991
+  HDRIHandle: 9025215151775488898
+  SurfaceRadius: 6360000
+  AtmosphereRadius: 6380000
+  RayleighScattering: [5.80000005e-06, 1.35e-05, 3.3100001e-05]
+  MieScattering: [1.99999995e-05, 1.99999995e-05, 1.99999995e-05]
+  SunIntensity: 0.300000012
+  CenterPoint: [0, -6360000, 0]
+  SunDirection: [0.200000003, 0.959169984, 0.200000003]
+Entities:
+  - Entity: 965770884099367701
+    TagComponent:
+      Tag: Mesh
+    ParentComponent:
+      Parent: 15570158968502740862
+      HasParent: false
+      Children:
+        []
+    TransformComponent:
+      Translation: [0, 1.2745018, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      LocalTranslation: [0, 0, 0]
+      LocalRotation: [0, 0, 0]
+      LocalScale: [1, 1, 1]
+    MeshComponent:
+      Handle: 14153901584894239449
+      MaterialHandles:
+        0: 3665661369623653193
+  - Entity: 15853032736334236282
+    TagComponent:
+      Tag: Directional Light
+    ParentComponent:
+      Parent: 11661706884506886079
+      HasParent: false
+      Children:
+        []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [-0.43634516, -0.789006531, -1.53866804]
+      Scale: [0.999999642, 0.99999994, 0.999999821]
+      LocalTranslation: [0, 0, 0]
+      LocalRotation: [0, 0, 0]
+      LocalScale: [1, 1, 1]
+    DirectionalLightComponent:
+      Enabled: true
+      Color: [1, 1, 1]
+      AmbientIntensity: 3.9000001

@@ -49,7 +49,9 @@ AssetHandle EditorAssetManager::AddAsset(AssetRef asset)
 {
     AssetHandle handle; // generates new asset
     AssetMetadata metadata;
+
     metadata.Type = asset->GetType();
+	metadata.Serializable = false;
     m_LoadedAssets[handle] = asset;
     m_AssetRegistry[handle] = metadata;
     return handle;
@@ -76,12 +78,15 @@ void EditorAssetManager::SerializeAssetRegistry()
         out << YAML::BeginSeq;
         for (const auto &[handle, metadata] : m_AssetRegistry)
         {
-            out << YAML::BeginMap;
-            out << YAML::Key << "Handle" << YAML::Value << handle;
-            std::string filepathStr = metadata.FilePath.generic_string();
-            out << YAML::Key << "FilePath" << YAML::Value << filepathStr;
-            out << YAML::Key << "Type" << YAML::Value << AssetTypeToString(metadata.Type);
-            out << YAML::EndMap;
+            if (metadata.Serializable)
+            {
+                out << YAML::BeginMap;
+                out << YAML::Key << "Handle" << YAML::Value << handle;
+                std::string filepathStr = metadata.FilePath.generic_string();
+                out << YAML::Key << "FilePath" << YAML::Value << filepathStr;
+                out << YAML::Key << "Type" << YAML::Value << AssetTypeToString(metadata.Type);
+                out << YAML::EndMap;
+            }
         }
         out << YAML::EndSeq;
         out << YAML::EndMap; // Root
@@ -159,7 +164,7 @@ AssetHandle EditorAssetManager::GetAssetHandleFromPath(const std::filesystem::pa
         if (metadata.FilePath == path) return handle;
     }
     // if it does not find it load it and return the handle
-    return ImportAsset(path);
+	return ImportAsset(path);
 }
 
 void EditorAssetManager::UnloadAsset(AssetHandle handle)

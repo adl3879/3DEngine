@@ -10,17 +10,16 @@
 #include "VertexArray.h"
 #include "Camera.h"
 #include "Asset.h"
-#include "Log.h"
 
 namespace Engine
 {
 class SkyLight  : public Asset
 {
   public:
-    SkyLight() = default;
+    SkyLight(const std::filesystem::path &hdrPath);
     virtual ~SkyLight() = default;
 
-    void Init(const std::filesystem::path &hdrPath, const std::size_t resolution);
+    void Init(const std::size_t resolution);
     void Destroy();
     void Render(const glm::mat4 &projection, const glm::mat4 &view);
 
@@ -30,13 +29,12 @@ class SkyLight  : public Asset
     unsigned int GetBrdfLUT() { return m_BrdfLUT; }
     const std::unordered_map<std::string, ShaderPtr> &GetShaders() { return m_Shaders; }
 
-    AssetHandle GetHandle() const { 
-		LOG_CORE_TRACE(Handle);
-		return Handle;
-	}
+    AssetHandle GetHandle() const { return Handle; }
 
     void BindMaps(int slot = 0) const;
     void UnBindMaps() const;
+
+	std::filesystem::path GetHdrPath() const { return m_HdrPath; }
 
   public:
     static AssetType GetStaticType() { return AssetType::SkyLight; }
@@ -57,6 +55,7 @@ class SkyLight  : public Asset
     VertexArray m_QuadVAO{};
 
     std::unordered_map<std::string, ShaderPtr> m_Shaders;
+    std::filesystem::path m_HdrPath;
 };
 
 using SkyLightRef = std::shared_ptr<SkyLight>;

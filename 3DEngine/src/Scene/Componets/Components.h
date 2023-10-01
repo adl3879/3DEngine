@@ -15,6 +15,7 @@
 
 #include <iostream>
 #include <memory>
+#include <unordered_map>
 
 namespace Engine
 {
@@ -110,7 +111,7 @@ struct TransformComponent
 struct MeshComponent
 {
     AssetHandle Handle = 0;
-    std::vector<AssetHandle> MaterialHandles;
+    std::unordered_map<uint32_t, AssetHandle> MaterialHandles;
 
     // only for built-in meshes
     ModelRef ModelResource = nullptr;
