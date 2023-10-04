@@ -14,6 +14,25 @@ Environment:
   CenterPoint: [0, -6360000, 0]
   SunDirection: [0.200000003, 0.959169984, 0.200000003]
 Entities:
+  - Entity: 10873298930197734224
+    TagComponent:
+      Tag: Mesh
+    ParentComponent:
+      Parent: 12864934677980199799
+      HasParent: false
+      Children:
+        []
+    TransformComponent:
+      Translation: [-1.99091923, 1.34930396, 1.66448915]
+      Rotation: [0, 0, 0]
+      Scale: [0.75999999, 0.75999999, 0.75999999]
+      LocalTranslation: [0, 0, 0]
+      LocalRotation: [0, 0, 0]
+      LocalScale: [1, 1, 1]
+    MeshComponent:
+      Handle: 13651608580584297652
+      MaterialHandles:
+        0: 17269953282650636160
   - Entity: 965770884099367701
     TagComponent:
       Tag: Mesh
@@ -23,7 +42,7 @@ Entities:
       Children:
         []
     TransformComponent:
-      Translation: [0, 1.2745018, 0]
+      Translation: [-5.96046448e-08, 1.69804847, 0]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
       LocalTranslation: [0, 0, 0]
@@ -52,3 +71,22 @@ Entities:
       Enabled: true
       Color: [1, 1, 1]
       AmbientIntensity: 3.9000001
+  - Entity: 6401651178576921065
+    TagComponent:
+      Tag: Mesh
+    ParentComponent:
+      Parent: 816221458106928804
+      HasParent: false
+      Children:
+        []
+    TransformComponent:
+      Translation: [0.202549368, 0.114150047, 0]
+      Rotation: [0, 0, 0]
+      Scale: [8.5294199, 0.07536605, 9.37717533]
+      LocalTranslation: [0, 0, 0]
+      LocalRotation: [0, 0, 0]
+      LocalScale: [1, 1, 1]
+    MeshComponent:
+      Handle: 16129188522535494883
+      MaterialHandles:
+        0: 2951509008381073663

@@ -24,6 +24,10 @@ static GLenum GetType(const RendererEnum &bufferType)
         case RendererEnum::DYNAMIC_DRAW: return GL_DYNAMIC_DRAW;
         case RendererEnum::STREAM_DRAW: return GL_STREAM_DRAW;
 		case RendererEnum::BLEND: return GL_BLEND;
+		case RendererEnum::CULL_FACE: return GL_CULL_FACE;
+		case RendererEnum::DEPTH_ATTACHMENT: return GL_DEPTH_ATTACHMENT;
+		case RendererEnum::COLOR_ATTACHMENT0: return GL_COLOR_ATTACHMENT0;
+		case RendererEnum::COLOR_ATTACHMENT1: return GL_COLOR_ATTACHMENT1;
     }
 
     return 0;

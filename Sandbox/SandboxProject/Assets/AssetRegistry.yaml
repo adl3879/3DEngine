@@ -1,6 +1,72 @@
 AssetRegistry:
+  - Handle: 6148487557239562
+    FilePath: Models/Sponza/5823059166183034438.jpg
+    Type: AssetType::Texture2D
+  - Handle: 70143196031676574
+    FilePath: Models/Sponza/3371964815757888145.jpg
+    Type: AssetType::Texture2D
+  - Handle: 161867492737030292
+    FilePath: Models/Sponza/8051790464816141987.jpg
+    Type: AssetType::Texture2D
+  - Handle: 196561359588216158
+    FilePath: Models/Sponza/4601176305987539675.jpg
+    Type: AssetType::Texture2D
+  - Handle: 271250746084563809
+    FilePath: Models/Sponza/11968150294050148237.jpg
+    Type: AssetType::Texture2D
+  - Handle: 293204233672397274
+    FilePath: Models/Sponza/332936164838540657.jpg
+    Type: AssetType::Texture2D
+  - Handle: 455496093463075980
+    FilePath: Materials/pp.material
+    Type: AssetType::Material
+  - Handle: 536804425717709314
+    FilePath: Models/Sponza/17556969131407844942.jpg
+    Type: AssetType::Texture2D
+  - Handle: 660256950754485085
+    FilePath: Models/boxTextured/CesiumLogoFlat.png
+    Type: AssetType::Texture2D
+  - Handle: 684611087757385170
+    FilePath: Models/Sponza/14170708867020035030.jpg
+    Type: AssetType::Texture2D
+  - Handle: 688082671911481219
+    FilePath: Models/Sponza/11490520546946913238.jpg
+    Type: AssetType::Texture2D
+  - Handle: 786298565344686565
+    FilePath: Models/Sponza/6047387724914829168.jpg
+    Type: AssetType::Texture2D
   - Handle: 841001324403422579
     FilePath: Models/ScifiHelment/SciFiHelmet_Normal.png
+    Type: AssetType::Texture2D
+  - Handle: 959291318409021432
+    FilePath: Models/Sponza/6667038893015345571.jpg
+    Type: AssetType::Texture2D
+  - Handle: 966267832679611958
+    FilePath: Materials/zhelmet.material
+    Type: AssetType::Material
+  - Handle: 1061476728279420906
+    FilePath: Models/Sponza/2374361008830720677.jpg
+    Type: AssetType::Texture2D
+  - Handle: 1529331716958027363
+    FilePath: Models/Sponza/8503262930880235456.jpg
+    Type: AssetType::Texture2D
+  - Handle: 2058058405846430039
+    FilePath: Textures/planks.png
+    Type: AssetType::Texture2D
+  - Handle: 2216392192833510787
+    FilePath: Models/Sponza/8006627369776289000.png
+    Type: AssetType::Texture2D
+  - Handle: 2709238929101386398
+    FilePath: Models/Sponza/5061699253647017043.png
+    Type: AssetType::Texture2D
+  - Handle: 2951509008381073663
+    FilePath: Materials/NewMaterial.material
+    Type: AssetType::Material
+  - Handle: 3245166179043056209
+    FilePath: Models/Sponza/7441062115984513793.jpg
+    Type: AssetType::Texture2D
+  - Handle: 3539184878233789407
+    FilePath: Models/Sponza/7268504077753552595.jpg
     Type: AssetType::Texture2D
   - Handle: 3599094910311310209
     FilePath: Models/ScifiHelment/SciFiHelmet_MetallicRoughness.png
@@ -8,27 +74,216 @@ AssetRegistry:
   - Handle: 3665661369623653193
     FilePath: Materials/helmet.material
     Type: AssetType::Material
+  - Handle: 3694607576216707722
+    FilePath: Models/Sponza/17876391417123941155.jpg
+    Type: AssetType::Texture2D
+  - Handle: 3919913007684088230
+    FilePath: Models/Sponza/11872827283454512094.jpg
+    Type: AssetType::Texture2D
+  - Handle: 4281195462266118206
+    FilePath: Materials/test.material
+    Type: AssetType::Material
+  - Handle: 4473141751168121514
+    FilePath: Models/Sponza/8481240838833932244.jpg
+    Type: AssetType::Texture2D
+  - Handle: 4615419541366943750
+    FilePath: Models/Sponza/Sponza.gltf
+    Type: AssetType::Mesh
+  - Handle: 4976193582728863185
+    FilePath: Models/Sponza/16275776544635328252.png
+    Type: AssetType::Texture2D
+  - Handle: 4993639765817977298
+    FilePath: Models/Sponza/3628158980083700836.jpg
+    Type: AssetType::Texture2D
+  - Handle: 5265080919083591473
+    FilePath: Models/Sponza/2051777328469649772.jpg
+    Type: AssetType::Texture2D
+  - Handle: 5593330600023715424
+    FilePath: Models/Sponza/1219024358953944284.jpg
+    Type: AssetType::Texture2D
+  - Handle: 5657579087024499060
+    FilePath: Models/Sponza/14650633544276105767.jpg
+    Type: AssetType::Texture2D
+  - Handle: 5803299734259056772
+    FilePath: Models/Sponza/6772804448157695701.jpg
+    Type: AssetType::Texture2D
+  - Handle: 5814285806088160379
+    FilePath: Models/Sponza/2185409758123873465.jpg
+    Type: AssetType::Texture2D
+  - Handle: 5886236845748960709
+    FilePath: Models/Sponza/4477655471536070370.jpg
+    Type: AssetType::Texture2D
+  - Handle: 5907953640278983559
+    FilePath: Scenes/sponza.scene
+    Type: AssetType::Scene
+  - Handle: 6195037364705423458
+    FilePath: Models/Sponza/755318871556304029.jpg
+    Type: AssetType::Texture2D
+  - Handle: 6629332303295634601
+    FilePath: Models/Sponza/16299174074766089871.jpg
+    Type: AssetType::Texture2D
+  - Handle: 6739537557996850757
+    FilePath: Models/Sponza/2411100444841994089.jpg
+    Type: AssetType::Texture2D
+  - Handle: 6788483534790159282
+    FilePath: Models/Sponza/8750083169368950601.jpg
+    Type: AssetType::Texture2D
+  - Handle: 6936153339602763286
+    FilePath: Models/Sponza/2299742237651021498.jpg
+    Type: AssetType::Texture2D
+  - Handle: 7080249238964596843
+    FilePath: Models/Sponza/6593109234861095314.jpg
+    Type: AssetType::Texture2D
   - Handle: 7173811087350262617
     FilePath: Textures/hdr/ballroom_4k.hdr
     Type: AssetType::SkyLight
+  - Handle: 7353160368416457652
+    FilePath: Models/Sponza/715093869573992647.jpg
+    Type: AssetType::Texture2D
+  - Handle: 7850535629515440136
+    FilePath: Models/Sponza/11474523244911310074.jpg
+    Type: AssetType::Texture2D
+  - Handle: 8077451248244901392
+    FilePath: Models/Sponza/7056944414013900257.jpg
+    Type: AssetType::Texture2D
+  - Handle: 8207561773807788945
+    FilePath: Models/Sponza/15295713303328085182.jpg
+    Type: AssetType::Texture2D
+  - Handle: 8465894470462377508
+    FilePath: Models/Sponza/6151467286084645207.jpg
+    Type: AssetType::Texture2D
+  - Handle: 8529432554998506347
+    FilePath: Models/Sponza/2775690330959970771.jpg
+    Type: AssetType::Texture2D
+  - Handle: 8583436982884622289
+    FilePath: Materials/shelmet.material
+    Type: AssetType::Material
+  - Handle: 8753306380957936794
+    FilePath: Materials/MM.material
+    Type: AssetType::Material
+  - Handle: 8902145360252096151
+    FilePath: Materials/TestMat.material
+    Type: AssetType::Material
   - Handle: 9025215151775488898
     FilePath: Textures/hdr/skyLight.hdr
     Type: AssetType::SkyLight
+  - Handle: 9099553942281210373
+    FilePath: Models/Sponza/8783994986360286082.jpg
+    Type: AssetType::Texture2D
+  - Handle: 9245007261050417569
+    FilePath: Materials/plank.material
+    Type: AssetType::Material
+  - Handle: 9279645765292526459
+    FilePath: Models/Sponza/14118779221266351425.jpg
+    Type: AssetType::Texture2D
   - Handle: 9341792963926230390
     FilePath: Models/ScifiHelment/SciFiHelmet_BaseColor.png
+    Type: AssetType::Texture2D
+  - Handle: 10017591557975166491
+    FilePath: Models/Sponza/7815564343179553343.jpg
+    Type: AssetType::Texture2D
+  - Handle: 10018217728371619845
+    FilePath: Models/Sponza/759203620573749278.jpg
+    Type: AssetType::Texture2D
+  - Handle: 10124340241975195694
+    FilePath: Models/Sponza/8114461559286000061.jpg
+    Type: AssetType::Texture2D
+  - Handle: 10637358794588873151
+    FilePath: Models/Sponza/9288698199695299068.jpg
+    Type: AssetType::Texture2D
+  - Handle: 11419112302770699703
+    FilePath: Models/Sponza/14267839433702832875.jpg
+    Type: AssetType::Texture2D
+  - Handle: 11421105775464740881
+    FilePath: Models/Sponza/3455394979645218238.jpg
+    Type: AssetType::Texture2D
+  - Handle: 11540702438951929378
+    FilePath: Models/Sponza/4910669866631290573.jpg
+    Type: AssetType::Texture2D
+  - Handle: 12011317523174933522
+    FilePath: Models/Sponza/13982482287905699490.jpg
+    Type: AssetType::Texture2D
+  - Handle: 12026307804139605318
+    FilePath: Models/Sponza/13824894030729245199.jpg
+    Type: AssetType::Texture2D
+  - Handle: 12206119999874204446
+    FilePath: Models/Sponza/8773302468495022225.jpg
+    Type: AssetType::Texture2D
+  - Handle: 12331469403057240513
+    FilePath: Models/Sponza/7645212358685992005.jpg
+    Type: AssetType::Texture2D
+  - Handle: 12454567453273618667
+    FilePath: Models/Sponza/3827035219084910048.jpg
+    Type: AssetType::Texture2D
+  - Handle: 12745996860818929380
+    FilePath: Models/Sponza/4871783166746854860.jpg
     Type: AssetType::Texture2D
   - Handle: 12851553850516286361
     FilePath: Scenes/shiny_helmet.material
     Type: AssetType::Material
+  - Handle: 12968258445663495767
+    FilePath: Models/Sponza/466164707995436622.jpg
+    Type: AssetType::Texture2D
   - Handle: 13411511752208729974
     FilePath: Models/ScifiHelment/SciFiHelmet_AmbientOcclusion.png
+    Type: AssetType::Texture2D
+  - Handle: 13436096839145060370
+    FilePath: Models/Sponza/9916269861720640319.jpg
+    Type: AssetType::Texture2D
+  - Handle: 13651608580584297652
+    FilePath: Models/Sphere/untitled.fbx
+    Type: AssetType::Mesh
+  - Handle: 13808049939698621595
+    FilePath: Models/Sponza/10388182081421875623.jpg
     Type: AssetType::Texture2D
   - Handle: 14153901584894239449
     FilePath: Models/ScifiHelment/SciFiHelmet.gltf
     Type: AssetType::Mesh
+  - Handle: 15684151063426960075
+    FilePath: Models/Sponza/2969916736137545357.jpg
+    Type: AssetType::Texture2D
+  - Handle: 16062891213296688891
+    FilePath: Models/Sponza/15722799267630235092.jpg
+    Type: AssetType::Texture2D
+  - Handle: 16129188522535494883
+    FilePath: Models/boxTextured/scene.gltf
+    Type: AssetType::Mesh
+  - Handle: 16315585669005395033
+    FilePath: Models/Sponza/13196865903111448057.jpg
+    Type: AssetType::Texture2D
+  - Handle: 16400650263679789890
+    FilePath: Models/Sponza/8747919177698443163.jpg
+    Type: AssetType::Texture2D
+  - Handle: 16756153801050849577
+    FilePath: Models/Sponza/12501374198249454378.jpg
+    Type: AssetType::Texture2D
+  - Handle: 16808329278065623082
+    FilePath: Models/Sponza/4675343432951571524.jpg
+    Type: AssetType::Texture2D
+  - Handle: 16853913441851970229
+    FilePath: Materials/Material2.material
+    Type: AssetType::Material
   - Handle: 17162677733896637482
     FilePath: Scenes/helmet2.scene
     Type: AssetType::Scene
+  - Handle: 17269574398777037043
+    FilePath: Models/Sponza/white.png
+    Type: AssetType::Texture2D
+  - Handle: 17269953282650636160
+    FilePath: Materials/RedMat.material
+    Type: AssetType::Material
+  - Handle: 17632299847810347027
+    FilePath: Models/Sponza/16885566240357350108.jpg
+    Type: AssetType::Texture2D
+  - Handle: 17702493327491992162
+    FilePath: Models/Sponza/4975155472559461469.jpg
+    Type: AssetType::Texture2D
+  - Handle: 17798336748619663294
+    FilePath: Models/Sponza/10381718147657362067.jpg
+    Type: AssetType::Texture2D
   - Handle: 18130279306217325161
     FilePath: Textures/hdr/puresky.hdr
     Type: AssetType::SkyLight
+  - Handle: 18303124696350920346
+    FilePath: Models/Sponza/5792855332885324923.jpg
+    Type: AssetType::Texture2D

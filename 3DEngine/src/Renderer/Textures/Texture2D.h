@@ -12,7 +12,7 @@ class Texture2D : public Texture
 	Texture2D();
     Texture2D(const TextureSpecification &specification, Buffer data);
     Texture2D(const TextureSpecification &specification);
-    Texture2D(ImageFormat format);
+    Texture2D(ImageFormat format, int with = 1, int height = 1);
     ~Texture2D();
 
     virtual void SetData(Buffer data) override;

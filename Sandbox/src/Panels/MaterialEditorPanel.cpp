@@ -74,8 +74,8 @@ void MaterialEditorPanel::OnImGuiRender()
         {
             if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
             {
-                const char *handle = (const char *)payload->Data;
-                material->SetTexture(ParameterType::ALBEDO, std::stoull(handle));
+                const char *path = (const char *)payload->Data;
+                material->SetTexture(ParameterType::ALBEDO, AssetManager::GetAssetHandleFromPath(path));
             }
             ImGui::EndDragDropTarget();
         }
@@ -87,8 +87,10 @@ void MaterialEditorPanel::OnImGuiRender()
         ImGui::SameLine();
 
         glm::vec3 color = material->GetMaterialData().Albedo;
-        ImGui::ColorEdit3("Color", glm::value_ptr(color), ImGuiColorEditFlags_NoInputs);
-        material->SetMaterialParam(ParameterType::ALBEDO, color);
+        if (ImGui::ColorEdit3("Color", glm::value_ptr(color), ImGuiColorEditFlags_NoInputs))
+        {
+            material->SetMaterialParam(ParameterType::ALBEDO, color);
+        }
 
 		ImGui::SameLine();
 		float emissiveValue = material->GetMaterialData().Emissive;
@@ -113,8 +115,8 @@ void MaterialEditorPanel::OnImGuiRender()
         {
             if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
             {
-                const char *handle = (const char *)payload->Data;
-                material->SetTexture(ParameterType::NORMAL, std::stoull(handle));
+                const char *path = (const char *)payload->Data;
+                material->SetTexture(ParameterType::NORMAL, AssetManager::GetAssetHandleFromPath(path));
             }
             ImGui::EndDragDropTarget();
         }
@@ -147,8 +149,8 @@ void MaterialEditorPanel::OnImGuiRender()
         {
             if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
             {
-                const char *handle = (const char *)payload->Data;
-                material->SetTexture(ParameterType::METALLIC, std::stoull(handle));
+                const char *path = (const char *)payload->Data;
+                material->SetTexture(ParameterType::METALLIC, AssetManager::GetAssetHandleFromPath(path));
             }
             ImGui::EndDragDropTarget();
         }
@@ -182,8 +184,8 @@ void MaterialEditorPanel::OnImGuiRender()
         {
             if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
             {
-                const char *handle = (const char *)payload->Data;
-                material->SetTexture(ParameterType::ROUGHNESS, std::stoull(handle));
+                const char *path = (const char *)payload->Data;
+                material->SetTexture(ParameterType::ROUGHNESS, AssetManager::GetAssetHandleFromPath(path));
             }
             ImGui::EndDragDropTarget();
         }
@@ -218,8 +220,8 @@ void MaterialEditorPanel::OnImGuiRender()
 		{
 			if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
 			{
-				const char *handle = (const char *)payload->Data;
-				material->SetTexture(ParameterType::AO, std::stoull(handle));
+				const char *path = (const char *)payload->Data;
+				material->SetTexture(ParameterType::AO, AssetManager::GetAssetHandleFromPath(path));
 			}
 			ImGui::EndDragDropTarget();
 		}

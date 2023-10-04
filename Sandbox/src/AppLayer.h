@@ -50,6 +50,10 @@ class AppLayer : public Layer
     void UI_Toolbar();
 
   private:
+    void DrawTransformControls(const char *icon, int type = -1);
+	bool m_IsControlPressed = false;
+
+  private:
     std::shared_ptr<Framebuffer> m_Framebuffer;
 
     EditorCamera m_EditorCamera;

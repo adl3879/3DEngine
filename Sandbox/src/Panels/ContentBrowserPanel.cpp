@@ -9,6 +9,7 @@
 #include "IconsFontAwesome5.h"
 #include "MaterialEditorPanel.h"
 #include "Utils/FileDialogs.h"
+#include "Misc/ThumbnailManager.h"
 
 #include <iostream>
 #include <fstream>
@@ -379,11 +380,12 @@ void ContentBrowserPanel::CreateFilePopup()
         if (ImGui::Button(ICON_FA_CHECK "  Save", ImVec2(100, 0)))
         {
             auto path = m_CurrentDirectory / name;
+			auto relativePath = std::filesystem::relative(path, Project::GetAssetDirectory());
             std::string extension = m_NewAssetType == AssetType::Scene      ? ".scene"
                                     : m_NewAssetType == AssetType::Material ? ".material"
                                                                             : "";
             std::ofstream file(path.string() + extension);
-            AssetManager::ImportAsset(path.string() + extension);
+            AssetManager::ImportAsset(relativePath.string() + extension);
             file.close();
             ImGui::CloseCurrentPopup();
         }
@@ -421,7 +423,7 @@ void ContentBrowserPanel::Search(const std::string &query)
 void ContentBrowserPanel::DrawFileAssetBrowser(std::filesystem::directory_entry directoryEntry) 
 {
     static float padding = 50.0f;
-    static float thumbnailSize = 120.0f;
+    static float thumbnailSize = 120.0f + 15;
     float cellSize = thumbnailSize + padding;
 
     float panelWidth = ImGui::GetContentRegionAvail().x;
@@ -442,6 +444,8 @@ void ContentBrowserPanel::DrawFileAssetBrowser(std::filesystem::directory_entry 
 
     /*if (path.extension() == ".png" || path.extension() == ".jpg" || path.extension() == ".jpeg")
 		icon = AssetManager::GetAsset<Texture2D>(relativePath);*/
+	if (path.extension() == ".material")
+		icon = ThumbnailManager::Get().GetThumbnail(relativePath);
 
     // only display Source folder of Scripts
     if (m_CurrentDirectory == Project::GetAssetDirectory() / "Scripts")
@@ -455,7 +459,7 @@ void ContentBrowserPanel::DrawFileAssetBrowser(std::filesystem::directory_entry 
 
     ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
 	//ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(thumbnailSize / 2, thumbnailSize / 2));
-    ImGui::ImageButton((void *)(intptr_t)icon->GetRendererID(), {thumbnailSize, thumbnailSize}, {0, 1}, {1, 0}, 15);
+    ImGui::ImageButton((void *)(intptr_t)icon->GetRendererID(), {thumbnailSize, thumbnailSize}, {0, 1}, {1, 0});
 	//ImGui::PopStyleVar();
     ImGui::PopStyleColor();
 

@@ -25,6 +25,7 @@ enum class RendererEnum
     DYNAMIC_DRAW,
     STREAM_DRAW,
 	BLEND,
+	CULL_FACE,
 };
 
 class RenderCommand

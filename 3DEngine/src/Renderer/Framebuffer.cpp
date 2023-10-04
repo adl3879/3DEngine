@@ -27,6 +27,12 @@ Framebuffer::Framebuffer(bool hasRenderBuffer, glm::vec2 size)
 
     // Unbind
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	// check if framebuffer is complete
+	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+	{
+		LOG_CORE_ERROR("Framebuffer is not complete!");
+	}
 }
 
 Framebuffer::~Framebuffer() {}
@@ -107,7 +113,7 @@ void Framebuffer::UpdateSize(glm::vec2 size)
         SetTexture(t.second, t.first);
     }
 
-    // Recreate render buffer
+    // Recreate render buffer 
     // TODO: move out render buffer.
     if (m_HasRenderBuffer)
     {

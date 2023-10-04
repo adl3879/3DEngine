@@ -735,17 +735,21 @@ Entity SceneHierarchyPanel::CreateEntityPopup()
     }
     if (ImGui::MenuItem(ICON_FA_LIGHTBULB "  Point Light"))
     {
+        static int count = 1;
         auto num = m_Context->GetLights()->GetNumPointLights() + 1;
-        entity = m_Context->CreateEntity("Point Light " + std::to_string(num));
-        entity.AddComponent<PointLightComponent>();
+        entity = m_Context->CreateEntity("Point Light");
+        auto &pc = entity.AddComponent<PointLightComponent>();
+        pc.Index = count++;
         m_SelectionContext = entity;
         return entity;
     }
     if (ImGui::MenuItem(ICON_FA_LIGHTBULB "  Spot Light"))
     {
+		static int count = 1;
         auto num = m_Context->GetLights()->GetNumSpotLights() + 1;
         entity = m_Context->CreateEntity("Spot Light " + std::to_string(num));
-        entity.AddComponent<SpotLightComponent>();
+        auto &sc = entity.AddComponent<SpotLightComponent>();
+		sc.Index = count++;
         m_SelectionContext = entity;
         return entity;
     }

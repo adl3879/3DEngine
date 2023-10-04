@@ -14,12 +14,9 @@ Mesh::Mesh(const std::vector<Vertex> &vertices, const std::vector<uint32_t> &ind
 
 void Mesh::Draw(Shader *shader, bool bindMaterials)
 {
-    //if (bindMaterials) Material->Bind(shader);
-
     VAO.Bind();
     RenderCommand::DrawElements(RendererEnum::TRIANGLES, IndexCount, RendererEnum::UINT, nullptr);
 
-    //Material->Unbind();
     VAO.Unbind();
 }
 

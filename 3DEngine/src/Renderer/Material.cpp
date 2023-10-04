@@ -87,10 +87,10 @@ void Material::Bind(Shader *shader) const noexcept
  
 void Material::Unbind() const noexcept
 {
-    /*for (const auto &texture : m_Textures)
+    for (const auto &texture : m_Textures)
     {
         if (texture) texture->Unbind();
-    }*/
+    }
 }
 
 bool Material::Reset(ParameterType type)

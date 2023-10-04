@@ -42,6 +42,9 @@ void ImGuiLayer::OnAttach()
     io.Fonts->AddFontFromFileTTF("Resources/fonts/" FONT_ICON_FILE_NAME_FAS, iconFontSize, &icons_config, icons_ranges);
     // use FONT_ICON_FILE_NAME_FAR if you want regular instead of solid
 
+	//io.Fonts->AddFontFromFileTTF("Resources/fonts/" FONT_ICON_FILE_NAME_FAS, iconFontSize * 2, &icons_config,
+ //                                icons_ranges);
+
     ImGui::StyleColorsDark();
     // ImGui::StyleColorsClassic();
     SetDarkThemeColors();

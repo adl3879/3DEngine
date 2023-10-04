@@ -22,17 +22,18 @@ class Renderer
     static void BeginDraw(CameraRef camera);
     static void EndDraw();
 
-    // lights
-
     static void DrawQuad(glm::mat4 transform = glm::mat4());
 
   public:
     static Shader *m_Shader;
-
-  public:
     static VertexArray *QuadVAO;
+
+	static MeshRef SphereMesh;
 
   private:
     static RenderList m_RenderList;
+
+  private:
+	static MeshRef CreateSphereMesh();
 };
 } // namespace Engine

@@ -7,12 +7,9 @@
 #include "InfiniteGrid.h"
 #include "Renderer.h"
 #include "PostFX/Bloom.h"
-#include "PostFX/Bloom2.h"
 
 namespace Engine
 {
-std::unique_ptr<Bloom> bloom = std::make_unique<Bloom>(5);
-
 void SceneRenderer::Init()
 {
     glEnable(GL_DEBUG_OUTPUT);
@@ -65,110 +62,116 @@ void SceneRenderer::RenderScene(Scene &scene, Framebuffer &framebuffer)
 {
     auto environment = scene.GetEnvironment();
 
-	m_ShadingBuffer->Bind();
-	
-	EnvironmentPass(scene);
+    auto view = scene.GetRegistry().view<MeshComponent, TransformComponent, VisibilityComponent>();
+	{
+        m_ShadingBuffer->Bind();
 
-    auto pbrShader = ShaderManager::GetShader("Resources/shaders/PBR");
-    pbrShader->Bind();
-    pbrShader->SetUniformMatrix4fv("projectionViewMatrix", m_Projection * m_View);
-    pbrShader->SetUniform3f("cameraPosition", m_CameraPosition);
-    scene.GetLights()->SetLightUniforms(*pbrShader);
+        EnvironmentPass(scene);
 
-	auto view = scene.GetRegistry().view<MeshComponent, TransformComponent, VisibilityComponent>();
-    for (auto &e : view)
-    {
-        auto [model, transform, visibility] = view.get<MeshComponent, TransformComponent, VisibilityComponent>(e);
+        auto pbrShader = ShaderManager::GetShader("Resources/shaders/PBR");
+        pbrShader->Bind();
+        pbrShader->SetUniformMatrix4fv("projectionViewMatrix", m_Projection * m_View);
+        pbrShader->SetUniform3f("cameraPosition", m_CameraPosition);
+        scene.GetLights()->SetLightUniforms(*pbrShader);
 
-        if (!visibility.IsVisible) continue;
-        if (model.Handle == 0 && model.ModelResource == nullptr) continue;
-
-        const auto &entityModel =
-            model.ModelResource ? model.ModelResource : AssetManager::GetAsset<Model>(model.Handle);
-
-        for (auto &mesh : entityModel->GetMeshes())
+        for (auto &e : view)
         {
-            if (environment->SkyboxHDR) environment->SkyboxHDR->BindMaps();
+            auto [model, transform, visibility] = view.get<MeshComponent, TransformComponent, VisibilityComponent>(e);
 
-			auto trnsfrm = transform.GetTransform();
-            Renderer::SubmitMesh(std::make_shared<Mesh>(mesh), trnsfrm, (int)e);
+            if (!visibility.IsVisible) continue;
+            if (model.Handle == 0 && model.ModelResource == nullptr) continue;
+
+            const auto &entityModel =
+                model.ModelResource ? model.ModelResource : AssetManager::GetAsset<Model>(model.Handle);
+
+            for (auto &mesh : entityModel->GetMeshes())
+            {
+                if (environment->SkyboxHDR) environment->SkyboxHDR->BindMaps();
+
+                auto trnsfrm = transform.GetTransform();
+                Renderer::SubmitMesh(std::make_shared<Mesh>(mesh), trnsfrm, (int)e);
+            }
         }
+
+        Renderer::Flush(pbrShader, false);
+        if (!scene.IsPlaying()) InfiniteGrid::Draw(m_Projection, m_View, m_CameraPosition);
+
+        // weird?
+        auto mouse = scene.GetViewportMousePos();
+        int pixel = m_ShadingBuffer->ReadPixel(1, mouse);
+        scene.SetHoveredEntity((entt::entity)(pixel - 1));
+
+        m_ShadingBuffer->Unbind();
     }
-
-    Renderer::Flush(pbrShader, false);
-	if (!scene.IsPlaying()) InfiniteGrid::Draw(m_Projection, m_View, m_CameraPosition);
-
-	// weird?
-	auto mouse = scene.GetViewportMousePos();
-    int pixel = m_ShadingBuffer->ReadPixel(1, mouse);
-    scene.SetHoveredEntity((entt::entity)(pixel - 1));
-
-	m_ShadingBuffer->Unbind();
 
 	// outline
-	auto outlineShader = ShaderManager::GetShader("Resources/shaders/outline");
-    outlineShader->Bind();
-    outlineShader->SetUniformMatrix4fv("projectionViewMatrix", m_Projection * m_View);
-
-	m_OutlineBuffer->Bind();
-    for (auto &e : view)
     {
-        if (e != scene.GetSelectedEntity()) continue;
-		auto [model, transform] = view.get<MeshComponent, TransformComponent>(e);
+        auto outlineShader = ShaderManager::GetShader("Resources/shaders/outline");
+        outlineShader->Bind();
+        outlineShader->SetUniformMatrix4fv("projectionViewMatrix", m_Projection * m_View);
 
-		if (model.Handle == 0 && model.ModelResource == nullptr) continue;
+        m_OutlineBuffer->Bind();
+        for (auto &e : view)
+        {
+            if (e != scene.GetSelectedEntity()) continue;
+            auto [model, transform] = view.get<MeshComponent, TransformComponent>(e);
 
-		const auto &entityModel =
-			model.ModelResource ? model.ModelResource : AssetManager::GetAsset<Model>(model.Handle);
+            if (model.Handle == 0 && model.ModelResource == nullptr) continue;
 
-		for (auto &mesh : entityModel->GetMeshes())
-		{
-			auto trnsfrm = transform.GetTransform();
-			Renderer::SubmitMesh(std::make_shared<Mesh>(mesh), trnsfrm, (int)e);
-		}
+            const auto &entityModel =
+                model.ModelResource ? model.ModelResource : AssetManager::GetAsset<Model>(model.Handle);
+
+            for (auto &mesh : entityModel->GetMeshes())
+            {
+                auto trnsfrm = transform.GetTransform();
+                Renderer::SubmitMesh(std::make_shared<Mesh>(mesh), trnsfrm, (int)e);
+            }
+        }
+        Renderer::Flush(outlineShader, false);
+        m_OutlineBuffer->Unbind();
+
+        m_Edge->Bind();
+        auto edgeShader = ShaderManager::GetShader("Resources/shaders/edgeDetection");
+        edgeShader->Bind();
+        edgeShader->SetUniform1i("mask", 0);
+        // dimensions
+        edgeShader->SetUniform1f("width", m_Edge->GetSize().x);
+        edgeShader->SetUniform1f("height", m_Edge->GetSize().y);
+
+        m_OutlineBuffer->GetTexture()->Bind(0);
+
+        Renderer::DrawQuad();
+        m_Edge->Unbind();
     }
-	Renderer::Flush(outlineShader, false);
-    m_OutlineBuffer->Unbind();
-
-	m_Edge->Bind();
-	auto edgeShader = ShaderManager::GetShader("Resources/shaders/edgeDetection");
-	edgeShader->Bind();
-	edgeShader->SetUniform1i("mask", 0);
-	// dimensions
-    edgeShader->SetUniform1f("width", m_Edge->GetSize().x);
-	edgeShader->SetUniform1f("height", m_Edge->GetSize().y);
-	
-	m_OutlineBuffer->GetTexture()->Bind(0);
-
-	Renderer::DrawQuad();
-	m_Edge->Unbind();
 
 	m_ShadingBuffer->QueueResize(framebuffer.GetSize());
 	m_OutlineBuffer->QueueResize(framebuffer.GetSize());
 	m_Edge->QueueResize(framebuffer.GetSize());
 
-	Texture2DRef finalOutput = m_ShadingBuffer->GetTexture();
-	environment->Bloom->RenderBloomTexture(finalOutput->GetRendererID(), 0.005);
+	{
+        Texture2DRef finalOutput = m_ShadingBuffer->GetTexture();
+        environment->Bloom->RenderBloomTexture(finalOutput->GetRendererID(), 0.005);
 
-	framebuffer.Bind();
-	
-	auto quadShader = ShaderManager::GetShader("Resources/shaders/quad");
-    quadShader->Bind();
-    quadShader->SetUniform1i("scene", 0);
-    quadShader->SetUniform1i("bloomBlur", 1);
-    quadShader->SetUniform1i("outlineTexture", 2);
+        framebuffer.Bind();
 
-    quadShader->SetUniform1f("bloomStrength", environment->BloomIntensity);
-    quadShader->SetUniform1f("exposure", environment->Exposure);
-	quadShader->SetUniform1i("bloomEnabled", environment->BloomEnabled);
+        auto quadShader = ShaderManager::GetShader("Resources/shaders/quad");
+        quadShader->Bind();
+        quadShader->SetUniform1i("scene", 0);
+        quadShader->SetUniform1i("bloomBlur", 1);
+        quadShader->SetUniform1i("outlineTexture", 2);
 
-	finalOutput->Bind(0);
-	glBindTextureUnit(1, environment->Bloom->BloomTexture());
-	m_Edge->GetTexture()->Bind(2);
+        quadShader->SetUniform1f("bloomStrength", environment->BloomIntensity);
+        quadShader->SetUniform1f("exposure", environment->Exposure);
+        quadShader->SetUniform1i("bloomEnabled", environment->BloomEnabled);
 
-    Renderer::DrawQuad(); 
-	 
-	framebuffer.Unbind();
+        finalOutput->Bind(0);
+        glBindTextureUnit(1, environment->Bloom->BloomTexture());
+        m_Edge->GetTexture()->Bind(2);
+
+        Renderer::DrawQuad();
+
+        framebuffer.Unbind();
+    }
 }
 
 void SceneRenderer::ShadowPass(Scene &scene) {}

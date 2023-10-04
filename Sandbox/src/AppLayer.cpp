@@ -51,6 +51,8 @@ void AppLayer::OnDetach() {}
 
 void AppLayer::OnUpdate(float dt)
 {
+    m_IsControlPressed = false;
+
     // update
     m_EditorCamera.OnUpdate(dt);
     m_EditorCamera.SetViewportSize(m_ViewportSize.x, m_ViewportSize.y);
@@ -182,15 +184,81 @@ void AppLayer::OnImGuiRender()
         if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
         {
             const char *path = (const char *)payload->Data;
-            ResetScene("");
-            m_EditorScene = AssetManager::GetAsset<Scene>(path);
-            m_SceneHierarchyPanel.SetContext(m_EditorScene);
-            m_EnvironmentPanel.SetContext(m_EditorScene);
+            auto assetType = Utils::GetAssetTypeFromExtension(path);
 
-            m_ActiveScene = m_EditorScene;
+			switch (assetType)
+			{
+            case AssetType::Scene:
+			{
+				ResetScene("");
+				m_EditorScene = AssetManager::GetAsset<Scene>(path);
+				m_SceneHierarchyPanel.SetContext(m_EditorScene);
+				m_EnvironmentPanel.SetContext(m_EditorScene);
+
+				m_ActiveScene = m_EditorScene;
+			}
+			break;
+			case AssetType::Mesh:
+			{
+				auto ent = m_ActiveScene->CreateEntity("Mesh");
+				auto &mesh = ent.AddComponent<MeshComponent>();
+				mesh.Handle = AssetManager::GetAssetHandleFromPath(path);
+			}
+			break;
+			case AssetType::Material:
+			{
+				if (m_ActiveScene->GetHoveredEntity() == (entt::entity)-1) break;
+
+				auto handle = AssetManager::GetAssetHandleFromPath(path);
+				// get current hovered entity, add material
+				Entity ent = {m_ActiveScene->GetHoveredEntity(), m_ActiveScene.get()};
+				auto &mesh = ent.GetComponent<MeshComponent>();
+				ModelRef model = AssetManager::GetAsset<Model>(mesh.Handle);
+				if (model->GetMeshes().size() == 1)
+				{
+					model->SetMaterialHandle(0, handle);
+					mesh.MaterialHandles[0] = handle;
+				}
+			}
+			break;
+            case AssetType::None: LOG_CORE_ERROR("Unknown Asset type!"); break;
+			default: break;
+			}
+
         }
         ImGui::EndDragDropTarget();
     }
+
+	// controls
+    ImGui::SetItemAllowOverlap();
+    ImGui::SetCursorPos({10, 6});
+
+    // ImGuiIO &io = ImGui::GetIO();
+    float oldSize = ImGui::GetFont()->Scale;
+    float buttonSize = 42;
+    ImVec4 activeColor = ImVec4(0.9255f, 0.6196f, 0.1412f, 1.0f);
+
+    ImGui::GetFont()->Scale *= 1.2;
+    ImGui::PushFont(ImGui::GetFont());
+    ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2{5, 0});
+    ImGui::PushStyleVar(ImGuiStyleVar_ButtonTextAlign, ImVec2{0.5, 0.5});
+    ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 5.0f);
+
+	// color to show it is selected
+    DrawTransformControls(ICON_FA_MOUSE_POINTER, -1);
+	ImGui::SameLine();
+
+    DrawTransformControls(ICON_FA_ARROWS_ALT, ImGuizmo::OPERATION::TRANSLATE);
+    ImGui::SameLine();
+   
+	DrawTransformControls(ICON_FA_SYNC_ALT, ImGuizmo::OPERATION::ROTATE);
+    ImGui::SameLine();
+   
+	DrawTransformControls(ICON_FA_EXPAND_ARROWS_ALT, ImGuizmo::OPERATION::SCALE);
+
+    ImGui::GetFont()->Scale = oldSize;
+    ImGui::PopStyleVar(3);
+    ImGui::PopFont();
 
     auto windowSize = ImGui::GetWindowSize();
     auto miniBound = ImGui::GetWindowPos();
@@ -299,14 +367,17 @@ void AppLayer::OnMouseScrolled(double xOffset, double yOffset)
 
 void AppLayer::OnMouseButtonPressed(MouseButton button)
 {
-    auto Input = InputManager::Instance();
-    // Mouse picking
-    if (button == MouseButton::Left && !ImGuizmo::IsOver() && !Input.IsKeyPressed(InputKey::LeftAlt))
+    if (!m_IsControlPressed)
     {
-        if (m_ViewportHovered)
+        auto Input = InputManager::Instance();
+        // Mouse picking
+        if (button == MouseButton::Left && !ImGuizmo::IsOver() && !Input.IsKeyPressed(InputKey::LeftAlt))
         {
-			m_SceneHierarchyPanel.SetSelectedEntity({m_ActiveScene->GetHoveredEntity(), 
-				m_ActiveScene.get()});
+            if (m_ViewportHovered)
+            {
+                m_SceneHierarchyPanel.SetSelectedEntity(
+                    {m_ActiveScene->GetHoveredEntity(), m_ActiveScene.get()});
+            }
         }
     }
 }
@@ -465,5 +536,34 @@ void AppLayer::UI_Toolbar()
         }
     }
     ImGui::End();
+}
+
+void AppLayer::DrawTransformControls(const char *icon, int type) 
+{
+    float buttonSize = 42;
+    ImVec4 activeColor = ImVec4(0.9255f, 0.6196f, 0.1412f, 1.0f);
+
+	// change color of selected button
+    if (m_GizmoType == type)
+    {
+        ImGui::PushStyleColor(ImGuiCol_Button, activeColor);
+		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, activeColor);
+    }
+    else
+    {
+		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{0.2f, 0.2f, 0.2f, 1.0f});
+		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4{0.3f, 0.3f, 0.3f, 1.0f});
+    }
+
+    if (ImGui::Button(icon, {buttonSize, buttonSize}))
+    {
+		m_GizmoType = type;
+    }
+	if (ImGui::IsItemHovered())
+	{
+		m_IsControlPressed = true;
+	}
+
+	ImGui::PopStyleColor(2);
 }
 } // namespace Engine

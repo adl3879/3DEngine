@@ -92,9 +92,12 @@ Texture2D::Texture2D(const TextureSpecification &specification)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
 }
 
-Texture2D::Texture2D(ImageFormat format) 
+Texture2D::Texture2D(ImageFormat format, int width, int height) 
 {
-    m_Specification = TextureSpecification{.Format = format};
+    m_Specification = TextureSpecification{.Format = format };
+	m_Specification.Width = width;
+	m_Specification.Height = height;
+
     m_InternalFormat = Utils::ImageFormatToGLInternalFormat(m_Specification.Format);
     m_DataFormat = Utils::ImageFormatToGLDataFormat(m_Specification.Format);
     m_DataType = Utils::ImageFormatToGLDataType(m_Specification.Format);
