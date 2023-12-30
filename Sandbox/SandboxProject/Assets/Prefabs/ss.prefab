@@ -1,0 +1,50 @@
+Prefab: Untitled
+Entities:
+  - Entity: 2553046964440454367
+    TagComponent:
+      Tag: Empty Entity
+      IsPrefab: false
+    ParentComponent:
+      Parent: 15740017123087734222
+      HasParent: true
+      Children:
+        []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, -0, 0]
+      Scale: [1, 1, 1]
+      LocalTranslation: [0, 0, 0]
+      LocalRotation: [0, 0, 0]
+      LocalScale: [1, 1, 1]
+  - Entity: 15740017123087734222
+    TagComponent:
+      Tag: Empty Entity
+      IsPrefab: false
+    ParentComponent:
+      Parent: 14480363122433135017
+      HasParent: true
+      Children:
+        - 2553046964440454367
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, -0, 0]
+      Scale: [1, 1, 1]
+      LocalTranslation: [0, 0, 0]
+      LocalRotation: [0, 0, 0]
+      LocalScale: [1, 1, 1]
+  - Entity: 14480363122433135017
+    TagComponent:
+      Tag: Empty Entity
+      IsPrefab: false
+    ParentComponent:
+      Parent: 3524744407886986772
+      HasParent: false
+      Children:
+        - 15740017123087734222
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      LocalTranslation: [0, 0, 0]
+      LocalRotation: [0, 0, 0]
+      LocalScale: [1, 1, 1]

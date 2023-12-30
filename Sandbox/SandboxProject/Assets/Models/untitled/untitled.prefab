@@ -1,0 +1,35 @@
+Prefab: Untitled
+Entities:
+  - Entity: 14902175201008648819
+    TagComponent:
+      Tag: Sphere
+    ParentComponent:
+      Parent: 4129800034491967430
+      HasParent: true
+      Children:
+        []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      LocalTranslation: [0, 0, 0]
+      LocalRotation: [0, 0, 0]
+      LocalScale: [1, 1, 1]
+    MeshComponent:
+      Handle: 2018756205094103921
+      MaterialHandle: 17842720366706159657
+  - Entity: 11534997835041000448
+    TagComponent:
+      Tag: untitled
+    ParentComponent:
+      Parent: 81212738840211713
+      HasParent: false
+      Children:
+        - 6773806486553682692
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      LocalTranslation: [0, 0, 0]
+      LocalRotation: [0, 0, 0]
+      LocalScale: [1, 1, 1]

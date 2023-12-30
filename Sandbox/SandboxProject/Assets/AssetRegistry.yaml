@@ -1,0 +1,4675 @@
+AssetRegistry:
+  - Handle: 36717303292451465
+    FilePath: Sponza/Sponza_mat20.material
+    Type: AssetType::Material
+  - Handle: 45591627312037893
+    FilePath: Sponza/Sponza_mat3.material
+    Type: AssetType::Material
+  - Handle: 77510802362989634
+    FilePath: Models/Sponza/meshes[0]-70.mesh
+    Type: AssetType::Mesh
+  - Handle: 94196562928470906
+    FilePath: Sponza/meshes[0]-36.mesh
+    Type: AssetType::Mesh
+  - Handle: 100347941953870695
+    FilePath: Scripts/Player.cs
+    Type: AssetType::NetScript
+  - Handle: 121140973596974356
+    FilePath: Sponza/meshes[0]-10.mesh
+    Type: AssetType::Mesh
+  - Handle: 122437536307802186
+    FilePath: ./Sponza/meshes[0]-40.mesh
+    Type: AssetType::Mesh
+  - Handle: 125109474309780327
+    FilePath: Models/Sponza/meshes[0]-92.mesh
+    Type: AssetType::Mesh
+  - Handle: 185829139122753842
+    FilePath: Sponza/3371964815757888145.jpg
+    Type: AssetType::Texture2D
+  - Handle: 186739020951198544
+    FilePath: Models/Sponza/meshes[0]-98.mesh
+    Type: AssetType::Mesh
+  - Handle: 233784353345944992
+    FilePath: Models/Sponza/4601176305987539675.jpg
+    Type: AssetType::Texture2D
+  - Handle: 275216578125237049
+    FilePath: Sponza/meshes[0]-47.mesh
+    Type: AssetType::Mesh
+  - Handle: 294627798772761595
+    FilePath: Models/Sponza/Sponza_mat84.material
+    Type: AssetType::Material
+  - Handle: 372466954346363283
+    FilePath: Sponza/Sponza_mat19.material
+    Type: AssetType::Material
+  - Handle: 408070452858200747
+    FilePath: Models/Sponza/14170708867020035030.jpg
+    Type: AssetType::Texture2D
+  - Handle: 428880631066430613
+    FilePath: Sponza/332936164838540657.jpg
+    Type: AssetType::Texture2D
+  - Handle: 459497814248557558
+    FilePath: Models/Sponza/meshes[0]-50.mesh
+    Type: AssetType::Mesh
+  - Handle: 474724309796179681
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 486822209745604600
+    FilePath: Sponza/meshes[0]-11.mesh
+    Type: AssetType::Mesh
+  - Handle: 507783826169926542
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 537749122170955634
+    FilePath: Models/Sponza/Sponza_mat88.material
+    Type: AssetType::Material
+  - Handle: 576989421914157934
+    FilePath: ./Sponza/meshes[0]-94.mesh
+    Type: AssetType::Mesh
+  - Handle: 597922028323227691
+    FilePath: Sponza/Sponza_mat2.material
+    Type: AssetType::Material
+  - Handle: 608618614344037383
+    FilePath: ./Sponza/meshes[0]-48.mesh
+    Type: AssetType::Mesh
+  - Handle: 610004587109138811
+    FilePath: Models/Sponza/Sponza_mat13.material
+    Type: AssetType::Material
+  - Handle: 612935512902027389
+    FilePath: Scenes/Sponza.scene
+    Type: AssetType::Scene
+  - Handle: 626803460821748222
+    FilePath: ./Sponza/meshes[0]-59.mesh
+    Type: AssetType::Mesh
+  - Handle: 632749440869951539
+    FilePath: Models/Sponza/2775690330959970771.jpg
+    Type: AssetType::Texture2D
+  - Handle: 658632355140384943
+    FilePath: Models/Sponza/8481240838833932244.jpg
+    Type: AssetType::Texture2D
+  - Handle: 659658507567096148
+    FilePath: Models/Sponza/12501374198249454378.jpg
+    Type: AssetType::Texture2D
+  - Handle: 676354954391754515
+    FilePath: Scenes/helment.scene
+    Type: AssetType::Scene
+  - Handle: 682016255586354569
+    FilePath: Models/Sponza/Sponza_mat31.material
+    Type: AssetType::Material
+  - Handle: 696099651392864382
+    FilePath: ./Sponza/meshes[0]-99.mesh
+    Type: AssetType::Mesh
+  - Handle: 697633856437652803
+    FilePath: Sponza/Sponza_mat19.material
+    Type: AssetType::Material
+  - Handle: 714569045418164152
+    FilePath: Models/Sponza/Sponza_mat47.material
+    Type: AssetType::Material
+  - Handle: 714938064521293683
+    FilePath: scene/Suzanne.material
+    Type: AssetType::Material
+  - Handle: 717217376031063107
+    FilePath: Models/Sponza/Sponza_mat48.material
+    Type: AssetType::Material
+  - Handle: 719666907796246747
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 725371668811386431
+    FilePath: Sponza/4871783166746854860.jpg
+    Type: AssetType::Texture2D
+  - Handle: 727428064882794787
+    FilePath: ./Sponza/meshes[0]-102.mesh
+    Type: AssetType::Mesh
+  - Handle: 741101928733369512
+    FilePath: Sponza/meshes[0]-76.mesh
+    Type: AssetType::Mesh
+  - Handle: 755919794264218120
+    FilePath: Models/Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 762087114219447110
+    FilePath: ./Sponza/meshes[0]-90.mesh
+    Type: AssetType::Mesh
+  - Handle: 798471468703284811
+    FilePath: ./Sponza/meshes[0]-82.mesh
+    Type: AssetType::Mesh
+  - Handle: 798703984240264824
+    FilePath: Models/Sponza/1219024358953944284.jpg
+    Type: AssetType::Texture2D
+  - Handle: 805127325118475142
+    FilePath: Models/Sponza/11968150294050148237.jpg
+    Type: AssetType::Texture2D
+  - Handle: 857871172513359121
+    FilePath: Sponza/759203620573749278.jpg
+    Type: AssetType::Texture2D
+  - Handle: 898844639818045513
+    FilePath: ./Sponza/meshes[0]-56.mesh
+    Type: AssetType::Mesh
+  - Handle: 903714778411314338
+    FilePath: Sponza/Sponza_mat43.material
+    Type: AssetType::Material
+  - Handle: 935571923955344253
+    FilePath: Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 946465585623875179
+    FilePath: Sponza/Sponza_mat26.material
+    Type: AssetType::Material
+  - Handle: 957627581628596003
+    FilePath: Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 962930918823879576
+    FilePath: Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 996333689742006370
+    FilePath: Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 1028259312646399994
+    FilePath: Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 1061044940859465044
+    FilePath: ./Sponza/meshes[0]-1.mesh
+    Type: AssetType::Mesh
+  - Handle: 1062081663036138933
+    FilePath: ./Sponza/meshes[0]-91.mesh
+    Type: AssetType::Mesh
+  - Handle: 1082510644786382971
+    FilePath: Models/Sponza/meshes[0]-67.mesh
+    Type: AssetType::Mesh
+  - Handle: 1102245831820276682
+    FilePath: Models/Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 1104361595595865262
+    FilePath: Sponza/meshes[0]-73.mesh
+    Type: AssetType::Mesh
+  - Handle: 1108589915546447458
+    FilePath: Sponza/meshes[0]-60.mesh
+    Type: AssetType::Mesh
+  - Handle: 1114619621048218427
+    FilePath: Sponza/Sponza_mat2.material
+    Type: AssetType::Material
+  - Handle: 1118222936645257904
+    FilePath: Models/Sponza/Sponza_mat63.material
+    Type: AssetType::Material
+  - Handle: 1118528502799126222
+    FilePath: Models/Sponza/Sponza_mat79.material
+    Type: AssetType::Material
+  - Handle: 1152137586451500747
+    FilePath: Sponza/9288698199695299068.jpg
+    Type: AssetType::Texture2D
+  - Handle: 1152455675061256542
+    FilePath: Models/Sponza/7815564343179553343.jpg
+    Type: AssetType::Texture2D
+  - Handle: 1187704293825488986
+    FilePath: Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 1227370330763250609
+    FilePath: ./Sponza/meshes[0]-80.mesh
+    Type: AssetType::Mesh
+  - Handle: 1270453824873491831
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 1284613998729836589
+    FilePath: Sponza/Sponza_mat62.material
+    Type: AssetType::Material
+  - Handle: 1289749775127592835
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 1297403675960268396
+    FilePath: Sponza/3455394979645218238.jpg
+    Type: AssetType::Texture2D
+  - Handle: 1305211695732284267
+    FilePath: Sponza/Sponza_mat2.material
+    Type: AssetType::Material
+  - Handle: 1324265570540136930
+    FilePath: Sponza/Sponza_mat2.material
+    Type: AssetType::Material
+  - Handle: 1329453152428322918
+    FilePath: Textures/hdr/ballroom_4k.hdr
+    Type: AssetType::SkyLight
+  - Handle: 1350320503531943002
+    FilePath: Models/scene/Mesh.mesh
+    Type: AssetType::Mesh
+  - Handle: 1355746848201690258
+    FilePath: Sponza/Sponza_mat9.material
+    Type: AssetType::Material
+  - Handle: 1358710007587958676
+    FilePath: Models/Sponza/meshes[0]-41.mesh
+    Type: AssetType::Mesh
+  - Handle: 1382007956586489439
+    FilePath: ./Sponza/meshes[0]-98.mesh
+    Type: AssetType::Mesh
+  - Handle: 1385130337203827836
+    FilePath: Sponza/Sponza_mat1.material
+    Type: AssetType::Material
+  - Handle: 1385734001505644942
+    FilePath: Models/Sponza/meshes[0]-48.mesh
+    Type: AssetType::Mesh
+  - Handle: 1406670708058450311
+    FilePath: Models/Sponza/Sponza_mat94.material
+    Type: AssetType::Material
+  - Handle: 1408700475571935108
+    FilePath: Sponza/Sponza_mat67.material
+    Type: AssetType::Material
+  - Handle: 1408816792013353783
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 1419023938992715011
+    FilePath: Sponza/Sponza_mat8.material
+    Type: AssetType::Material
+  - Handle: 1429446352180798166
+    FilePath: Sponza/meshes[0]-35.mesh
+    Type: AssetType::Mesh
+  - Handle: 1476340384678159671
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 1487211190463968427
+    FilePath: Models/Sponza/Sponza_mat71.material
+    Type: AssetType::Material
+  - Handle: 1488616753569398685
+    FilePath: Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 1488762027680047451
+    FilePath: Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 1493330796807716373
+    FilePath: Sponza/17876391417123941155.jpg
+    Type: AssetType::Texture2D
+  - Handle: 1493533981579751621
+    FilePath: Models/Sponza/meshes[0]-82.mesh
+    Type: AssetType::Mesh
+  - Handle: 1548128405015522366
+    FilePath: Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 1556985830870686162
+    FilePath: Models/Sponza/755318871556304029.jpg
+    Type: AssetType::Texture2D
+  - Handle: 1569231530553720274
+    FilePath: ./Sponza/meshes[0]-62.mesh
+    Type: AssetType::Mesh
+  - Handle: 1577536987693565789
+    FilePath: Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 1595116975919274094
+    FilePath: Sponza/6151467286084645207.jpg
+    Type: AssetType::Texture2D
+  - Handle: 1638415806113241198
+    FilePath: Models/Sponza/17556969131407844942.jpg
+    Type: AssetType::Texture2D
+  - Handle: 1638648536140043214
+    FilePath: Models/Sponza/13982482287905699490.jpg
+    Type: AssetType::Texture2D
+  - Handle: 1653112921723594623
+    FilePath: Models/Sponza/meshes[0]-81.mesh
+    Type: AssetType::Mesh
+  - Handle: 1653437247902322206
+    FilePath: Models/Sponza/Sponza_mat0.material
+    Type: AssetType::Material
+  - Handle: 1657198428261928899
+    FilePath: Sponza/meshes[0]-3.mesh
+    Type: AssetType::Mesh
+  - Handle: 1704846084255793694
+    FilePath: ./Sponza/meshes[0]-29.mesh
+    Type: AssetType::Mesh
+  - Handle: 1727849858067576937
+    FilePath: Sponza/Sponza_mat17.material
+    Type: AssetType::Material
+  - Handle: 1743541241280185363
+    FilePath: Sponza/Sponza_mat14.material
+    Type: AssetType::Material
+  - Handle: 1770870894456896102
+    FilePath: Sponza/meshes[0]-1.mesh
+    Type: AssetType::Mesh
+  - Handle: 1777564463448129366
+    FilePath: Models/Sponza/6593109234861095314.jpg
+    Type: AssetType::Texture2D
+  - Handle: 1798048201498762878
+    FilePath: SciFiHelmet/SciFiHelmet_Normal.png
+    Type: AssetType::Texture2D
+  - Handle: 1836706633038768821
+    FilePath: Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 1851235492747599126
+    FilePath: Sponza/Sponza_mat9.material
+    Type: AssetType::Material
+  - Handle: 1858180843276891176
+    FilePath: Sponza/Sponza_mat10.material
+    Type: AssetType::Material
+  - Handle: 1867779279658777051
+    FilePath: Models/Sponza/11872827283454512094.jpg
+    Type: AssetType::Texture2D
+  - Handle: 1882045117874786628
+    FilePath: Sponza/Sponza_mat11.material
+    Type: AssetType::Material
+  - Handle: 1892523878233285259
+    FilePath: Sponza/Sponza_mat1.material
+    Type: AssetType::Material
+  - Handle: 1898347184903854580
+    FilePath: Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 1961701803993335638
+    FilePath: Sponza/Sponza_mat1.material
+    Type: AssetType::Material
+  - Handle: 1963190737025932330
+    FilePath: Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 1974314640870765129
+    FilePath: Sponza/meshes[0]-100.mesh
+    Type: AssetType::Mesh
+  - Handle: 1975301657000218209
+    FilePath: Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 1977737082369970767
+    FilePath: Sponza/Sponza_mat20.material
+    Type: AssetType::Material
+  - Handle: 1990184274964142819
+    FilePath: Sponza/meshes[0]-84.mesh
+    Type: AssetType::Mesh
+  - Handle: 2012787974134996438
+    FilePath: Sponza/Sponza_mat21.material
+    Type: AssetType::Material
+  - Handle: 2014270031628505919
+    FilePath: ./Sponza/meshes[0]-0.mesh
+    Type: AssetType::Mesh
+  - Handle: 2017922249515236361
+    FilePath: ./Sponza/meshes[0]-19.mesh
+    Type: AssetType::Mesh
+  - Handle: 2018756205094103921
+    FilePath: Models/untitled/Sphere.mesh
+    Type: AssetType::Mesh
+  - Handle: 2029624143966535992
+    FilePath: Models/Sponza/meshes[0]-97.mesh
+    Type: AssetType::Mesh
+  - Handle: 2030651855425217283
+    FilePath: Models/Sponza/Sponza_mat27.material
+    Type: AssetType::Material
+  - Handle: 2033042397864976870
+    FilePath: Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 2038570125356442990
+    FilePath: Sponza/meshes[0]-17.mesh
+    Type: AssetType::Mesh
+  - Handle: 2044736651116102344
+    FilePath: ./Sponza/meshes[0]-86.mesh
+    Type: AssetType::Mesh
+  - Handle: 2071759487956329609
+    FilePath: Models/Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 2075372702611521940
+    FilePath: Sponza/meshes[0]-8.mesh
+    Type: AssetType::Mesh
+  - Handle: 2076090867906627856
+    FilePath: Models/Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 2085939212994766814
+    FilePath: Sponza/Sponza_mat2.material
+    Type: AssetType::Material
+  - Handle: 2087210598897245829
+    FilePath: ./Sponza/meshes[0]-89.mesh
+    Type: AssetType::Mesh
+  - Handle: 2095936513523383347
+    FilePath: Sponza/meshes[0]-4.mesh
+    Type: AssetType::Mesh
+  - Handle: 2101939746456685562
+    FilePath: Models/Sponza/meshes[0]-39.mesh
+    Type: AssetType::Mesh
+  - Handle: 2122996219080469786
+    FilePath: Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 2164212339419246039
+    FilePath: Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 2168837060585283574
+    FilePath: Sponza/Sponza_mat42.material
+    Type: AssetType::Material
+  - Handle: 2185667389045014380
+    FilePath: Sponza/4975155472559461469.jpg
+    Type: AssetType::Texture2D
+  - Handle: 2186160664894207980
+    FilePath: Prefabs/x.prefab
+    Type: AssetType::Prefab
+  - Handle: 2208346780058875388
+    FilePath: Sponza/Sponza_mat74.material
+    Type: AssetType::Material
+  - Handle: 2216830760993144031
+    FilePath: ./untitled/Sphere.001.mesh
+    Type: AssetType::Mesh
+  - Handle: 2245036289740006216
+    FilePath: ./Sponza/meshes[0]-32.mesh
+    Type: AssetType::Mesh
+  - Handle: 2245191914319409119
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 2267436823495234224
+    FilePath: Sponza/Sponza_mat2.material
+    Type: AssetType::Material
+  - Handle: 2274212116746827942
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 2291737809195939376
+    FilePath: Models/Sponza/Sponza_mat85.material
+    Type: AssetType::Material
+  - Handle: 2314548899927366926
+    FilePath: Sponza/meshes[0]-14.mesh
+    Type: AssetType::Mesh
+  - Handle: 2321051222261098322
+    FilePath: Models/Sponza/Sponza_mat97.material
+    Type: AssetType::Material
+  - Handle: 2334914440029607089
+    FilePath: Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 2359041600424400531
+    FilePath: Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 2375020426175568489
+    FilePath: Models/Sponza/meshes[0]-95.mesh
+    Type: AssetType::Mesh
+  - Handle: 2399557069102159821
+    FilePath: Sponza/meshes[0]-24.mesh
+    Type: AssetType::Mesh
+  - Handle: 2405932737024255201
+    FilePath: Models/Sponza/meshes[0]-53.mesh
+    Type: AssetType::Mesh
+  - Handle: 2417739451765578606
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 2429758661269258114
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 2435219330285687721
+    FilePath: Sponza/Sponza_mat2.material
+    Type: AssetType::Material
+  - Handle: 2449574190965269840
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 2452612047088223148
+    FilePath: Models/Sponza/Sponza.prefab
+    Type: AssetType::Prefab
+  - Handle: 2472764473522785735
+    FilePath: Sponza/Sponza_mat2.material
+    Type: AssetType::Material
+  - Handle: 2478899802951210288
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 2483641595003218512
+    FilePath: Sponza/meshes[0]-45.mesh
+    Type: AssetType::Mesh
+  - Handle: 2495563538659803358
+    FilePath: Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 2495651676149179290
+    FilePath: Models/Sponza/meshes[0]-76.mesh
+    Type: AssetType::Mesh
+  - Handle: 2498635594604343134
+    FilePath: Sponza/Sponza_mat17.material
+    Type: AssetType::Material
+  - Handle: 2503645562688104367
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 2506964531785583423
+    FilePath: Sponza/meshes[0]-51.mesh
+    Type: AssetType::Mesh
+  - Handle: 2511975914617209703
+    FilePath: Sponza/Sponza_mat2.material
+    Type: AssetType::Material
+  - Handle: 2525024634659935789
+    FilePath: Sponza/Sponza_mat1.material
+    Type: AssetType::Material
+  - Handle: 2540343316050890932
+    FilePath: Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 2541734910720491600
+    FilePath: Models/Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 2549119534460180910
+    FilePath: Sponza/Sponza_mat2.material
+    Type: AssetType::Material
+  - Handle: 2560027600701004255
+    FilePath: Models/Sponza/meshes[0]-85.mesh
+    Type: AssetType::Mesh
+  - Handle: 2568267561206079447
+    FilePath: Models/Sponza/Sponza_mat56.material
+    Type: AssetType::Material
+  - Handle: 2575049482757785557
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 2582484167701260469
+    FilePath: Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 2586428666022887308
+    FilePath: Sponza/meshes[0]-21.mesh
+    Type: AssetType::Mesh
+  - Handle: 2591159932978057398
+    FilePath: Models/Sponza/Sponza_mat11.material
+    Type: AssetType::Material
+  - Handle: 2615277104755289546
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 2634190788175750214
+    FilePath: ./Sponza/meshes[0]-87.mesh
+    Type: AssetType::Mesh
+  - Handle: 2638022726751974868
+    FilePath: Models/SciFiHelmet/SciFiHelmet.material
+    Type: AssetType::Material
+  - Handle: 2671609864376599442
+    FilePath: Sponza/Sponza_mat89.material
+    Type: AssetType::Material
+  - Handle: 2672782196874168549
+    FilePath: Sponza/meshes[0]-66.mesh
+    Type: AssetType::Mesh
+  - Handle: 2699225689932487297
+    FilePath: Sponza/Sponza_mat1.material
+    Type: AssetType::Material
+  - Handle: 2709366426516170014
+    FilePath: Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 2767157986445750375
+    FilePath: Models/Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 2767187995667338330
+    FilePath: Sponza/Sponza_mat2.material
+    Type: AssetType::Material
+  - Handle: 2769248809427615386
+    FilePath: Sponza/Sponza_mat101.material
+    Type: AssetType::Material
+  - Handle: 2769850348576254349
+    FilePath: Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 2817302538398346049
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 2838841138587441848
+    FilePath: Sponza/Sponza_mat1.material
+    Type: AssetType::Material
+  - Handle: 2840599811706509883
+    FilePath: Sponza/Sponza_mat1.material
+    Type: AssetType::Material
+  - Handle: 2856997780279758322
+    FilePath: Sponza/Sponza_mat17.material
+    Type: AssetType::Material
+  - Handle: 2866852803016921606
+    FilePath: Sponza/Sponza_mat0.material
+    Type: AssetType::Material
+  - Handle: 2870814125946490692
+    FilePath: Models/goblin-archer/body.material
+    Type: AssetType::Material
+  - Handle: 2872295758951037631
+    FilePath: Sponza/Sponza_mat2.material
+    Type: AssetType::Material
+  - Handle: 2891371155800152275
+    FilePath: Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 2906178852894828315
+    FilePath: Models/Sponza/Sponza_mat90.material
+    Type: AssetType::Material
+  - Handle: 2910969254873326925
+    FilePath: Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 2918499919223253393
+    FilePath: Sponza/Sponza_mat18.material
+    Type: AssetType::Material
+  - Handle: 2923727938650961658
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 2941332276094985694
+    FilePath: Models/Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 2949558949957558828
+    FilePath: Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 2959443739719713958
+    FilePath: Sponza/Sponza_mat87.material
+    Type: AssetType::Material
+  - Handle: 2987063669030607505
+    FilePath: ./Sponza/meshes[0]-92.mesh
+    Type: AssetType::Mesh
+  - Handle: 2995233093852161796
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 3001503069284910555
+    FilePath: Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 3025533107151702525
+    FilePath: Sponza/meshes[0]-75.mesh
+    Type: AssetType::Mesh
+  - Handle: 3025925101475175592
+    FilePath: Models/Sponza/meshes[0]-26.mesh
+    Type: AssetType::Mesh
+  - Handle: 3026661260706725495
+    FilePath: Sponza/Sponza_mat92.material
+    Type: AssetType::Material
+  - Handle: 3029531299268314244
+    FilePath: Models/Sponza/meshes[0]-16.mesh
+    Type: AssetType::Mesh
+  - Handle: 3071479290505970856
+    FilePath: Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 3124009149735763339
+    FilePath: Sponza/meshes[0]-47.meshes[0]-7.mesh
+    Type: AssetType::Mesh
+  - Handle: 3145699496622380172
+    FilePath: Models/Sponza/16885566240357350108.jpg
+    Type: AssetType::Texture2D
+  - Handle: 3155720091153705154
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 3156024217846075728
+    FilePath: Sponza/Sponza_mat17.material
+    Type: AssetType::Material
+  - Handle: 3167629372884610030
+    FilePath: ./Sponza/meshes[0]-73.mesh
+    Type: AssetType::Mesh
+  - Handle: 3169823544368783360
+    FilePath: ./Sponza/meshes[0]-14.mesh
+    Type: AssetType::Mesh
+  - Handle: 3175369629500322247
+    FilePath: Prefabs/s.prefab
+    Type: AssetType::Prefab
+  - Handle: 3176681659675894934
+    FilePath: Sponza/Sponza_mat19.material
+    Type: AssetType::Material
+  - Handle: 3183409211111857492
+    FilePath: Models/Sponza/Sponza_mat65.material
+    Type: AssetType::Material
+  - Handle: 3217560862293607462
+    FilePath: Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 3218176040932571576
+    FilePath: ./Sponza/meshes[0]-69.mesh
+    Type: AssetType::Mesh
+  - Handle: 3232919031150359007
+    FilePath: Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 3238342753315074929
+    FilePath: Sponza/Sponza_mat29.material
+    Type: AssetType::Material
+  - Handle: 3266096328705684420
+    FilePath: Models/Sponza/meshes[0]-100.mesh
+    Type: AssetType::Mesh
+  - Handle: 3272537098419191777
+    FilePath: Sponza/meshes[0]-54.mesh
+    Type: AssetType::Mesh
+  - Handle: 3288442884626602827
+    FilePath: Models/Sponza/Sponza_mat74.material
+    Type: AssetType::Material
+  - Handle: 3309479847837119805
+    FilePath: Sponza/Sponza_mat18.material
+    Type: AssetType::Material
+  - Handle: 3315513976562786707
+    FilePath: untitled/DefaultMaterial.material
+    Type: AssetType::Material
+  - Handle: 3320234910869745226
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 3322080897645753407
+    FilePath: Models/Sponza/meshes[0]-56.mesh
+    Type: AssetType::Mesh
+  - Handle: 3346386387417921358
+    FilePath: Sponza/Sponza_mat2.material
+    Type: AssetType::Material
+  - Handle: 3423591263287329707
+    FilePath: Sponza/Sponza_mat1.material
+    Type: AssetType::Material
+  - Handle: 3427052268250309240
+    FilePath: Sponza/Sponza_mat2.material
+    Type: AssetType::Material
+  - Handle: 3431857300982033077
+    FilePath: Models/Sponza/Sponza_mat66.material
+    Type: AssetType::Material
+  - Handle: 3440876589359076642
+    FilePath: Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 3462813132373354424
+    FilePath: Models/Sponza/meshes[0]-30.mesh
+    Type: AssetType::Mesh
+  - Handle: 3463901822335194698
+    FilePath: Models/Sponza/meshes[0]-34.mesh
+    Type: AssetType::Mesh
+  - Handle: 3467844305413382548
+    FilePath: Sponza/Sponza_mat21.material
+    Type: AssetType::Material
+  - Handle: 3475600246367552066
+    FilePath: Sponza/meshes[0]-67.mesh
+    Type: AssetType::Mesh
+  - Handle: 3500910554389121471
+    FilePath: Models/Sponza/3371964815757888145.jpg
+    Type: AssetType::Texture2D
+  - Handle: 3510689146921402980
+    FilePath: Sponza/Sponza_mat2.material
+    Type: AssetType::Material
+  - Handle: 3515732105215076078
+    FilePath: Sponza/Sponza_mat18.material
+    Type: AssetType::Material
+  - Handle: 3518062525257865101
+    FilePath: Scripts/f.lua
+    Type: AssetType::LuaScript
+  - Handle: 3543790966645110733
+    FilePath: Models/Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 3545091418335671580
+    FilePath: Sponza/meshes[0]-78.mesh
+    Type: AssetType::Mesh
+  - Handle: 3545310078014054952
+    FilePath: Sponza/Sponza_mat18.material
+    Type: AssetType::Material
+  - Handle: 3577147850564299833
+    FilePath: Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 3597014067295241202
+    FilePath: Sponza/Sponza_mat48.material
+    Type: AssetType::Material
+  - Handle: 3608381514843613758
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 3632066425394455995
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 3640272458520881246
+    FilePath: Sponza/Sponza_mat88.material
+    Type: AssetType::Material
+  - Handle: 3652538494249494880
+    FilePath: Sponza/meshes[0]-56.meshes[0]-60.mesh
+    Type: AssetType::Mesh
+  - Handle: 3693726851661274176
+    FilePath: Sponza/15295713303328085182.jpg
+    Type: AssetType::Texture2D
+  - Handle: 3695604911749250903
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 3699764223242963693
+    FilePath: Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 3712466744290125620
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 3724734992386399979
+    FilePath: Sponza/8006627369776289000.png
+    Type: AssetType::Texture2D
+  - Handle: 3725563973413176786
+    FilePath: Sponza/Sponza_mat85.material
+    Type: AssetType::Material
+  - Handle: 3738158207598763680
+    FilePath: Sponza/11872827283454512094.jpg
+    Type: AssetType::Texture2D
+  - Handle: 3747762234317233833
+    FilePath: Sponza/meshes[0]-88.mesh
+    Type: AssetType::Mesh
+  - Handle: 3757909438389232355
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 3774667833596018190
+    FilePath: Models/Sponza/Sponza_mat62.material
+    Type: AssetType::Material
+  - Handle: 3781188543820353953
+    FilePath: Sponza/Sponza_mat1.material
+    Type: AssetType::Material
+  - Handle: 3783287156648442481
+    FilePath: Prefabs/hello.prefab
+    Type: AssetType::Prefab
+  - Handle: 3832439029698321734
+    FilePath: Sponza/Sponza_mat1.material
+    Type: AssetType::Material
+  - Handle: 3857130315315415901
+    FilePath: Scripts/hh.lua
+    Type: AssetType::LuaScript
+  - Handle: 3860643894984828501
+    FilePath: Sponza/Sponza_mat100.material
+    Type: AssetType::Material
+  - Handle: 3908208414061405997
+    FilePath: ./Sponza/meshes[0]-22.mesh
+    Type: AssetType::Mesh
+  - Handle: 3908726348442093953
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 3922356561263797020
+    FilePath: Sponza/2185409758123873465.jpg
+    Type: AssetType::Texture2D
+  - Handle: 3946370760364125607
+    FilePath: Sponza/Sponza_mat18.material
+    Type: AssetType::Material
+  - Handle: 3948145772760856801
+    FilePath: Models/Sponza/Sponza_mat7.material
+    Type: AssetType::Material
+  - Handle: 3957073882424283269
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 3965153177873439050
+    FilePath: Sponza/Sponza_mat2.material
+    Type: AssetType::Material
+  - Handle: 3991896474428917969
+    FilePath: Sponza/Sponza_mat91.material
+    Type: AssetType::Material
+  - Handle: 3991988827965666847
+    FilePath: Models/Sponza/meshes[0]-42.mesh
+    Type: AssetType::Mesh
+  - Handle: 3997148757706620579
+    FilePath: Sponza/5792855332885324923.jpg
+    Type: AssetType::Texture2D
+  - Handle: 4005713227466741421
+    FilePath: Models/Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 4012984305196872245
+    FilePath: Models/Sponza/Sponza_mat58.material
+    Type: AssetType::Material
+  - Handle: 4013227279957171518
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 4014073007124569368
+    FilePath: ./Sponza/meshes[0]-53.mesh
+    Type: AssetType::Mesh
+  - Handle: 4023408214416405640
+    FilePath: Models/Sponza/meshes[0]-38.mesh
+    Type: AssetType::Mesh
+  - Handle: 4035605814563026412
+    FilePath: Sponza/Sponza_mat0.material
+    Type: AssetType::Material
+  - Handle: 4052900988331951133
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 4071016894827135979
+    FilePath: Sponza/14118779221266351425.jpg
+    Type: AssetType::Texture2D
+  - Handle: 4072470747037315335
+    FilePath: Sponza/4910669866631290573.jpg
+    Type: AssetType::Texture2D
+  - Handle: 4082092240707600101
+    FilePath: Models/Sponza/759203620573749278.jpg
+    Type: AssetType::Texture2D
+  - Handle: 4106955460554794081
+    FilePath: Models/Sponza/Sponza_mat61.material
+    Type: AssetType::Material
+  - Handle: 4119157719827766586
+    FilePath: Sponza/meshes[0]-18.mesh
+    Type: AssetType::Mesh
+  - Handle: 4130466594974657279
+    FilePath: Models/Sponza/14650633544276105767.jpg
+    Type: AssetType::Texture2D
+  - Handle: 4146663645035484479
+    FilePath: Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 4162349904604320376
+    FilePath: ./Sponza/meshes[0]-61.mesh
+    Type: AssetType::Mesh
+  - Handle: 4165641554818468816
+    FilePath: Sponza/Sponza_mat1.material
+    Type: AssetType::Material
+  - Handle: 4172887218495929947
+    FilePath: Sponza/6593109234861095314.jpg
+    Type: AssetType::Texture2D
+  - Handle: 4206170551172143523
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 4222657107723696890
+    FilePath: Models/SciFiHelmet/SciFiHelmet_MetallicRoughness.png
+    Type: AssetType::Texture2D
+  - Handle: 4233337674924037317
+    FilePath: Sponza/Sponza_mat2.material
+    Type: AssetType::Material
+  - Handle: 4236936661167092723
+    FilePath: Models/Sponza/meshes[0]-84.mesh
+    Type: AssetType::Mesh
+  - Handle: 4253578261503151292
+    FilePath: Sponza/Sponza_mat1.material
+    Type: AssetType::Material
+  - Handle: 4263654616068113695
+    FilePath: Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 4280084084171498008
+    FilePath: Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 4309243993831565562
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 4325433754499345065
+    FilePath: Sponza/meshes[0]-40.mesh
+    Type: AssetType::Mesh
+  - Handle: 4339463426046548971
+    FilePath: Models/Sponza/Sponza_mat68.material
+    Type: AssetType::Material
+  - Handle: 4341397259430106948
+    FilePath: Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 4350435399071732898
+    FilePath: Models/Sponza/Sponza_mat72.material
+    Type: AssetType::Material
+  - Handle: 4361871722464907486
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 4381210562735298457
+    FilePath: Models/goblin-archer/goblin-archer.mesh
+    Type: AssetType::Mesh
+  - Handle: 4383277755394937013
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 4395276627291204761
+    FilePath: Models/Sponza/14118779221266351425.jpg
+    Type: AssetType::Texture2D
+  - Handle: 4412453064502644591
+    FilePath: Sponza/Sponza_mat8.material
+    Type: AssetType::Material
+  - Handle: 4418904348086462147
+    FilePath: Sponza/Sponza_mat17.material
+    Type: AssetType::Material
+  - Handle: 4444376923375629365
+    FilePath: Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 4446473950900506237
+    FilePath: Models/Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 4453762145809149534
+    FilePath: Sponza/Sponza_mat2.material
+    Type: AssetType::Material
+  - Handle: 4456075400731783205
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 4459744956457354177
+    FilePath: Models/Sponza/Sponza_mat89.material
+    Type: AssetType::Material
+  - Handle: 4505870563139502042
+    FilePath: Sponza/meshes[0]-29.mesh
+    Type: AssetType::Mesh
+  - Handle: 4517386466861989748
+    FilePath: Sponza/7815564343179553343.jpg
+    Type: AssetType::Texture2D
+  - Handle: 4523952745216648125
+    FilePath: Models/Sponza/7056944414013900257.jpg
+    Type: AssetType::Texture2D
+  - Handle: 4531972763153706651
+    FilePath: Models/Sponza/Sponza_mat41.material
+    Type: AssetType::Material
+  - Handle: 4544397924023471992
+    FilePath: untitled/Sphere.001.mesh
+    Type: AssetType::Mesh
+  - Handle: 4552668294746307825
+    FilePath: Models/Sponza/meshes[0]-1.mesh
+    Type: AssetType::Mesh
+  - Handle: 4568353369360794268
+    FilePath: Sponza/Sponza_mat15.material
+    Type: AssetType::Material
+  - Handle: 4599961523014328669
+    FilePath: Models/Sponza/Sponza_mat55.material
+    Type: AssetType::Material
+  - Handle: 4616349694585318497
+    FilePath: Sponza/4601176305987539675.jpg
+    Type: AssetType::Texture2D
+  - Handle: 4620931681686464564
+    FilePath: Sponza/Sponza_mat19.material
+    Type: AssetType::Material
+  - Handle: 4625213308391101681
+    FilePath: Sponza/Sponza_mat21.material
+    Type: AssetType::Material
+  - Handle: 4632673673161833555
+    FilePath: Sponza/meshes[0]-12.mesh
+    Type: AssetType::Mesh
+  - Handle: 4651320922487288394
+    FilePath: Sponza/7268504077753552595.jpg
+    Type: AssetType::Texture2D
+  - Handle: 4664567596295666162
+    FilePath: Sponza/Sponza_mat14.material
+    Type: AssetType::Material
+  - Handle: 4666075723924773204
+    FilePath: Models/Sponza/meshes[0]-24.mesh
+    Type: AssetType::Mesh
+  - Handle: 4677466720564126617
+    FilePath: Sponza/meshes[0]-94.mesh
+    Type: AssetType::Mesh
+  - Handle: 4687721767993208088
+    FilePath: Models/Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 4710685372390255299
+    FilePath: Models/Sponza/meshes[0]-90.mesh
+    Type: AssetType::Mesh
+  - Handle: 4737876510643893612
+    FilePath: Sponza/Sponza_mat7.material
+    Type: AssetType::Material
+  - Handle: 4738601526434704797
+    FilePath: Models/Sponza/Sponza_mat102.material
+    Type: AssetType::Material
+  - Handle: 4746839487981813328
+    FilePath: Sponza/16275776544635328252.png
+    Type: AssetType::Texture2D
+  - Handle: 4747313405366074548
+    FilePath: Sponza/2299742237651021498.jpg
+    Type: AssetType::Texture2D
+  - Handle: 4750969561496231352
+    FilePath: Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 4759967189484428421
+    FilePath: Models/Sponza/meshes[0]-62.mesh
+    Type: AssetType::Mesh
+  - Handle: 4769854164881993470
+    FilePath: Models/Sponza/Sponza_mat33.material
+    Type: AssetType::Material
+  - Handle: 4770129778857507415
+    FilePath: Models/Sponza/4910669866631290573.jpg
+    Type: AssetType::Texture2D
+  - Handle: 4773961137516513065
+    FilePath: Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 4853225405324521481
+    FilePath: Scripts/hh.shader
+    Type: AssetType::Shader
+  - Handle: 4874455773615081133
+    FilePath: Models/Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 4918500815879367979
+    FilePath: Sponza/Sponza_mat17.material
+    Type: AssetType::Material
+  - Handle: 4929950783313266167
+    FilePath: Models/Sponza/meshes[0]-18.mesh
+    Type: AssetType::Mesh
+  - Handle: 4936237304464737540
+    FilePath: Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 4975605760658690405
+    FilePath: Sponza/Sponza_mat47.material
+    Type: AssetType::Material
+  - Handle: 4978957983575880905
+    FilePath: Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 4983530886914587276
+    FilePath: Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 5001660058882535389
+    FilePath: Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 5008544064380043871
+    FilePath: Models/Sponza/Sponza_mat25.material
+    Type: AssetType::Material
+  - Handle: 5011016669890466199
+    FilePath: Sponza/Sponza_mat20.material
+    Type: AssetType::Material
+  - Handle: 5028497589225702374
+    FilePath: Sponza/Sponza_mat18.material
+    Type: AssetType::Material
+  - Handle: 5035114980162271412
+    FilePath: Prefabs/tt.prefab
+    Type: AssetType::Prefab
+  - Handle: 5040476450943422611
+    FilePath: Sponza/Sponza_mat17.material
+    Type: AssetType::Material
+  - Handle: 5048347899977957330
+    FilePath: ./Sponza/meshes[0]-41.mesh
+    Type: AssetType::Mesh
+  - Handle: 5054627921202040674
+    FilePath: ./Sponza/meshes[0]-54.mesh
+    Type: AssetType::Mesh
+  - Handle: 5060225965566035246
+    FilePath: Sponza/Sponza_mat2.material
+    Type: AssetType::Material
+  - Handle: 5081355194008266442
+    FilePath: Sponza/Sponza_mat19.material
+    Type: AssetType::Material
+  - Handle: 5116219592664009315
+    FilePath: Sponza/Sponza_mat23.material
+    Type: AssetType::Material
+  - Handle: 5119947919663597385
+    FilePath: Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 5127517980861453590
+    FilePath: Sponza/Sponza_mat1.material
+    Type: AssetType::Material
+  - Handle: 5133153451042805202
+    FilePath: Models/Sponza/meshes[0]-25.mesh
+    Type: AssetType::Mesh
+  - Handle: 5142652143809472642
+    FilePath: Sponza/Sponza_mat54.material
+    Type: AssetType::Material
+  - Handle: 5156311585276274334
+    FilePath: ./Sponza/meshes[0]-33.mesh
+    Type: AssetType::Mesh
+  - Handle: 5158545924245854404
+    FilePath: Sponza/Sponza_mat17.material
+    Type: AssetType::Material
+  - Handle: 5161349115278813313
+    FilePath: Sponza/meshes[0]-97.mesh
+    Type: AssetType::Mesh
+  - Handle: 5171792313701870667
+    FilePath: Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 5172951535161094568
+    FilePath: Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 5182995661592811781
+    FilePath: Models/Sponza/Sponza_mat29.material
+    Type: AssetType::Material
+  - Handle: 5192742920910107793
+    FilePath: Models/SciFiHelmet/SciFiHelmet_Normal.png
+    Type: AssetType::Texture2D
+  - Handle: 5197751587910763987
+    FilePath: Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 5201098274010621447
+    FilePath: Models/Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 5201705895999345566
+    FilePath: Sponza/meshes[0]-83.mesh
+    Type: AssetType::Mesh
+  - Handle: 5215094545891657999
+    FilePath: Sponza/Sponza_mat2.material
+    Type: AssetType::Material
+  - Handle: 5229198295133619126
+    FilePath: Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 5239519185555564046
+    FilePath: ./Sponza/meshes[0]-39.mesh
+    Type: AssetType::Mesh
+  - Handle: 5266805718183065160
+    FilePath: Sponza/Sponza_mat20.material
+    Type: AssetType::Material
+  - Handle: 5271626382896458421
+    FilePath: Models/Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 5283407856731340496
+    FilePath: ./Sponza/meshes[0]-71.mesh
+    Type: AssetType::Mesh
+  - Handle: 5306909664965101424
+    FilePath: Models/Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 5326333472924413097
+    FilePath: Models/Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 5360902856907904442
+    FilePath: ./Sponza/meshes[0]-70.mesh
+    Type: AssetType::Mesh
+  - Handle: 5369248093487094950
+    FilePath: Sponza/Sponza_mat1.material
+    Type: AssetType::Material
+  - Handle: 5374940777993607983
+    FilePath: ./Sponza/meshes[0]-25.mesh
+    Type: AssetType::Mesh
+  - Handle: 5391390977643647807
+    FilePath: Models/Sponza/meshes[0]-40.mesh
+    Type: AssetType::Mesh
+  - Handle: 5396927531187895018
+    FilePath: Sponza/1219024358953944284.jpg
+    Type: AssetType::Texture2D
+  - Handle: 5402412389797781308
+    FilePath: Sponza/8503262930880235456.jpg
+    Type: AssetType::Texture2D
+  - Handle: 5414490994143478694
+    FilePath: Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 5419395486246178044
+    FilePath: Sponza/Sponza_mat2.material
+    Type: AssetType::Material
+  - Handle: 5432323820460526010
+    FilePath: ./Sponza/meshes[0]-26.mesh
+    Type: AssetType::Mesh
+  - Handle: 5435708777734862849
+    FilePath: Models/Sponza/meshes[0]-51.mesh
+    Type: AssetType::Mesh
+  - Handle: 5446808325557342022
+    FilePath: Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 5450782383771110617
+    FilePath: Sponza/meshes[0]-61.mesh
+    Type: AssetType::Mesh
+  - Handle: 5453554280141474573
+    FilePath: Models/Sponza/8503262930880235456.jpg
+    Type: AssetType::Texture2D
+  - Handle: 5483500330192119323
+    FilePath: Sponza/Sponza_mat2.material
+    Type: AssetType::Material
+  - Handle: 5546781541952868943
+    FilePath: Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 5552346575249107156
+    FilePath: Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 5553875802585407090
+    FilePath: Models/Sponza/Sponza_mat50.material
+    Type: AssetType::Material
+  - Handle: 5562542673563282691
+    FilePath: Models/Sponza/meshes[0]-19.mesh
+    Type: AssetType::Mesh
+  - Handle: 5566609667932039744
+    FilePath: Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 5567951123221194807
+    FilePath: Models/Sponza/Sponza_mat22.material
+    Type: AssetType::Material
+  - Handle: 5580041215077256564
+    FilePath: Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 5593947794887462701
+    FilePath: Sponza/4477655471536070370.jpg
+    Type: AssetType::Texture2D
+  - Handle: 5621178401365936109
+    FilePath: Sponza/Sponza_mat1.material
+    Type: AssetType::Material
+  - Handle: 5631258893590887702
+    FilePath: Sponza/Sponza_mat3.material
+    Type: AssetType::Material
+  - Handle: 5671514416681326908
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 5673484975470366623
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 5681862377691693874
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 5687675370076245581
+    FilePath: Sponza/Sponza_mat8.material
+    Type: AssetType::Material
+  - Handle: 5694122099907576822
+    FilePath: Sponza/meshes[0]-9.mesh
+    Type: AssetType::Mesh
+  - Handle: 5699130443479231341
+    FilePath: Sponza/Sponza_mat18.material
+    Type: AssetType::Material
+  - Handle: 5706675968864410705
+    FilePath: Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 5707627354276777828
+    FilePath: Models/Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 5718284651582537958
+    FilePath: Sponza/Sponza_mat23.material
+    Type: AssetType::Material
+  - Handle: 5722600618251289493
+    FilePath: Sponza/Sponza_mat75.material
+    Type: AssetType::Material
+  - Handle: 5724365954704630389
+    FilePath: Models/Sponza/Sponza_mat36.material
+    Type: AssetType::Material
+  - Handle: 5730435364656310545
+    FilePath: Models/Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 5733284871188300590
+    FilePath: Models/Sponza/Sponza_mat92.material
+    Type: AssetType::Material
+  - Handle: 5734390017905607266
+    FilePath: Sponza/Sponza_mat11.material
+    Type: AssetType::Material
+  - Handle: 5737218853972981724
+    FilePath: Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 5739087467730230294
+    FilePath: Sponza/meshes[0]-46.mesh
+    Type: AssetType::Mesh
+  - Handle: 5754198353201505317
+    FilePath: Sponza/Sponza_mat0.material
+    Type: AssetType::Material
+  - Handle: 5754868731405241445
+    FilePath: scene/Suzanne.material
+    Type: AssetType::Material
+  - Handle: 5765749498613227537
+    FilePath: Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 5778894364091394669
+    FilePath: Sponza/Sponza_mat14.material
+    Type: AssetType::Material
+  - Handle: 5789155311783609924
+    FilePath: Models/Sponza/meshes[0]-12.mesh
+    Type: AssetType::Mesh
+  - Handle: 5808074896511256608
+    FilePath: Models/Sponza/meshes[0]-9.mesh
+    Type: AssetType::Mesh
+  - Handle: 5831324718734523344
+    FilePath: Models/SciFiHelmet/SciFiHelmet.mesh
+    Type: AssetType::Mesh
+  - Handle: 5839619904059825981
+    FilePath: Sponza/meshes[0]-93.mesh
+    Type: AssetType::Mesh
+  - Handle: 5864749409315078484
+    FilePath: Sponza/Sponza_mat15.material
+    Type: AssetType::Material
+  - Handle: 5900941579993108884
+    FilePath: Sponza/Sponza_mat16.material
+    Type: AssetType::Material
+  - Handle: 5903587367804836243
+    FilePath: ./Sponza/meshes[0]-17.mesh
+    Type: AssetType::Mesh
+  - Handle: 5909005605667941519
+    FilePath: Models/Sponza/meshes[0]-68.mesh
+    Type: AssetType::Mesh
+  - Handle: 5911315219422864937
+    FilePath: Sponza/Sponza_mat10.material
+    Type: AssetType::Material
+  - Handle: 5915621243783761633
+    FilePath: Sponza/Sponza_mat1.material
+    Type: AssetType::Material
+  - Handle: 5941484263773204040
+    FilePath: Sponza/Sponza_mat7.material
+    Type: AssetType::Material
+  - Handle: 5962455413701431592
+    FilePath: Models/Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 5968908786871342138
+    FilePath: Models/Sponza/Sponza_mat99.material
+    Type: AssetType::Material
+  - Handle: 5969118638860151731
+    FilePath: Sponza/meshes[0]-7.mesh
+    Type: AssetType::Mesh
+  - Handle: 5981758094237549393
+    FilePath: SciFiHelmet/SciFiHelmet.mesh
+    Type: AssetType::Mesh
+  - Handle: 5983049493673932669
+    FilePath: Sponza/466164707995436622.jpg
+    Type: AssetType::Texture2D
+  - Handle: 5994360328302053364
+    FilePath: Models/Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 6017781425118184105
+    FilePath: Sponza/17556969131407844942.jpg
+    Type: AssetType::Texture2D
+  - Handle: 6041455424609759958
+    FilePath: Sponza/Sponza_mat21.material
+    Type: AssetType::Material
+  - Handle: 6047884397700648558
+    FilePath: Sponza/Sponza_mat1.material
+    Type: AssetType::Material
+  - Handle: 6051631061606930168
+    FilePath: Sponza/Sponza_mat1.material
+    Type: AssetType::Material
+  - Handle: 6149495200059983814
+    FilePath: Models/Sponza/meshes[0]-28.mesh
+    Type: AssetType::Mesh
+  - Handle: 6154592242138252093
+    FilePath: Models/Sponza/5823059166183034438.jpg
+    Type: AssetType::Texture2D
+  - Handle: 6176342369171271400
+    FilePath: Models/Sponza/2051777328469649772.jpg
+    Type: AssetType::Texture2D
+  - Handle: 6191993464044521719
+    FilePath: Sponza/Sponza_mat10.material
+    Type: AssetType::Material
+  - Handle: 6208423524729015576
+    FilePath: Sponza/Sponza_mat21.material
+    Type: AssetType::Material
+  - Handle: 6225216896089123770
+    FilePath: Sponza/Sponza_mat38.material
+    Type: AssetType::Material
+  - Handle: 6233185400958415365
+    FilePath: Models/Sponza/3827035219084910048.jpg
+    Type: AssetType::Texture2D
+  - Handle: 6241880389754580177
+    FilePath: Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 6263219061542681729
+    FilePath: Sponza/Sponza_mat18.material
+    Type: AssetType::Material
+  - Handle: 6274021856010013380
+    FilePath: Sponza/meshes[0]-98.mesh
+    Type: AssetType::Mesh
+  - Handle: 6277469712747320466
+    FilePath: Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 6278829536454150062
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 6284359963627406552
+    FilePath: Models/Sponza/meshes[0]-21.mesh
+    Type: AssetType::Mesh
+  - Handle: 6310459005405692286
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 6314901912615086234
+    FilePath: Sponza/Sponza_mat52.material
+    Type: AssetType::Material
+  - Handle: 6316966713492957155
+    FilePath: Sponza/Sponza_mat20.material
+    Type: AssetType::Material
+  - Handle: 6336132462218883381
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 6339878588496152953
+    FilePath: Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 6342311314105951625
+    FilePath: Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 6342812009361320256
+    FilePath: Sponza/meshes[0]-101.mesh
+    Type: AssetType::Mesh
+  - Handle: 6357716533395320702
+    FilePath: ./Sponza/meshes[0]-24.mesh
+    Type: AssetType::Mesh
+  - Handle: 6363382533969477140
+    FilePath: ./Sponza/meshes[0]-63.mesh
+    Type: AssetType::Mesh
+  - Handle: 6374864639413269536
+    FilePath: Models/Sponza/meshes[0]-66.mesh
+    Type: AssetType::Mesh
+  - Handle: 6385084518536942229
+    FilePath: Sponza/3827035219084910048.jpg
+    Type: AssetType::Texture2D
+  - Handle: 6391677511847528453
+    FilePath: Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 6393347446044020891
+    FilePath: Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 6397213014383395414
+    FilePath: Sponza/Sponza_mat14.material
+    Type: AssetType::Material
+  - Handle: 6420362373115959749
+    FilePath: Models/Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 6420640284052279376
+    FilePath: Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 6420867504309936829
+    FilePath: Models/Sponza/meshes[0]-102.mesh
+    Type: AssetType::Mesh
+  - Handle: 6425290909832566854
+    FilePath: Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 6437977828223339039
+    FilePath: Sponza/7441062115984513793.jpg
+    Type: AssetType::Texture2D
+  - Handle: 6482378218417779633
+    FilePath: Sponza/Sponza_mat7.material
+    Type: AssetType::Material
+  - Handle: 6485086212879904534
+    FilePath: Models/DamagedHelmet/DamagedHelmet.prefab
+    Type: AssetType::Prefab
+  - Handle: 6486709403282394299
+    FilePath: Sponza/meshes[0]-0.mesh
+    Type: AssetType::Mesh
+  - Handle: 6528286118828966128
+    FilePath: Sponza/Sponza_mat20.material
+    Type: AssetType::Material
+  - Handle: 6550181663668990788
+    FilePath: Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 6609424089653778894
+    FilePath: Sponza/Sponza_mat21.material
+    Type: AssetType::Material
+  - Handle: 6625961747012834279
+    FilePath: Models/Sponza/meshes[0]-32.mesh
+    Type: AssetType::Mesh
+  - Handle: 6649832887348475093
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 6699533598447067139
+    FilePath: Sponza/Sponza_mat93.material
+    Type: AssetType::Material
+  - Handle: 6699966202757850259
+    FilePath: Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 6723905697963571819
+    FilePath: untitled/untitled.prefab
+    Type: AssetType::Prefab
+  - Handle: 6738023788118996435
+    FilePath: Models/Sponza/Sponza_mat81.material
+    Type: AssetType::Material
+  - Handle: 6745588026458269878
+    FilePath: Sponza/Sponza_mat18.material
+    Type: AssetType::Material
+  - Handle: 6755388080871893160
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 6756822370778819755
+    FilePath: Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 6757813803994767354
+    FilePath: Models/Sponza/meshes[0]-11.mesh
+    Type: AssetType::Mesh
+  - Handle: 6765441527936362293
+    FilePath: Models/Sponza/Sponza_mat49.material
+    Type: AssetType::Material
+  - Handle: 6775860922216299459
+    FilePath: Sponza/Sponza_mat13.material
+    Type: AssetType::Material
+  - Handle: 6783665027611758845
+    FilePath: Sponza/Sponza_mat1.material
+    Type: AssetType::Material
+  - Handle: 6785207817899062840
+    FilePath: Sponza/Sponza_mat19.material
+    Type: AssetType::Material
+  - Handle: 6795943491793128759
+    FilePath: Sponza/Sponza_mat18.material
+    Type: AssetType::Material
+  - Handle: 6796697334798769183
+    FilePath: Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 6813517972188198340
+    FilePath: Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 6819345842357968967
+    FilePath: Sponza/Sponza_mat23.material
+    Type: AssetType::Material
+  - Handle: 6822077444399495823
+    FilePath: Models/Sponza/Sponza_mat45.material
+    Type: AssetType::Material
+  - Handle: 6878970627482745848
+    FilePath: Sponza/Sponza_mat9.material
+    Type: AssetType::Material
+  - Handle: 6891338380071350596
+    FilePath: Sponza/Sponza_mat28.material
+    Type: AssetType::Material
+  - Handle: 6910606052901460395
+    FilePath: Sponza/Sponza_mat2.material
+    Type: AssetType::Material
+  - Handle: 6935723851861620468
+    FilePath: Sponza/Sponza_mat19.material
+    Type: AssetType::Material
+  - Handle: 6963614438150755230
+    FilePath: Sponza/meshes[0]-15.mesh
+    Type: AssetType::Mesh
+  - Handle: 6991975497509918493
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 7030914905459606913
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 7055204872171819793
+    FilePath: Sponza/Sponza_mat2.material
+    Type: AssetType::Material
+  - Handle: 7058118400220238862
+    FilePath: Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 7060002546582282894
+    FilePath: Sponza/Sponza_mat20.material
+    Type: AssetType::Material
+  - Handle: 7067566114328053018
+    FilePath: Sponza/16299174074766089871.jpg
+    Type: AssetType::Texture2D
+  - Handle: 7100366184922559585
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 7124264632768331288
+    FilePath: Sponza/Sponza_mat56.material
+    Type: AssetType::Material
+  - Handle: 7138284167693978299
+    FilePath: Sponza/Sponza_mat37.material
+    Type: AssetType::Material
+  - Handle: 7139186514098955311
+    FilePath: Sponza/Sponza_mat7.material
+    Type: AssetType::Material
+  - Handle: 7146740299357275314
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 7176699297408009544
+    FilePath: Sponza/Sponza_mat8.material
+    Type: AssetType::Material
+  - Handle: 7200913496228914093
+    FilePath: Sponza/Sponza_mat1.material
+    Type: AssetType::Material
+  - Handle: 7201701054241294133
+    FilePath: Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 7240629348759451134
+    FilePath: Sponza/6667038893015345571.jpg
+    Type: AssetType::Texture2D
+  - Handle: 7264150381207766000
+    FilePath: Sponza/meshes[0]-89.mesh
+    Type: AssetType::Mesh
+  - Handle: 7264309067670765386
+    FilePath: Sponza/Sponza_mat22.material
+    Type: AssetType::Material
+  - Handle: 7265917466128635295
+    FilePath: Sponza/Sponza_mat15.material
+    Type: AssetType::Material
+  - Handle: 7271039504667843102
+    FilePath: Sponza/Sponza_mat96.material
+    Type: AssetType::Material
+  - Handle: 7273993422018299674
+    FilePath: Sponza/meshes[0]-81.mesh
+    Type: AssetType::Mesh
+  - Handle: 7283541577507423000
+    FilePath: Models/Sponza/Sponza_mat2.material
+    Type: AssetType::Material
+  - Handle: 7292304850706666408
+    FilePath: Sponza/Sponza_mat8.material
+    Type: AssetType::Material
+  - Handle: 7305463025547331727
+    FilePath: Models/Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 7321646859891239494
+    FilePath: ./Sponza/meshes[0]-27.mesh
+    Type: AssetType::Mesh
+  - Handle: 7351984802271874157
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 7374239568742642967
+    FilePath: Models/Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 7384385252309793441
+    FilePath: Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 7402900516694921831
+    FilePath: Models/Sponza/7645212358685992005.jpg
+    Type: AssetType::Texture2D
+  - Handle: 7407820010229815774
+    FilePath: Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 7416917232357734199
+    FilePath: Sponza/Sponza_mat60.material
+    Type: AssetType::Material
+  - Handle: 7428292856611946922
+    FilePath: Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 7435199701515647009
+    FilePath: Sponza/Sponza_mat14.material
+    Type: AssetType::Material
+  - Handle: 7466398210852763991
+    FilePath: Models/Sponza/meshes[0]-14.mesh
+    Type: AssetType::Mesh
+  - Handle: 7509043158799173993
+    FilePath: Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 7516024698559700023
+    FilePath: Models/Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 7532477195129943666
+    FilePath: Sponza/meshes[0]-25.mesh
+    Type: AssetType::Mesh
+  - Handle: 7536043283269493159
+    FilePath: Sponza/meshes[0]-38.mesh
+    Type: AssetType::Mesh
+  - Handle: 7553173983176826929
+    FilePath: Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 7558109133461825066
+    FilePath: Sponza/Sponza_mat20.material
+    Type: AssetType::Material
+  - Handle: 7586069637413780032
+    FilePath: Sponza/Sponza_mat18.material
+    Type: AssetType::Material
+  - Handle: 7593291843346192836
+    FilePath: Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 7649586608295806944
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 7663908234606318992
+    FilePath: Models/Sponza/Sponza_mat44.material
+    Type: AssetType::Material
+  - Handle: 7667499576148464164
+    FilePath: Sponza/2374361008830720677.jpg
+    Type: AssetType::Texture2D
+  - Handle: 7667927824006664606
+    FilePath: Models/Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 7672007394827364480
+    FilePath: ./Sponza/meshes[0]-28.mesh
+    Type: AssetType::Mesh
+  - Handle: 7685163163948690147
+    FilePath: Sponza/14170708867020035030.jpg
+    Type: AssetType::Texture2D
+  - Handle: 7687776417602275126
+    FilePath: Sponza/Sponza_mat8.material
+    Type: AssetType::Material
+  - Handle: 7691991362840762221
+    FilePath: d.lua
+    Type: AssetType::LuaScript
+  - Handle: 7709545605357182663
+    FilePath: Models/Sponza/Sponza_mat46.material
+    Type: AssetType::Material
+  - Handle: 7710079665461974085
+    FilePath: Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 7757184432491254397
+    FilePath: Sponza/Sponza_mat10.material
+    Type: AssetType::Material
+  - Handle: 7765860233921826530
+    FilePath: Sponza/Sponza_mat17.material
+    Type: AssetType::Material
+  - Handle: 7769242424302010386
+    FilePath: Models/Sponza/4975155472559461469.jpg
+    Type: AssetType::Texture2D
+  - Handle: 7780756538474511791
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 7783487602623332460
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 7794770162794602382
+    FilePath: Sponza/Sponza_mat7.material
+    Type: AssetType::Material
+  - Handle: 7800582037622536442
+    FilePath: Sponza/2051777328469649772.jpg
+    Type: AssetType::Texture2D
+  - Handle: 7801148120206767227
+    FilePath: Models/Sponza/meshes[0]-72.mesh
+    Type: AssetType::Mesh
+  - Handle: 7808742109346320218
+    FilePath: Models/Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 7817701443958753186
+    FilePath: Sponza/Sponza_mat1.material
+    Type: AssetType::Material
+  - Handle: 7827781289717846248
+    FilePath: Models/Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 7838856225249469429
+    FilePath: Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 7846320857700983018
+    FilePath: Sponza/11490520546946913238.jpg
+    Type: AssetType::Texture2D
+  - Handle: 7856497058592168029
+    FilePath: Models/Sponza/Sponza_mat34.material
+    Type: AssetType::Material
+  - Handle: 7860672904470561736
+    FilePath: Sponza/Sponza_mat2.material
+    Type: AssetType::Material
+  - Handle: 7879068011234678449
+    FilePath: Models/Sponza/meshes[0]-6.mesh
+    Type: AssetType::Mesh
+  - Handle: 7879194423231646950
+    FilePath: Sponza/Sponza_mat70.material
+    Type: AssetType::Material
+  - Handle: 7891316658820536516
+    FilePath: Sponza/Sponza_mat23.material
+    Type: AssetType::Material
+  - Handle: 7899547380761550477
+    FilePath: Sponza/Sponza_mat2.material
+    Type: AssetType::Material
+  - Handle: 7899592959928784043
+    FilePath: Sponza/6772804448157695701.jpg
+    Type: AssetType::Texture2D
+  - Handle: 7912793163977657364
+    FilePath: Sponza/Sponza_mat22.material
+    Type: AssetType::Material
+  - Handle: 7922731238439755235
+    FilePath: ./Sponza/meshes[0]-13.mesh
+    Type: AssetType::Mesh
+  - Handle: 7924363528432355635
+    FilePath: Sponza/meshes[0]-87.mesh
+    Type: AssetType::Mesh
+  - Handle: 7933010911585018501
+    FilePath: Sponza/meshes[0]-30.mesh
+    Type: AssetType::Mesh
+  - Handle: 7935519446183407663
+    FilePath: Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 7949523845214436589
+    FilePath: Sponza/Sponza_mat0.material
+    Type: AssetType::Material
+  - Handle: 7957948950929954363
+    FilePath: Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 7973850936176299722
+    FilePath: Sponza/Sponza_mat1.material
+    Type: AssetType::Material
+  - Handle: 7980284145682141361
+    FilePath: Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 7994547350420444679
+    FilePath: Models/Sponza/Sponza_mat101.material
+    Type: AssetType::Material
+  - Handle: 7997337310632584441
+    FilePath: Models/Sponza/Sponza_mat8.material
+    Type: AssetType::Material
+  - Handle: 8004312988696493611
+    FilePath: Sponza/Sponza_mat3.material
+    Type: AssetType::Material
+  - Handle: 8010450347883074201
+    FilePath: Models/Sponza/meshes[0]-74.mesh
+    Type: AssetType::Mesh
+  - Handle: 8036019391593458402
+    FilePath: Models/Sponza/meshes[0]-87.mesh
+    Type: AssetType::Mesh
+  - Handle: 8040458048541440835
+    FilePath: Models/Sponza/Sponza_mat2.material
+    Type: AssetType::Material
+  - Handle: 8040466812997122241
+    FilePath: ./Sponza/meshes[0]-31.mesh
+    Type: AssetType::Mesh
+  - Handle: 8071817744289632759
+    FilePath: ./Sponza/meshes[0]-100.mesh
+    Type: AssetType::Mesh
+  - Handle: 8087025498274424779
+    FilePath: Sponza/Sponza_mat17.material
+    Type: AssetType::Material
+  - Handle: 8103467733499294046
+    FilePath: Sponza/meshes[0]-59.mesh
+    Type: AssetType::Mesh
+  - Handle: 8104198257219406515
+    FilePath: Models/Sponza/meshes[0]-43.mesh
+    Type: AssetType::Mesh
+  - Handle: 8117412124560521697
+    FilePath: Sponza/Sponza_mat21.material
+    Type: AssetType::Material
+  - Handle: 8121552539484503347
+    FilePath: Sponza/Sponza_mat20.material
+    Type: AssetType::Material
+  - Handle: 8148809747094714538
+    FilePath: Models/Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 8153434888410484279
+    FilePath: SciFiHelmet/SciFiHelmet_AmbientOcclusion.png
+    Type: AssetType::Texture2D
+  - Handle: 8158065952100276307
+    FilePath: Models/Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 8160287872670798434
+    FilePath: Sponza/Sponza_mat15.material
+    Type: AssetType::Material
+  - Handle: 8192296816423286575
+    FilePath: Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 8199546943309477650
+    FilePath: Sponza/Sponza_mat24.material
+    Type: AssetType::Material
+  - Handle: 8218336520400956133
+    FilePath: Sponza/Sponza_mat2.material
+    Type: AssetType::Material
+  - Handle: 8222241061675034719
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 8243788721295742956
+    FilePath: Models/Sponza/meshes[0]-57.mesh
+    Type: AssetType::Mesh
+  - Handle: 8248509812297129913
+    FilePath: Sponza/Sponza_mat3.material
+    Type: AssetType::Material
+  - Handle: 8260845686894538952
+    FilePath: Models/Sponza/meshes[0]-60.mesh
+    Type: AssetType::Mesh
+  - Handle: 8279903655419433298
+    FilePath: Sponza/meshes[0]-91.mesh
+    Type: AssetType::Mesh
+  - Handle: 8302493139928046321
+    FilePath: Models/Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 8306052250546599368
+    FilePath: Sponza/Sponza_mat20.material
+    Type: AssetType::Material
+  - Handle: 8322061481426695385
+    FilePath: ./Sponza/meshes[0]-67.mesh
+    Type: AssetType::Mesh
+  - Handle: 8325360169291741400
+    FilePath: ./Sponza/meshes[0]-64.mesh
+    Type: AssetType::Mesh
+  - Handle: 8347889163468301903
+    FilePath: Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 8367343944765325322
+    FilePath: Models/Sponza/Sponza_mat78.material
+    Type: AssetType::Material
+  - Handle: 8367510687614979171
+    FilePath: Sponza/meshes[0]-56.mesh
+    Type: AssetType::Mesh
+  - Handle: 8369544515447832563
+    FilePath: Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 8371617171243411826
+    FilePath: Sponza/Sponza_mat0.material
+    Type: AssetType::Material
+  - Handle: 8427967057217416760
+    FilePath: Models/Sponza/Sponza_mat2.material
+    Type: AssetType::Material
+  - Handle: 8429235537684381050
+    FilePath: Sponza/Sponza_mat50.material
+    Type: AssetType::Material
+  - Handle: 8440002190538220227
+    FilePath: Sponza/Sponza_mat2.material
+    Type: AssetType::Material
+  - Handle: 8446815872204225326
+    FilePath: Models/Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 8458233568945123879
+    FilePath: Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 8470832412651736693
+    FilePath: Models/Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 8486963367594801449
+    FilePath: ./Sponza/meshes[0]-58.mesh
+    Type: AssetType::Mesh
+  - Handle: 8496593998052522008
+    FilePath: Models/Sponza/Sponza_mat57.material
+    Type: AssetType::Material
+  - Handle: 8536355341286967803
+    FilePath: Sponza/13196865903111448057.jpg
+    Type: AssetType::Texture2D
+  - Handle: 8540965023853884223
+    FilePath: Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 8560951826309100483
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 8565661354709602119
+    FilePath: Sponza/Sponza_mat44.material
+    Type: AssetType::Material
+  - Handle: 8594399766177711520
+    FilePath: Sponza/Sponza_mat35.material
+    Type: AssetType::Material
+  - Handle: 8600974327107120448
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 8608200749625668522
+    FilePath: Scenes/prefabTest.scene
+    Type: AssetType::Scene
+  - Handle: 8621753809129279115
+    FilePath: ./Sponza/meshes[0]-88.mesh
+    Type: AssetType::Mesh
+  - Handle: 8622197310801406997
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 8634171351895691539
+    FilePath: Sponza/meshes[0]-58.mesh
+    Type: AssetType::Mesh
+  - Handle: 8645806048208217086
+    FilePath: Sponza/Sponza_mat3.material
+    Type: AssetType::Material
+  - Handle: 8655006724736347477
+    FilePath: Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 8673635310685840495
+    FilePath: Models/Sponza/Sponza_mat98.material
+    Type: AssetType::Material
+  - Handle: 8681110378334977091
+    FilePath: Sponza/Sponza_mat13.material
+    Type: AssetType::Material
+  - Handle: 8693966937220475977
+    FilePath: Models/Sponza/meshes[0]-88.mesh
+    Type: AssetType::Mesh
+  - Handle: 8706791629346056008
+    FilePath: Sponza/meshes[0]-42.mesh
+    Type: AssetType::Mesh
+  - Handle: 8709550939867134261
+    FilePath: Sponza/Sponza_mat12.material
+    Type: AssetType::Material
+  - Handle: 8719376764858294180
+    FilePath: Models/Sponza/meshes[0]-52.mesh
+    Type: AssetType::Mesh
+  - Handle: 8736901173680432242
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 8744908730396540229
+    FilePath: Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 8755278298518967154
+    FilePath: Models/Sponza/meshes[0]-5.mesh
+    Type: AssetType::Mesh
+  - Handle: 8762572189741538562
+    FilePath: Models/Sponza/Sponza_mat30.material
+    Type: AssetType::Material
+  - Handle: 8783210597866865824
+    FilePath: Models/Sponza/Sponza_mat54.material
+    Type: AssetType::Material
+  - Handle: 8822015529834058283
+    FilePath: Scenes/physics.scene
+    Type: AssetType::Scene
+  - Handle: 8833690433172064882
+    FilePath: Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 8845634709963903841
+    FilePath: Sponza/Sponza_mat2.material
+    Type: AssetType::Material
+  - Handle: 8851880307570683060
+    FilePath: Sponza/3628158980083700836.jpg
+    Type: AssetType::Texture2D
+  - Handle: 8867873009833742085
+    FilePath: ./Sponza/meshes[0]-42.mesh
+    Type: AssetType::Mesh
+  - Handle: 8869971098987266599
+    FilePath: Sponza/Sponza_mat20.material
+    Type: AssetType::Material
+  - Handle: 8896756100092768917
+    FilePath: Sponza/Sponza_mat13.material
+    Type: AssetType::Material
+  - Handle: 8903940790629085122
+    FilePath: Sponza/Sponza_mat16.material
+    Type: AssetType::Material
+  - Handle: 8927798346744375382
+    FilePath: Scenes/sphere.scene
+    Type: AssetType::Scene
+  - Handle: 8940608913959195444
+    FilePath: Sponza/Sponza_mat1.material
+    Type: AssetType::Material
+  - Handle: 8957815993569199117
+    FilePath: Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 8964626019072548314
+    FilePath: Sponza/Sponza_mat12.material
+    Type: AssetType::Material
+  - Handle: 8965244011218047164
+    FilePath: Sponza/Sponza_mat7.material
+    Type: AssetType::Material
+  - Handle: 8966022731641290940
+    FilePath: Sponza/Sponza_mat0.material
+    Type: AssetType::Material
+  - Handle: 8980707679158735556
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 8987538640065195266
+    FilePath: Sponza/Sponza_mat1.material
+    Type: AssetType::Material
+  - Handle: 9019836346671853827
+    FilePath: Sponza/Sponza_mat14.material
+    Type: AssetType::Material
+  - Handle: 9023517744560966552
+    FilePath: Models/Sponza/15722799267630235092.jpg
+    Type: AssetType::Texture2D
+  - Handle: 9042818202655761358
+    FilePath: Models/Sponza/4871783166746854860.jpg
+    Type: AssetType::Texture2D
+  - Handle: 9055636082939680091
+    FilePath: Models/Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 9061021832128509184
+    FilePath: ./Sponza/meshes[0]-101.mesh
+    Type: AssetType::Mesh
+  - Handle: 9069054081383320207
+    FilePath: Sponza/Sponza_mat98.material
+    Type: AssetType::Material
+  - Handle: 9097821660694547377
+    FilePath: Sponza/Sponza_mat21.material
+    Type: AssetType::Material
+  - Handle: 9098683910960237249
+    FilePath: Models/Sponza/meshes[0]-46.mesh
+    Type: AssetType::Mesh
+  - Handle: 9111011971135583383
+    FilePath: Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 9119852335624757495
+    FilePath: Sponza/Sponza_mat0.material
+    Type: AssetType::Material
+  - Handle: 9138505262781159013
+    FilePath: Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 9138922950984254050
+    FilePath: Models/Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 9140068431942134156
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 9151516758815037043
+    FilePath: Sponza/Sponza_mat2.material
+    Type: AssetType::Material
+  - Handle: 9160038102658983055
+    FilePath: Sponza/Sponza_mat3.material
+    Type: AssetType::Material
+  - Handle: 9175966531297644516
+    FilePath: Sponza/Sponza_mat10.material
+    Type: AssetType::Material
+  - Handle: 9209355025595742587
+    FilePath: Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 9213558524433507069
+    FilePath: Sponza/Sponza_mat23.material
+    Type: AssetType::Material
+  - Handle: 9230278210475209326
+    FilePath: Models/Sponza/8051790464816141987.jpg
+    Type: AssetType::Texture2D
+  - Handle: 9232008772948089196
+    FilePath: Sponza/Sponza_mat59.material
+    Type: AssetType::Material
+  - Handle: 9246209566355703588
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 9265779837880316407
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 9270866980867167519
+    FilePath: Models/Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 9288574281932375289
+    FilePath: Sponza/Sponza_mat16.material
+    Type: AssetType::Material
+  - Handle: 9295041671341470609
+    FilePath: Sponza/715093869573992647.jpg
+    Type: AssetType::Texture2D
+  - Handle: 9295388667104747608
+    FilePath: Sponza/8750083169368950601.jpg
+    Type: AssetType::Texture2D
+  - Handle: 9305489681096107028
+    FilePath: Models/Sponza/5792855332885324923.jpg
+    Type: AssetType::Texture2D
+  - Handle: 9309855194522460352
+    FilePath: Sponza/14267839433702832875.jpg
+    Type: AssetType::Texture2D
+  - Handle: 9311342157940991012
+    FilePath: Sponza/Sponza_mat15.material
+    Type: AssetType::Material
+  - Handle: 9313215491659244636
+    FilePath: Sponza/Sponza_mat15.material
+    Type: AssetType::Material
+  - Handle: 9315252101327862574
+    FilePath: Sponza/meshes[0]-65.meshes[0]-67.meshes[0]-70.mesh
+    Type: AssetType::Mesh
+  - Handle: 9321630895128083080
+    FilePath: Models/Sponza/Sponza_mat43.material
+    Type: AssetType::Material
+  - Handle: 9331386229997451609
+    FilePath: Sponza/Sponza_mat2.material
+    Type: AssetType::Material
+  - Handle: 9399949773473979404
+    FilePath: ./Sponza/meshes[0]-50.mesh
+    Type: AssetType::Mesh
+  - Handle: 9411376370091933456
+    FilePath: Models/Sponza/Sponza_mat2.material
+    Type: AssetType::Material
+  - Handle: 9419709771197841968
+    FilePath: Scenes/hhsaaa.scene
+    Type: AssetType::Scene
+  - Handle: 9425191470602039373
+    FilePath: Models/Sponza/8773302468495022225.jpg
+    Type: AssetType::Texture2D
+  - Handle: 9426775022122679930
+    FilePath: Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 9453808154202543259
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 9462029218828224728
+    FilePath: Sponza/meshes[0]-90.mesh
+    Type: AssetType::Mesh
+  - Handle: 9467614915385316783
+    FilePath: Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 9472236382463266431
+    FilePath: Scenes/scriptTest.scene
+    Type: AssetType::Scene
+  - Handle: 9488411984406427866
+    FilePath: Sponza/Sponza_mat21.material
+    Type: AssetType::Material
+  - Handle: 9495842572289917791
+    FilePath: Sponza/Sponza_mat21.material
+    Type: AssetType::Material
+  - Handle: 9500385101336100723
+    FilePath: Models/Sponza/meshes[0]-8.mesh
+    Type: AssetType::Mesh
+  - Handle: 9500947745543712476
+    FilePath: Sponza/Sponza_mat17.material
+    Type: AssetType::Material
+  - Handle: 9514625995715902434
+    FilePath: Sponza/meshes[0]-13.mesh
+    Type: AssetType::Mesh
+  - Handle: 9526321032189411771
+    FilePath: Sponza/Sponza_mat23.material
+    Type: AssetType::Material
+  - Handle: 9534694727595290370
+    FilePath: Sponza/2969916736137545357.jpg
+    Type: AssetType::Texture2D
+  - Handle: 9543245392632297798
+    FilePath: ./Sponza/meshes[0]-93.mesh
+    Type: AssetType::Mesh
+  - Handle: 9583857077609557953
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 9606312615813903162
+    FilePath: Sponza/Sponza_mat2.material
+    Type: AssetType::Material
+  - Handle: 9606514970906392056
+    FilePath: Models/Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 9631801931787577864
+    FilePath: Sponza/Sponza_mat79.material
+    Type: AssetType::Material
+  - Handle: 9644033655305796717
+    FilePath: Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 9647428149830822710
+    FilePath: ./Sponza/meshes[0]-96.mesh
+    Type: AssetType::Mesh
+  - Handle: 9661007269772563170
+    FilePath: Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 9674959485935245548
+    FilePath: Models/Sponza/Sponza_mat64.material
+    Type: AssetType::Material
+  - Handle: 9707240905451624407
+    FilePath: Sponza/Sponza_mat8.material
+    Type: AssetType::Material
+  - Handle: 9732164102474584427
+    FilePath: Sponza/Sponza_mat13.material
+    Type: AssetType::Material
+  - Handle: 9740720352131187079
+    FilePath: Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 9743759917517316874
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 9745501153700545769
+    FilePath: Sponza/meshes[0]-71.mesh
+    Type: AssetType::Mesh
+  - Handle: 9757919079299557896
+    FilePath: Sponza/Sponza_mat1.material
+    Type: AssetType::Material
+  - Handle: 9761235257168568198
+    FilePath: Sponza/Sponza_mat3.material
+    Type: AssetType::Material
+  - Handle: 9761382633890196010
+    FilePath: Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 9789017645974707349
+    FilePath: Sponza/8773302468495022225.jpg
+    Type: AssetType::Texture2D
+  - Handle: 9792193706575693752
+    FilePath: Models/Sponza/16299174074766089871.jpg
+    Type: AssetType::Texture2D
+  - Handle: 9809535680877050475
+    FilePath: SciFiHelmet/SciFiHelmet_MetallicRoughness.png
+    Type: AssetType::Texture2D
+  - Handle: 9813865226086610834
+    FilePath: Sponza/Sponza_mat23.material
+    Type: AssetType::Material
+  - Handle: 9843273100321685468
+    FilePath: Sponza/Sponza_mat2.material
+    Type: AssetType::Material
+  - Handle: 9864751268566190155
+    FilePath: Sponza/Sponza_mat3.material
+    Type: AssetType::Material
+  - Handle: 9879390654946377487
+    FilePath: Sponza/Sponza_mat57.material
+    Type: AssetType::Material
+  - Handle: 9889723395278051290
+    FilePath: Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 9893814895413877139
+    FilePath: Models/Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 9899099868135722945
+    FilePath: Models/Sponza/meshes[0]-22.mesh
+    Type: AssetType::Mesh
+  - Handle: 9939734246154335859
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 9969902074264016281
+    FilePath: Models/Sponza/meshes[0]-99.mesh
+    Type: AssetType::Mesh
+  - Handle: 9983549870302759930
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 9984153876651554745
+    FilePath: Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 9991444474808282849
+    FilePath: Models/Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 10009184361121550341
+    FilePath: Sponza/Sponza_mat18.material
+    Type: AssetType::Material
+  - Handle: 10013328141680575137
+    FilePath: Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 10017331768197131968
+    FilePath: Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 10021727923602778608
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 10034653847619895833
+    FilePath: Models/Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 10038882414661681159
+    FilePath: Models/Sponza/13196865903111448057.jpg
+    Type: AssetType::Texture2D
+  - Handle: 10039282347630962250
+    FilePath: Models/Sponza/8114461559286000061.jpg
+    Type: AssetType::Texture2D
+  - Handle: 10077620511902113983
+    FilePath: Sponza/Sponza_mat18.material
+    Type: AssetType::Material
+  - Handle: 10101720611834759397
+    FilePath: Sponza/Sponza_mat1.material
+    Type: AssetType::Material
+  - Handle: 10105517949002449932
+    FilePath: Sponza/Sponza_mat10.material
+    Type: AssetType::Material
+  - Handle: 10121645566708587108
+    FilePath: Sponza/Sponza_mat1.material
+    Type: AssetType::Material
+  - Handle: 10122407045561336779
+    FilePath: Models/Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 10123912536681922685
+    FilePath: Sponza/meshes[0]-77.mesh
+    Type: AssetType::Mesh
+  - Handle: 10141592119688591377
+    FilePath: Sponza/Sponza_mat2.material
+    Type: AssetType::Material
+  - Handle: 10152481712772906959
+    FilePath: Sponza/Sponza_mat2.material
+    Type: AssetType::Material
+  - Handle: 10157305142828318769
+    FilePath: Sponza/meshes[0]-95.mesh
+    Type: AssetType::Mesh
+  - Handle: 10166785396071302663
+    FilePath: Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 10168182903063865143
+    FilePath: Sponza/8051790464816141987.jpg
+    Type: AssetType::Texture2D
+  - Handle: 10178496108596169786
+    FilePath: Sponza/5823059166183034438.jpg
+    Type: AssetType::Texture2D
+  - Handle: 10185282305835947615
+    FilePath: Models/Sponza/meshes[0]-94.mesh
+    Type: AssetType::Mesh
+  - Handle: 10195345484574435973
+    FilePath: Sponza/Sponza_mat2.material
+    Type: AssetType::Material
+  - Handle: 10211751878271400186
+    FilePath: Sponza/meshes[0]-53.mesh
+    Type: AssetType::Mesh
+  - Handle: 10212234577811051728
+    FilePath: Sponza/Sponza_mat8.material
+    Type: AssetType::Material
+  - Handle: 10214182161086456166
+    FilePath: Sponza/Sponza_mat21.material
+    Type: AssetType::Material
+  - Handle: 10217688576715308691
+    FilePath: Sponza/Sponza_mat14.material
+    Type: AssetType::Material
+  - Handle: 10219587426565549232
+    FilePath: ./Sponza/meshes[0]-15.mesh
+    Type: AssetType::Mesh
+  - Handle: 10225849378295459922
+    FilePath: Models/Sponza/715093869573992647.jpg
+    Type: AssetType::Texture2D
+  - Handle: 10236088994784080632
+    FilePath: Sponza/Sponza_mat3.material
+    Type: AssetType::Material
+  - Handle: 10243860606368553635
+    FilePath: ./Sponza/meshes[0]-52.mesh
+    Type: AssetType::Mesh
+  - Handle: 10287908114218851781
+    FilePath: ./Sponza/meshes[0]-49.mesh
+    Type: AssetType::Mesh
+  - Handle: 10337060693705560394
+    FilePath: Sponza/Sponza_mat16.material
+    Type: AssetType::Material
+  - Handle: 10342711755942060324
+    FilePath: Models/Sponza/Sponza_mat1.material
+    Type: AssetType::Material
+  - Handle: 10350634061333074246
+    FilePath: Sponza/Sponza_mat32.material
+    Type: AssetType::Material
+  - Handle: 10351799591367496956
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 10368146411431652057
+    FilePath: Sponza/Sponza_mat3.material
+    Type: AssetType::Material
+  - Handle: 10376196443742212558
+    FilePath: Sponza/Sponza_mat22.material
+    Type: AssetType::Material
+  - Handle: 10388687082407631154
+    FilePath: Sponza/meshes[0]-62.mesh
+    Type: AssetType::Mesh
+  - Handle: 10399172830608277333
+    FilePath: Models/Sponza/Sponza_mat24.material
+    Type: AssetType::Material
+  - Handle: 10420561055266525868
+    FilePath: Models/Sponza/Sponza_mat17.material
+    Type: AssetType::Material
+  - Handle: 10425269128699155715
+    FilePath: scene/Suzanne.mesh
+    Type: AssetType::Mesh
+  - Handle: 10460647875449040021
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 10485751816662758968
+    FilePath: Sponza/Sponza_mat78.material
+    Type: AssetType::Material
+  - Handle: 10489353251120665114
+    FilePath: Sponza/meshes[0]-57.mesh
+    Type: AssetType::Mesh
+  - Handle: 10506574057316104482
+    FilePath: Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 10518414736518127692
+    FilePath: ./Sponza/meshes[0]-55.mesh
+    Type: AssetType::Mesh
+  - Handle: 10519031749910436743
+    FilePath: Sponza/Sponza_mat15.material
+    Type: AssetType::Material
+  - Handle: 10521163130488747013
+    FilePath: Models/Sponza/2185409758123873465.jpg
+    Type: AssetType::Texture2D
+  - Handle: 10535393254254230617
+    FilePath: Sponza/Sponza_mat1.material
+    Type: AssetType::Material
+  - Handle: 10538805058503881165
+    FilePath: ./Sponza/meshes[0]-3.mesh
+    Type: AssetType::Mesh
+  - Handle: 10576023505317840860
+    FilePath: ./Sponza/meshes[0]-43.mesh
+    Type: AssetType::Mesh
+  - Handle: 10577983265616353037
+    FilePath: Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 10584974720749089364
+    FilePath: ./Sponza/meshes[0]-60.mesh
+    Type: AssetType::Mesh
+  - Handle: 10585123503191937800
+    FilePath: Scripts/ddd.scene
+    Type: AssetType::Scene
+  - Handle: 10606440135028894131
+    FilePath: Sponza/Sponza_mat73.material
+    Type: AssetType::Material
+  - Handle: 10630592111510184533
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 10645921732782720443
+    FilePath: Models/Sponza/Sponza_mat20.material
+    Type: AssetType::Material
+  - Handle: 10651598740124097439
+    FilePath: Sponza/Sponza_mat13.material
+    Type: AssetType::Material
+  - Handle: 10656156098178990084
+    FilePath: Sponza/meshes[0]-28.mesh
+    Type: AssetType::Mesh
+  - Handle: 10661386186065891668
+    FilePath: Sponza/Sponza_mat17.material
+    Type: AssetType::Material
+  - Handle: 10665584648083398956
+    FilePath: Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 10675935488220451297
+    FilePath: ./Sponza/meshes[0]-18.mesh
+    Type: AssetType::Mesh
+  - Handle: 10678809285582432261
+    FilePath: Sponza/Sponza_mat1.material
+    Type: AssetType::Material
+  - Handle: 10679508173239257758
+    FilePath: Sponza/Sponza_mat18.material
+    Type: AssetType::Material
+  - Handle: 10695553528347120167
+    FilePath: Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 10727385820352027111
+    FilePath: ./Sponza/meshes[0]-38.mesh
+    Type: AssetType::Mesh
+  - Handle: 10728514507901278085
+    FilePath: Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 10736274981223082604
+    FilePath: Models/Sponza/332936164838540657.jpg
+    Type: AssetType::Texture2D
+  - Handle: 10751223485899827965
+    FilePath: Models/Sponza/7441062115984513793.jpg
+    Type: AssetType::Texture2D
+  - Handle: 10755353335200470349
+    FilePath: Models/Sponza/Sponza_mat1.material
+    Type: AssetType::Material
+  - Handle: 10770257067714829905
+    FilePath: Sponza/Sponza_mat0.material
+    Type: AssetType::Material
+  - Handle: 10776145801830232653
+    FilePath: Sponza/Sponza_mat18.material
+    Type: AssetType::Material
+  - Handle: 10783650716468095382
+    FilePath: Sponza/Sponza_mat1.material
+    Type: AssetType::Material
+  - Handle: 10799648983196839013
+    FilePath: Models/goblin-archer/body.material
+    Type: AssetType::Material
+  - Handle: 10818460925196022523
+    FilePath: Sponza/Sponza_mat33.material
+    Type: AssetType::Material
+  - Handle: 10849695864023647142
+    FilePath: Sponza/Sponza_mat15.material
+    Type: AssetType::Material
+  - Handle: 10864172556694268975
+    FilePath: Models/Sponza/meshes[0]-27.mesh
+    Type: AssetType::Mesh
+  - Handle: 10865007574222170975
+    FilePath: Models/Sponza/Sponza_mat20.material
+    Type: AssetType::Material
+  - Handle: 10865899927554865817
+    FilePath: Models/Sponza/10388182081421875623.jpg
+    Type: AssetType::Texture2D
+  - Handle: 10878982782144361916
+    FilePath: Models/Sponza/Sponza_mat12.material
+    Type: AssetType::Material
+  - Handle: 10899190034997003789
+    FilePath: Sponza/white.png
+    Type: AssetType::Texture2D
+  - Handle: 10912475634005909547
+    FilePath: Sponza/Sponza_mat9.material
+    Type: AssetType::Material
+  - Handle: 10918257729546718879
+    FilePath: ./Sponza/meshes[0]-57.mesh
+    Type: AssetType::Mesh
+  - Handle: 10921699017098682973
+    FilePath: Models/Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 10924283854856337327
+    FilePath: Sponza/Sponza_mat14.material
+    Type: AssetType::Material
+  - Handle: 10924344226638192490
+    FilePath: Sponza/Sponza_mat21.material
+    Type: AssetType::Material
+  - Handle: 10939358874545628988
+    FilePath: Materials/first.shader
+    Type: AssetType::None
+  - Handle: 10940405596222385160
+    FilePath: Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 10946776017173679439
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 10968068763018239046
+    FilePath: Models/Sponza/Sponza_mat2.material
+    Type: AssetType::Material
+  - Handle: 10995306593209909421
+    FilePath: Sponza/Sponza_mat1.material
+    Type: AssetType::Material
+  - Handle: 10996375874928493152
+    FilePath: Sponza/Sponza_mat15.material
+    Type: AssetType::Material
+  - Handle: 10997462109294350909
+    FilePath: Sponza/Sponza_mat17.material
+    Type: AssetType::Material
+  - Handle: 11005057076303139458
+    FilePath: Models/Sponza/17876391417123941155.jpg
+    Type: AssetType::Texture2D
+  - Handle: 11020605857006387714
+    FilePath: Sponza/Sponza_mat81.material
+    Type: AssetType::Material
+  - Handle: 11034046080548032214
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 11039807573767477832
+    FilePath: Sponza/Sponza_mat14.material
+    Type: AssetType::Material
+  - Handle: 11062764202530695838
+    FilePath: Sponza/meshes[0]-79.mesh
+    Type: AssetType::Mesh
+  - Handle: 11081439525063192300
+    FilePath: Sponza/Sponza_mat16.material
+    Type: AssetType::Material
+  - Handle: 11083412386033728407
+    FilePath: Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 11088708873966222879
+    FilePath: Sponza/Sponza_mat16.material
+    Type: AssetType::Material
+  - Handle: 11101983693241326752
+    FilePath: Sponza/meshes[0]-92.mesh
+    Type: AssetType::Mesh
+  - Handle: 11108009569181399639
+    FilePath: scene/Suzanne_BaseColor.png
+    Type: AssetType::Texture2D
+  - Handle: 11108049447958302925
+    FilePath: Sponza/Sponza_mat9.material
+    Type: AssetType::Material
+  - Handle: 11120249414556656435
+    FilePath: Models/Sponza/Sponza_mat18.material
+    Type: AssetType::Material
+  - Handle: 11134799331452658881
+    FilePath: Models/Sponza/Sponza_mat3.material
+    Type: AssetType::Material
+  - Handle: 11137661354212701242
+    FilePath: ./Sponza/meshes[0]-78.mesh
+    Type: AssetType::Mesh
+  - Handle: 11153981913451802797
+    FilePath: Models/Sponza/Sponza_mat69.material
+    Type: AssetType::Material
+  - Handle: 11162869800534552922
+    FilePath: Sponza/Sponza_mat23.material
+    Type: AssetType::Material
+  - Handle: 11163876438680549018
+    FilePath: Models/Sponza/Sponza_mat2.material
+    Type: AssetType::Material
+  - Handle: 11164006887567699405
+    FilePath: Sponza/Sponza_mat2.material
+    Type: AssetType::Material
+  - Handle: 11167316108868879218
+    FilePath: Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 11168256889136229249
+    FilePath: Sponza/Sponza_mat90.material
+    Type: AssetType::Material
+  - Handle: 11174027948428102644
+    FilePath: Models/Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 11174500331286282914
+    FilePath: Sponza/Sponza_mat1.material
+    Type: AssetType::Material
+  - Handle: 11178106449836364421
+    FilePath: Sponza/meshes[0]-39.mesh
+    Type: AssetType::Mesh
+  - Handle: 11179928610154905385
+    FilePath: Sponza/Sponza_mat20.material
+    Type: AssetType::Material
+  - Handle: 11196814471148074756
+    FilePath: Sponza/Sponza_mat20.material
+    Type: AssetType::Material
+  - Handle: 11204430780471536993
+    FilePath: Sponza/Sponza_mat19.material
+    Type: AssetType::Material
+  - Handle: 11207943540681523453
+    FilePath: Models/Sponza/6772804448157695701.jpg
+    Type: AssetType::Texture2D
+  - Handle: 11209366358103799238
+    FilePath: Models/Sponza/Sponza_mat16.material
+    Type: AssetType::Material
+  - Handle: 11218570497019073999
+    FilePath: Sponza/meshes[0]-2.mesh
+    Type: AssetType::Mesh
+  - Handle: 11231473564990983479
+    FilePath: Sponza/Sponza_mat82.material
+    Type: AssetType::Material
+  - Handle: 11240243556096562419
+    FilePath: Models/Sponza/9916269861720640319.jpg
+    Type: AssetType::Texture2D
+  - Handle: 11243798020932481228
+    FilePath: Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 11275681625137478659
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 11284037170328301115
+    FilePath: Models/Sponza/meshes[0]-44.mesh
+    Type: AssetType::Mesh
+  - Handle: 11286106826308125413
+    FilePath: Sponza/meshes[0]-22.mesh
+    Type: AssetType::Mesh
+  - Handle: 11291565932853428894
+    FilePath: Sponza/9916269861720640319.jpg
+    Type: AssetType::Texture2D
+  - Handle: 11291860000871931017
+    FilePath: ./Sponza/meshes[0]-11.mesh
+    Type: AssetType::Mesh
+  - Handle: 11315307229409682775
+    FilePath: Models/Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 11319532507297343463
+    FilePath: ./Sponza/meshes[0]-81.mesh
+    Type: AssetType::Mesh
+  - Handle: 11335711965563562412
+    FilePath: Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 11336546153631408269
+    FilePath: Sponza/meshes[0]-102.mesh
+    Type: AssetType::Mesh
+  - Handle: 11336685331311147460
+    FilePath: Sponza/Sponza_mat9.material
+    Type: AssetType::Material
+  - Handle: 11339454674729412368
+    FilePath: Sponza/Sponza_mat9.material
+    Type: AssetType::Material
+  - Handle: 11345593182903326093
+    FilePath: Sponza/Sponza_mat20.material
+    Type: AssetType::Material
+  - Handle: 11351201881818304861
+    FilePath: Models/Sponza/Sponza_mat1.material
+    Type: AssetType::Material
+  - Handle: 11357439185600080996
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 11360991746272009394
+    FilePath: ./Sponza/meshes[0]-44.mesh
+    Type: AssetType::Mesh
+  - Handle: 11369219988722223993
+    FilePath: Sponza/Sponza_mat3.material
+    Type: AssetType::Material
+  - Handle: 11377949186310422354
+    FilePath: ./Sponza/meshes[0]-5.mesh
+    Type: AssetType::Mesh
+  - Handle: 11398037987448101704
+    FilePath: Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 11408041734172035463
+    FilePath: Models/Sponza/Sponza_mat2.material
+    Type: AssetType::Material
+  - Handle: 11415285545536717187
+    FilePath: Models/Sponza/Sponza_mat1.material
+    Type: AssetType::Material
+  - Handle: 11441291331520455242
+    FilePath: Models/Sponza/meshes[0]-33.mesh
+    Type: AssetType::Mesh
+  - Handle: 11447262563258071881
+    FilePath: Models/Sponza/meshes[0]-54.mesh
+    Type: AssetType::Mesh
+  - Handle: 11451354641012971107
+    FilePath: Sponza/Sponza_mat1.material
+    Type: AssetType::Material
+  - Handle: 11467547525196806581
+    FilePath: Models/Sponza/meshes[0]-65.mesh
+    Type: AssetType::Mesh
+  - Handle: 11489294682527526483
+    FilePath: Sponza/meshes[0]-27.mesh
+    Type: AssetType::Mesh
+  - Handle: 11492579193323821018
+    FilePath: Models/Sponza/meshes[0]-80.mesh
+    Type: AssetType::Mesh
+  - Handle: 11511451562917916551
+    FilePath: Sponza/Sponza_mat21.material
+    Type: AssetType::Material
+  - Handle: 11538759900863505759
+    FilePath: Models/Sponza/Sponza_mat28.material
+    Type: AssetType::Material
+  - Handle: 11564784376468205397
+    FilePath: Models/Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 11566162796066457760
+    FilePath: Sponza/Sponza_mat20.material
+    Type: AssetType::Material
+  - Handle: 11568777643617389065
+    FilePath: Models/Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 11584611604558693650
+    FilePath: ./Sponza/meshes[0]-51.mesh
+    Type: AssetType::Mesh
+  - Handle: 11587024928611809597
+    FilePath: Sponza/Sponza_mat15.material
+    Type: AssetType::Material
+  - Handle: 11601447942844179309
+    FilePath: Sponza/meshes[0]-55.mesh
+    Type: AssetType::Mesh
+  - Handle: 11605472090292974513
+    FilePath: Sponza/Sponza_mat1.material
+    Type: AssetType::Material
+  - Handle: 11611597875886196890
+    FilePath: Sponza/Sponza_mat17.material
+    Type: AssetType::Material
+  - Handle: 11617134976384490362
+    FilePath: Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 11636505459790278395
+    FilePath: Models/Sponza/Sponza_mat35.material
+    Type: AssetType::Material
+  - Handle: 11651385552188007988
+    FilePath: Sponza/Sponza_mat11.material
+    Type: AssetType::Material
+  - Handle: 11678401056702255889
+    FilePath: Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 11689222724420317416
+    FilePath: ./Sponza/meshes[0]-85.mesh
+    Type: AssetType::Mesh
+  - Handle: 11690803884664547471
+    FilePath: Sponza/Sponza_mat10.material
+    Type: AssetType::Material
+  - Handle: 11698140006231389570
+    FilePath: Models/Sponza/Sponza_mat95.material
+    Type: AssetType::Material
+  - Handle: 11703024107283443986
+    FilePath: Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 11723315324933584893
+    FilePath: ./Sponza/meshes[0]-37.mesh
+    Type: AssetType::Mesh
+  - Handle: 11729788127554192150
+    FilePath: Sponza/Sponza_mat7.material
+    Type: AssetType::Material
+  - Handle: 11770193038776130479
+    FilePath: Sponza/Sponza_mat21.material
+    Type: AssetType::Material
+  - Handle: 11784767704696407710
+    FilePath: Sponza/Sponza_mat20.material
+    Type: AssetType::Material
+  - Handle: 11787525622734748248
+    FilePath: Models/Sponza/Sponza_mat39.material
+    Type: AssetType::Material
+  - Handle: 11798212147994362877
+    FilePath: Models/Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 11826490765409037358
+    FilePath: Sponza/Sponza_mat21.material
+    Type: AssetType::Material
+  - Handle: 11841303781083731884
+    FilePath: Models/Sponza/meshes[0]-13.mesh
+    Type: AssetType::Mesh
+  - Handle: 11843391260545402920
+    FilePath: Sponza/Sponza_mat23.material
+    Type: AssetType::Material
+  - Handle: 11867607744230181455
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 11870770436658435841
+    FilePath: Sponza/Sponza_mat19.material
+    Type: AssetType::Material
+  - Handle: 11873682440829451597
+    FilePath: Sponza/Sponza_mat16.material
+    Type: AssetType::Material
+  - Handle: 11881239850369117248
+    FilePath: Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 11885889299216115403
+    FilePath: Sponza/Sponza_mat15.material
+    Type: AssetType::Material
+  - Handle: 11899648755828236414
+    FilePath: Sponza/Sponza_mat55.material
+    Type: AssetType::Material
+  - Handle: 11913330690475577858
+    FilePath: Sponza/Sponza_mat18.material
+    Type: AssetType::Material
+  - Handle: 11953435396361325887
+    FilePath: Models/Sponza/meshes[0]-31.mesh
+    Type: AssetType::Mesh
+  - Handle: 11960264234887020585
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 11977926807784612076
+    FilePath: Sponza/6047387724914829168.jpg
+    Type: AssetType::Texture2D
+  - Handle: 11984687088529051360
+    FilePath: Sponza/Sponza_mat9.material
+    Type: AssetType::Material
+  - Handle: 11984704895459980264
+    FilePath: Sponza/Sponza_mat19.material
+    Type: AssetType::Material
+  - Handle: 11994682878676973971
+    FilePath: Sponza/Sponza_mat83.material
+    Type: AssetType::Material
+  - Handle: 12010548498025339469
+    FilePath: Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 12026170985815269172
+    FilePath: Models/Sponza/6151467286084645207.jpg
+    Type: AssetType::Texture2D
+  - Handle: 12033885489278224677
+    FilePath: Models/Sponza/Sponza_mat51.material
+    Type: AssetType::Material
+  - Handle: 12061111896049440048
+    FilePath: Models/Sponza/Sponza_mat83.material
+    Type: AssetType::Material
+  - Handle: 12071241816976905197
+    FilePath: Sponza/Sponza_mat21.material
+    Type: AssetType::Material
+  - Handle: 12095048223945999663
+    FilePath: Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 12099888798392157187
+    FilePath: Models/Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 12107230967791581300
+    FilePath: Models/Sponza/8747919177698443163.jpg
+    Type: AssetType::Texture2D
+  - Handle: 12109136998434495919
+    FilePath: Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 12112589410882633670
+    FilePath: Sponza/Sponza_mat95.material
+    Type: AssetType::Material
+  - Handle: 12117910869787495023
+    FilePath: ./Sponza/meshes[0]-77.mesh
+    Type: AssetType::Mesh
+  - Handle: 12126455524939271921
+    FilePath: Models/Sponza/Sponza_mat2.material
+    Type: AssetType::Material
+  - Handle: 12130333634500231753
+    FilePath: Models/Sponza/meshes[0]-86.mesh
+    Type: AssetType::Mesh
+  - Handle: 12133309297036159286
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 12138697049152055079
+    FilePath: Sponza/Sponza_mat1.material
+    Type: AssetType::Material
+  - Handle: 12153672499178110367
+    FilePath: Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 12160086486421471078
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 12171701438037500038
+    FilePath: Models/Sponza/Sponza_mat2.material
+    Type: AssetType::Material
+  - Handle: 12173158790311228475
+    FilePath: Sponza/Sponza_mat17.material
+    Type: AssetType::Material
+  - Handle: 12181817824046508542
+    FilePath: Sponza/Sponza_mat19.material
+    Type: AssetType::Material
+  - Handle: 12194690144707229261
+    FilePath: Sponza/meshes[0]-43.mesh
+    Type: AssetType::Mesh
+  - Handle: 12205408362909196120
+    FilePath: Models/Sponza/meshes[0]-73.mesh
+    Type: AssetType::Mesh
+  - Handle: 12225208763303060879
+    FilePath: Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 12241053106701310896
+    FilePath: Sponza/Sponza_mat20.material
+    Type: AssetType::Material
+  - Handle: 12264299776132701456
+    FilePath: Sponza/Sponza_mat10.material
+    Type: AssetType::Material
+  - Handle: 12265689337148314935
+    FilePath: Models/Sponza/meshes[0]-63.mesh
+    Type: AssetType::Mesh
+  - Handle: 12308366880119032758
+    FilePath: Models/Sponza/meshes[0]-0.mesh
+    Type: AssetType::Mesh
+  - Handle: 12311365569884822656
+    FilePath: Sponza/Sponza_mat20.material
+    Type: AssetType::Material
+  - Handle: 12313448867241046959
+    FilePath: Sponza/Sponza_mat2.material
+    Type: AssetType::Material
+  - Handle: 12322895671903775141
+    FilePath: Sponza/meshes[0]-32.mesh
+    Type: AssetType::Mesh
+  - Handle: 12335495573935405872
+    FilePath: Sponza/meshes[0]-34.mesh
+    Type: AssetType::Mesh
+  - Handle: 12374578673905683663
+    FilePath: Sponza/Sponza_mat34.material
+    Type: AssetType::Material
+  - Handle: 12378792918477739817
+    FilePath: Sponza/Sponza_mat14.material
+    Type: AssetType::Material
+  - Handle: 12409937007467209611
+    FilePath: Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 12416219125585906442
+    FilePath: Sponza/Sponza_mat1.material
+    Type: AssetType::Material
+  - Handle: 12418673214353014383
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 12424036352936231208
+    FilePath: Sponza/Sponza_mat18.material
+    Type: AssetType::Material
+  - Handle: 12426431792315068283
+    FilePath: Sponza/Sponza_mat14.material
+    Type: AssetType::Material
+  - Handle: 12435906775705463193
+    FilePath: Sponza/4675343432951571524.jpg
+    Type: AssetType::Texture2D
+  - Handle: 12441014246199933860
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 12462515945579945184
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 12463586352143172326
+    FilePath: Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 12465158790797535142
+    FilePath: Sponza/Sponza_mat2.material
+    Type: AssetType::Material
+  - Handle: 12468150881552055609
+    FilePath: Sponza/Sponza_mat2.material
+    Type: AssetType::Material
+  - Handle: 12511118866450815739
+    FilePath: Models/Sponza/6667038893015345571.jpg
+    Type: AssetType::Texture2D
+  - Handle: 12527433865826617524
+    FilePath: Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 12529131192824583407
+    FilePath: Sponza/meshes[0]-5.mesh
+    Type: AssetType::Mesh
+  - Handle: 12532080704862545346
+    FilePath: Models/Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 12534770313574853195
+    FilePath: Models/Sponza/meshes[0]-37.mesh
+    Type: AssetType::Mesh
+  - Handle: 12538078319753821336
+    FilePath: Sponza/Sponza_mat2.material
+    Type: AssetType::Material
+  - Handle: 12547204896302511386
+    FilePath: Sponza/Sponza_mat13.material
+    Type: AssetType::Material
+  - Handle: 12560653667922900279
+    FilePath: Sponza/11474523244911310074.jpg
+    Type: AssetType::Texture2D
+  - Handle: 12581926619431469633
+    FilePath: Sponza/Sponza_mat19.material
+    Type: AssetType::Material
+  - Handle: 12583201078051527429
+    FilePath: Sponza/Sponza_mat1.material
+    Type: AssetType::Material
+  - Handle: 12603308196176820648
+    FilePath: Models/Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 12615927245561651941
+    FilePath: Sponza/Sponza_mat1.material
+    Type: AssetType::Material
+  - Handle: 12626881528593654650
+    FilePath: Models/Sponza/meshes[0]-89.mesh
+    Type: AssetType::Mesh
+  - Handle: 12640796459599246154
+    FilePath: Models/Sponza/Sponza_mat20.material
+    Type: AssetType::Material
+  - Handle: 12648100315242075500
+    FilePath: Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 12648357240444149093
+    FilePath: Models/Sponza/Sponza_mat86.material
+    Type: AssetType::Material
+  - Handle: 12658258000871192565
+    FilePath: Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 12682401923329606868
+    FilePath: ./Sponza/meshes[0]-34.mesh
+    Type: AssetType::Mesh
+  - Handle: 12690856100868305504
+    FilePath: Models/goblin-archer/hair.material
+    Type: AssetType::Material
+  - Handle: 12705469877577290230
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 12705718187380073322
+    FilePath: Models/Sponza/3455394979645218238.jpg
+    Type: AssetType::Texture2D
+  - Handle: 12738875721144045481
+    FilePath: Models/Sponza/meshes[0]-61.mesh
+    Type: AssetType::Mesh
+  - Handle: 12748210958857611984
+    FilePath: Sponza/Sponza_mat2.material
+    Type: AssetType::Material
+  - Handle: 12755468095543827179
+    FilePath: Sponza/Sponza_mat71.material
+    Type: AssetType::Material
+  - Handle: 12760085349766737348
+    FilePath: Sponza/Sponza_mat41.material
+    Type: AssetType::Material
+  - Handle: 12769124666441988284
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 12769662176202522828
+    FilePath: Sponza/Sponza_mat14.material
+    Type: AssetType::Material
+  - Handle: 12773082885043865933
+    FilePath: Models/Sponza/Sponza_mat70.material
+    Type: AssetType::Material
+  - Handle: 12781334818568361161
+    FilePath: Models/Sponza/Sponza_mat93.material
+    Type: AssetType::Material
+  - Handle: 12788552141585403283
+    FilePath: Sponza/Sponza_mat20.material
+    Type: AssetType::Material
+  - Handle: 12791650862451895224
+    FilePath: ./Sponza/meshes[0]-4.mesh
+    Type: AssetType::Mesh
+  - Handle: 12821344568848926333
+    FilePath: Models/Sponza/meshes[0]-58.mesh
+    Type: AssetType::Mesh
+  - Handle: 12838452322018031977
+    FilePath: Sponza/Sponza_mat1.material
+    Type: AssetType::Material
+  - Handle: 12839586444045028015
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 12881163820406080152
+    FilePath: Models/Sponza/2374361008830720677.jpg
+    Type: AssetType::Texture2D
+  - Handle: 12895620420526077772
+    FilePath: Sponza/Sponza_mat18.material
+    Type: AssetType::Material
+  - Handle: 12909590964630425410
+    FilePath: Sponza/Sponza_mat2.material
+    Type: AssetType::Material
+  - Handle: 12934463872654522218
+    FilePath: Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 12953852495926238993
+    FilePath: Sponza/13824894030729245199.jpg
+    Type: AssetType::Texture2D
+  - Handle: 12957016824919706322
+    FilePath: Sponza/meshes[0]-63.mesh
+    Type: AssetType::Mesh
+  - Handle: 12957475683417414631
+    FilePath: Sponza/Sponza_mat2.material
+    Type: AssetType::Material
+  - Handle: 12957578525305445057
+    FilePath: Sponza/15722799267630235092.jpg
+    Type: AssetType::Texture2D
+  - Handle: 12967915711235740079
+    FilePath: Models/Sponza/meshes[0]-4.mesh
+    Type: AssetType::Mesh
+  - Handle: 12976410554587550144
+    FilePath: Models/Sponza/8750083169368950601.jpg
+    Type: AssetType::Texture2D
+  - Handle: 13005207142185572625
+    FilePath: Models/Sponza/Sponza_mat59.material
+    Type: AssetType::Material
+  - Handle: 13008108050323149502
+    FilePath: scene/Suzanne_MetallicRoughness.png
+    Type: AssetType::Texture2D
+  - Handle: 13011348723579208489
+    FilePath: Sponza/Sponza_mat15.material
+    Type: AssetType::Material
+  - Handle: 13011531176835074915
+    FilePath: Models/Sponza/4477655471536070370.jpg
+    Type: AssetType::Texture2D
+  - Handle: 13018264215437057611
+    FilePath: Models/Sponza/Sponza_mat1.material
+    Type: AssetType::Material
+  - Handle: 13026095706555756057
+    FilePath: Sponza/Sponza_mat8.material
+    Type: AssetType::Material
+  - Handle: 13032959964090739098
+    FilePath: Models/Sponza/Sponza_mat19.material
+    Type: AssetType::Material
+  - Handle: 13056564913635152316
+    FilePath: Models/Sponza/Sponza_mat14.material
+    Type: AssetType::Material
+  - Handle: 13056636484346684435
+    FilePath: Sponza/Sponza_mat1.material
+    Type: AssetType::Material
+  - Handle: 13064858461705332486
+    FilePath: Sponza/Sponza_mat23.material
+    Type: AssetType::Material
+  - Handle: 13070588100714678371
+    FilePath: Models/Sponza/Sponza_mat60.material
+    Type: AssetType::Material
+  - Handle: 13071511178561877658
+    FilePath: Models/Sponza/Sponza_mat1.material
+    Type: AssetType::Material
+  - Handle: 13104388238956179747
+    FilePath: Sponza/Sponza_mat1.material
+    Type: AssetType::Material
+  - Handle: 13113829060130526338
+    FilePath: Sponza/Sponza_mat1.material
+    Type: AssetType::Material
+  - Handle: 13122981090051124462
+    FilePath: Models/Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 13127423548111472985
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 13128994366182298609
+    FilePath: ./Sponza/meshes[0]-47.mesh
+    Type: AssetType::Mesh
+  - Handle: 13131309773770217200
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 13138707002458865655
+    FilePath: Sponza/Sponza_mat21.material
+    Type: AssetType::Material
+  - Handle: 13159403979182426177
+    FilePath: Sponza/meshes[0]-96.mesh
+    Type: AssetType::Mesh
+  - Handle: 13163889526530144698
+    FilePath: Sponza/Sponza_mat49.material
+    Type: AssetType::Material
+  - Handle: 13169817163897330351
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 13170541668988458558
+    FilePath: Sponza/meshes[0]-41.mesh
+    Type: AssetType::Mesh
+  - Handle: 13173231115168564896
+    FilePath: Models/Sponza/Sponza_mat2.material
+    Type: AssetType::Material
+  - Handle: 13174886500172244520
+    FilePath: Sponza/Sponza_mat1.material
+    Type: AssetType::Material
+  - Handle: 13180973682795028315
+    FilePath: Models/Sponza/meshes[0]-79.mesh
+    Type: AssetType::Mesh
+  - Handle: 13203980752718550714
+    FilePath: Sponza/meshes[0]-48.mesh
+    Type: AssetType::Mesh
+  - Handle: 13212444643307450965
+    FilePath: SciFiHelmet/SciFiHelmet.material
+    Type: AssetType::Material
+  - Handle: 13227767623562570535
+    FilePath: Sponza/Sponza_mat11.material
+    Type: AssetType::Material
+  - Handle: 13231604106583757957
+    FilePath: Sponza/Sponza_mat15.material
+    Type: AssetType::Material
+  - Handle: 13247569679036304997
+    FilePath: Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 13254438575984124026
+    FilePath: Sponza/Sponza_mat2.material
+    Type: AssetType::Material
+  - Handle: 13255471111714143982
+    FilePath: Textures/hdr/skyLight.hdr
+    Type: AssetType::SkyLight
+  - Handle: 13259795781795398588
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 13265711009245005000
+    FilePath: Sponza/Sponza_mat21.material
+    Type: AssetType::Material
+  - Handle: 13285482306973883698
+    FilePath: Models/Sponza/meshes[0]-78.mesh
+    Type: AssetType::Mesh
+  - Handle: 13300690066118306406
+    FilePath: Models/Sponza/6047387724914829168.jpg
+    Type: AssetType::Texture2D
+  - Handle: 13328685099197645721
+    FilePath: Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 13347714714443111164
+    FilePath: Sponza/10381718147657362067.jpg
+    Type: AssetType::Texture2D
+  - Handle: 13367877080144514074
+    FilePath: Sponza/Sponza_mat18.material
+    Type: AssetType::Material
+  - Handle: 13373254591342483036
+    FilePath: Sponza/Sponza_mat65.material
+    Type: AssetType::Material
+  - Handle: 13402149328338532084
+    FilePath: Models/Sponza/7268504077753552595.jpg
+    Type: AssetType::Texture2D
+  - Handle: 13403334359759978166
+    FilePath: Sponza/Sponza_mat0.material
+    Type: AssetType::Material
+  - Handle: 13421302347342434593
+    FilePath: ./Sponza/meshes[0]-68.mesh
+    Type: AssetType::Mesh
+  - Handle: 13428504784835301328
+    FilePath: Sponza/Sponza_mat16.material
+    Type: AssetType::Material
+  - Handle: 13444533359201146929
+    FilePath: Sponza/Sponza_mat36.material
+    Type: AssetType::Material
+  - Handle: 13449537609233537704
+    FilePath: Models/Sponza/Sponza_mat18.material
+    Type: AssetType::Material
+  - Handle: 13460519014917428670
+    FilePath: Models/Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 13473061005587004085
+    FilePath: Models/Sponza/meshes[0]-7.mesh
+    Type: AssetType::Mesh
+  - Handle: 13481821894781783164
+    FilePath: Sponza/Sponza_mat63.material
+    Type: AssetType::Material
+  - Handle: 13482244034212483930
+    FilePath: Models/Sponza/meshes[0]-3.mesh
+    Type: AssetType::Mesh
+  - Handle: 13490681751385542251
+    FilePath: Models/Sponza/meshes[0]-17.mesh
+    Type: AssetType::Mesh
+  - Handle: 13492592899465453674
+    FilePath: Sponza/meshes[0]-23.mesh
+    Type: AssetType::Mesh
+  - Handle: 13500406699662790220
+    FilePath: Models/Sponza/meshes[0]-45.mesh
+    Type: AssetType::Mesh
+  - Handle: 13513699509361525963
+    FilePath: Sponza/Sponza_mat18.material
+    Type: AssetType::Material
+  - Handle: 13516503994571500826
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 13516547050895102844
+    FilePath: Models/Sponza/Sponza_mat75.material
+    Type: AssetType::Material
+  - Handle: 13524478485523086409
+    FilePath: Sponza/Sponza_mat19.material
+    Type: AssetType::Material
+  - Handle: 13527514391886765320
+    FilePath: Models/Sponza/3628158980083700836.jpg
+    Type: AssetType::Texture2D
+  - Handle: 13527903555165735243
+    FilePath: Sponza/Sponza_mat21.material
+    Type: AssetType::Material
+  - Handle: 13534101347716049214
+    FilePath: Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 13537133646804340962
+    FilePath: ./Sponza/meshes[0]-7.mesh
+    Type: AssetType::Mesh
+  - Handle: 13545022434533225501
+    FilePath: ./Sponza/meshes[0]-65.mesh
+    Type: AssetType::Mesh
+  - Handle: 13547600785274106688
+    FilePath: Models/Sponza/meshes[0]-64.mesh
+    Type: AssetType::Mesh
+  - Handle: 13565902852764861787
+    FilePath: Models/untitled/DefaultMaterial.material
+    Type: AssetType::Material
+  - Handle: 13581659332905795537
+    FilePath: Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 13590781547386654520
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 13594322361657571827
+    FilePath: Sponza/meshes[0]-64.mesh
+    Type: AssetType::Mesh
+  - Handle: 13597563996070867424
+    FilePath: Models/Sponza/Sponza_mat32.material
+    Type: AssetType::Material
+  - Handle: 13628184467658478422
+    FilePath: ./Sponza/meshes[0]-10.mesh
+    Type: AssetType::Mesh
+  - Handle: 13633665521779093937
+    FilePath: Sponza/Sponza_mat19.material
+    Type: AssetType::Material
+  - Handle: 13659302372124144644
+    FilePath: Models/Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 13668743517743067693
+    FilePath: Scripts/test.lua
+    Type: AssetType::LuaScript
+  - Handle: 13676893388755711140
+    FilePath: Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 13682537019889940175
+    FilePath: Models/Sponza/14267839433702832875.jpg
+    Type: AssetType::Texture2D
+  - Handle: 13686309950240182249
+    FilePath: Sponza/Sponza_mat97.material
+    Type: AssetType::Material
+  - Handle: 13702018675466987069
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 13715036204245996585
+    FilePath: Sponza/Sponza_mat76.material
+    Type: AssetType::Material
+  - Handle: 13720594715532888153
+    FilePath: Sponza/Sponza_mat23.material
+    Type: AssetType::Material
+  - Handle: 13742426547978469718
+    FilePath: Sponza/meshes[0]-70.mesh
+    Type: AssetType::Mesh
+  - Handle: 13750717346788221542
+    FilePath: Sponza/Sponza_mat10.material
+    Type: AssetType::Material
+  - Handle: 13759268325574510703
+    FilePath: Sponza/meshes[0]-52.mesh
+    Type: AssetType::Mesh
+  - Handle: 13760002597897352883
+    FilePath: Sponza/Sponza_mat39.material
+    Type: AssetType::Material
+  - Handle: 13771708776254109622
+    FilePath: Materials/plain.material
+    Type: AssetType::Material
+  - Handle: 13783625506942259779
+    FilePath: Sponza/Sponza_mat58.material
+    Type: AssetType::Material
+  - Handle: 13784852303811649098
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 13815918431306735913
+    FilePath: ./Sponza/meshes[0]-9.mesh
+    Type: AssetType::Mesh
+  - Handle: 13816005681339932281
+    FilePath: Sponza/Sponza_mat9.material
+    Type: AssetType::Material
+  - Handle: 13818300138417737984
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 13820284780564528165
+    FilePath: Sponza/meshes[0]-69.mesh
+    Type: AssetType::Mesh
+  - Handle: 13832537903380571062
+    FilePath: Sponza/meshes[0]-37.mesh
+    Type: AssetType::Mesh
+  - Handle: 13863916810536151254
+    FilePath: Models/Sponza/Sponza_mat21.material
+    Type: AssetType::Material
+  - Handle: 13870633395837610228
+    FilePath: Models/Sponza/meshes[0]-20.mesh
+    Type: AssetType::Mesh
+  - Handle: 13887105149875026254
+    FilePath: Sponza/Sponza_mat20.material
+    Type: AssetType::Material
+  - Handle: 13897342407935795830
+    FilePath: Models/Sponza/5061699253647017043.png
+    Type: AssetType::Texture2D
+  - Handle: 13898317322843691324
+    FilePath: Models/DamagedHelmet/Material_MR.material
+    Type: AssetType::Material
+  - Handle: 13902410415199679556
+    FilePath: Models/Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 13910028052335948664
+    FilePath: Sponza/meshes[0]-52.meshes[0]-62.mesh
+    Type: AssetType::Mesh
+  - Handle: 13917545690740189429
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 13921847823606590640
+    FilePath: ./Sponza/meshes[0]-83.mesh
+    Type: AssetType::Mesh
+  - Handle: 13956431261815302269
+    FilePath: Prefabs/untitled.prefab
+    Type: AssetType::Prefab
+  - Handle: 13970443514706964823
+    FilePath: Sponza/2411100444841994089.jpg
+    Type: AssetType::Texture2D
+  - Handle: 13973393393380103765
+    FilePath: Sponza/Sponza_mat2.material
+    Type: AssetType::Material
+  - Handle: 13975896200835328618
+    FilePath: Sponza/Sponza_mat19.material
+    Type: AssetType::Material
+  - Handle: 14017646331486319027
+    FilePath: Sponza/Sponza_mat1.material
+    Type: AssetType::Material
+  - Handle: 14030138182226712422
+    FilePath: Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 14053635627737106140
+    FilePath: Sponza/Sponza_mat80.material
+    Type: AssetType::Material
+  - Handle: 14060759398245148844
+    FilePath: Sponza/Sponza_mat64.material
+    Type: AssetType::Material
+  - Handle: 14088265431190765226
+    FilePath: Models/Sponza/Sponza_mat40.material
+    Type: AssetType::Material
+  - Handle: 14104688272474624389
+    FilePath: Sponza/Sponza_mat19.material
+    Type: AssetType::Material
+  - Handle: 14105987398646628478
+    FilePath: Models/Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 14110994321725861482
+    FilePath: Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 14120454611904220357
+    FilePath: Models/Sponza/Sponza_mat91.material
+    Type: AssetType::Material
+  - Handle: 14127485705371954642
+    FilePath: Sponza/Sponza_mat3.material
+    Type: AssetType::Material
+  - Handle: 14137749919101601358
+    FilePath: Sponza/Sponza_mat9.material
+    Type: AssetType::Material
+  - Handle: 14138666728913944278
+    FilePath: Sponza/Sponza_mat14.material
+    Type: AssetType::Material
+  - Handle: 14140928013493955295
+    FilePath: Sponza/Sponza_mat69.material
+    Type: AssetType::Material
+  - Handle: 14152409911086071637
+    FilePath: Sponza/Sponza_mat10.material
+    Type: AssetType::Material
+  - Handle: 14168268123693465754
+    FilePath: Models/Sponza/466164707995436622.jpg
+    Type: AssetType::Texture2D
+  - Handle: 14196001772889370471
+    FilePath: Sponza/Sponza_mat21.material
+    Type: AssetType::Material
+  - Handle: 14205097282983714122
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 14217023701054787777
+    FilePath: Models/Sponza/Sponza_mat67.material
+    Type: AssetType::Material
+  - Handle: 14221215600734072316
+    FilePath: Sponza/Sponza_mat3.material
+    Type: AssetType::Material
+  - Handle: 14231190312597650360
+    FilePath: Sponza/meshes[0]-50.mesh
+    Type: AssetType::Mesh
+  - Handle: 14232981017348398042
+    FilePath: Sponza/2775690330959970771.jpg
+    Type: AssetType::Texture2D
+  - Handle: 14263053186423103811
+    FilePath: Sponza/Sponza_mat12.material
+    Type: AssetType::Material
+  - Handle: 14266878958751982317
+    FilePath: ./Sponza/meshes[0]-2.mesh
+    Type: AssetType::Mesh
+  - Handle: 14274003137545354657
+    FilePath: Sponza/Sponza_mat7.material
+    Type: AssetType::Material
+  - Handle: 14284885111424276714
+    FilePath: Sponza/Sponza_mat3.material
+    Type: AssetType::Material
+  - Handle: 14290194539043790446
+    FilePath: Models/Sponza/Sponza_mat21.material
+    Type: AssetType::Material
+  - Handle: 14327157842289751549
+    FilePath: Models/Sponza/Sponza_mat1.material
+    Type: AssetType::Material
+  - Handle: 14334468425198638044
+    FilePath: Models/Sponza/meshes[0]-96.mesh
+    Type: AssetType::Mesh
+  - Handle: 14341543225639105375
+    FilePath: Sponza/Sponza_mat18.material
+    Type: AssetType::Material
+  - Handle: 14344321921011292564
+    FilePath: Sponza/Sponza_mat13.material
+    Type: AssetType::Material
+  - Handle: 14347221890605422218
+    FilePath: Sponza/8783994986360286082.jpg
+    Type: AssetType::Texture2D
+  - Handle: 14361331460390545984
+    FilePath: Sponza/Sponza_mat0.material
+    Type: AssetType::Material
+  - Handle: 14378697519687697316
+    FilePath: Models/Sponza/meshes[0]-35.mesh
+    Type: AssetType::Mesh
+  - Handle: 14380704834461158529
+    FilePath: ./Sponza/meshes[0]-79.mesh
+    Type: AssetType::Mesh
+  - Handle: 14387859284948051411
+    FilePath: Models/Sponza/Sponza_mat3.material
+    Type: AssetType::Material
+  - Handle: 14389617066193669296
+    FilePath: Sponza/Sponza_mat1.material
+    Type: AssetType::Material
+  - Handle: 14424494667121501059
+    FilePath: Models/Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 14448297941677047213
+    FilePath: Sponza/meshes[0]-68.mesh
+    Type: AssetType::Mesh
+  - Handle: 14461714169832349489
+    FilePath: Models/Sponza/8783994986360286082.jpg
+    Type: AssetType::Texture2D
+  - Handle: 14464004902488976397
+    FilePath: Sponza/Sponza_mat77.material
+    Type: AssetType::Material
+  - Handle: 14472328292703299784
+    FilePath: Models/Sponza/2299742237651021498.jpg
+    Type: AssetType::Texture2D
+  - Handle: 14475341017322131501
+    FilePath: Sponza/Sponza_mat2.material
+    Type: AssetType::Material
+  - Handle: 14483285681867238142
+    FilePath: ./Sponza/meshes[0]-16.mesh
+    Type: AssetType::Mesh
+  - Handle: 14494099890468526501
+    FilePath: Sponza/meshes[0]-86.mesh
+    Type: AssetType::Mesh
+  - Handle: 14500422918815418079
+    FilePath: Sponza/Sponza_mat13.material
+    Type: AssetType::Material
+  - Handle: 14504414077535701297
+    FilePath: Sponza/Sponza_mat45.material
+    Type: AssetType::Material
+  - Handle: 14511245182554836062
+    FilePath: Sponza/Sponza_mat2.material
+    Type: AssetType::Material
+  - Handle: 14531060287180788490
+    FilePath: Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 14537557364293232620
+    FilePath: ./Sponza/meshes[0]-46.mesh
+    Type: AssetType::Mesh
+  - Handle: 14549417533870751229
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 14554633951330177287
+    FilePath: Sponza/Sponza_mat30.material
+    Type: AssetType::Material
+  - Handle: 14575714630096300928
+    FilePath: Sponza/Sponza_mat10.material
+    Type: AssetType::Material
+  - Handle: 14591961459872767546
+    FilePath: Sponza/Sponza_mat99.material
+    Type: AssetType::Material
+  - Handle: 14635211140458937581
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 14635281879322930462
+    FilePath: Models/Sponza/2411100444841994089.jpg
+    Type: AssetType::Texture2D
+  - Handle: 14638110548141352007
+    FilePath: Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 14644702600018093743
+    FilePath: Sponza/Sponza_mat53.material
+    Type: AssetType::Material
+  - Handle: 14660672375813208527
+    FilePath: Models/goblin-archer/goblin-archer.prefab
+    Type: AssetType::Prefab
+  - Handle: 14667578610633469620
+    FilePath: Models/Sponza/Sponza_mat37.material
+    Type: AssetType::Material
+  - Handle: 14679931301149541992
+    FilePath: Sponza/meshes[0]-82.mesh
+    Type: AssetType::Mesh
+  - Handle: 14681475195958692251
+    FilePath: Models/Sponza/Sponza_mat2.material
+    Type: AssetType::Material
+  - Handle: 14695452071253439963
+    FilePath: Sponza/Sponza_mat10.material
+    Type: AssetType::Material
+  - Handle: 14724448719492006831
+    FilePath: ./Sponza/meshes[0]-12.mesh
+    Type: AssetType::Mesh
+  - Handle: 14762876338201470073
+    FilePath: Models/DamagedHelmet/Default_metalRoughness.jpg
+    Type: AssetType::Texture2D
+  - Handle: 14763150859770149371
+    FilePath: Models/DamagedHelmet/mesh_helmet_LP_13930damagedHelmet.mesh
+    Type: AssetType::Mesh
+  - Handle: 14765567842826582810
+    FilePath: Sponza/Sponza_mat15.material
+    Type: AssetType::Material
+  - Handle: 14769725979508401431
+    FilePath: Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 14775812250319150513
+    FilePath: Sponza/Sponza_mat2.material
+    Type: AssetType::Material
+  - Handle: 14788833065097617938
+    FilePath: Sponza/Sponza_mat84.material
+    Type: AssetType::Material
+  - Handle: 14790174935195288043
+    FilePath: Sponza/Sponza_mat46.material
+    Type: AssetType::Material
+  - Handle: 14802664281752112839
+    FilePath: Sponza/Sponza_mat14.material
+    Type: AssetType::Material
+  - Handle: 14805915855119091925
+    FilePath: Models/Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 14810409985127600654
+    FilePath: Sponza/Sponza_mat15.material
+    Type: AssetType::Material
+  - Handle: 14831626375913530319
+    FilePath: Sponza/Sponza_mat14.material
+    Type: AssetType::Material
+  - Handle: 14831823057197671253
+    FilePath: Models/Sponza/Sponza_mat19.material
+    Type: AssetType::Material
+  - Handle: 14841918080370612616
+    FilePath: Sponza/Sponza_mat2.material
+    Type: AssetType::Material
+  - Handle: 14854443244399613284
+    FilePath: Sponza/Sponza_mat2.material
+    Type: AssetType::Material
+  - Handle: 14862279992705403046
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 14863123206958077299
+    FilePath: Sponza/Sponza_mat10.material
+    Type: AssetType::Material
+  - Handle: 14866029853148359467
+    FilePath: Sponza/Sponza_mat8.material
+    Type: AssetType::Material
+  - Handle: 14873179806089255207
+    FilePath: Models/Sponza/Sponza_mat1.material
+    Type: AssetType::Material
+  - Handle: 14879307894506763155
+    FilePath: Sponza/Sponza_mat20.material
+    Type: AssetType::Material
+  - Handle: 14880590292078022602
+    FilePath: Sponza/10388182081421875623.jpg
+    Type: AssetType::Texture2D
+  - Handle: 14884680506277084044
+    FilePath: Models/Sponza/Sponza_mat15.material
+    Type: AssetType::Material
+  - Handle: 14906221297994973170
+    FilePath: Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 14908853589798431426
+    FilePath: Models/Sponza/meshes[0]-36.mesh
+    Type: AssetType::Mesh
+  - Handle: 14920340880432445781
+    FilePath: Models/Sponza/Sponza_mat21.material
+    Type: AssetType::Material
+  - Handle: 14924158367662724129
+    FilePath: Models/Sponza/Sponza_mat20.material
+    Type: AssetType::Material
+  - Handle: 14935989677872680553
+    FilePath: Sponza/meshes[0]-20.mesh
+    Type: AssetType::Mesh
+  - Handle: 14947262948548727917
+    FilePath: Models/Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 14962299021092432119
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 14974665986670994076
+    FilePath: Sponza/Sponza_mat10.material
+    Type: AssetType::Material
+  - Handle: 14974930591392874354
+    FilePath: Sponza/Sponza_mat23.material
+    Type: AssetType::Material
+  - Handle: 14978840288551491490
+    FilePath: Sponza/Sponza_mat1.material
+    Type: AssetType::Material
+  - Handle: 14988713493442751389
+    FilePath: Sponza/Sponza_mat61.material
+    Type: AssetType::Material
+  - Handle: 15008944046610385449
+    FilePath: Sponza/Sponza_mat7.material
+    Type: AssetType::Material
+  - Handle: 15009696212907389747
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 15011785032012845256
+    FilePath: Models/Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 15018590485488273386
+    FilePath: Sponza/Sponza_mat14.material
+    Type: AssetType::Material
+  - Handle: 15027500821001886479
+    FilePath: Models/Sponza/Sponza_mat100.material
+    Type: AssetType::Material
+  - Handle: 15039780111016160409
+    FilePath: Sponza/meshes[0]-65.mesh
+    Type: AssetType::Mesh
+  - Handle: 15051395777896885617
+    FilePath: Sponza/16885566240357350108.jpg
+    Type: AssetType::Texture2D
+  - Handle: 15054622275760668303
+    FilePath: Models/Sponza/meshes[0]-47.mesh
+    Type: AssetType::Mesh
+  - Handle: 15074231944521113950
+    FilePath: Sponza/Sponza_mat1.material
+    Type: AssetType::Material
+  - Handle: 15075138981710961665
+    FilePath: Models/Sponza/meshes[0]-49.mesh
+    Type: AssetType::Mesh
+  - Handle: 15078331117984319146
+    FilePath: Models/Sponza/meshes[0]-101.mesh
+    Type: AssetType::Mesh
+  - Handle: 15089723127952440293
+    FilePath: Sponza/Sponza_mat18.material
+    Type: AssetType::Material
+  - Handle: 15109244564313971669
+    FilePath: Sponza/755318871556304029.jpg
+    Type: AssetType::Texture2D
+  - Handle: 15109549942249883740
+    FilePath: Sponza/Sponza_mat1.material
+    Type: AssetType::Material
+  - Handle: 15122618824260236552
+    FilePath: Sponza/Sponza_mat2.material
+    Type: AssetType::Material
+  - Handle: 15156547864646552902
+    FilePath: ./Sponza/meshes[0]-75.mesh
+    Type: AssetType::Mesh
+  - Handle: 15188490370941597139
+    FilePath: Sponza/Sponza_mat17.material
+    Type: AssetType::Material
+  - Handle: 15198962714549834724
+    FilePath: ./Sponza/meshes[0]-20.mesh
+    Type: AssetType::Mesh
+  - Handle: 15199346156793829537
+    FilePath: Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 15209746906072593720
+    FilePath: Sponza/Sponza_mat2.material
+    Type: AssetType::Material
+  - Handle: 15245428001749656854
+    FilePath: SciFiHelmet/SciFiHelmet_BaseColor.png
+    Type: AssetType::Texture2D
+  - Handle: 15246688020927244990
+    FilePath: Models/Sponza/meshes[0]-77.mesh
+    Type: AssetType::Mesh
+  - Handle: 15258359728359231115
+    FilePath: SciFiHelmet/SciFiHelmet.material
+    Type: AssetType::Material
+  - Handle: 15264039945158468387
+    FilePath: Scenes/cameraTest.scene
+    Type: AssetType::Scene
+  - Handle: 15272480970045446621
+    FilePath: Sponza/Sponza_mat102.material
+    Type: AssetType::Material
+  - Handle: 15273070972369652157
+    FilePath: Models/Sponza/Sponza_mat9.material
+    Type: AssetType::Material
+  - Handle: 15275157419819668864
+    FilePath: Sponza/Sponza_mat14.material
+    Type: AssetType::Material
+  - Handle: 15313626546674739457
+    FilePath: Models/Sponza/meshes[0]-23.mesh
+    Type: AssetType::Mesh
+  - Handle: 15319849356367342662
+    FilePath: Sponza/Sponza_mat21.material
+    Type: AssetType::Material
+  - Handle: 15337306436452036242
+    FilePath: Models/goblin-archer/hair.material
+    Type: AssetType::Material
+  - Handle: 15341920193905519278
+    FilePath: Sponza/Sponza_mat21.material
+    Type: AssetType::Material
+  - Handle: 15349622908281766802
+    FilePath: Models/Sponza/Sponza_mat53.material
+    Type: AssetType::Material
+  - Handle: 15370972791144821104
+    FilePath: Sponza/Sponza_mat13.material
+    Type: AssetType::Material
+  - Handle: 15372515099382817181
+    FilePath: Models/Sponza/Sponza_mat80.material
+    Type: AssetType::Material
+  - Handle: 15424724316196030487
+    FilePath: Sponza/Sponza_mat10.material
+    Type: AssetType::Material
+  - Handle: 15432296926536084482
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 15438562842619860287
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 15443010372792632707
+    FilePath: Sponza/Sponza_mat24.material
+    Type: AssetType::Material
+  - Handle: 15451265911065618114
+    FilePath: ./Sponza/meshes[0]-97.mesh
+    Type: AssetType::Mesh
+  - Handle: 15462328040344085444
+    FilePath: ./Sponza/meshes[0]-74.mesh
+    Type: AssetType::Mesh
+  - Handle: 15468391260552146974
+    FilePath: Sponza/Sponza_mat3.material
+    Type: AssetType::Material
+  - Handle: 15482575119557098436
+    FilePath: Sponza/Sponza_mat15.material
+    Type: AssetType::Material
+  - Handle: 15510491366249867973
+    FilePath: Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 15521797682615873620
+    FilePath: Sponza/Sponza_mat21.material
+    Type: AssetType::Material
+  - Handle: 15523747148356818744
+    FilePath: Sponza/Sponza_mat1.material
+    Type: AssetType::Material
+  - Handle: 15527732953967393837
+    FilePath: Sponza/Sponza_mat1.material
+    Type: AssetType::Material
+  - Handle: 15533384940344636888
+    FilePath: Sponza/Sponza_mat3.material
+    Type: AssetType::Material
+  - Handle: 15554295365324118069
+    FilePath: Sponza/Sponza_mat17.material
+    Type: AssetType::Material
+  - Handle: 15561985444477631589
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 15575068917539861081
+    FilePath: Sponza/Sponza_mat23.material
+    Type: AssetType::Material
+  - Handle: 15577228224051189667
+    FilePath: Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 15600592272735698417
+    FilePath: Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 15601154188608974122
+    FilePath: Sponza/Sponza_mat3.material
+    Type: AssetType::Material
+  - Handle: 15609737921027965784
+    FilePath: Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 15625198058087824053
+    FilePath: Models/Sponza/Sponza_mat10.material
+    Type: AssetType::Material
+  - Handle: 15631703764290022911
+    FilePath: Models/Sponza/10381718147657362067.jpg
+    Type: AssetType::Texture2D
+  - Handle: 15634576001592833329
+    FilePath: Sponza/5061699253647017043.png
+    Type: AssetType::Texture2D
+  - Handle: 15640390529920516783
+    FilePath: Sponza/Sponza_mat18.material
+    Type: AssetType::Material
+  - Handle: 15646342095137321655
+    FilePath: Prefabs/ss.prefab
+    Type: AssetType::Prefab
+  - Handle: 15650762205627249430
+    FilePath: Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 15666488690786105700
+    FilePath: Sponza/Sponza.prefab
+    Type: AssetType::Prefab
+  - Handle: 15686073897781307175
+    FilePath: Sponza/7645212358685992005.jpg
+    Type: AssetType::Texture2D
+  - Handle: 15732331170345992809
+    FilePath: Sponza/Sponza_mat20.material
+    Type: AssetType::Material
+  - Handle: 15734279023365600823
+    FilePath: Sponza/Sponza_mat20.material
+    Type: AssetType::Material
+  - Handle: 15759157884616792886
+    FilePath: Models/SciFiHelmet/SciFiHelmet_BaseColor.png
+    Type: AssetType::Texture2D
+  - Handle: 15763072699562298611
+    FilePath: Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 15764092420881877524
+    FilePath: Sponza/Sponza_mat18.material
+    Type: AssetType::Material
+  - Handle: 15778685471230851881
+    FilePath: Models/Sponza/meshes[0]-83.mesh
+    Type: AssetType::Mesh
+  - Handle: 15781537005394736799
+    FilePath: Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 15783240470303018492
+    FilePath: Sponza/Sponza_mat14.material
+    Type: AssetType::Material
+  - Handle: 15797306283478399250
+    FilePath: Models/Sponza/2969916736137545357.jpg
+    Type: AssetType::Texture2D
+  - Handle: 15810040180888391045
+    FilePath: Sponza/Sponza_mat15.material
+    Type: AssetType::Material
+  - Handle: 15810230370290857724
+    FilePath: Sponza/8481240838833932244.jpg
+    Type: AssetType::Texture2D
+  - Handle: 15810866278232404018
+    FilePath: Sponza/7056944414013900257.jpg
+    Type: AssetType::Texture2D
+  - Handle: 15826490866302740336
+    FilePath: Sponza/meshes[0]-33.mesh
+    Type: AssetType::Mesh
+  - Handle: 15827464459881845295
+    FilePath: Sponza/Sponza_mat2.material
+    Type: AssetType::Material
+  - Handle: 15832606158637074809
+    FilePath: Models/Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 15843447948996301427
+    FilePath: Sponza/Sponza_mat8.material
+    Type: AssetType::Material
+  - Handle: 15870550926117022060
+    FilePath: Models/Sponza/Sponza_mat82.material
+    Type: AssetType::Material
+  - Handle: 15881430112523955096
+    FilePath: Sponza/Sponza_mat1.material
+    Type: AssetType::Material
+  - Handle: 15884566809470613790
+    FilePath: Models/untitled/untitled.prefab
+    Type: AssetType::Prefab
+  - Handle: 15903332868265037823
+    FilePath: Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 15934028713394987823
+    FilePath: Sponza/Sponza_mat3.material
+    Type: AssetType::Material
+  - Handle: 15947658957471438706
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 15954580524042458576
+    FilePath: Sponza/Sponza_mat21.material
+    Type: AssetType::Material
+  - Handle: 15982601337024197241
+    FilePath: Sponza/Sponza_mat24.material
+    Type: AssetType::Material
+  - Handle: 15992762472857863940
+    FilePath: Sponza/Sponza_mat7.material
+    Type: AssetType::Material
+  - Handle: 15993836363917747523
+    FilePath: Sponza/Sponza_mat68.material
+    Type: AssetType::Material
+  - Handle: 16000224112386887949
+    FilePath: Sponza/Sponza_mat0.material
+    Type: AssetType::Material
+  - Handle: 16002805660851783926
+    FilePath: Models/Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 16007208511759663368
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 16018508845316485326
+    FilePath: Materials/test.material
+    Type: AssetType::Material
+  - Handle: 16022940234157589647
+    FilePath: Sponza/Sponza_mat21.material
+    Type: AssetType::Material
+  - Handle: 16043090660891183400
+    FilePath: Sponza/Sponza_mat18.material
+    Type: AssetType::Material
+  - Handle: 16047086973486834784
+    FilePath: Sponza/Sponza_mat86.material
+    Type: AssetType::Material
+  - Handle: 16065667490562297016
+    FilePath: Models/Sponza/13824894030729245199.jpg
+    Type: AssetType::Texture2D
+  - Handle: 16067381679849289529
+    FilePath: ./Sponza/meshes[0]-6.mesh
+    Type: AssetType::Mesh
+  - Handle: 16074168314654602624
+    FilePath: Sponza/Sponza_mat2.material
+    Type: AssetType::Material
+  - Handle: 16086228708424288649
+    FilePath: Sponza/Sponza_mat66.material
+    Type: AssetType::Material
+  - Handle: 16095444372543666613
+    FilePath: Sponza/meshes[0]-74.mesh
+    Type: AssetType::Mesh
+  - Handle: 16103466958720397729
+    FilePath: Sponza/8747919177698443163.jpg
+    Type: AssetType::Texture2D
+  - Handle: 16116839438309911162
+    FilePath: Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 16116853898464483191
+    FilePath: Sponza/Sponza_mat21.material
+    Type: AssetType::Material
+  - Handle: 16127999694981655070
+    FilePath: Models/Sponza/Sponza_mat77.material
+    Type: AssetType::Material
+  - Handle: 16130060345851794946
+    FilePath: Sponza/Sponza_mat20.material
+    Type: AssetType::Material
+  - Handle: 16153947068944431366
+    FilePath: Sponza/Sponza_mat9.material
+    Type: AssetType::Material
+  - Handle: 16157755839227098335
+    FilePath: ./Sponza/meshes[0]-76.mesh
+    Type: AssetType::Mesh
+  - Handle: 16164426214473191227
+    FilePath: Models/Sponza/Sponza_mat1.material
+    Type: AssetType::Material
+  - Handle: 16169385637038089536
+    FilePath: Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 16174490069536284341
+    FilePath: Sponza/Sponza_mat13.material
+    Type: AssetType::Material
+  - Handle: 16176528575674238393
+    FilePath: Models/Sponza/Sponza_mat26.material
+    Type: AssetType::Material
+  - Handle: 16182536481602600278
+    FilePath: Models/Sponza/meshes[0]-15.mesh
+    Type: AssetType::Mesh
+  - Handle: 16208907091251799943
+    FilePath: Sponza/Sponza_mat15.material
+    Type: AssetType::Material
+  - Handle: 16214335722893915051
+    FilePath: Sponza/Sponza_mat20.material
+    Type: AssetType::Material
+  - Handle: 16216256180313928210
+    FilePath: Models/Sponza/Sponza_mat1.material
+    Type: AssetType::Material
+  - Handle: 16231665450296005022
+    FilePath: Sponza/Sponza_mat16.material
+    Type: AssetType::Material
+  - Handle: 16236056726068733593
+    FilePath: Models/Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 16265142658943838111
+    FilePath: Models/Sponza/Sponza_mat2.material
+    Type: AssetType::Material
+  - Handle: 16267953252645189686
+    FilePath: Sponza/Sponza_mat16.material
+    Type: AssetType::Material
+  - Handle: 16283596512931830470
+    FilePath: Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 16296672866440908906
+    FilePath: Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 16300554588475660410
+    FilePath: Models/Sponza/4675343432951571524.jpg
+    Type: AssetType::Texture2D
+  - Handle: 16301780859881415003
+    FilePath: Models/Sponza/Sponza_mat18.material
+    Type: AssetType::Material
+  - Handle: 16304203805014137276
+    FilePath: Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 16307722008249152565
+    FilePath: Sponza/Sponza_mat16.material
+    Type: AssetType::Material
+  - Handle: 16310452167826902016
+    FilePath: Sponza/Sponza_mat1.material
+    Type: AssetType::Material
+  - Handle: 16346905014948261886
+    FilePath: Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 16350361067398897467
+    FilePath: Sponza/Sponza_mat19.material
+    Type: AssetType::Material
+  - Handle: 16350518526465811131
+    FilePath: Models/Sponza/meshes[0]-71.mesh
+    Type: AssetType::Mesh
+  - Handle: 16352732975713372828
+    FilePath: Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 16393470252798153482
+    FilePath: Sponza/Sponza_mat22.material
+    Type: AssetType::Material
+  - Handle: 16411886751707740350
+    FilePath: Sponza/Sponza_mat15.material
+    Type: AssetType::Material
+  - Handle: 16412774117097924788
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 16413333842134951573
+    FilePath: Sponza/Sponza_mat11.material
+    Type: AssetType::Material
+  - Handle: 16420919304949048743
+    FilePath: ./Sponza/meshes[0]-23.mesh
+    Type: AssetType::Mesh
+  - Handle: 16478064016997032783
+    FilePath: Sponza/Sponza_mat18.material
+    Type: AssetType::Material
+  - Handle: 16488381407144899984
+    FilePath: Sponza/Sponza_mat17.material
+    Type: AssetType::Material
+  - Handle: 16496140415738055338
+    FilePath: Sponza/Sponza_mat7.material
+    Type: AssetType::Material
+  - Handle: 16518565628620388027
+    FilePath: Models/Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 16522149251498383865
+    FilePath: Scenes/dd.scene
+    Type: AssetType::Scene
+  - Handle: 16524140411690447315
+    FilePath: ./Sponza/meshes[0]-95.mesh
+    Type: AssetType::Mesh
+  - Handle: 16536268916470988632
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 16542031505241000489
+    FilePath: Sponza/Sponza_mat31.material
+    Type: AssetType::Material
+  - Handle: 16543435871214225677
+    FilePath: Models/Sponza/Sponza_mat23.material
+    Type: AssetType::Material
+  - Handle: 16560324557291243188
+    FilePath: Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 16577420420798145357
+    FilePath: Models/Sponza/11474523244911310074.jpg
+    Type: AssetType::Texture2D
+  - Handle: 16619448114495835653
+    FilePath: Sponza/Sponza_mat2.material
+    Type: AssetType::Material
+  - Handle: 16624354340021800567
+    FilePath: Models/Sponza/Sponza_mat15.material
+    Type: AssetType::Material
+  - Handle: 16641765260261782827
+    FilePath: Sponza/Sponza_mat3.material
+    Type: AssetType::Material
+  - Handle: 16652532425057484685
+    FilePath: Sponza/Sponza_mat13.material
+    Type: AssetType::Material
+  - Handle: 16653468575322969669
+    FilePath: Sponza/Sponza_mat7.material
+    Type: AssetType::Material
+  - Handle: 16656132949701248837
+    FilePath: Sponza/meshes[0]-6.mesh
+    Type: AssetType::Mesh
+  - Handle: 16662735561626301906
+    FilePath: Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 16673070068645819234
+    FilePath: ./Sponza/meshes[0]-45.mesh
+    Type: AssetType::Mesh
+  - Handle: 16690576572718101200
+    FilePath: Models/Sponza/Sponza_mat17.material
+    Type: AssetType::Material
+  - Handle: 16690627407625278326
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 16697533455923708110
+    FilePath: Sponza/Sponza_mat9.material
+    Type: AssetType::Material
+  - Handle: 16699919217727767658
+    FilePath: Sponza/Sponza_mat2.material
+    Type: AssetType::Material
+  - Handle: 16706982053737327675
+    FilePath: Sponza/12501374198249454378.jpg
+    Type: AssetType::Texture2D
+  - Handle: 16718894233847450041
+    FilePath: Textures/hdr/Stonewall_Ref.hdr
+    Type: AssetType::SkyLight
+  - Handle: 16726086985784001906
+    FilePath: Sponza/Sponza_mat2.material
+    Type: AssetType::Material
+  - Handle: 16760045232461729999
+    FilePath: Models/Sponza/meshes[0]-55.mesh
+    Type: AssetType::Mesh
+  - Handle: 16763926739511976376
+    FilePath: Sponza/8114461559286000061.jpg
+    Type: AssetType::Texture2D
+  - Handle: 16801058604341098155
+    FilePath: Sponza/Sponza_mat2.material
+    Type: AssetType::Material
+  - Handle: 16814138671709199172
+    FilePath: Models/Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 16845516742887752083
+    FilePath: Sponza/Sponza_mat19.material
+    Type: AssetType::Material
+  - Handle: 16851504669940971725
+    FilePath: Sponza/Sponza_mat10.material
+    Type: AssetType::Material
+  - Handle: 16877529584026954623
+    FilePath: Models/Sponza/Sponza_mat10.material
+    Type: AssetType::Material
+  - Handle: 16893495770499898479
+    FilePath: Sponza/Sponza_mat21.material
+    Type: AssetType::Material
+  - Handle: 16899178430033548051
+    FilePath: Models/Sponza/15295713303328085182.jpg
+    Type: AssetType::Texture2D
+  - Handle: 16901087909165273827
+    FilePath: Sponza/Sponza_mat17.material
+    Type: AssetType::Material
+  - Handle: 16910772550933343763
+    FilePath: Sponza/Sponza_mat2.material
+    Type: AssetType::Material
+  - Handle: 16912360878323949979
+    FilePath: Sponza/Sponza_mat1.material
+    Type: AssetType::Material
+  - Handle: 16914889818883553292
+    FilePath: Sponza/meshes[0]-49.mesh
+    Type: AssetType::Mesh
+  - Handle: 16926771939257080419
+    FilePath: Sponza/Sponza_mat51.material
+    Type: AssetType::Material
+  - Handle: 16931825859189030735
+    FilePath: Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 16960209841701440821
+    FilePath: Sponza/Sponza_mat18.material
+    Type: AssetType::Material
+  - Handle: 16963659079923221613
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 16964336706699932098
+    FilePath: Sponza/Sponza_mat10.material
+    Type: AssetType::Material
+  - Handle: 16970651234128042477
+    FilePath: Models/Sponza/meshes[0]-75.mesh
+    Type: AssetType::Mesh
+  - Handle: 16986967375354125086
+    FilePath: Models/DamagedHelmet/Default_AO.jpg
+    Type: AssetType::Texture2D
+  - Handle: 16994738588595174026
+    FilePath: Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 17032441020828111424
+    FilePath: Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 17039296361815514500
+    FilePath: Sponza/Sponza_mat16.material
+    Type: AssetType::Material
+  - Handle: 17073181173306798976
+    FilePath: Sponza/Sponza_mat15.material
+    Type: AssetType::Material
+  - Handle: 17073444675359784442
+    FilePath: Sponza/Sponza_mat21.material
+    Type: AssetType::Material
+  - Handle: 17079202456468054423
+    FilePath: Sponza/meshes[0]-72.mesh
+    Type: AssetType::Mesh
+  - Handle: 17097389203490045541
+    FilePath: Sponza/Sponza_mat25.material
+    Type: AssetType::Material
+  - Handle: 17100876381804257586
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 17108559133693901264
+    FilePath: Models/Sponza/meshes[0]-69.mesh
+    Type: AssetType::Mesh
+  - Handle: 17111123314308096443
+    FilePath: Models/Sponza/Sponza_mat42.material
+    Type: AssetType::Material
+  - Handle: 17114710001402154981
+    FilePath: Sponza/Sponza_mat7.material
+    Type: AssetType::Material
+  - Handle: 17136562757606480475
+    FilePath: Sponza/Sponza_mat14.material
+    Type: AssetType::Material
+  - Handle: 17152049855785885922
+    FilePath: Sponza/meshes[0]-31.mesh
+    Type: AssetType::Mesh
+  - Handle: 17166427724807632064
+    FilePath: Sponza/Sponza_mat18.material
+    Type: AssetType::Material
+  - Handle: 17171019022394895343
+    FilePath: Sponza/Sponza_mat1.material
+    Type: AssetType::Material
+  - Handle: 17174460410709520798
+    FilePath: Models/Sponza/Sponza_mat38.material
+    Type: AssetType::Material
+  - Handle: 17199150607702266598
+    FilePath: Sponza/Sponza_mat14.material
+    Type: AssetType::Material
+  - Handle: 17213359236299165898
+    FilePath: Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 17213730290637871010
+    FilePath: Sponza/Sponza_mat9.material
+    Type: AssetType::Material
+  - Handle: 17213731993988083893
+    FilePath: Sponza/Sponza_mat13.material
+    Type: AssetType::Material
+  - Handle: 17231715634878192550
+    FilePath: Sponza/Sponza_mat19.material
+    Type: AssetType::Material
+  - Handle: 17233491933660125211
+    FilePath: Sponza/Sponza_mat10.material
+    Type: AssetType::Material
+  - Handle: 17248462330791326896
+    FilePath: Models/scene/CesiumLogoFlat.png
+    Type: AssetType::Texture2D
+  - Handle: 17269120637303133770
+    FilePath: Models/scene/Texture.material
+    Type: AssetType::Material
+  - Handle: 17270025063667959286
+    FilePath: Scenes/helmet.scene
+    Type: AssetType::Scene
+  - Handle: 17295847091267501937
+    FilePath: Sponza/Sponza_mat1.material
+    Type: AssetType::Material
+  - Handle: 17301894675277754019
+    FilePath: Sponza/Sponza_mat10.material
+    Type: AssetType::Material
+  - Handle: 17302806141646546140
+    FilePath: Sponza/meshes[0]-99.mesh
+    Type: AssetType::Mesh
+  - Handle: 17307429404786150433
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 17312983481024629734
+    FilePath: Sponza/Sponza_mat24.material
+    Type: AssetType::Material
+  - Handle: 17316564717373391226
+    FilePath: ./Sponza/meshes[0]-30.mesh
+    Type: AssetType::Mesh
+  - Handle: 17319105074732057652
+    FilePath: Sponza/14650633544276105767.jpg
+    Type: AssetType::Texture2D
+  - Handle: 17336550946930621817
+    FilePath: Sponza/meshes[0]-80.mesh
+    Type: AssetType::Mesh
+  - Handle: 17343145400851493958
+    FilePath: Models/Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 17349132054260267673
+    FilePath: Sponza/Sponza_mat2.material
+    Type: AssetType::Material
+  - Handle: 17365152150854750048
+    FilePath: Sponza/Sponza_mat20.material
+    Type: AssetType::Material
+  - Handle: 17387403989863420113
+    FilePath: Models/Sponza/Sponza_mat1.material
+    Type: AssetType::Material
+  - Handle: 17393745179454334146
+    FilePath: Models/Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 17415925791272582027
+    FilePath: Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 17420432302248931415
+    FilePath: ./Sponza/meshes[0]-66.mesh
+    Type: AssetType::Mesh
+  - Handle: 17443655356932774328
+    FilePath: Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 17454311297641686941
+    FilePath: Sponza/Sponza_mat21.material
+    Type: AssetType::Material
+  - Handle: 17458400572028586883
+    FilePath: Models/Sponza/meshes[0]-93.mesh
+    Type: AssetType::Mesh
+  - Handle: 17460456070450281950
+    FilePath: Sponza/meshes[0]-26.mesh
+    Type: AssetType::Mesh
+  - Handle: 17466229942288832350
+    FilePath: Sponza/Sponza_mat0.material
+    Type: AssetType::Material
+  - Handle: 17478518886610529220
+    FilePath: Sponza/Sponza_mat24.material
+    Type: AssetType::Material
+  - Handle: 17488364622050409547
+    FilePath: Models/Sponza/Sponza_mat21.material
+    Type: AssetType::Material
+  - Handle: 17510068037280567343
+    FilePath: Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 17533036883278475901
+    FilePath: Sponza/Sponza_mat17.material
+    Type: AssetType::Material
+  - Handle: 17541655777841970676
+    FilePath: Models/SciFiHelmet/SciFiHelmet_AmbientOcclusion.png
+    Type: AssetType::Texture2D
+  - Handle: 17542793552380738812
+    FilePath: Sponza/Sponza_mat15.material
+    Type: AssetType::Material
+  - Handle: 17545452954221543431
+    FilePath: Sponza/meshes[0]-16.mesh
+    Type: AssetType::Mesh
+  - Handle: 17547589137573443432
+    FilePath: Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 17563354406143214093
+    FilePath: ./Sponza/meshes[0]-8.mesh
+    Type: AssetType::Mesh
+  - Handle: 17567681329221985845
+    FilePath: Sponza/Sponza_mat3.material
+    Type: AssetType::Material
+  - Handle: 17579257076650356009
+    FilePath: Models/Sponza/meshes[0]-91.mesh
+    Type: AssetType::Mesh
+  - Handle: 17585576891805689068
+    FilePath: Sponza/Sponza_mat8.material
+    Type: AssetType::Material
+  - Handle: 17592982199020721382
+    FilePath: Sponza/Sponza_mat19.material
+    Type: AssetType::Material
+  - Handle: 17609579641638318572
+    FilePath: Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 17627554109406911792
+    FilePath: Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 17640227288031382853
+    FilePath: Sponza/Sponza_mat12.material
+    Type: AssetType::Material
+  - Handle: 17641090461566754478
+    FilePath: Sponza/Sponza_mat1.material
+    Type: AssetType::Material
+  - Handle: 17643619226942497916
+    FilePath: Sponza/Sponza_mat10.material
+    Type: AssetType::Material
+  - Handle: 17654333060196967201
+    FilePath: Models/Sponza/Sponza_mat96.material
+    Type: AssetType::Material
+  - Handle: 17659004393167640237
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 17665572573073841153
+    FilePath: Models/Sponza/Sponza_mat18.material
+    Type: AssetType::Material
+  - Handle: 17681939312425389030
+    FilePath: Sponza/Sponza_mat20.material
+    Type: AssetType::Material
+  - Handle: 17689620169491666108
+    FilePath: Models/Sponza/Sponza_mat76.material
+    Type: AssetType::Material
+  - Handle: 17696656412090720537
+    FilePath: Models/Sponza/Sponza_mat14.material
+    Type: AssetType::Material
+  - Handle: 17697311077397594085
+    FilePath: Sponza/meshes[0]-85.mesh
+    Type: AssetType::Mesh
+  - Handle: 17711988738698177850
+    FilePath: Models/Sponza/meshes[0]-29.mesh
+    Type: AssetType::Mesh
+  - Handle: 17733239202266336905
+    FilePath: Sponza/Sponza_mat20.material
+    Type: AssetType::Material
+  - Handle: 17735218992808637499
+    FilePath: Prefabs/test.prefab
+    Type: AssetType::Prefab
+  - Handle: 17787525354308583496
+    FilePath: Models/Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 17801790067784140378
+    FilePath: Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 17812413279887302899
+    FilePath: Sponza/13982482287905699490.jpg
+    Type: AssetType::Texture2D
+  - Handle: 17847324593215359080
+    FilePath: Models/Sponza/Sponza_mat1.material
+    Type: AssetType::Material
+  - Handle: 17885832713906696306
+    FilePath: Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 17903217275733163219
+    FilePath: Sponza/11968150294050148237.jpg
+    Type: AssetType::Texture2D
+  - Handle: 17913196334036644614
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 17917085511966994283
+    FilePath: Sponza/Sponza_mat1.material
+    Type: AssetType::Material
+  - Handle: 17925349833058965644
+    FilePath: Models/Sponza/9288698199695299068.jpg
+    Type: AssetType::Texture2D
+  - Handle: 17926175109497429636
+    FilePath: Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 17929479314165041563
+    FilePath: Models/Sponza/Sponza_mat87.material
+    Type: AssetType::Material
+  - Handle: 17932597518058563102
+    FilePath: Textures/hdr/puresky.hdr
+    Type: AssetType::SkyLight
+  - Handle: 17942525843509380776
+    FilePath: Sponza/Sponza_mat1.material
+    Type: AssetType::Material
+  - Handle: 17958893107215462284
+    FilePath: Sponza/Sponza_mat27.material
+    Type: AssetType::Material
+  - Handle: 17959419326268025714
+    FilePath: Sponza/Sponza_mat1.material
+    Type: AssetType::Material
+  - Handle: 17979141573591265056
+    FilePath: Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 17984372628124693247
+    FilePath: Sponza/Sponza_mat40.material
+    Type: AssetType::Material
+  - Handle: 18000041387228796428
+    FilePath: Sponza/Sponza_mat0.material
+    Type: AssetType::Material
+  - Handle: 18045309955899242594
+    FilePath: Scenes/sz.scene
+    Type: AssetType::Scene
+  - Handle: 18054623800092365225
+    FilePath: Sponza/Sponza_mat10.material
+    Type: AssetType::Material
+  - Handle: 18057560821839015997
+    FilePath: ./Sponza/meshes[0]-21.mesh
+    Type: AssetType::Mesh
+  - Handle: 18068211177375902550
+    FilePath: Sponza/meshes[0]-19.mesh
+    Type: AssetType::Mesh
+  - Handle: 18089243402084287787
+    FilePath: Sponza/Sponza_mat3.material
+    Type: AssetType::Material
+  - Handle: 18094141065424731901
+    FilePath: Models/DamagedHelmet/Default_normal.jpg
+    Type: AssetType::Texture2D
+  - Handle: 18097038405564992927
+    FilePath: Sponza/Sponza_mat94.material
+    Type: AssetType::Material
+  - Handle: 18100852363234951759
+    FilePath: Sponza/Sponza_mat12.material
+    Type: AssetType::Material
+  - Handle: 18110579032573869715
+    FilePath: Models/Sponza/meshes[0]-59.mesh
+    Type: AssetType::Mesh
+  - Handle: 18113783688977367182
+    FilePath: Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 18115496323099028979
+    FilePath: Sponza/meshes[0]-44.mesh
+    Type: AssetType::Mesh
+  - Handle: 18119138101823225321
+    FilePath: Sponza/Sponza_mat1.material
+    Type: AssetType::Material
+  - Handle: 18124346680093368625
+    FilePath: Models/Sponza/meshes[0]-10.mesh
+    Type: AssetType::Mesh
+  - Handle: 18130759775512411119
+    FilePath: Models/Sponza/meshes[0]-2.mesh
+    Type: AssetType::Mesh
+  - Handle: 18140061164025667464
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 18142436746414057896
+    FilePath: Sponza/Sponza_mat1.material
+    Type: AssetType::Material
+  - Handle: 18155944671124947054
+    FilePath: Models/Sponza/Sponza_mat52.material
+    Type: AssetType::Material
+  - Handle: 18159123397438702863
+    FilePath: Models/DamagedHelmet/Default_albedo.jpg
+    Type: AssetType::Texture2D
+  - Handle: 18163397687937340494
+    FilePath: Models/Sponza/16275776544635328252.png
+    Type: AssetType::Texture2D
+  - Handle: 18166554315658647908
+    FilePath: Sponza/Sponza_mat72.material
+    Type: AssetType::Material
+  - Handle: 18169549941929894212
+    FilePath: Sponza/Sponza_mat19.material
+    Type: AssetType::Material
+  - Handle: 18184029339486700559
+    FilePath: Sponza/Sponza_mat13.material
+    Type: AssetType::Material
+  - Handle: 18203072547112326107
+    FilePath: Sponza/Sponza_mat22.material
+    Type: AssetType::Material
+  - Handle: 18216941946732937966
+    FilePath: SciFiHelmet/SciFiHelmet.material
+    Type: AssetType::Material
+  - Handle: 18219590517710874714
+    FilePath: Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 18221673129758026698
+    FilePath: Models/Sponza/Sponza_mat73.material
+    Type: AssetType::Material
+  - Handle: 18227486144242415951
+    FilePath: Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 18227920588408240061
+    FilePath: ./Sponza/meshes[0]-72.mesh
+    Type: AssetType::Mesh
+  - Handle: 18233801027136365279
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 18259875977358218918
+    FilePath: Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 18262921474805234784
+    FilePath: Sponza/Sponza_mat16.material
+    Type: AssetType::Material
+  - Handle: 18270393460102805429
+    FilePath: Sponza/Sponza_mat14.material
+    Type: AssetType::Material
+  - Handle: 18272571291062851957
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 18300810752144140254
+    FilePath: Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 18312633487934619236
+    FilePath: ./Sponza/meshes[0]-36.mesh
+    Type: AssetType::Mesh
+  - Handle: 18317983068663911612
+    FilePath: Sponza/Sponza_mat20.material
+    Type: AssetType::Material
+  - Handle: 18334387022376486554
+    FilePath: ./Sponza/meshes[0]-84.mesh
+    Type: AssetType::Mesh
+  - Handle: 18335923532562975400
+    FilePath: Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 18347339494188561671
+    FilePath: ./Sponza/meshes[0]-35.mesh
+    Type: AssetType::Mesh
+  - Handle: 18357117499798789398
+    FilePath: Models/Sponza/8006627369776289000.png
+    Type: AssetType::Texture2D
+  - Handle: 18387721805435643636
+    FilePath: Sponza/Sponza_mat8.material
+    Type: AssetType::Material
+  - Handle: 18389983937977172306
+    FilePath: Sponza/Sponza_mat18.material
+    Type: AssetType::Material
+  - Handle: 18410197102920552087
+    FilePath: Sponza/Sponza_mat8.material
+    Type: AssetType::Material
+  - Handle: 18411903449913554013
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 18420692851682362644
+    FilePath: Sponza/Sponza_mat5.material
+    Type: AssetType::Material
+  - Handle: 18422577226717621245
+    FilePath: Models/Sponza/11490520546946913238.jpg
+    Type: AssetType::Texture2D
+  - Handle: 18424939963038568623
+    FilePath: Sponza/Sponza_mat4.material
+    Type: AssetType::Material
+  - Handle: 18432043229880860837
+    FilePath: Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 18437475056594015679
+    FilePath: Sponza/Sponza_mat17.material
+    Type: AssetType::Material
+  - Handle: 18438886936440744990
+    FilePath: Sponza/Sponza_mat6.material
+    Type: AssetType::Material
+  - Handle: 18443867298266782683
+    FilePath: Sponza/Sponza_mat4.material
+    Type: AssetType::Material

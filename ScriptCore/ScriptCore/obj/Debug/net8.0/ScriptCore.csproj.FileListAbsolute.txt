@@ -1,0 +1,16 @@
+C:\dev\3DEngine\ScriptCore\ScriptCore\bin\Debug\net8.0\ScriptCore.deps.json
+C:\dev\3DEngine\ScriptCore\ScriptCore\bin\Debug\net8.0\ScriptCore.dll
+C:\dev\3DEngine\ScriptCore\ScriptCore\bin\Debug\net8.0\ScriptCore.pdb
+C:\dev\3DEngine\ScriptCore\ScriptCore\bin\Debug\net8.0\Coral.Managed.dll
+C:\dev\3DEngine\ScriptCore\ScriptCore\bin\Debug\net8.0\Coral.Managed.pdb
+C:\dev\3DEngine\ScriptCore\ScriptCore\obj\Debug\net8.0\ScriptCore.csproj.AssemblyReference.cache
+C:\dev\3DEngine\ScriptCore\ScriptCore\obj\Debug\net8.0\ScriptCore.GeneratedMSBuildEditorConfig.editorconfig
+C:\dev\3DEngine\ScriptCore\ScriptCore\obj\Debug\net8.0\ScriptCore.AssemblyInfoInputs.cache
+C:\dev\3DEngine\ScriptCore\ScriptCore\obj\Debug\net8.0\ScriptCore.AssemblyInfo.cs
+C:\dev\3DEngine\ScriptCore\ScriptCore\obj\Debug\net8.0\ScriptCore.csproj.CoreCompileInputs.cache
+C:\dev\3DEngine\ScriptCore\ScriptCore\obj\Debug\net8.0\ScriptCore.sourcelink.json
+C:\dev\3DEngine\ScriptCore\ScriptCore\obj\Debug\net8.0\ScriptCore.csproj.CopyComplete
+C:\dev\3DEngine\ScriptCore\ScriptCore\obj\Debug\net8.0\ScriptCore.dll
+C:\dev\3DEngine\ScriptCore\ScriptCore\obj\Debug\net8.0\refint\ScriptCore.dll
+C:\dev\3DEngine\ScriptCore\ScriptCore\obj\Debug\net8.0\ScriptCore.pdb
+C:\dev\3DEngine\ScriptCore\ScriptCore\obj\Debug\net8.0\ref\ScriptCore.dll

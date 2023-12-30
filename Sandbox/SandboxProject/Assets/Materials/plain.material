@@ -1,0 +1,18 @@
+Material:
+  Name: DefaultMaterial
+  TexturesDirectory: Models\untitled
+  IsDefault: true
+  AlbedoColor: [0.599423647, 0.0811899379, 0.0811899379]
+  Metallic: 0
+  Roughness: 0.899999976
+  AO: 1
+  AlbedoMap: 0
+  MetallicMap: 0
+  RoughnessMap: 0
+  AOMap: 0
+  NormalMap: 0
+  AlbedoMapPath: No Texture
+  MetallicMapPath: No Texture
+  RoughnessMapPath: No Texture
+  AOMapPath: No Texture
+  NormalMapPath: No Texture

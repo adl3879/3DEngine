@@ -1,0 +1,18 @@
+Material:
+  Name: Material_MR
+  TexturesDirectory: Models\DamagedHelmet
+  IsDefault: true
+  AlbedoColor: [0, 0, 0]
+  Metallic: 0
+  Roughness: 0.899999976
+  AO: 1
+  AlbedoMap: 18159123397438702863
+  MetallicMap: 14762876338201470073
+  RoughnessMap: 14762876338201470073
+  AOMap: 16986967375354125086
+  NormalMap: 18094141065424731901
+  AlbedoMapPath: Default_albedo.jpg
+  MetallicMapPath: Default_metalRoughness.jpg
+  RoughnessMapPath: Default_metalRoughness.jpg
+  AOMapPath: Default_AO.jpg
+  NormalMapPath: Default_normal.jpg

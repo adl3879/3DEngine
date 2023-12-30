@@ -1,0 +1,18 @@
+Material:
+  Name: Sponza_mat24
+  TexturesDirectory: Sponza
+  IsDefault: true
+  AlbedoColor: [0, 0, 0]
+  Metallic: 0
+  Roughness: 0.899999976
+  AO: 1
+  AlbedoMap: 9534694727595290370
+  MetallicMap: 16103466958720397729
+  RoughnessMap: 16103466958720397729
+  AOMap: 0
+  NormalMap: 4071016894827135979
+  AlbedoMapPath: 2969916736137545357.jpg
+  MetallicMapPath: 8747919177698443163.jpg
+  RoughnessMapPath: 8747919177698443163.jpg
+  AOMapPath: No Texture
+  NormalMapPath: 14118779221266351425.jpg

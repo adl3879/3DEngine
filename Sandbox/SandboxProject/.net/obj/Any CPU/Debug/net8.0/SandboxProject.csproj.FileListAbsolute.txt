@@ -1,0 +1,15 @@
+C:\dev\3DEngine\Sandbox\SandboxProject\.net\bin\Any CPU\Debug\net8.0\SandboxProject.deps.json
+C:\dev\3DEngine\Sandbox\SandboxProject\.net\bin\Any CPU\Debug\net8.0\SandboxProject.dll
+C:\dev\3DEngine\Sandbox\SandboxProject\.net\bin\Any CPU\Debug\net8.0\SandboxProject.pdb
+C:\dev\3DEngine\Sandbox\SandboxProject\.net\bin\Any CPU\Debug\net8.0\ScriptCore.dll
+C:\dev\3DEngine\Sandbox\SandboxProject\.net\obj\Any CPU\Debug\net8.0\SandboxProject.csproj.AssemblyReference.cache
+C:\dev\3DEngine\Sandbox\SandboxProject\.net\obj\Any CPU\Debug\net8.0\SandboxProject.GeneratedMSBuildEditorConfig.editorconfig
+C:\dev\3DEngine\Sandbox\SandboxProject\.net\obj\Any CPU\Debug\net8.0\SandboxProject.AssemblyInfoInputs.cache
+C:\dev\3DEngine\Sandbox\SandboxProject\.net\obj\Any CPU\Debug\net8.0\SandboxProject.AssemblyInfo.cs
+C:\dev\3DEngine\Sandbox\SandboxProject\.net\obj\Any CPU\Debug\net8.0\SandboxProject.csproj.CoreCompileInputs.cache
+C:\dev\3DEngine\Sandbox\SandboxProject\.net\obj\Any CPU\Debug\net8.0\SandboxProject.sourcelink.json
+C:\dev\3DEngine\Sandbox\SandboxProject\.net\obj\Any CPU\Debug\net8.0\SandboxProject.csproj.CopyComplete
+C:\dev\3DEngine\Sandbox\SandboxProject\.net\obj\Any CPU\Debug\net8.0\SandboxProject.dll
+C:\dev\3DEngine\Sandbox\SandboxProject\.net\obj\Any CPU\Debug\net8.0\refint\SandboxProject.dll
+C:\dev\3DEngine\Sandbox\SandboxProject\.net\obj\Any CPU\Debug\net8.0\SandboxProject.pdb
+C:\dev\3DEngine\Sandbox\SandboxProject\.net\obj\Any CPU\Debug\net8.0\ref\SandboxProject.dll

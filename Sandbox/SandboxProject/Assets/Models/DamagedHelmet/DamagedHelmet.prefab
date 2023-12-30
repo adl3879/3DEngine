@@ -1,0 +1,35 @@
+Prefab: Untitled
+Entities:
+  - Entity: 10595380472414313427
+    TagComponent:
+      Tag: mesh_helmet_LP_13930damagedHelmet
+    ParentComponent:
+      Parent: 9450856338750059057
+      HasParent: true
+      Children:
+        []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      LocalTranslation: [0, 0, 0]
+      LocalRotation: [0, 0, 0]
+      LocalScale: [1, 1, 1]
+    MeshComponent:
+      Handle: 14763150859770149371
+      MaterialHandle: 14940532475582559072
+  - Entity: 9450856338750059057
+    TagComponent:
+      Tag: DamagedHelmet
+    ParentComponent:
+      Parent: 6538991811707194813
+      HasParent: false
+      Children:
+        - 10595380472414313427
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      LocalTranslation: [0, 0, 0]
+      LocalRotation: [0, 0, 0]
+      LocalScale: [1, 1, 1]

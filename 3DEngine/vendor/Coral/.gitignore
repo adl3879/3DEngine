@@ -1,0 +1,20 @@
+# Folders
+.vs/
+**/Build/
+**/Intermediates/
+**/bin/
+**/obj/
+**/.vscode/
+
+.idea/
+
+# Files
+*.sln
+*.csproj
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
+
+Makefile
+
+*.code-workspace

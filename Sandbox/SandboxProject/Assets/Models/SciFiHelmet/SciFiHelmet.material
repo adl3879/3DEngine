@@ -1,0 +1,18 @@
+Material:
+  Name: SciFiHelmet
+  TexturesDirectory: Models\SciFiHelmet
+  IsDefault: true
+  AlbedoColor: [0, 0, 0]
+  Metallic: 1
+  Roughness: 0.832000017
+  AO: 1
+  AlbedoMap: 15759157884616792886
+  MetallicMap: 4222657107723696890
+  RoughnessMap: 4222657107723696890
+  AOMap: 17541655777841970676
+  NormalMap: 5192742920910107793
+  AlbedoMapPath: SciFiHelmet_BaseColor.png
+  MetallicMapPath: SciFiHelmet_MetallicRoughness.png
+  RoughnessMapPath: SciFiHelmet_MetallicRoughness.png
+  AOMapPath: SciFiHelmet_AmbientOcclusion.png
+  NormalMapPath: SciFiHelmet_Normal.png

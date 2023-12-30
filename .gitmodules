@@ -1,0 +1,37 @@
+[submodule "Hazel/vendor/spdlog"]
+	path = Hazel/vendor/spdlog
+	url = ../../gabime/spdlog.git
+	branch = v1.x
+[submodule "Hazel/vendor/GLFW"]
+	path = Hazel/vendor/GLFW
+	url = ../../TheCherno/glfw.git
+	branch = master
+[submodule "Hazel/vendor/imgui"]
+	path = Hazel/vendor/imgui
+	url = ../../TheCherno/imgui.git
+	branch = docking
+[submodule "Hazel/vendor/glm"]
+	path = Hazel/vendor/glm
+	url = ../../g-truc/glm.git
+	branch = master
+[submodule "Hazel/vendor/yaml-cpp"]
+	path = Hazel/vendor/yaml-cpp
+	url = https://github.com/thecherno/yaml-cpp
+[submodule "Hazel/vendor/ImGuizmo"]
+	path = Hazel/vendor/ImGuizmo
+	url = https://github.com/thecherno/imguizmo
+[submodule "Hazel/vendor/Box2D"]
+	path = Hazel/vendor/Box2D
+	url = https://github.com/thecherno/box2d
+[submodule "3DEngine/vendor/imgui"]
+	path = 3DEngine/vendor/imgui
+	url = https://github.com/ocornut/imgui.git
+[submodule "3DEngine/vendor/ImGuiColorTextEdit"]
+	path = 3DEngine/vendor/ImGuiColorTextEdit
+	url = https://github.com/BalazsJako/ImGuiColorTextEdit.git
+[submodule "3DEngine/vendor/Coral"]
+	path = 3DEngine/vendor/Coral
+	url = https://github.com/StudioCherno/Coral.git
+[submodule "3DEngine/vendor/--recursive"]
+	path = 3DEngine/vendor/--recursive
+	url = https://github.com/StudioCherno/Coral.git

@@ -1,0 +1,56 @@
+Scene: Untitled
+Environment:
+  SkyType: Procedural Sky
+  AmbientColor: [1, 1, 1, 1]
+  BloomEnabled: true
+  Exposure: 1.20000005
+  BloomIntensity: 0.0399999991
+  SurfaceRadius: 6360000
+  AtmosphereRadius: 6380000
+  RayleighScattering: [5.80000005e-06, 1.35e-05, 3.3100001e-05]
+  MieScattering: [1.99999995e-05, 1.99999995e-05, 1.99999995e-05]
+  SunIntensity: 0.300000012
+  CenterPoint: [0, -6360000, 0]
+  SunDirection: [0.200000003, 0.959169984, 0.200000003]
+Entities:
+  - Entity: 3770049266630681616
+    TagComponent:
+      Tag: Mesh
+    ParentComponent:
+      Parent: 11324788899931082483
+      HasParent: false
+      Children:
+        []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      LocalTranslation: [0, 0, 0]
+      LocalRotation: [0, 0, 0]
+      LocalScale: [1, 1, 1]
+    MeshComponent:
+      Handle: 1350320503531943002
+      MaterialHandle: 8294963912676184267
+    NetScriptComponent:
+      Handle: 100347941953870695
+  - Entity: 15735252182166597636
+    TagComponent:
+      Tag: Camera
+    ParentComponent:
+      Parent: 18207536401154752687
+      HasParent: false
+      Children:
+        []
+    TransformComponent:
+      Translation: [0, 0, 5.22686052]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      LocalTranslation: [0, 0, 0]
+      LocalRotation: [0, 0, 0]
+      LocalScale: [1, 1, 1]
+    CameraComponent:
+      Camera:
+        PerspectiveFOV: -0.785398185
+        PerspectiveNear: 0.100000001
+        PerspectiveFar: 100
+      Primary: true

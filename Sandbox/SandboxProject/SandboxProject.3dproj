@@ -1,0 +1,23 @@
+Project:
+  Name: SandboxProject
+  StartScene: ""
+  AssetDirectory: Assets
+  AssetRegistryPath: AssetRegistry.yaml
+  ScriptModulePath: Scripts/Binaries/Sandbox.dll
+  InputToActionMap:
+    - Action: attack
+      Input:
+        - SpecialKey: ""
+          KeyboardKey: K
+        - SpecialKey: ""
+          KeyboardKey: Enter
+    - Action: jump
+      Input:
+        - SpecialKey: ""
+          KeyboardKey: Space
+        - SpecialKey: ""
+          KeyboardKey: J
+    - Action: run
+      Input:
+        - SpecialKey: ""
+          KeyboardKey: A
