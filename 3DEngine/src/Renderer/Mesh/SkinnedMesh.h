@@ -7,12 +7,11 @@
 #include "Vertex.h"
 #include "VertexArray.h"
 #include "Material.h"
-#include "Asset.h"
 #include "Shader.h"
 
 namespace Engine
 {
-struct SkinnedMesh : public Asset
+struct SkinnedMesh
 {
     SkinnedMesh();
     SkinnedMesh(const std::string &name, const std::vector<SkinnedVertex> &vertices, const std::vector<uint32_t> &indices,
@@ -30,8 +29,6 @@ struct SkinnedMesh : public Asset
     std::vector<uint32_t> Indices;
 
     AssetHandle DefaultMaterialHandle; // default material
-
-	[[nodiscard]] AssetType GetType() const override { return AssetType::SkinnedMesh; }
 
   private:
     void SetupMesh(const std::vector<SkinnedVertex> &vertices, const std::vector<uint32_t> &indices);

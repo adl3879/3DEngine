@@ -15,6 +15,22 @@ Mesh::Mesh(const std::string &name, const std::vector<Vertex> &vertices, const s
     SetupMesh(vertices, indices);
 }
 
+Mesh::Mesh(const std::string &name, const std::vector<Vertex> &vertices, const std::vector<uint32_t> &indices,
+           const std::filesystem::path &materialPath)
+    : IndexCount(indices.size()), VertexCount(vertices.size()), DefaultMaterialPath(materialPath),
+      Vertices(vertices), Indices(indices), Name(name)
+{
+    SetupMesh(vertices, indices);
+}
+
+Mesh::Mesh(const std::string& name, const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices,
+	MaterialRef material)
+	: IndexCount(indices.size()), VertexCount(vertices.size()), DefaultMaterial(material),
+	Vertices(vertices), Indices(indices), Name(name)
+{
+	SetupMesh(vertices, indices);
+}
+
 void Mesh::Draw(Shader *shader, bool bindMaterials)
 {
     VAO.Bind();

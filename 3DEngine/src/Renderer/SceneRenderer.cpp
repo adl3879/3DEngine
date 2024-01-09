@@ -107,15 +107,23 @@ void SceneRenderer::RenderScene(Scene &scene, Framebuffer &framebuffer)
             if (!visibility.IsVisible) continue;
             if (mesh.Handle == 0 && mesh.ModelResource == nullptr) continue;
 
-            const auto &m = AssetManager::GetAsset<Mesh>(mesh.Handle);
 
             if (environment->SkyboxHDR) environment->SkyboxHDR->BindMaps();
 
-            auto trnsfrm = transform.GetTransform();
-            const bool isHandleValid = AssetManager::IsAssetHandleValid(mesh.MaterialHandle);
-            const MaterialRef mat =
-                AssetManager::GetAsset<Material>(isHandleValid ? mesh.MaterialHandle : m->DefaultMaterialHandle);
-            Renderer::SubmitMesh(m, mat, trnsfrm, static_cast<int>(e));
+            const auto &model = AssetManager::GetAsset<Model>(mesh.Handle);
+            if (model == nullptr) continue;
+            for (const auto &m : model->GetMeshes())
+            {
+                auto trnsfrm = transform.GetTransform();
+                MaterialRef mat = AssetManager::GetAsset<Material>(mesh.MaterialHandle);
+                if (mat == nullptr)
+                {
+                    mat = m.DefaultMaterial;
+                    mat->SetTextureFindPath(AssetManager::GetRegistry()[mesh.Handle].FilePath);
+                }
+
+                Renderer::SubmitMesh(std::make_shared<Mesh>(m), mat, trnsfrm, static_cast<int>(e));
+            }
         }
 
         Renderer::Flush(pbrShader, false);
@@ -151,49 +159,49 @@ void SceneRenderer::RenderScene(Scene &scene, Framebuffer &framebuffer)
         m_ShadingBuffer->Unbind();
     }
 
-    // outline
-    if (!scene.IsPlaying() && m_ShowDebug)
-    {
-        const auto outlineShader = ShaderManager::GetShader("Resources/shaders/outline");
-        outlineShader->Bind();
-        outlineShader->SetUniformMatrix4fv("projectionViewMatrix", m_Projection * m_View);
+    //// outline
+    //if (!scene.IsPlaying() && m_ShowDebug)
+    //{
+    //    const auto outlineShader = ShaderManager::GetShader("Resources/shaders/outline");
+    //    outlineShader->Bind();
+    //    outlineShader->SetUniformMatrix4fv("projectionViewMatrix", m_Projection * m_View);
 
-        m_OutlineBuffer->Bind();
-        m_OutlineBuffer->Clear();
+    //    m_OutlineBuffer->Bind();
+    //    m_OutlineBuffer->Clear();
 
-        for (auto &e : view)
-        {
-            if (e != scene.GetSelectedEntity()) continue;
-            auto [mesh, transform] = view.get<MeshComponent, TransformComponent>(e);
+    //    for (auto &e : view)
+    //    {
+    //        if (e != scene.GetSelectedEntity()) continue;
+    //        auto [mesh, transform] = view.get<MeshComponent, TransformComponent>(e);
 
-            if (mesh.Handle == 0 && mesh.ModelResource == nullptr) continue;
+    //        if (mesh.Handle == 0 && mesh.ModelResource == nullptr) continue;
 
-            const auto &m = AssetManager::GetAsset<Mesh>(mesh.Handle);
+    //        const auto &m = AssetManager::GetAsset<Mesh>(mesh.Handle);
 
-            auto trnsfrm = transform.GetTransform();
-            bool isHandleValid = AssetManager::IsAssetHandleValid(mesh.MaterialHandle);
-            MaterialRef mat =
-                AssetManager::GetAsset<Material>(isHandleValid ? mesh.MaterialHandle : m->DefaultMaterialHandle);
-            Renderer::SubmitMesh(m, mat, trnsfrm, (int)e);
-        }
-        Renderer::Flush(outlineShader, false);
-        m_OutlineBuffer->Unbind();
+    //        auto trnsfrm = transform.GetTransform();
+    //        bool isHandleValid = AssetManager::IsAssetHandleValid(mesh.MaterialHandle);
+    //        MaterialRef mat = AssetManager::GetAsset<Material>(
+    //            isHandleValid ? mesh.MaterialHandle : AssetManager::GetAssetHandleFromPath(m->DefaultMaterialPath));
+    //        Renderer::SubmitMesh(m, mat, trnsfrm, (int)e);
+    //    }
+    //    Renderer::Flush(outlineShader, false);
+    //    m_OutlineBuffer->Unbind();
 
-        m_Edge->Bind();
-        m_Edge->Clear();
+    //    m_Edge->Bind();
+    //    m_Edge->Clear();
 
-        auto edgeShader = ShaderManager::GetShader("Resources/shaders/edgeDetection");
-        edgeShader->Bind();
-        edgeShader->SetUniform1i("mask", 0);
-        // dimensions
-        edgeShader->SetUniform1f("width", m_Edge->GetSize().x);
-        edgeShader->SetUniform1f("height", m_Edge->GetSize().y);
+    //    auto edgeShader = ShaderManager::GetShader("Resources/shaders/edgeDetection");
+    //    edgeShader->Bind();
+    //    edgeShader->SetUniform1i("mask", 0);
+    //    // dimensions
+    //    edgeShader->SetUniform1f("width", m_Edge->GetSize().x);
+    //    edgeShader->SetUniform1f("height", m_Edge->GetSize().y);
 
-        m_OutlineBuffer->GetTexture()->Bind(0);
+    //    m_OutlineBuffer->GetTexture()->Bind(0);
 
-        Renderer::DrawQuad();
-        m_Edge->Unbind();
-    }
+    //    Renderer::DrawQuad();
+    //    m_Edge->Unbind();
+    //}
 
     {
         Texture2DRef finalOutput = m_ShadingBuffer->GetTexture();

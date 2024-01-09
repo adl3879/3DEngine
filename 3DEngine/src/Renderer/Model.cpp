@@ -19,7 +19,11 @@ Model::Model(std::filesystem::path path, std::filesystem::path dst, const bool f
     : m_Path(path), m_Dst(dst)
 {
     // auto fullPath = Utils::Path::GetAbsolute(std::string(path));
-    if (!LoadModel(path, flipWindingOrder, loadMaterial)) LOG_CORE_ERROR("Failed to load model: {0}", path.string());
+    if (!LoadModel(path, flipWindingOrder, loadMaterial))
+    {
+        LOG_CORE_ERROR("Failed to load model: {0}", path.string());
+        return;
+    }
 }
 
 Model::Model(const std::string &name, const std::vector<Vertex> &vertices, std::vector<unsigned int> &indices,
@@ -57,6 +61,11 @@ bool Model::LoadModel(const std::filesystem::path &path, const bool flipWindingO
 
         return false;
     }
+	if (scene->HasAnimations())
+	{
+        m_HasAnimations = true;
+        return true;
+	}
 
     ProcessNode(scene->mRootNode, scene, loadMaterial);
 
@@ -74,7 +83,7 @@ void Model::ProcessNode(aiNode *node, const aiScene *scene, const bool loadMater
     }
 
     // Process their children via recursive tree traversal
-    for (auto i = 0; i < node->mNumChildren; ++i) ProcessNode(node->mChildren[i], scene, loadMaterial);
+    for (auto i = 0; i < node->mNumChildren; i++) ProcessNode(node->mChildren[i], scene, loadMaterial);
 }
 
 Mesh Model::ProcessMesh(aiMesh *mesh, const aiScene *scene, bool loadMaterial)
@@ -164,14 +173,15 @@ Mesh Model::ProcessMesh(aiMesh *mesh, const aiScene *scene, bool loadMaterial)
                                       : material->Name;
             material->Name = matName;
 
-            auto relativePath = std::filesystem::relative(m_Dst / m_Path.stem(), Project::GetAssetDirectory());
+            /*auto relativePath = std::filesystem::relative(m_Dst / m_Path.stem(), Project::GetAssetDirectory());
             material->Handle = AssetManager::AddAsset(material, relativePath / (matName + ".material"));
+            auto defaultMatPath = relativePath / (matName + ".material");*/
 
             ++m_NumOfMaterials;
-            return {mesh->mName.C_Str(), vertices, indices, material->Handle};
+            return {mesh->mName.C_Str(), vertices, indices, material};
         }
     }
 
-    return {mesh->mName.C_Str(), vertices, indices, 0};
+    return {mesh->mName.C_Str(), vertices, indices, nullptr};
 }
 } // namespace Engine

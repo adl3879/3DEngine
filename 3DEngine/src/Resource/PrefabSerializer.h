@@ -10,7 +10,7 @@ namespace Engine
 class PrefabSerializer
 {
   public:
-    explicit PrefabSerializer(const PrefabRef &prefab): m_Prefab(prefab) {}
+    PrefabSerializer(PrefabRef &prefab): m_Prefab(prefab) {}
 
     void Serialize(const std::filesystem::path &path);
     bool Deserialize(const std::filesystem::path &path);

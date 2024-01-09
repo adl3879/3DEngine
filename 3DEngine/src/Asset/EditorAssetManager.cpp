@@ -6,6 +6,7 @@
 
 #include <yaml-cpp/yaml.h>
 #include <fstream>
+#include <filesystem>
 
 namespace Engine
 {
@@ -39,9 +40,13 @@ AssetHandle EditorAssetManager::ImportAsset(const std::filesystem::path &path)
     asset->Handle = handle;
     if (asset)
     {
-        m_LoadedAssets[handle] = asset;
-        m_AssetRegistry[handle] = metadata;
-        SerializeAssetRegistry();
+        if (m_PathToHandleMap.find(metadata.FilePath) == m_PathToHandleMap.end())
+        {
+            m_LoadedAssets[handle] = asset;
+            m_AssetRegistry[handle] = metadata;
+			m_PathToHandleMap[metadata.FilePath] = handle;
+        }
+		SerializeAssetRegistry();
     }
     return handle;
 }
@@ -53,9 +58,15 @@ AssetHandle EditorAssetManager::AddAsset(AssetRef asset, const std::filesystem::
 
     metadata.Type = asset->GetType();
     metadata.FilePath = path;
-    m_LoadedAssets[handle] = asset;
-    m_AssetRegistry[handle] = metadata;
+
+	if (m_PathToHandleMap.find(path) == m_PathToHandleMap.end())
+    {
+        m_LoadedAssets[handle] = asset;
+        m_AssetRegistry[handle] = metadata;
+		m_PathToHandleMap[path] = handle;
+    }
     SerializeAssetRegistry();
+
     return handle;
 }
 
@@ -80,7 +91,7 @@ void EditorAssetManager::SerializeAssetRegistry()
         out << YAML::BeginSeq;
         for (const auto &[handle, metadata] : m_AssetRegistry)
         {
-            if (metadata.Serializable)
+            if (metadata.Serializable && std::filesystem::exists(Project::GetAssetDirectory() / metadata.FilePath))
             {
                 out << YAML::BeginMap;
                 out << YAML::Key << "Handle" << YAML::Value << handle;
@@ -119,8 +130,12 @@ bool EditorAssetManager::DeserializeAssetRegistry()
     {
         AssetHandle handle = node["Handle"].as<uint64_t>();
         auto &metadata = m_AssetRegistry[handle];
-        metadata.FilePath = node["FilePath"].as<std::string>();
-        metadata.Type = AssetTypeFromString(node["Type"].as<std::string>());
+        if (m_PathToHandleMap.find(metadata.FilePath) == m_PathToHandleMap.end())
+        {
+            metadata.FilePath = node["FilePath"].as<std::string>();
+            metadata.Type = AssetTypeFromString(node["Type"].as<std::string>());
+			m_PathToHandleMap[metadata.FilePath] = handle;
+        }
     }
 
     return true;
@@ -128,8 +143,8 @@ bool EditorAssetManager::DeserializeAssetRegistry()
 
 AssetRef EditorAssetManager::GetAsset(AssetHandle handle)
 {
-    // 1. check if handle is valid
-    if (!IsAssetHandleValid(handle)) return nullptr;
+     // 1. check if handle is valid
+     if (!IsAssetHandleValid(handle)) return nullptr;
 
     // 2. check if asset needs load (and if so, load)
     AssetRef asset;
@@ -140,7 +155,7 @@ AssetRef EditorAssetManager::GetAsset(AssetHandle handle)
     else
     {
         // load asset
-        const AssetMetadata &metadata = GetMetadata(handle);
+        const auto &metadata = GetMetadata(handle);
         asset = AssetImporter::ImportAsset(handle, metadata);
         m_LoadedAssets[handle] = asset;
         if (!asset)
@@ -154,20 +169,15 @@ AssetRef EditorAssetManager::GetAsset(AssetHandle handle)
 
 AssetRef EditorAssetManager::GetAsset(const std::filesystem::path &path)
 {
-    // check if path exists in Project Assets directory
-    if (!std::filesystem::exists(Project::GetAssetDirectory() / path)) return nullptr;
-
     AssetHandle handle = GetAssetHandleFromPath(path);
     return GetAsset(handle);
 }
 
 AssetHandle EditorAssetManager::GetAssetHandleFromPath(const std::filesystem::path &path)
 {
-    // can make faster by using a map of path to handle
-    for (auto &[handle, metadata] : m_AssetRegistry)
-    {
-        if (metadata.FilePath == path) return handle;
-    }
+    if (m_PathToHandleMap.find(path) != m_PathToHandleMap.end())
+        return m_PathToHandleMap[path];
+
     // if it does not find it load it and return the handle
     return ImportAsset(path);
 }

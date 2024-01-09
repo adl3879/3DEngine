@@ -25,7 +25,7 @@ static std::unordered_map<AssetType, AssetImportFn> s_AssetImportFns = {
     {AssetType::SkyLight, SkyLightImporter::ImportSkyLight},
     {AssetType::Prefab, PrefabImporter::ImportPrefab},
     {AssetType::Shader, ShaderImporter::ImportShader},
-    {AssetType::NetScript,  NetScriptImporter::ImportNetScript},
+    {AssetType::NetScript, NetScriptImporter::ImportNetScript},
 };
 
 AssetRef AssetImporter::ImportAsset(AssetHandle handle, const AssetMetadata &metadata)

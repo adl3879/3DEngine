@@ -32,7 +32,6 @@ bool MaterialSerializer::Serialize(const std::filesystem::path &filepath)
         {
             out << YAML::BeginMap; // Material
             out << YAML::Key << "Name" << YAML::Value << m_Material->Name;
-            out << YAML::Key << "TexturesDirectory" << YAML::Value << m_Material->TexturesDirectory.string();
             out << YAML::Key << "IsDefault" << YAML::Value << m_Material->IsDefault;
             // params
             out << YAML::Key << "AlbedoColor" << YAML::Value << YAML::Flow << YAML::BeginSeq << parameters.Albedo.x
@@ -82,7 +81,6 @@ bool MaterialSerializer::Deserialize(const std::filesystem::path &filepath)
     if (!materialNode) return false;
 
     m_Material->Name = materialNode["Name"].as<std::string>();
-    m_Material->TexturesDirectory = materialNode["TexturesDirectory"].as<std::string>();
     if (materialNode["IsDefault"]) m_Material->IsDefault = materialNode["IsDefault"].as<bool>();
 
     glm::vec3 albedoColor, normalValue;

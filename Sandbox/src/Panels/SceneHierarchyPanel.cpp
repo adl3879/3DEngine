@@ -335,57 +335,60 @@ void SceneHierarchyPanel::DrawComponents(Entity entity)
             ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.05f, 0.05f, 0.05f, 0.54f));
 
             auto meshEntity = entity.GetComponent<MeshComponent>();
-            auto mesh = AssetManager::GetAsset<Mesh>(entityComponent.Handle);
-            // const auto &material = AssetManager::GetAsset<Material>(entityComponent.MaterialHandle);
-            if (mesh != nullptr)
+            auto model = AssetManager::GetAsset<Model>(entityComponent.Handle);
+                
+            if (ImGui::TreeNodeEx((void *)typeid(MeshComponent).hash_code(), ImGuiTreeNodeFlags_DefaultOpen,
+                                    "Material"))
             {
-                if (ImGui::TreeNodeEx((void *)typeid(MeshComponent).hash_code(), ImGuiTreeNodeFlags_DefaultOpen,
-                                      "Material"))
+                if (model != nullptr)
                 {
-
-                    bool openModal = false;
-                    AssetHandle matHandle = AssetManager::IsAssetHandleValid(entityComponent.MaterialHandle)
-                                                ? entityComponent.MaterialHandle
-                                                : mesh->DefaultMaterialHandle;
-                    auto material = AssetManager::GetAsset<Material>(matHandle);
-
-                    ImGui::PushStyleVar(ImGuiStyleVar_ButtonTextAlign, ImVec2(0.0f, 0.5f));
-                    ImGui::Button(_labelPrefix("Name", material->Name.c_str()), ImVec2(-1, 0));
-                    ImGui::PopStyleVar();
-
-                    if (ImGui::BeginPopupContextItem())
+                    for (const auto &mesh : model->GetMeshes())
                     {
-                        if (ImGui::MenuItem(ICON_FA_EDIT "   Open Material Editor"))
+                        bool openModal = false;
+                        MaterialRef material = AssetManager::GetAsset<Material>(entityComponent.MaterialHandle);
+                        if (material == nullptr)
                         {
-                            bool isValidHandle = AssetManager::IsAssetHandleValid(entityComponent.MaterialHandle);
-                            MaterialEditorPanel::OpenMaterialEditor(
-                                isValidHandle ? entityComponent.MaterialHandle : mesh->DefaultMaterialHandle, true);
+                            material = mesh.DefaultMaterial;
                         }
-                        // remove
-                        if (ImGui::MenuItem(ICON_FA_TRASH "   Remove"))
-                        {
-                            entityComponent.MaterialHandle = 0;
-                        }
-                        ImGui::EndPopup();
-                    }
 
-                    if (ImGui::BeginDragDropTarget())
-                    {
-                        if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
+                        ImGui::PushStyleVar(ImGuiStyleVar_ButtonTextAlign, ImVec2(0.0f, 0.5f));
+                        ImGui::Button(_labelPrefix("Name", material->Name.c_str()), ImVec2(-1, 0));
+                        ImGui::PopStyleVar();
+
+                        if (ImGui::BeginPopupContextItem())
                         {
-                            const char *path = (const char *)payload->Data;
-                            if (Utils::GetAssetTypeFromExtension(path) == AssetType::Material)
+                            if (material != mesh.DefaultMaterial &&
+                                ImGui::MenuItem(ICON_FA_EDIT "   Open Material Editor"))
                             {
-                                auto handle = AssetManager::GetAssetHandleFromPath(path);
-                                // model->SetMaterialHandle(i, handle);
-                                entityComponent.MaterialHandle = handle;
+                                MaterialEditorPanel::OpenMaterialEditor(mesh.DefaultMaterial, true);
                             }
+                            // remove
+                            if (ImGui::MenuItem(ICON_FA_TRASH "   Remove"))
+                            {
+                                entityComponent.MaterialHandle = 0;
+                            }
+                            ImGui::EndPopup();
                         }
-                        ImGui::EndDragDropTarget();
+
+                        if (ImGui::BeginDragDropTarget())
+                        {
+                            if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
+                            {
+                                const char *path = (const char *)payload->Data;
+                                if (Utils::GetAssetTypeFromExtension(path) == AssetType::Material)
+                                {
+                                    auto handle = AssetManager::GetAssetHandleFromPath(path);
+                                    // model->SetMaterialHandle(i, handle);
+                                    entityComponent.MaterialHandle = handle;
+                                }
+                            }
+                            ImGui::EndDragDropTarget();
+                        }
                     }
-                    ImGui::TreePop();
                 }
-            }
+                
+                ImGui::TreePop();
+			}
 
             if (removeComponent) entity.RemoveComponent<MeshComponent>();
             ImGui::PopStyleColor(2);

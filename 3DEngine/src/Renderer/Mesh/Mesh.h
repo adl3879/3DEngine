@@ -17,6 +17,10 @@ struct Mesh : public Asset
     Mesh();
     Mesh(const std::string &name, const std::vector<Vertex> &vertices, const std::vector<uint32_t> &indices,
          AssetHandle materialHandle = 0);
+    Mesh(const std::string &name, const std::vector<Vertex> &vertices, const std::vector<uint32_t> &indices,
+         const std::filesystem::path &materialPath);
+	Mesh(const std::string &name, const std::vector<Vertex> &vertices, const std::vector<uint32_t> &indices,
+         MaterialRef material);
 
     void Draw(Shader *shader, bool bindMaterials);
     void Clear();
@@ -29,7 +33,10 @@ struct Mesh : public Asset
     std::vector<Vertex> Vertices;
     std::vector<uint32_t> Indices;
 
-    AssetHandle DefaultMaterialHandle; // default material
+	MaterialRef DefaultMaterial;
+
+    AssetHandle DefaultMaterialHandle;
+    std::filesystem::path DefaultMaterialPath;
 
     [[nodiscard]] AssetType GetType() const override { return AssetType::Mesh; }
 

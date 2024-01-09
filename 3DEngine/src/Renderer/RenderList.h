@@ -46,7 +46,10 @@ public:
         const uint32_t modelMatrixUniformLocation = shader->FindUniformLocation("model");
         for (auto &i : m_RenderList)
         {
-            if (!depthOnly) i.first->Bind(shader);
+            if (!depthOnly)
+            {
+                i.first->Bind(shader);
+            }
             for (auto &m : i.second)
             {
                 shader->SetUniformMatrix4fv(modelMatrixUniformLocation, m.Transform);

@@ -140,23 +140,23 @@ void Material::BindTextures()
         if (!AssetManager::IsAssetHandleValid(m_TextureHandles[i]))
         {
             // only runs once if there is a valid texture
-            auto texture = AssetManager::GetAsset<Texture2D>(TexturesDirectory / m_TexturePaths[i]);
-            if (texture)
+            auto texturePath = m_TextureFindPath.parent_path() / m_TexturePaths[i];
+            auto fullPath = std::filesystem::current_path() / Project::GetAssetDirectory() / texturePath;
+            if (std::filesystem::exists(fullPath) && !std::filesystem::is_directory(fullPath))
             {
-                texture->Bind(i + 3);
-                m_TextureHandles[i] = texture->Handle;
-
-                // serialize the material
-                MaterialSerializer serializer(std::make_shared<Material>(*this));
-                auto filePath = Project::GetAssetDirectory() / AssetManager::GetRegistry()[Handle].FilePath;
-                serializer.Serialize(filePath);
-
-                //                AssetManager::UnloadAsset(Handle);
-                //                ThumbnailManager::Get().MarkThumbnailAsDirty(Handle);
+                auto texture = AssetManager::GetAsset<Texture2D>(texturePath);
+                if (texture)
+                {
+                    texture->Bind(i + 3);
+                    m_TextureHandles[i] = texture->Handle;
+                }
             }
         }
         else
-            AssetManager::GetAsset<Texture2D>(m_TextureHandles[i])->Bind(i + 3);
+        {
+            auto tex = AssetManager::GetAsset<Texture2D>(m_TextureHandles[i]);
+            tex->Bind(i + 3);
+        }
     }
 }
 

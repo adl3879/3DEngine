@@ -2,6 +2,7 @@
 
 #include "Asset.h"
 #include "TextureImporter.h"
+#include "Material.h"
 
 namespace Engine
 {
@@ -15,6 +16,7 @@ class MaterialEditorPanel
 
   public:
     static void OpenMaterialEditor(AssetHandle handle, bool isDefaultMaterial = false);
+    static void OpenMaterialEditor(MaterialRef mat, bool isDefaultMaterial = false);
 
   private:
     Texture2DRef m_CheckerboardTexture;

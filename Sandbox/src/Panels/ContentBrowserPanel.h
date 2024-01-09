@@ -36,7 +36,6 @@ class ContentBrowserPanel
     void AddPathToTree(FileTreeNode &root, const std::filesystem::path &path);
     void RefreshAssetTree();
     void DisplayFileHierarchy(const std::filesystem::path &directory);
-    void CreateFilePopup();
     void OpenCreateFilePopup(AssetType type);
 
     // Search
@@ -67,11 +66,14 @@ class ContentBrowserPanel
 
     Mode m_Mode = Mode::Asset;
     std::string m_SearchQuery;
+	bool m_RenameRequested = false;
+	std::filesystem::path m_RenamePath;
 
   private:
     SceneRef m_Context;
 
     Entity m_PrefabDraggedEntity;
     bool m_SaveRequested = false;
+
 };
 } // namespace Engine

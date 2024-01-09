@@ -136,7 +136,7 @@ void ScriptingEngineNet::LoadProjectAssembly()
     {
         LOG_CORE_INFO("Detected type: {}", std::string(type->GetFullName()));
         LOG_CORE_INFO("Detected base type: {}", std::string(type->GetBaseType().GetFullName()));
-
+		
         const auto baseTypeName = std::string(type->GetBaseType().GetFullName());
         if (baseTypeName == "ScriptCore.Net.Entity")
         {

@@ -20,6 +20,7 @@ class Prefab : public Asset
     [[nodiscard]] SceneRef GetScene() const { return m_Scene; }
     [[nodiscard]] Entity GetRootEntity() const { return m_RootEntity; }
     [[nodiscard]] std::string GetDisplayName() const { return m_DisplayName; }
+    std::vector<Entity> GetEntities() { return m_Entities; }
 
     [[nodiscard]] AssetType GetType() const override { return AssetType::Prefab; }
 
@@ -30,6 +31,7 @@ class Prefab : public Asset
     std::string m_DisplayName;
     Entity m_RootEntity;
     SceneRef m_Scene;
+    std::vector<Entity> m_Entities;
 };
 
 using PrefabRef = std::shared_ptr<Prefab>;

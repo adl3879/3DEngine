@@ -73,19 +73,21 @@ public:
     void SetEmissiveValue(float value) { m_MaterialParam.Emissive = value; }
     void SetShaderHandle(AssetHandle shaderHandle) { m_ShaderHandle = shaderHandle; }
 
+	void SetTextureFindPath(const std::filesystem::path &path) { m_TextureFindPath = path; }
+
 private:
     void BindTextures();
 
 public:
     std::string Name;
     bool IsDefault = false;
-    //
-    std::filesystem::path TexturesDirectory = "";
 
 private:
     MaterialData m_MaterialParam;
     bool m_UseNormalMap = true;
     AssetHandle m_ShaderHandle = 0;
+
+	std::filesystem::path m_TextureFindPath;
 
     std::array<AssetHandle, 5> m_TextureHandles;
     std::array<std::string, 5> m_TexturePaths;

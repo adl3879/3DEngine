@@ -12,6 +12,7 @@
 #include "UUID.h"
 #include "Asset.h"
 #include "Prefab.h"
+#include "Animation.h"
 
 #include <memory>
 
@@ -184,5 +185,14 @@ struct NetScriptComponent
 
     NetScriptComponent() = default;
     NetScriptComponent(const NetScriptComponent &) = default;
+};
+
+struct SkinnedMeshComponent
+{
+    AssetHandle Handle = 0;
+    std::vector<Animation *> Animations;
+
+	SkinnedMeshComponent() = default;
+    SkinnedMeshComponent(const SkinnedMeshComponent &) = default;
 };
 } // namespace Engine

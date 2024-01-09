@@ -98,8 +98,7 @@ void MaterialEditorPanel::OnImGuiRender()
     {
         // align to center
         ImGui::SetCursorPosX((ImGui::GetWindowWidth() - thumbnailSize) / 2);
-        const auto icon = ThumbnailManager::Get()
-            .GetThumbnail(AssetManager::GetRegistry()[s_MaterialHandle].FilePath);
+        const auto icon = ThumbnailManager::Get().GetThumbnail(path);
         if (icon)
         {
             ImGui::Image((void *)(intptr_t)icon->GetRendererID(),
@@ -340,5 +339,10 @@ void MaterialEditorPanel::OpenMaterialEditor(AssetHandle handle, bool isDefaultM
     }
     else
         LOG_CORE_ERROR("MaterialEditorPanel::OpenMaterialEditor - Invalid asset handle!");
+}
+
+void MaterialEditorPanel::OpenMaterialEditor(MaterialRef mat, bool isDefaultMaterial)
+{
+
 }
 } // namespace Engine

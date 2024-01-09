@@ -68,7 +68,7 @@ class AppLayer : public Layer
     SceneHierarchyPanel m_SceneHierarchyPanel;
     MaterialEditorPanel m_MaterialEditorPanel;
     EnvironmentPanel m_EnvironmentPanel;
-    ContentBrowserPanel m_ContentBrowserPanel;
+    std::unique_ptr<ContentBrowserPanel> m_ContentBrowserPanel;
     InputMapPanel m_InputMapPanel;
 
   private:

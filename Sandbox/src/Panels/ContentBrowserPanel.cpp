@@ -1,6 +1,7 @@
 #include "ContentBrowserPanel.h"
 
 #include <imgui.h>
+#include <FileWatch.h>
 
 #include "Project.h"
 #include "TextureImporter.h"
@@ -32,6 +33,13 @@ namespace Utils
 {
 } // namespace Utils
 
+struct ContentBrowserData
+{
+    std::unique_ptr<filewatch::FileWatch<std::string>> RenameWatcher;
+	std::string CurrentRenamePath;
+};
+ContentBrowserData *s_Data = new ContentBrowserData();
+
 ContentBrowserPanel::ContentBrowserPanel()
 {
     m_DirectoryIcon = TextureImporter::LoadTexture2D("Resources/Icons/ContentBrowser/DirectoryIcon.png");
@@ -44,7 +52,24 @@ ContentBrowserPanel::ContentBrowserPanel()
 
     m_ThumbnailCache = std::make_shared<ThumbnailCache>();
 
-    m_Mode = Mode::FileSystem;
+	s_Data->RenameWatcher = std::make_unique<filewatch::FileWatch<std::string>>(
+		"C:\\dev\\3DEngine\\Sandbox\\SandboxProject\\Assets",
+		[](const std::string &path, const filewatch::Event change_type)
+		{
+			if (change_type == filewatch::Event::renamed_new)
+			{
+                if (Utils::GetAssetTypeFromExtension(path) == AssetType::Mesh)
+                {
+                    LOG_CORE_CRITICAL("File renamed from {0} to {1}", s_Data->CurrentRenamePath,  path);
+					if (MeshImporter::LoadModel(Project::GetAssetDirectory() / path, ""))
+					{
+						// delete import file
+						auto importFile = s_Data->CurrentRenamePath + ".import";
+						std::filesystem::remove(importFile);
+					}
+                }
+			}
+		});
 }
 
 void ContentBrowserPanel::OnImGuiRender()
@@ -174,7 +199,7 @@ void ContentBrowserPanel::OnImGuiRender()
             }
             if (ImGui::MenuItem(ICON_FA_CUBE "   3D Mesh"))
             {
-                const auto path = FileDialogs::OpenFile("3D Model (*.fbx *.obj *.gltf)\0*.fbx;*.obj;*.gltf\0");
+                const auto path = FileDialogs::OpenFile("3D Model (*.fbx *.dae *.gltf)\0*.fbx;*.dae;*.gltf\0");
                 MeshImporter::LoadModel(path, m_CurrentDirectory);
             }
             ImGui::EndPopup();
@@ -198,7 +223,6 @@ void ContentBrowserPanel::OnImGuiRender()
     ImGui::Columns(1);
     ImGui::EndChild();
 
-    CreateFilePopup();
     if (ImGui::BeginDragDropTarget())
     {
         if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("ENTITY"))
@@ -280,64 +304,26 @@ void ContentBrowserPanel::DisplayFileHierarchy(const std::filesystem::path &dire
     }
 }
 
-void ContentBrowserPanel::CreateFilePopup()
-{
-    if (m_OpenCreateFilePopup)
-    {
-        ImGui::OpenPopup("create_scene_file");
-        m_OpenCreateFilePopup = false;
-    }
-    if (ImGui::BeginPopup("create_scene_file"))
-    {
-        static char name[128] = "\0";
-
-        ImGui::Text("Save As");
-        ImGui::InputText(" ", name, IM_ARRAYSIZE(name));
-
-        ImGui::SameLine();
-        if (m_SaveRequested)
-        {
-            if (m_NewAssetType == AssetType::Prefab)
-            {
-                const auto prefab = std::make_shared<Prefab>();
-                prefab->CreateFromEntity(m_PrefabDraggedEntity);
-                PrefabSerializer serializer(prefab);
-                serializer.Serialize(m_CurrentDirectory / (std::string(name) + ".prefab"));
-            }
-            else if (m_NewAssetType == AssetType::Folder)
-            {
-                std::filesystem::create_directory(m_CurrentDirectory / name);
-            }
-            else
-            {
-                const auto path = m_CurrentDirectory / name;
-                const auto relativePath = std::filesystem::relative(path, Project::GetAssetDirectory());
-                const std::string extension = m_NewAssetType == AssetType::Scene       ? ".scene"
-                                              : m_NewAssetType == AssetType::Material  ? ".material"
-                                              : m_NewAssetType == AssetType::Shader    ? ".shader"
-                                              : m_NewAssetType == AssetType::NetScript ? ".cs"
-                                                                                       : "";
-                std::ofstream file(path.string() + extension);
-                AssetManager::ImportAsset(relativePath.string() + extension);
-                file.close();
-            }
-            m_SaveRequested = false;
-            ImGui::CloseCurrentPopup();
-        }
-        ImGui::EndPopup();
-    }
-
-    // Handle Enter key press
-    if (ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_Enter), false))
-    {
-        m_SaveRequested = true;
-    }
-}
-
 void ContentBrowserPanel::OpenCreateFilePopup(AssetType type)
 {
-    m_NewAssetType = type;
-    m_OpenCreateFilePopup = true;
+	if (type == AssetType::Folder)
+	{
+		std::filesystem::create_directory(m_CurrentDirectory / "New Folder");
+		m_RenameRequested = true;
+		m_RenamePath = m_CurrentDirectory / "New Folder";
+	}
+	else
+	{
+		std::string defaultName = type == AssetType::Scene		? "Scene.scene"
+					   : type == AssetType::Material	? "New Material.material"
+					   : type == AssetType::Shader		? "New Shader.shader"
+					   : type == AssetType::NetScript	? "New Script.cs"
+														: "New File.txt";
+		std::ofstream file(m_CurrentDirectory / defaultName);
+		file.close();
+		m_RenameRequested = true;
+		m_RenamePath = m_CurrentDirectory / defaultName;
+	}
 }
 
 void ContentBrowserPanel::Search(const std::string &query)
@@ -365,14 +351,14 @@ void ContentBrowserPanel::Search(const std::string &query)
 
 void ContentBrowserPanel::DrawFileAssetBrowser(std::filesystem::directory_entry directoryEntry)
 {
-    //    static float thumbnailSize = 120.0f + 15;
-
     const auto &path = directoryEntry.path();
     const std::string filenameString = path.filename().string();
 
     auto relativePath = std::filesystem::relative(path, Project::GetAssetDirectory());
 
     if (path.stem() == "AssetRegistry") return;
+    if (path.extension() == ".import") return;
+	if (path.extension() == ".bin") return;
 
     ImGui::PushID(filenameString.c_str());
     Texture2DRef icon = directoryEntry.is_directory() ? m_DirectoryIcon : m_FileIcon;
@@ -394,18 +380,38 @@ void ContentBrowserPanel::DrawFileAssetBrowser(std::filesystem::directory_entry 
 
     if (path.extension() == ".cs") icon = cSharpIcon;
 
-    ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
-    ImGui::ImageButton((void *)(intptr_t)icon->GetRendererID(), {thumbnailSize.x, thumbnailSize.y}, {0, 1}, {1, 0}, 15);
-    ImGui::PopStyleColor();
+	ImGui::BeginGroup();
+	ImGui::PushID(filenameString.c_str());
 
-    if (!directoryEntry.is_directory() && ImGui::BeginPopupContextItem())
+	auto scrPos = ImGui::GetCursorScreenPos();
+    int thumbnailPadding = 20;
+
+	// Draw background color
+    ImGui::GetWindowDrawList()->AddRectFilled(
+        scrPos,
+        ImVec2(ImGui::GetCursorScreenPos().x + thumbnailSize.x + (thumbnailPadding * 2), ImGui::GetCursorScreenPos().y + 220),
+        IM_COL32(0.05 * 255, 0.05 * 255, 0.05 * 255, 0.54 * 255), 10);
+
+	// change button color
+    ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
+	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.2, 0.2, 0.2, 0.2));
+	ImGui::ImageButton((void *)(intptr_t)icon->GetRendererID(), {thumbnailSize.x, thumbnailSize.y}, {0, 1}, {1, 0}, thumbnailPadding);
+	ImGui::PopStyleColor(2);
+
+	if (ImGui::BeginPopupContextItem())
     {
         if (ImGui::MenuItem(ICON_FA_TRASH "   Delete"))
         {
             std::filesystem::remove(path);
         }
-        ImGui::EndPopup();
-    }
+        // Rename
+		if (ImGui::MenuItem(ICON_FA_PEN "   Rename"))
+		{
+			m_RenameRequested = true;
+			m_RenamePath = path;
+		}
+		ImGui::EndPopup();
+	}
 
     if (ImGui::BeginDragDropSource())
     {
@@ -436,19 +442,56 @@ void ContentBrowserPanel::DrawFileAssetBrowser(std::filesystem::directory_entry 
         }
     }
 
-    std::string truncatedName = filenameString.substr(0, filenameString.find_last_of("."));
+    std::string fileNameWithoutExtension = filenameString.substr(0, filenameString.find_last_of("."));
+	std::string truncatedName = fileNameWithoutExtension;
     if (truncatedName.size() > 10) truncatedName = truncatedName.substr(0, 10) + "...";
 
     // center
-    ImGui::SetCursorPosX(ImGui::GetCursorPosX() + (thumbnailSize.x - ImGui::CalcTextSize(truncatedName.c_str()).x) / 2);
-    ImGui::Text("%s", truncatedName.c_str());
-    if (ImGui::IsItemHovered())
-    {
-        ImGui::BeginTooltip();
+    auto cps = ImGui::GetCursorPosX();
+    auto ps = ImGui::GetCursorPosX() +
+              (thumbnailSize.x + (thumbnailPadding * 2) - ImGui::CalcTextSize(truncatedName.c_str()).x) / 2;
+    ImGui::SetCursorPosX(ps);
+    ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 10);
 
-        ImGui::Text("%s", filenameString.c_str());
-        ImGui::EndTooltip();
+
+    if (m_RenameRequested && m_RenamePath == path)
+    {
+        ImGui::SetKeyboardFocusHere();
+
+        static char name[128] = "\0";
+        strcpy(name, fileNameWithoutExtension.c_str());
+		ImGui::SetCursorPosX(cps + thumbnailPadding);
+        ImGui::PushItemWidth(thumbnailSize.x);
+		ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(1.0f, 1.0f, 1.0f, 1.0f));
+		// text color
+		ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.0f, 0.0f, 0.0f, 1.0f));
+		// align text to center
+		ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
+		ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 2.0f);
+        ImGui::InputText("##rename", name, IM_ARRAYSIZE(name));
+		ImGui::PopStyleVar(2);
+		ImGui::PopStyleColor(2);
+        ImGui::PopItemWidth();
+        if (ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_Enter), false))
+        {
+            if (strlen(name) >= 2)
+            {
+				s_Data->CurrentRenamePath = path.string();
+                m_RenameRequested = false;
+                m_RenamePath = "";
+                auto extension = path.extension();
+                auto newName = extension.empty() ? name : name + extension.string();
+                std::filesystem::rename(path, path.parent_path() / newName);
+            }
+        }
     }
+    else
+    {
+        ImGui::TextWrapped("%s", truncatedName.c_str());
+    }
+
+	ImGui::PopID();
+    ImGui::EndGroup();
 
     ImGui::NextColumn();
 

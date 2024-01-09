@@ -83,8 +83,9 @@ void ThumbnailManager::GenerateMaterialThumbnail(MaterialRef mat, Texture2DRef t
     m_Framebuffer->SetTexture(std::move(texture));
     m_Framebuffer->Bind();
     {
-        RenderCommand::SetClearColor({0.2f, 0.2f, 0.2f});
-        m_Framebuffer->Clear();
+        RenderCommand::SetClearColor({0.05f, 0.05f, 0.05f});
+        //glClearColor(0.05f, 0.05f, 0.05f, 0.54f);
+		m_Framebuffer->Clear();
 
         RenderCommand::Disable(RendererEnum::BLEND);
         RenderCommand::Disable(RendererEnum::CULL_FACE);

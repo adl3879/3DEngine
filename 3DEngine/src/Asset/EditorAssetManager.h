@@ -34,6 +34,7 @@ class EditorAssetManager : public AssetManagerBase
   private:
     AssetRegistry m_AssetRegistry;
     AssetMap m_LoadedAssets;
+    std::map<std::filesystem::path, AssetHandle> m_PathToHandleMap;
 
     // TODO: memory-only assets
 };

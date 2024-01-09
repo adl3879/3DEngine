@@ -203,7 +203,7 @@ Entity *Scene::GetEntity(const std::string &name)
 
 Entity Scene::GetEntityByUUID(UUID uuid)
 {
-    // O(n)
+    // O(1)
     if (m_EntityMap.find(uuid) != m_EntityMap.end()) return {m_EntityMap.at(uuid), this};
 
     return {};
@@ -282,10 +282,22 @@ Entity Scene::DuplicateEntityRecursiveW(Entity originalEntity, std::unordered_ma
 
 Entity Scene::DuplicateEntityRecursive(Entity entity)
 {
-    std::unordered_map<UUID, Entity> entityMap;
-    return DuplicateEntityRecursiveW(entity, entityMap);
-}
+   /* std::unordered_map<UUID, Entity> entityMap;
+    return DuplicateEntityRecursiveW(entity, entityMap);*/
 
+	Entity newEntity = DuplicateEntity(entity);
+
+	auto &parent = entity.GetComponent<ParentComponent>();
+    if (!parent.Children.empty())
+    {
+        for (const auto &child : parent.Children)
+        {
+            DuplicateEntityRecursive(GetEntityByUUID(child));
+        }
+    }
+    return newEntity;
+}
+    
 void Scene::Merge(std::shared_ptr<Scene> src)
 {
     auto &srcSceneRegistry = src->m_Registry;

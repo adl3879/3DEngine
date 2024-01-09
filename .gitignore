@@ -18,3 +18,5 @@ cmake-build-release/
 out/
 .idea/
 .vs/
+
+build/

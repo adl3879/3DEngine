@@ -10,6 +10,7 @@
 #include "TextureImporter.h"
 #include "Utils/FileDialogs.h"
 #include "Prefab.h"
+#include "PrefabSerializer.h"
 
 #include <IconsFontAwesome5.h>
 
@@ -38,9 +39,11 @@ void AppLayer::OnAttach()
     m_EditorScene = std::make_shared<Scene>();
     m_ActiveScene = m_EditorScene;
 
+	m_ContentBrowserPanel = std::make_unique<ContentBrowserPanel>();
+
     m_SceneHierarchyPanel.SetContext(m_ActiveScene);
     m_EnvironmentPanel.SetContext(m_ActiveScene);
-    m_ContentBrowserPanel.SetContext(m_ActiveScene);
+    m_ContentBrowserPanel->SetContext(m_ActiveScene);
     // attach scene
     m_ActiveScene->OnAttach();
 
@@ -175,7 +178,7 @@ void AppLayer::OnImGuiRender()
     m_SceneHierarchyPanel.OnImGuiRender();
     m_EnvironmentPanel.OnImGuiRender();
     m_MaterialEditorPanel.OnImGuiRender();
-    m_ContentBrowserPanel.OnImGuiRender();
+    m_ContentBrowserPanel->OnImGuiRender();
     m_InputMapPanel.OnImGuiRender();
 
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{0, 0});
@@ -232,7 +235,11 @@ void AppLayer::OnImGuiRender()
                 break;
                 case AssetType::Prefab:
                 {
-                    auto prefab = AssetManager::GetAsset<Prefab>(path);
+                    //auto prefab = AssetManager::GetAsset<Prefab>(path);
+                    auto prefab = std::make_shared<Prefab>();
+                    PrefabSerializer serializer(prefab);
+                    serializer.Deserialize(Project::GetAssetDirectory() / path);
+
                     prefab->AttachToScene(m_ActiveScene);
                 }
                 break;

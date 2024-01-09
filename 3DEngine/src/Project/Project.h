@@ -54,6 +54,8 @@ public:
         return std::static_pointer_cast<EditorAssetManager>(m_AssetManager);
     }
 
+	static std::filesystem::path GetImportCachePath() { return GetProjectDirectory() / "Library\\Imported"; }
+
 	static std::filesystem::path GetProjectConfigPath() { return s_ProjectConfigPath; }
 
     static std::shared_ptr<Project> New();

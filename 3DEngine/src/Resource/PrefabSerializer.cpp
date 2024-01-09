@@ -16,14 +16,22 @@ void PrefabSerializer::Serialize(const std::filesystem::path &path)
     out << YAML::Key << "Prefab" << YAML::Value << "Untitled";
     out << YAML::Key << "Entities" << YAML::Value << YAML::BeginSeq;
     auto i = m_Prefab->GetScene();
-    m_Prefab->GetScene()->GetRegistry().each(
+    /*m_Prefab->GetScene()->GetRegistry().each(
         [&](auto entityId)
         {
             Entity entity{entityId, m_Prefab->GetScene().get()};
             if (!entity) return;
 
             SceneSerializer::SerializeEntity(out, entity);
-        });
+        });*/
+
+	for (auto entity : m_Prefab->GetEntities())
+	{
+        if (!entity) return;
+
+        SceneSerializer::SerializeEntity(out, entity);
+	}
+
     out << YAML::EndSeq;
     out << YAML::EndMap;
 
@@ -40,6 +48,8 @@ bool PrefabSerializer::Deserialize(const std::filesystem::path &path)
     YAML::Node data = YAML::Load(strStream.str());
     if (!data["Prefab"]) return false;
 
+	std::map<UUID, UUID> oldToNewUUIDMap = {};
+
     auto entities = data["Entities"];
     if (entities)
     {
@@ -47,14 +57,39 @@ bool PrefabSerializer::Deserialize(const std::filesystem::path &path)
         {
             SceneRef scene = m_Prefab->GetScene();
 
+			// change uuid
             auto uuid = entity["Entity"].as<uint64_t>();
+			// not finding in old means it has not been changed
+            auto newUUID = oldToNewUUIDMap.find(uuid) != oldToNewUUIDMap.end() ? oldToNewUUIDMap[uuid] : UUID();
+			oldToNewUUIDMap[uuid] = newUUID;
+
             std::string name;
             auto tagComponent = entity["TagComponent"];
             if (tagComponent) name = tagComponent["Tag"].as<std::string>();
 
             LOG_CORE_TRACE("Deserialized entity with ID = {0}, name = {1}", uuid, name);
-            Entity deserializedEntity = scene->CreateEntityWithUUID(uuid, name);
+            Entity deserializedEntity = scene->CreateEntityWithUUID(newUUID, name);
             SceneSerializer::DeserializeEntity(entity, deserializedEntity);
+
+			// change parent
+			auto &parent = deserializedEntity.GetComponent<ParentComponent>();
+            if (parent.HasParent)
+            {
+                auto newParentUUID = oldToNewUUIDMap.find(parent.Parent) != oldToNewUUIDMap.end()
+                                         ? oldToNewUUIDMap[parent.Parent]
+                                         : UUID();
+                oldToNewUUIDMap[parent.Parent] = newParentUUID;
+                parent.Parent = newParentUUID;
+            }
+
+			// change children
+			for (auto &id : parent.Children)
+			{
+				auto newChildUUID =
+					oldToNewUUIDMap.find(id) != oldToNewUUIDMap.end() ? oldToNewUUIDMap[id] : UUID();
+				oldToNewUUIDMap[id] = newChildUUID;
+				id = newChildUUID;
+			}
         }
     }
     return true;
