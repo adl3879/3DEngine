@@ -1,48 +1,24 @@
 #pragma once
 
-#include <vector>
-#include <memory>
-#include <string>
+#include "SkinnedModel.h"
+#include "StaticMesh.h"
 
-#include "Vertex.h"
-#include "VertexArray.h"
-#include "Material.h"
-#include "Asset.h"
-#include "Shader.h"
+#include"Asset.h"
+
+#include <map>
 
 namespace Engine
 {
 struct Mesh : public Asset
 {
-    Mesh();
-    Mesh(const std::string &name, const std::vector<Vertex> &vertices, const std::vector<uint32_t> &indices,
-         AssetHandle materialHandle = 0);
-    Mesh(const std::string &name, const std::vector<Vertex> &vertices, const std::vector<uint32_t> &indices,
-         const std::filesystem::path &materialPath);
-	Mesh(const std::string &name, const std::vector<Vertex> &vertices, const std::vector<uint32_t> &indices,
-         MaterialRef material);
+	std::vector<StaticMesh> StaticMeshes;
 
-    void Draw(Shader *shader, bool bindMaterials);
-    void Clear();
+	// animation
+	Engine::SkinnedMeshData SkinnedMeshData;
 
-    VertexArray VAO;
-    std::string Name;
-    std::size_t IndexCount;
-    std::size_t VertexCount;
+	bool HasAnimations() const { return !SkinnedMeshData.SkinnedMeshes.empty(); }
 
-    std::vector<Vertex> Vertices;
-    std::vector<uint32_t> Indices;
-
-	MaterialRef DefaultMaterial;
-
-    AssetHandle DefaultMaterialHandle;
-    std::filesystem::path DefaultMaterialPath;
-
-    [[nodiscard]] AssetType GetType() const override { return AssetType::Mesh; }
-
-  private:
-    void SetupMesh(const std::vector<Vertex> &vertices, const std::vector<uint32_t> &indices);
+	[[nodiscard]] AssetType GetType() const override { return AssetType::Mesh; }
 };
-
 using MeshRef = std::shared_ptr<Mesh>;
-} // namespace Engine
+}

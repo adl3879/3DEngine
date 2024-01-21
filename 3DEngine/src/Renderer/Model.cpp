@@ -32,9 +32,9 @@ Model::Model(const std::string &name, const std::vector<Vertex> &vertices, std::
     m_Meshes.emplace_back(name, vertices, indices, materialHandle);
 }
 
-Model::Model(const Mesh &mesh) noexcept { m_Meshes.push_back(mesh); }
+Model::Model(const StaticMesh &mesh) noexcept { m_Meshes.push_back(mesh); }
 
-void Model::AttachMesh(const Mesh mesh) noexcept { m_Meshes.push_back(mesh); }
+void Model::AttachMesh(const StaticMesh mesh) noexcept { m_Meshes.push_back(mesh); }
 
 void Model::Delete()
 {
@@ -86,7 +86,7 @@ void Model::ProcessNode(aiNode *node, const aiScene *scene, const bool loadMater
     for (auto i = 0; i < node->mNumChildren; i++) ProcessNode(node->mChildren[i], scene, loadMaterial);
 }
 
-Mesh Model::ProcessMesh(aiMesh *mesh, const aiScene *scene, bool loadMaterial)
+StaticMesh Model::ProcessMesh(aiMesh *mesh, const aiScene *scene, bool loadMaterial)
 {
     std::vector<Vertex> vertices;
 
@@ -172,10 +172,6 @@ Mesh Model::ProcessMesh(aiMesh *mesh, const aiScene *scene, bool loadMaterial)
                                       ? (m_Path.stem().string() + "_mat" + std::to_string(mesh->mMaterialIndex))
                                       : material->Name;
             material->Name = matName;
-
-            /*auto relativePath = std::filesystem::relative(m_Dst / m_Path.stem(), Project::GetAssetDirectory());
-            material->Handle = AssetManager::AddAsset(material, relativePath / (matName + ".material"));
-            auto defaultMatPath = relativePath / (matName + ".material");*/
 
             ++m_NumOfMaterials;
             return {mesh->mName.C_Str(), vertices, indices, material};

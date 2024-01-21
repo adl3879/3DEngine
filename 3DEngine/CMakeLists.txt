@@ -56,10 +56,7 @@ foreach (_headerFile ${HEADERS})
 endforeach()
 list (REMOVE_DUPLICATES INCLUDE_DIRS)
 
-add_library(${PROJECT_NAME} STATIC ${SOURCES}
-        src/Scripting/NetModules/SceneNetAPI.h
-        src/Utils/CustomString.h
-        src/Utils/String.cpp "src/Renderer/SkinnedModel.h" "src/Renderer/SkinnedModel.cpp" "src/Renderer/Mesh/Bone.h" "src/Renderer/Mesh/Bone.cpp" "src/Resource/Animator.h" "src/Resource/Animator.cpp" "src/Asset/MeshImporter.cpp" "src/Resource/ImportData.h" "src/Resource/ImportData.cpp")
+add_library(${PROJECT_NAME} STATIC ${SOURCES} "src/Renderer/Mesh/Mesh.h")
 
 target_include_directories(${PROJECT_NAME}
         PUBLIC

@@ -8,7 +8,6 @@
 
 #include "Vertex.h"
 #include "SkinnedMesh.h"
-#include "Asset.h"
 
 struct aiScene;
 struct aiNode;
@@ -23,16 +22,25 @@ struct BoneInfo
     glm::mat4 Offset;
 };
 
-class SkinnedModel : public Asset
+struct SkinnedMeshData
+{
+    std::vector<SkinnedMesh> SkinnedMeshes = {};
+    int NumAnimations = 0;
+    std::map<std::string, BoneInfo> BoneInfoMap;
+    int BoneCount = 0;
+};
+
+class SkinnedModel
 {
   public:
-    SkinnedModel(const std::filesystem::path &path, const std::filesystem::path &dst);
+    SkinnedModel(const std::filesystem::path &path);
 
 	auto &GetBoneInfoMap() { return m_BoneInfoMap; }
     int &GetBoneCount() { return m_BoneCounter; }
     int GetNumAnimations() const { return m_NumAnims; }
 
-	[[nodiscard]] AssetType GetType() const override { return AssetType::SkinnedMesh; }
+	std::string GetName() { return m_Path.filename().stem().string(); }
+    std::vector<SkinnedMesh> GetMeshes() { return m_Meshes; }
 
   private:
     bool LoadModel(const std::filesystem::path &path);
@@ -48,7 +56,7 @@ class SkinnedModel : public Asset
     int m_BoneCounter = 0;
     int m_NumAnims = 0;
 
-	std::filesystem::path m_Path, m_Dst;
+	std::filesystem::path m_Path;
 };
 
 using SkinnedModelRef = std::shared_ptr<SkinnedModel>;

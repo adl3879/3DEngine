@@ -4,7 +4,7 @@
 #include <memory>
 #include <vector>
 
-#include "Mesh.h"
+#include "StaticMesh.h"
 
 namespace Engine
 {
@@ -97,14 +97,14 @@ public:
 class MeshShape : public PhysicShape
 {
 private:
-    std::shared_ptr<Mesh> m_Mesh;
+    std::shared_ptr<StaticMesh> m_Mesh;
 
 public:
-    MeshShape(std::shared_ptr<Mesh> mesh)
+    MeshShape(std::shared_ptr<StaticMesh> mesh)
         : m_Mesh(mesh) { m_Type = RigidBodyShapes::MESH; }
 
-    void SetMesh(std::shared_ptr<Mesh> mesh) { m_Mesh = mesh; }
-    [[nodiscard]] std::shared_ptr<Mesh> GetMesh() const { return m_Mesh; }
+    void SetMesh(std::shared_ptr<StaticMesh> mesh) { m_Mesh = mesh; }
+    [[nodiscard]] std::shared_ptr<StaticMesh> GetMesh() const { return m_Mesh; }
 };
 
 class ConvexHullShape : public PhysicShape

@@ -61,15 +61,6 @@ void ThumbnailManager::OnUpdate()
                 m_Thumbnails[path] = thumbnail;
             }
             break;
-            case AssetType::Mesh:
-            {
-                auto mesh = AssetManager::GetAsset<Mesh>(path);
-                Texture2DRef thumbnail =
-                    std::make_shared<Texture2D>(ImageFormat::RGB16, m_ThumbnailSize.x, m_ThumbnailSize.y);
-                GenerateMeshThumbnail(mesh, thumbnail);
-                m_Thumbnails[path] = thumbnail;
-            }
-            break;
             default: break;
         }
 
@@ -83,8 +74,7 @@ void ThumbnailManager::GenerateMaterialThumbnail(MaterialRef mat, Texture2DRef t
     m_Framebuffer->SetTexture(std::move(texture));
     m_Framebuffer->Bind();
     {
-        RenderCommand::SetClearColor({0.05f, 0.05f, 0.05f});
-        //glClearColor(0.05f, 0.05f, 0.05f, 0.54f);
+        RenderCommand::SetClearColor({0.2f, 0.2f, 0.2f});
 		m_Framebuffer->Clear();
 
         RenderCommand::Disable(RendererEnum::BLEND);
@@ -116,43 +106,6 @@ void ThumbnailManager::GenerateMaterialThumbnail(MaterialRef mat, Texture2DRef t
 
         // render sphere
         Renderer::SphereMesh->Draw(pbrShader, true);
-    }
-    m_Framebuffer->Unbind();
-}
-
-void ThumbnailManager::GenerateMeshThumbnail(MeshRef mesh, Texture2DRef texture)
-{
-    m_Framebuffer->SetTexture(std::move(texture));
-    m_Framebuffer->Bind();
-    {
-        RenderCommand::SetClearColor({0.2f, 0.2f, 0.2f});
-        m_Framebuffer->Clear();
-
-        RenderCommand::Disable(RendererEnum::BLEND);
-        RenderCommand::Disable(RendererEnum::CULL_FACE);
-
-        auto projection = glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f);
-        auto view = glm::lookAt(glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-        auto model = glm::mat4(1.0f);
-        model = glm::scale(model, glm::vec3(0.6f));
-
-        const auto pbrShader = ShaderManager::GetShader("Resources/shaders/PBR");
-        pbrShader->Bind();
-
-        MaterialRef material = std::make_shared<Material>();
-        material->SetMaterialParam(ParameterType::ALBEDO, glm::vec3(1.0f, 1.0f, 1.0f));
-        material->Bind(pbrShader);
-
-        // light
-        pbrShader->SetUniform3f("gDirectionalLight.Color", glm::vec3(100.0f, 100.0f, 100.0f));
-        pbrShader->SetUniform3f("gDirectionalLight.Direction", glm::vec3(-1.0f, 1.0f, 1.0f));
-
-        pbrShader->SetUniformMatrix4fv("model", model);
-        pbrShader->SetUniformMatrix4fv("projectionViewMatrix", (projection * view));
-        pbrShader->SetUniform3f("cameraPosition", glm::vec3(0.0f));
-
-        // render sphere
-        mesh->Draw(pbrShader, true);
     }
     m_Framebuffer->Unbind();
 }

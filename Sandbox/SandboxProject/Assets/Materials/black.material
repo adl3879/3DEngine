@@ -1,0 +1,17 @@
+Material:
+  Name: ""
+  IsDefault: false
+  AlbedoColor: [0, 0, 0]
+  Metallic: 0
+  Roughness: 0.899999976
+  AO: 1
+  AlbedoMap: 7659298108751472366
+  MetallicMap: 6337894435733611648
+  RoughnessMap: 14868258933382577700
+  AOMap: 0
+  NormalMap: 13341540491844079318
+  AlbedoMapPath: No Texture
+  MetallicMapPath: No Texture
+  RoughnessMapPath: No Texture
+  AOMapPath: No Texture
+  NormalMapPath: No Texture

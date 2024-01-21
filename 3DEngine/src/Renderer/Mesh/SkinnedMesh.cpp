@@ -7,10 +7,11 @@ namespace Engine
 {
 SkinnedMesh::SkinnedMesh() : IndexCount(0), VertexCount(0) {}
 
-SkinnedMesh::SkinnedMesh(const std::string &name, const std::vector<SkinnedVertex> &vertices, const std::vector<uint32_t> &indices,
-           AssetHandle materialHandle)
-    : IndexCount(indices.size()), VertexCount(vertices.size()), DefaultMaterialHandle(materialHandle),
-      Vertices(vertices), Indices(indices), Name(name)
+
+SkinnedMesh::SkinnedMesh(const std::string &name, const std::vector<SkinnedVertex> &vertices,
+                       const std::vector<uint32_t> &indices, MaterialRef material)
+    : IndexCount(indices.size()), VertexCount(vertices.size()), DefaultMaterial(material), Vertices(vertices),
+      Indices(indices), Name(name)
 {
     SetupMesh(vertices, indices);
 }

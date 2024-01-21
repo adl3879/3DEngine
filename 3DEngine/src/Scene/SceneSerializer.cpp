@@ -186,9 +186,9 @@ void SceneSerializer::SerializeEntity(YAML::Emitter &out, Entity entity)
         out << YAML::EndMap; // CameraComponent
     }
 
-    if (entity.HasComponent<MeshComponent>())
+    if (entity.HasComponent<StaticMeshComponent>())
     {
-        out << YAML::Key << "MeshComponent";
+        out << YAML::Key << "StaticMeshComponent";
         out << YAML::BeginMap; // MeshComponent
 
         const auto &meshComponent = entity.GetComponent<MeshComponent>();
@@ -467,12 +467,12 @@ void SceneSerializer::DeserializeEntity(YAML::detail::iterator_value entity, Ent
         cc.Primary = cameraComponent["Primary"].as<bool>();
     }
 
-    if (auto modelComponent = entity["MeshComponent"])
+    if (auto modelComponent = entity["StaticMeshComponent"])
     {
         auto handle = modelComponent["Handle"].as<uint64_t>();
         auto materialHandle = modelComponent["MaterialHandle"].as<uint64_t>();
 
-        auto &mesh = deserializedEntity.AddComponent<MeshComponent>();
+        auto &mesh = deserializedEntity.AddComponent<StaticMeshComponent>();
         mesh.Handle = handle;
         mesh.MaterialHandle = materialHandle;
     }

@@ -29,7 +29,7 @@ class Environment
     ProceduralSkyRef ProceduralSkybox = nullptr;
 
 	BloomRendererRef Bloom = nullptr;
-	bool BloomEnabled = true;
+	bool BloomEnabled = false;
 	float Exposure = 1.2f;
 	float BloomIntensity = 0.04f;
 };

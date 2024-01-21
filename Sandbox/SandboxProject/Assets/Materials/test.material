@@ -1,6 +1,5 @@
 Material:
   Name: ""
-  TexturesDirectory: ""
   IsDefault: false
   AlbedoColor: [0.0129392268, 0.0863178298, 0.118155599]
   Metallic: 0

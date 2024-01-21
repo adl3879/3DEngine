@@ -2,6 +2,7 @@
 
 #include "SkinnedModel.h"
 #include "ImportData.h"
+#include "Mesh.h"
 
 namespace Engine
 {                              
@@ -39,10 +40,36 @@ static bool LoadStaticMesh(const std::filesystem::path &path, const std::filesys
 
 static bool LoadSkinnedMesh(const std::filesystem::path &path, const std::filesystem::path &currentDir)
 {
+    // Copy mesh file into currentDir
+    auto copyMeshFileTo = std::filesystem::current_path() / currentDir / path.filename();
+    if (currentDir != "")
+		std::filesystem::copy(path, copyMeshFileTo, std::filesystem::copy_options::overwrite_existing);
+
+    // create a import data
+    ImportData importData;
+    importData.Type = AssetType::SkinnedMesh;
+    importData.SourceFile = path;
+
+    UUID uuid;
+    std::string dstFileName = std::format("{0}-{1}.mesh", path.filename().string(), uuid.ToString());
+    importData.DestinationFile = std::filesystem::current_path() / Project::GetImportCachePath() / dstFileName;
+
+    auto model = std::make_shared<SkinnedModel>(path);
+
+    // write import data to disk
+    ImportDataSerializer serializer(importData);
+    auto importDataPath = path.string() + ".import";
+    serializer.Serialize(importDataPath);
+
+    if (MeshFileManager::WriteSkinnedMeshFile(importData.DestinationFile, model))
+        LOG_CORE_INFO("Successfully wrote mesh to disk");
+    else
+		LOG_CORE_ERROR("Failed to write mesh to disk");
+
     return true;
 }
 
-ModelRef MeshImporter::ImportMesh(AssetHandle handle, const AssetMetadata &metadata)
+MeshRef MeshImporter::ImportMesh(AssetHandle handle, const AssetMetadata &metadata)
 {
  	auto importDataFile = metadata.FilePath.string() + ".import";
 	if (!std::filesystem::exists(Project::GetAssetDirectory() / importDataFile))
@@ -60,17 +87,20 @@ ModelRef MeshImporter::ImportMesh(AssetHandle handle, const AssetMetadata &metad
             serializer.Deserialize(Project::GetAssetDirectory() / importDataFile);
         else return nullptr;
 	}
+	
+	auto meshes = importData.Type == AssetType::Mesh
+                                             ? MeshFileManager::ReadMeshFile(importData.DestinationFile)
+                                             : std::vector<StaticMesh>{};
 
-	auto meshes = MeshFileManager::ReadMeshFile(importData.DestinationFile);
-	if (meshes.empty()) return nullptr;
+	auto skinnedMeshes = importData.Type == AssetType::SkinnedMesh
+                                 ? MeshFileManager::ReadSkinnedMeshFile(importData.DestinationFile)
+                                 : SkinnedMeshData{};
 
-	auto model = std::make_shared<Model>();
-	for (auto mesh : meshes)
-	{
-		model->AttachMesh(std::move(mesh));
-	}
-
-	return model;
+	MeshRef mesh = std::make_shared<Mesh>();
+	mesh->StaticMeshes = std::move(meshes);
+	mesh->SkinnedMeshData = std::move(skinnedMeshes);
+	
+	return mesh;
 }
 
 bool MeshImporter::LoadModel(const std::filesystem::path &path, const std::filesystem::path &currentDir)

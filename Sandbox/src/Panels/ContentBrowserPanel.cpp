@@ -25,9 +25,9 @@ bool openCreateFilePopup = false;
 
 static char searchStr[128] = "";
 
-Texture2DRef sceneIcon, backIcon, forwardIcon, prefabIcon, cSharpIcon;
+Texture2DRef sceneIcon, backIcon, forwardIcon, prefabIcon, cSharpIcon, modelIcon;
 
-glm::vec2 thumbnailSize = {130.0f, 120.0f};
+glm::vec2 thumbnailSize = {100.0f, 100.0f};
 
 namespace Utils
 {
@@ -49,6 +49,7 @@ ContentBrowserPanel::ContentBrowserPanel()
     forwardIcon = TextureImporter::LoadTexture2D("Resources/Icons/ContentBrowser/ForwardIcon.png");
     prefabIcon = TextureImporter::LoadTexture2D("Resources/Icons/ContentBrowser/PrefabIcon.png");
     cSharpIcon = TextureImporter::LoadTexture2D("Resources/Icons/ContentBrowser/CSharpIcon.png");
+    modelIcon = TextureImporter::LoadTexture2D("Resources/Icons/ContentBrowser/3DModelIcon.png");
 
     m_ThumbnailCache = std::make_shared<ThumbnailCache>();
 
@@ -278,11 +279,6 @@ void ContentBrowserPanel::DisplayFileHierarchy(const std::filesystem::path &dire
             }
             if (isLeaf) flags |= ImGuiTreeNodeFlags_Leaf;
 
-            // change selection color
-            // ImGui::PushStyleColor(ImGuiCol_HeaderHovered, ImVec4(0.925f, 0.75f, 0.4666f, 0.6f));
-            // ImGui::PushStyleColor(ImGuiCol_HeaderActive, ImVec4(0.925f, 0.75f, 0.4666f, 0.6f));
-            // ImGui::PushStyleColor(ImGuiCol_Header, ImVec4(0.925f, 0.75f, 0.4666f, 0.6f));
-
             const bool treeNodeOpen =
                 ImGui::TreeNodeEx(path.c_str(), flags,
                                   !isOpen || isLeaf ? ICON_FA_FOLDER "  %s" : ICON_FA_FOLDER_OPEN "  %s", path.c_str());
@@ -318,11 +314,21 @@ void ContentBrowserPanel::OpenCreateFilePopup(AssetType type)
 					   : type == AssetType::Material	? "New Material.material"
 					   : type == AssetType::Shader		? "New Shader.shader"
 					   : type == AssetType::NetScript	? "New Script.cs"
+                       : type == AssetType::Prefab		? "New Prefab.prefab"
 														: "New File.txt";
+
 		std::ofstream file(m_CurrentDirectory / defaultName);
 		file.close();
 		m_RenameRequested = true;
 		m_RenamePath = m_CurrentDirectory / defaultName;
+
+		if (type == AssetType::Prefab)
+		{
+			auto prefab = std::make_shared<Prefab>();
+			prefab->CreateFromEntity(m_PrefabDraggedEntity);
+			PrefabSerializer serializer(prefab);
+			serializer.Serialize(m_CurrentDirectory / defaultName);
+		}
 	}
 }
 
@@ -375,6 +381,10 @@ void ContentBrowserPanel::DrawFileAssetBrowser(std::filesystem::directory_entry 
         icon = ThumbnailManager::Get().GetThumbnail(relativePath);
         if (!icon) icon = m_FileIcon;
     }
+    if (path.extension() == ".gltf" || path.extension() == ".fbx" || path.extension() == ".dae")
+	{
+		icon = modelIcon;
+	}
 
     if (path.extension() == ".prefab") icon = prefabIcon;
 
@@ -387,10 +397,10 @@ void ContentBrowserPanel::DrawFileAssetBrowser(std::filesystem::directory_entry 
     int thumbnailPadding = 20;
 
 	// Draw background color
-    ImGui::GetWindowDrawList()->AddRectFilled(
+    /*ImGui::GetWindowDrawList()->AddRectFilled(
         scrPos,
-        ImVec2(ImGui::GetCursorScreenPos().x + thumbnailSize.x + (thumbnailPadding * 2), ImGui::GetCursorScreenPos().y + 220),
-        IM_COL32(0.05 * 255, 0.05 * 255, 0.05 * 255, 0.54 * 255), 10);
+        ImVec2(ImGui::GetCursorScreenPos().x + thumbnailSize.x + (thumbnailPadding * 2), ImGui::GetCursorScreenPos().y + 200),
+        IM_COL32(0.05 * 255, 0.05 * 255, 0.05 * 255, 0.54 * 255), 0);*/
 
 	// change button color
     ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
@@ -451,7 +461,7 @@ void ContentBrowserPanel::DrawFileAssetBrowser(std::filesystem::directory_entry 
     auto ps = ImGui::GetCursorPosX() +
               (thumbnailSize.x + (thumbnailPadding * 2) - ImGui::CalcTextSize(truncatedName.c_str()).x) / 2;
     ImGui::SetCursorPosX(ps);
-    ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 10);
+    //ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 10);
 
 
     if (m_RenameRequested && m_RenamePath == path)
@@ -488,10 +498,18 @@ void ContentBrowserPanel::DrawFileAssetBrowser(std::filesystem::directory_entry 
     else
     {
         ImGui::TextWrapped("%s", truncatedName.c_str());
+		if (ImGui::IsItemHovered())
+        {
+			ImGui::BeginTooltip();
+			ImGui::Text("%s", filenameString.c_str());
+			ImGui::EndTooltip();
+		}
     }
 
 	ImGui::PopID();
     ImGui::EndGroup();
+
+	//ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 30);
 
     ImGui::NextColumn();
 

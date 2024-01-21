@@ -19,7 +19,6 @@ template <typename... Component>
 static void CopyComponent(entt::registry &dst, entt::registry &src,
                           const std::unordered_map<UUID, entt::entity> &enttMap)
 {
-    // clang-format off
     ([&]()
     {
         auto view = src.view<Component>();
@@ -31,7 +30,6 @@ static void CopyComponent(entt::registry &dst, entt::registry &src,
             dst.emplace_or_replace<Component>(dstEntity, srcComponent);
         }
     }(), ...);
-    // clang-format on
 }
 
 template <typename... Component>
@@ -43,12 +41,10 @@ static void CopyComponent(ComponentExceptIDAndTagGroup<Component...>, entt::regi
 
 template <typename... Component> static void CopyComponentIfExists(Entity dst, Entity src)
 {
-    // clang-format off
     ([&]()
     {
         if (src.HasComponent<Component>()) dst.AddOrReplaceComponent<Component>(src.GetComponent<Component>());
     }(), ...);
-    // clang-format on
 }
 
 template <typename... Component>
@@ -158,6 +154,16 @@ void Scene::OnUpdate(float dt)
         auto spotLight = light.Enabled ? light.Light : SpotLight();
         m_Lights->SetSpotLight(light.Enabled ? &light.Light : nullptr, light.Index);
     }
+
+	auto animationControllerView = m_Registry.view<AnimationControllerComponent>();
+	for (const auto entity : animationControllerView)
+	{
+		auto &animationController = animationControllerView.get<AnimationControllerComponent>(entity);
+        if (animationController.Animator != nullptr)
+        {
+            animationController.Animator->UpdateAnimation(dt);
+        }
+	}
 }
 
 void Scene::OnFixedUpdate(float dt)
@@ -282,9 +288,6 @@ Entity Scene::DuplicateEntityRecursiveW(Entity originalEntity, std::unordered_ma
 
 Entity Scene::DuplicateEntityRecursive(Entity entity)
 {
-   /* std::unordered_map<UUID, Entity> entityMap;
-    return DuplicateEntityRecursiveW(entity, entityMap);*/
-
 	Entity newEntity = DuplicateEntity(entity);
 
 	auto &parent = entity.GetComponent<ParentComponent>();
@@ -309,6 +312,7 @@ void Scene::Merge(std::shared_ptr<Scene> src)
         UUID uuid = srcSceneRegistry.get<IDComponent>(entity).ID;
         const auto &name = srcSceneRegistry.get<TagComponent>(entity).Tag;
         Entity newEntity = CreateEntityWithUUID(uuid, name);
+        newEntity.GetComponent<TagComponent>().IsPrefab = true;
         enttMap[uuid] = (entt::entity)newEntity;
     }
 

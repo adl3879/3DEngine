@@ -60,6 +60,10 @@ void SceneHierarchyPanel::DrawEntityNode(Entity entity)
     icon.append("  ");
 
     ImVec4 textColor = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
+    if (entity.GetComponent<TagComponent>().IsPrefab)
+    {
+        textColor = ImVec4(0.0f, 1.0f, 0.0f, 1.0f);
+    }
 
     ImGui::PushStyleColor(ImGuiCol_Text, textColor);
     bool open = ImGui::TreeNodeEx((void *)(uint64_t)(uint32_t)entity, flags, "%s", (icon + tag).c_str());
@@ -256,14 +260,18 @@ void SceneHierarchyPanel::DrawComponents(Entity entity)
         ImGui::PopID();
     }
 
-    if (entity.HasComponent<MeshComponent>())
+    if (entity.HasComponent<StaticMeshComponent>() || entity.HasComponent<SkinnedMeshComponent>())
     {
         bool removeComponent = false;
-        auto &entityComponent = entity.GetComponent<MeshComponent>();
+        MeshComponent *entityComponent = new MeshComponent();
+
+		if (entity.HasComponent<StaticMeshComponent>()) entityComponent = &entity.GetComponent<StaticMeshComponent>();
+        else if (entity.HasComponent<SkinnedMeshComponent>()) entityComponent = &entity.GetComponent<SkinnedMeshComponent>();
+
         _collapsingHeaderStyle();
         if (ImGui::CollapsingHeader("Mesh"))
         {
-            auto meshName = AssetManager::GetAssetName(entityComponent.Handle);
+            auto meshName = AssetManager::GetAssetName(entityComponent->Handle);
             REMOVABLE_COMPONENT
             ImGui::PushStyleVar(ImGuiStyleVar_ButtonTextAlign, ImVec2(0.0f, 0.5f));
 
@@ -301,10 +309,10 @@ void SceneHierarchyPanel::DrawComponents(Entity entity)
 
                         auto assetName = AssetManager::GetAssetName(asset.first);
 
-                        if (ImGui::Selectable(assetName.c_str(), asset.first == entityComponent.Handle))
+                        if (ImGui::Selectable(assetName.c_str(), asset.first == entityComponent->Handle))
                         {
-                            entityComponent.Handle = asset.first;
-                            entityComponent.MaterialHandle = 0;
+                            entityComponent->Handle = asset.first;
+                            entityComponent->MaterialHandle = 0;
                             // close popup
                             ImGui::CloseCurrentPopup();
                         }
@@ -325,7 +333,7 @@ void SceneHierarchyPanel::DrawComponents(Entity entity)
                     const char *path = (const char *)payload->Data;
                     if (Utils::GetAssetTypeFromExtension(path) == AssetType::Mesh)
                     {
-                        entityComponent.Handle = AssetManager::GetAssetHandleFromPath(path);
+                        entityComponent->Handle = AssetManager::GetAssetHandleFromPath(path);
                     }
                 }
                 ImGui::EndDragDropTarget();
@@ -334,56 +342,50 @@ void SceneHierarchyPanel::DrawComponents(Entity entity)
             ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.05f, 0.05f, 0.05f, 0.54f));
             ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.05f, 0.05f, 0.05f, 0.54f));
 
-            auto meshEntity = entity.GetComponent<MeshComponent>();
-            auto model = AssetManager::GetAsset<Model>(entityComponent.Handle);
-                
-            if (ImGui::TreeNodeEx((void *)typeid(MeshComponent).hash_code(), ImGuiTreeNodeFlags_DefaultOpen,
-                                    "Material"))
+            auto asset = AssetManager::GetAsset<Mesh>(entityComponent->Handle);   
+            if (ImGui::TreeNodeEx((void *)typeid(MeshComponent).hash_code(), 0, "Material"))
             {
-                if (model != nullptr)
+                for (const auto &mesh : asset->StaticMeshes)
                 {
-                    for (const auto &mesh : model->GetMeshes())
+                    bool openModal = false;
+                    MaterialRef material = AssetManager::GetAsset<Material>(entityComponent->MaterialHandle);
+                    if (material == nullptr)
                     {
-                        bool openModal = false;
-                        MaterialRef material = AssetManager::GetAsset<Material>(entityComponent.MaterialHandle);
-                        if (material == nullptr)
-                        {
-                            material = mesh.DefaultMaterial;
-                        }
+                        material = mesh.DefaultMaterial;
+                    }
 
-                        ImGui::PushStyleVar(ImGuiStyleVar_ButtonTextAlign, ImVec2(0.0f, 0.5f));
-                        ImGui::Button(_labelPrefix("Name", material->Name.c_str()), ImVec2(-1, 0));
-                        ImGui::PopStyleVar();
+                    ImGui::PushStyleVar(ImGuiStyleVar_ButtonTextAlign, ImVec2(0.0f, 0.5f));
+                    ImGui::Button(_labelPrefix("Name", material->Name.c_str()), ImVec2(-1, 0));
+                    ImGui::PopStyleVar();
 
-                        if (ImGui::BeginPopupContextItem())
+                    if (ImGui::BeginPopupContextItem())
+                    {
+                        if (material != mesh.DefaultMaterial &&
+                            ImGui::MenuItem(ICON_FA_EDIT "   Open Material Editor"))
                         {
-                            if (material != mesh.DefaultMaterial &&
-                                ImGui::MenuItem(ICON_FA_EDIT "   Open Material Editor"))
-                            {
-                                MaterialEditorPanel::OpenMaterialEditor(mesh.DefaultMaterial, true);
-                            }
-                            // remove
-                            if (ImGui::MenuItem(ICON_FA_TRASH "   Remove"))
-                            {
-                                entityComponent.MaterialHandle = 0;
-                            }
-                            ImGui::EndPopup();
+                            MaterialEditorPanel::OpenMaterialEditor(mesh.DefaultMaterial, true);
                         }
+                        // remove
+                        if (ImGui::MenuItem(ICON_FA_TRASH "   Remove"))
+                        {
+                            entityComponent->MaterialHandle = 0;
+                        }
+                        ImGui::EndPopup();
+                    }
 
-                        if (ImGui::BeginDragDropTarget())
+                    if (ImGui::BeginDragDropTarget())
+                    {
+                        if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
                         {
-                            if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
+                            const char *path = (const char *)payload->Data;
+                            if (Utils::GetAssetTypeFromExtension(path) == AssetType::Material)
                             {
-                                const char *path = (const char *)payload->Data;
-                                if (Utils::GetAssetTypeFromExtension(path) == AssetType::Material)
-                                {
-                                    auto handle = AssetManager::GetAssetHandleFromPath(path);
-                                    // model->SetMaterialHandle(i, handle);
-                                    entityComponent.MaterialHandle = handle;
-                                }
+                                auto handle = AssetManager::GetAssetHandleFromPath(path);
+                                // model->SetMaterialHandle(i, handle);
+                                entityComponent->MaterialHandle = handle;
                             }
-                            ImGui::EndDragDropTarget();
                         }
+                        ImGui::EndDragDropTarget();
                     }
                 }
                 
@@ -409,7 +411,7 @@ void SceneHierarchyPanel::DrawComponents(Entity entity)
     {
         bool removeComponent = false;
         _collapsingHeaderStyle();
-        if (ImGui::CollapsingHeader("DirectionalLight"))
+        if (ImGui::CollapsingHeader("DirectionalLight"))\
         {
             REMOVABLE_COMPONENT
             auto &entityComponent = entity.GetComponent<DirectionalLightComponent>();

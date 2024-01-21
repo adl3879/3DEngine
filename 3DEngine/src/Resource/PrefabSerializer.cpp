@@ -16,15 +16,7 @@ void PrefabSerializer::Serialize(const std::filesystem::path &path)
     out << YAML::Key << "Prefab" << YAML::Value << "Untitled";
     out << YAML::Key << "Entities" << YAML::Value << YAML::BeginSeq;
     auto i = m_Prefab->GetScene();
-    /*m_Prefab->GetScene()->GetRegistry().each(
-        [&](auto entityId)
-        {
-            Entity entity{entityId, m_Prefab->GetScene().get()};
-            if (!entity) return;
-
-            SceneSerializer::SerializeEntity(out, entity);
-        });*/
-
+  
 	for (auto entity : m_Prefab->GetEntities())
 	{
         if (!entity) return;
@@ -70,6 +62,9 @@ bool PrefabSerializer::Deserialize(const std::filesystem::path &path)
             LOG_CORE_TRACE("Deserialized entity with ID = {0}, name = {1}", uuid, name);
             Entity deserializedEntity = scene->CreateEntityWithUUID(newUUID, name);
             SceneSerializer::DeserializeEntity(entity, deserializedEntity);
+
+			auto &tag = deserializedEntity.GetComponent<TagComponent>();
+            tag.IsPrefab = true;
 
 			// change parent
 			auto &parent = deserializedEntity.GetComponent<ParentComponent>();

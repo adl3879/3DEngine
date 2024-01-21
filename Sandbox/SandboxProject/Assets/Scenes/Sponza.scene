@@ -1,0 +1,68 @@
+Scene: Untitled
+Environment:
+  SkyType: Procedural Sky
+  AmbientColor: [1, 1, 1, 1]
+  BloomEnabled: true
+  Exposure: 1.20000005
+  BloomIntensity: 0.0399999991
+  SurfaceRadius: 6360000
+  AtmosphereRadius: 6380000
+  RayleighScattering: [5.80000005e-06, 1.35e-05, 3.3100001e-05]
+  MieScattering: [1.99999995e-05, 1.99999995e-05, 1.99999995e-05]
+  SunIntensity: 0.300000012
+  CenterPoint: [0, -6360000, 0]
+  SunDirection: [0.200000003, 0.959169984, 0.200000003]
+Entities:
+  - Entity: 6072223630289447716
+    TagComponent:
+      Tag: Empty Entity
+    ParentComponent:
+      Parent: 7968493670538782889
+      HasParent: false
+      Children:
+        - 16252897869693945359
+        - 17215919161640782051
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      LocalTranslation: [0, 0, 0]
+      LocalRotation: [0, 0, 0]
+      LocalScale: [1, 1, 1]
+  - Entity: 16252897869693945359
+    TagComponent:
+      Tag: Mesh
+    ParentComponent:
+      Parent: 6072223630289447716
+      HasParent: true
+      Children:
+        []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, -0, 0]
+      Scale: [0.00100000005, 0.00100000005, 0.00100000005]
+      LocalTranslation: [0, 0, 0]
+      LocalRotation: [0, -0, 0]
+      LocalScale: [0.00100000005, 0.00100000005, 0.00100000005]
+    MeshComponent:
+      Handle: 8825612763546943016
+      MaterialHandle: 2335531091455878033
+  - Entity: 17215919161640782051
+    TagComponent:
+      Tag: Directional Light
+    ParentComponent:
+      Parent: 6072223630289447716
+      HasParent: true
+      Children:
+        []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [1.83679652, -0.431439281, 3.02812243]
+      Scale: [1.00000119, 0.999998331, 0.999999642]
+      LocalTranslation: [0, 0, 0]
+      LocalRotation: [1.83679545, -0.431439489, 3.02812219]
+      LocalScale: [1.00000107, 0.999998271, 0.999999583]
+    DirectionalLightComponent:
+      Enabled: true
+      Color: [0.0449135751, 0.949964404, 0.974063396]
+      AmbientIntensity: 6.0999999

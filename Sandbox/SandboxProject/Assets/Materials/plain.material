@@ -1,6 +1,5 @@
 Material:
   Name: DefaultMaterial
-  TexturesDirectory: Models\untitled
   IsDefault: true
   AlbedoColor: [0.599423647, 0.0811899379, 0.0811899379]
   Metallic: 0

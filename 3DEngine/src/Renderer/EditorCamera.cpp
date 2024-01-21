@@ -69,7 +69,7 @@ void EditorCamera::OnUpdate(float ts)
         glm::vec2 delta = (mouse - m_InitialMousePosition) * 0.003f;
         m_InitialMousePosition = mouse;
 
-        if (InputManager::Get().IsMouseButtonPressed(MouseButton::Right)) MousePan(delta);
+        if (InputManager::Get().IsKeyPressed(InputKey::LeftControl)) MousePan(delta);
         else if (InputManager::Get().IsMouseButtonPressed(MouseButton::Left)) MouseRotate(delta);
     }
 

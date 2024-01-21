@@ -25,8 +25,8 @@ static inline glm::mat4 ConvertMatrixToGLMFormat(const aiMatrix4x4 &from)
     return to;
 }
 
-SkinnedModel::SkinnedModel(const std::filesystem::path &path, const std::filesystem::path &dst)
-	: m_Path(path), m_Dst(dst)
+SkinnedModel::SkinnedModel(const std::filesystem::path &path)
+	: m_Path(path)
 { 
 	if (!LoadModel(path)) LOG_CORE_ERROR("Failed to load {}", path.string());
 }
@@ -35,9 +35,7 @@ bool SkinnedModel::LoadModel(const std::filesystem::path &path)
 {
     Assimp::Importer importer;
     const aiScene *scene = nullptr;
-    auto importFlags = aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FixInfacingNormals |
-                        aiProcess_CalcTangentSpace | aiProcess_OptimizeGraph;
-
+    auto importFlags = aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_CalcTangentSpace;
    
     scene = importer.ReadFile(path.string().c_str(), importFlags);
 
@@ -81,13 +79,20 @@ void SkinnedModel::SetVertexBoneDataToDefault(SkinnedVertex &vertex)
 
 void SkinnedModel::SetVertexBoneData(SkinnedVertex &vertex, int boneId, float weight) 
 {
-	for (int i = 0; i < MAX_BONE_INFLUENCE; i++)
+    for (int i = 0; i < MAX_BONE_INFLUENCE; ++i)
+    {
+		if (vertex.BoneIDs[i] == boneId) return;
+    }
+
+    if (weight == 0.0f) return;
+
+	for (int i = 0; i < MAX_BONE_INFLUENCE; ++i)
 	{
 		if (vertex.BoneIDs[i] < 0)
 		{
-			vertex.BoneIDs[i] = boneId;
 			vertex.Weights[i] = weight;
-			return;
+			vertex.BoneIDs[i] = boneId;
+			break;
 		}
 	}
 }
@@ -151,20 +156,20 @@ SkinnedMesh SkinnedModel::ProcessMesh(aiMesh *mesh, const aiScene *scene)
 
 	 if (mesh->mMaterialIndex >= 0)
      {
-        const auto *mat = scene->mMaterials[mesh->mMaterialIndex];
+		const auto *mat = scene->mMaterials[mesh->mMaterialIndex];
 
-        aiString name;
+		aiString name;
         mat->Get(AI_MATKEY_NAME, name);
 
         std::string materialName = name.C_Str();
 
         std::array<aiString, 5> materialPaths;
 
-        mat->GetTexture(AI_MATKEY_BASE_COLOR_TEXTURE, &materialPaths[ParameterType::ALBEDO]);
+        mat->GetTexture(aiTextureType_DIFFUSE, 0, &materialPaths[ParameterType::ALBEDO]);
         mat->GetTexture(aiTextureType_NORMALS, 0, &materialPaths[ParameterType::NORMAL]);
-        mat->GetTexture(AI_MATKEY_METALLIC_TEXTURE, &materialPaths[ParameterType::METALLIC]);
-        mat->GetTexture(AI_MATKEY_ROUGHNESS_TEXTURE, &materialPaths[ParameterType::ROUGHNESS]);
-        mat->GetTexture(aiTextureType_LIGHTMAP, 0, &materialPaths[ParameterType::AO]);
+        mat->GetTexture(aiTextureType_METALNESS, 0, &materialPaths[ParameterType::METALLIC]);
+        mat->GetTexture(aiTextureType_DIFFUSE_ROUGHNESS, 0, &materialPaths[ParameterType::ROUGHNESS]);
+        mat->GetTexture(aiTextureType_AMBIENT_OCCLUSION, 0, &materialPaths[ParameterType::AO]);
 
         MaterialRef material = std::make_shared<Material>();
         material->Init(materialName, materialPaths[ParameterType::ALBEDO].C_Str(),
@@ -177,17 +182,13 @@ SkinnedMesh SkinnedModel::ProcessMesh(aiMesh *mesh, const aiScene *scene)
                                   : material->Name;
         material->Name = matName;
 
-        auto relativePath = std::filesystem::relative(m_Dst / m_Path.stem(), Project::GetAssetDirectory());
-        material->Handle = AssetManager::AddAsset(material, relativePath / (matName + ".material"));
-
-        return {mesh->mName.C_Str(), vertices, indices, material->Handle};
+        return {mesh->mName.C_Str(), vertices, indices, material};
      }
 
-	 return {mesh->mName.C_Str(), vertices, indices, 0};
+	 return {mesh->mName.C_Str(), vertices, indices, nullptr};
 }
 
-void SkinnedModel::ExtractBoneWeightForVertices(std::vector<SkinnedVertex> &vertices, aiMesh *mesh,
-                                                const aiScene *scene)
+void SkinnedModel::ExtractBoneWeightForVertices(std::vector<SkinnedVertex> &vertices, aiMesh *mesh, const aiScene *scene)
 {
 	for (int boneIndex = 0; boneIndex < mesh->mNumBones; boneIndex++)
 	{

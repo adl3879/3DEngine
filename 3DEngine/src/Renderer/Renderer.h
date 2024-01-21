@@ -3,12 +3,13 @@
 #include <glm/glm.hpp>
 
 #include "ShaderManager.h"
-#include "Mesh.h"
+#include "StaticMesh.h"
 #include "Camera.h"
 #include "RenderList.h"
 #include "VertexArray.h"
 #include "Material.h"
 #include "Texture2D.h"
+#include "SkinnedMesh.h"
 
 namespace Engine
 {
@@ -17,7 +18,8 @@ class Renderer
 public:
     static void Init();
 
-    static void SubmitMesh(MeshRef mesh, MaterialRef mat, glm::mat4 &transform, const int32_t entityId = -1);
+    static void SubmitMesh(StaticMeshRef mesh, MaterialRef mat, glm::mat4 &transform, const int32_t entityId = -1);
+	static void SubmitSkinnedMesh(SkinnedMeshRef mesh, MaterialRef mat, glm::mat4 &transform, const int32_t entityId = -1);
     static void Flush(Shader *shader, bool depthOnly = false);
 
     // drawing states
@@ -39,12 +41,12 @@ public:
     static VertexArray *FrustumVAO;
     static VertexArray *CubeVAO;
 
-    static MeshRef SphereMesh;
+    static StaticMeshRef SphereMesh;
 
 private:
     static RenderList m_RenderList;
 
 private:
-    static MeshRef CreateSphereMesh();
+    static StaticMeshRef CreateSphereMesh();
 };
 } // namespace Engine

@@ -13,7 +13,7 @@ VertexArray *Renderer::FrustumVAO = nullptr;
 VertexArray *Renderer::CubeVAO = nullptr;
 RenderList Renderer::m_RenderList;
 
-MeshRef Renderer::SphereMesh = nullptr;
+StaticMeshRef Renderer::SphereMesh = nullptr;
 
 struct RVertex
 {
@@ -135,9 +135,14 @@ void Renderer::Init()
     CubeVAO->Unbind();
 }
 
-void Renderer::SubmitMesh(MeshRef mesh, MaterialRef mat, glm::mat4 &transform, const int32_t entityId)
+void Renderer::SubmitMesh(StaticMeshRef mesh, MaterialRef mat, glm::mat4 &transform, const int32_t entityId)
 {
     m_RenderList.AddToRenderList(mesh, mat, transform, entityId);
+}
+
+void Renderer::SubmitSkinnedMesh(SkinnedMeshRef mesh, MaterialRef mat, glm::mat4& transform, const int32_t entityId)
+{
+	m_RenderList.AddToRenderList(mesh, mat, transform, entityId);
 }
 
 void Renderer::Flush(Shader *shader, bool depthOnly) { m_RenderList.Flush(shader, depthOnly); }
@@ -156,7 +161,7 @@ void Renderer::DrawQuad(glm::mat4 transform)
     RenderCommand::DrawArrays(0, 6);
 }
 
-MeshRef Renderer::CreateSphereMesh()
+StaticMeshRef Renderer::CreateSphereMesh()
 {
     const float sectorCount = 36;
     const float stackCount = 36;
@@ -232,7 +237,7 @@ MeshRef Renderer::CreateSphereMesh()
         }
     }
 
-    MeshRef mesh = std::make_shared<Mesh>("sphere", finalVertices, finalIndices);
+    StaticMeshRef mesh = std::make_shared<StaticMesh>("sphere", finalVertices, finalIndices);
     return mesh;
 }
 

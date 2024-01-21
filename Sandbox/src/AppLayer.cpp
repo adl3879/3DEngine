@@ -11,6 +11,7 @@
 #include "Utils/FileDialogs.h"
 #include "Prefab.h"
 #include "PrefabSerializer.h"
+#include "Mesh.h"
 
 #include <IconsFontAwesome5.h>
 
@@ -218,8 +219,27 @@ void AppLayer::OnImGuiRender()
                 case AssetType::Mesh:
                 {
                     auto ent = m_ActiveScene->CreateEntity("Mesh");
-                    auto &mesh = ent.AddComponent<MeshComponent>();
-                    mesh.Handle = AssetManager::GetAssetHandleFromPath(path);
+                    const auto handle = AssetManager::GetAssetHandleFromPath(path);
+					const auto &asset = AssetManager::GetAsset<Mesh>(path);
+					if (!asset->HasAnimations())
+					{
+						auto &mesh = ent.AddComponent<StaticMeshComponent>();
+						mesh.Handle = handle;
+					}
+					else
+					{
+						LOG_CORE_INFO("Loading skinned mesh");
+						auto &mesh = ent.AddComponent<SkinnedMeshComponent>();
+						mesh.Handle = handle;
+						auto &animationController = ent.AddComponent<AnimationControllerComponent>();
+						for (int i = 0; i < asset->SkinnedMeshData.NumAnimations; i++)
+						{
+							auto animation = new Animation();
+							animation->LoadAnimation(Project::GetAssetDirectory() / path, &asset->SkinnedMeshData, i);
+							animationController.AddAnimation(animation);
+						}
+						animationController.Animator = new Animator(animationController.Animations[0]);
+					}
                 }
                 break;
                 case AssetType::Material:
@@ -261,7 +281,7 @@ void AppLayer::OnImGuiRender()
 
     ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2{5, 0});
     ImGui::PushStyleVar(ImGuiStyleVar_ButtonTextAlign, ImVec2{0.5, 0.5});
-    ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 5.0f);
+    //ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 5.0f);
 
     // color to show it is selected
     DrawControls(ICON_FA_MOUSE_POINTER, "Select", m_GizmoType == -1, [&]() { m_GizmoType = -1; });
@@ -285,7 +305,7 @@ void AppLayer::OnImGuiRender()
     DrawControls(ICON_FA_BORDER_ALL, "Show/Hide Grid", m_ActiveScene->IsGridEnabled(),
                  [&]() { m_ActiveScene->SetGridEnabled(!m_ActiveScene->IsGridEnabled()); });
 
-    ImGui::PopStyleVar(3);
+    ImGui::PopStyleVar(2);
 
     auto windowSize = ImGui::GetWindowSize();
     auto miniBound = ImGui::GetWindowPos();
@@ -554,7 +574,7 @@ void AppLayer::UI_Toolbar()
             m_ActiveScene->OnRuntimeStop();
         }
         else if (m_ActiveScene->IsPaused() &&
-                 ImGui::ImageButton((void *)(intptr_t)playIcon->GetRendererID(), ImVec2{size, size}))
+             ImGui::ImageButton((void *)(intptr_t)playIcon->GetRendererID(), ImVec2{size, size}))
         {
             m_ActiveScene->SetPaused(false);
             m_ActiveScene->OnRuntimeStart();

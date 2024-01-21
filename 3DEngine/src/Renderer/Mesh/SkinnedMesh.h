@@ -15,7 +15,7 @@ struct SkinnedMesh
 {
     SkinnedMesh();
     SkinnedMesh(const std::string &name, const std::vector<SkinnedVertex> &vertices, const std::vector<uint32_t> &indices,
-         AssetHandle materialHandle = 0);
+               MaterialRef material = nullptr);
 
     void Draw(Shader *shader, bool bindMaterials);
     void Clear();
@@ -28,9 +28,10 @@ struct SkinnedMesh
     std::vector<SkinnedVertex> Vertices;
     std::vector<uint32_t> Indices;
 
-    AssetHandle DefaultMaterialHandle; // default material
+	MaterialRef DefaultMaterial;
 
   private:
     void SetupMesh(const std::vector<SkinnedVertex> &vertices, const std::vector<uint32_t> &indices);
 };
+using SkinnedMeshRef = std::shared_ptr<SkinnedMesh>;
 }

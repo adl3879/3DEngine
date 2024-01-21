@@ -15,14 +15,12 @@ void Prefab::CreateFromEntity(Entity entity)
     m_RootEntity = entity;
     m_DisplayName = entity.GetComponent<TagComponent>().Tag;
 
-    //auto e = m_Scene->DuplicateEntityRecursive(entity);
     EntityWalker(entity);
 }
 
 void Prefab::EntityWalker(Entity entity)
 {
     m_Entities.push_back(entity);
-    entity.GetComponent<TagComponent>().IsPrefab = true;
 
     for (const auto &e : entity.GetComponent<ParentComponent>().ChildEntities) EntityWalker(e);
 }

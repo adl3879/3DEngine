@@ -4,7 +4,7 @@
 #include "Framebuffer.h"
 #include "Asset.h"
 #include "Material.h"
-#include "Mesh.h"
+#include "Model.h"
 
 #include <glm/glm.hpp>
 #include <unordered_map>
@@ -31,7 +31,6 @@ class ThumbnailManager
 
   private:
     void GenerateMaterialThumbnail(MaterialRef material, Texture2DRef texture);
-    void GenerateMeshThumbnail(MeshRef mesh, Texture2DRef texture);
 
   private:
     std::unordered_map<std::filesystem::path, Texture2DRef> m_Thumbnails;

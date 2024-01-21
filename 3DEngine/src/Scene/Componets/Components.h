@@ -12,7 +12,7 @@
 #include "UUID.h"
 #include "Asset.h"
 #include "Prefab.h"
-#include "Animation.h"
+#include "Animator.h"
 
 #include <memory>
 
@@ -125,12 +125,18 @@ struct MeshComponent
 {
     AssetHandle Handle = 0;
     AssetHandle MaterialHandle;
+};
 
-    // only for built-in meshes
-    ModelRef ModelResource = nullptr;
+struct StaticMeshComponent : public MeshComponent
+{
+    StaticMeshComponent() = default;
+    StaticMeshComponent(const StaticMeshComponent &) = default;
+};
 
-    MeshComponent() = default;
-    MeshComponent(const MeshComponent &) = default;
+struct SkinnedMeshComponent : public MeshComponent
+{
+	SkinnedMeshComponent() = default;
+    SkinnedMeshComponent(const SkinnedMeshComponent &) = default;
 };
 
 struct CameraComponent
@@ -187,12 +193,17 @@ struct NetScriptComponent
     NetScriptComponent(const NetScriptComponent &) = default;
 };
 
-struct SkinnedMeshComponent
+struct AnimationControllerComponent
 {
-    AssetHandle Handle = 0;
-    std::vector<Animation *> Animations;
+	Animator *Animator = nullptr;
+	std::vector<Animation *> Animations;
 
-	SkinnedMeshComponent() = default;
-    SkinnedMeshComponent(const SkinnedMeshComponent &) = default;
+	void AddAnimation(Animation* animation)
+	{
+		Animations.push_back(animation);
+	}
+
+	AnimationControllerComponent() = default;
+	AnimationControllerComponent(const AnimationControllerComponent &) = default;
 };
 } // namespace Engine

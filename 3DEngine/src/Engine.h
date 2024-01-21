@@ -19,4 +19,6 @@
 #include "AssetManager.h"
 #include "ImGuiHelpers.h"
 
+#include "Mesh.h"
+
 #include "DynamicWorld.h"
