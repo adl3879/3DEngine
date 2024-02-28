@@ -61,24 +61,24 @@ float EditorCamera::ZoomSpeed() const
 void EditorCamera::OnUpdate(float ts)
 {
     m_DeltaTime = ts;
+    auto mousePos = InputManager::Get().GetMouseMovedPosition();
+    const glm::vec2 &mouse{mousePos.X, mousePos.Y};
     if (InputManager::Get().IsKeyPressed(InputKey::LeftAlt))
     {
-        auto mousePos = InputManager::Get().GetMouseMovedPosition();
-        const glm::vec2 &mouse{mousePos.X, mousePos.Y};
-
         glm::vec2 delta = (mouse - m_InitialMousePosition) * 0.003f;
         m_InitialMousePosition = mouse;
 
         if (InputManager::Get().IsKeyPressed(InputKey::LeftControl)) MousePan(delta);
         else if (InputManager::Get().IsMouseButtonPressed(MouseButton::Left)) MouseRotate(delta);
     }
+	m_InitialMousePosition = mouse;
 
     UpdateView();
 }
 
 void EditorCamera::OnMouseScrolled(double xOffset, double yOffset)
 {
-    float speed = (float)yOffset * 10.0f;
+    float speed = (float)yOffset;
     MouseZoom(speed * m_DeltaTime);
     UpdateView();
 }

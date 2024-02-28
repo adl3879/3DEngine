@@ -14,25 +14,25 @@ template <typename... Component> struct ComponentExceptIDAndTagGroup
 };
 
 using AllComponents =
-    ComponentGroup<IDComponent, TagComponent, VisibilityComponent, TransformComponent, MeshComponent, CameraComponent,
+    ComponentGroup<IDComponent, TagComponent, VisibilityComponent, TransformComponent, StaticMeshComponent, SkinnedMeshComponent, CameraComponent,
                    // lights
                    PointLightComponent, DirectionalLightComponent, SpotLightComponent,
                    // physics
                    RigidBodyComponent, BoxColliderComponent, SphereColliderComponent, ParentComponent,
-                   NetScriptComponent>;
+                   NetScriptComponent, AnimationControllerComponent>;
 
 using AllComponentsExceptIDAndTag =
-    ComponentExceptIDAndTagGroup<VisibilityComponent, TransformComponent, MeshComponent, CameraComponent,
+    ComponentExceptIDAndTagGroup<VisibilityComponent, TransformComponent, StaticMeshComponent, SkinnedMeshComponent, CameraComponent,
                                  // lights
                                  PointLightComponent, DirectionalLightComponent, SpotLightComponent,
                                  // physics
                                  RigidBodyComponent, BoxColliderComponent, SphereColliderComponent, ParentComponent,
-                                 NetScriptComponent>;
+                                 NetScriptComponent, AnimationControllerComponent>;
 
 using AllComponentsExceptIDAndTagAndParent =
-    ComponentExceptIDAndTagGroup<VisibilityComponent, TransformComponent, MeshComponent, CameraComponent,
+    ComponentExceptIDAndTagGroup<VisibilityComponent, TransformComponent, StaticMeshComponent, SkinnedMeshComponent, CameraComponent,
                                  // lights
                                  PointLightComponent, DirectionalLightComponent, SpotLightComponent,
                                  // physics
-                                 RigidBodyComponent, BoxColliderComponent, SphereColliderComponent, NetScriptComponent>;
+                                 RigidBodyComponent, BoxColliderComponent, SphereColliderComponent, NetScriptComponent, AnimationControllerComponent>;
 } // namespace Engine

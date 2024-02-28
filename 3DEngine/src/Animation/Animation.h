@@ -32,6 +32,7 @@ class Animation
     inline float GetDuration() { return m_Duration; }
     inline const AssimpNodeData &GetRootNode() { return m_RootNode; }
     inline const std::map<std::string, BoneInfo> &GetBoneIDMap() { return m_BoneInfoMap; }
+	inline const std::string &GetName() { return m_Name; }
 
   private:
     void ReadMissingBones(const aiAnimation *animation, SkinnedMeshData meshData);
@@ -43,5 +44,6 @@ class Animation
     std::vector<Bone> m_Bones;
     AssimpNodeData m_RootNode;
     std::map<std::string, BoneInfo> m_BoneInfoMap;
+	std::string m_Name;
 };
 }

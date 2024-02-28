@@ -5,6 +5,7 @@
 #include "Renderer.h"
 #include "Scene.h"
 #include "Framebuffer.h"
+#include "ShadowFramebuffer.h"
 
 #include <memory>
 
@@ -24,6 +25,7 @@ class SceneRenderer
   private:
     void ShadowPass(Scene &scene);
     void EnvironmentPass(Scene &scene);
+    void LightingPass(Scene &scene);
 
   private:
     glm::mat4 m_Projection, m_View;
@@ -33,6 +35,7 @@ class SceneRenderer
     FramebufferRef m_ShadingBuffer;
     FramebufferRef m_OutlineBuffer;
     FramebufferRef m_Edge;
+    ShadowMapFBO m_ShadowFBO;
 
     FramebufferRef m_ShadowBuffer;
 

@@ -62,8 +62,7 @@ void Framebuffer::SetTexture(Texture2DRef texture, unsigned int attachment)
         size += 1;
     }
 
-    if (size > 0)
-        glDrawBuffers(size, &keys[0]);
+    if (size > 0) glDrawBuffers(size, &keys[0]);
 
     Unbind();
 }

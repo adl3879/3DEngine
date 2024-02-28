@@ -32,6 +32,7 @@ void main()
     gl_Position = projectionViewMatrix * vec4(currentPos, 1.0f);
 
     FragPosLightSpace = lightSpaceMatrix * vec4(currentPos, 1.0f);
+
     TexCoords = aUV;
     WorldPosition = vec3(model * vec4(aPos, 1.0f));
 }

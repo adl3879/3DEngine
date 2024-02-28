@@ -25,7 +25,7 @@ bool openCreateFilePopup = false;
 
 static char searchStr[128] = "";
 
-Texture2DRef sceneIcon, backIcon, forwardIcon, prefabIcon, cSharpIcon, modelIcon;
+Texture2DRef sceneIcon, backIcon, forwardIcon, prefabIcon, cSharpIcon, modelIcon, hdrIcon;
 
 glm::vec2 thumbnailSize = {100.0f, 100.0f};
 
@@ -50,6 +50,7 @@ ContentBrowserPanel::ContentBrowserPanel()
     prefabIcon = TextureImporter::LoadTexture2D("Resources/Icons/ContentBrowser/PrefabIcon.png");
     cSharpIcon = TextureImporter::LoadTexture2D("Resources/Icons/ContentBrowser/CSharpIcon.png");
     modelIcon = TextureImporter::LoadTexture2D("Resources/Icons/ContentBrowser/3DModelIcon.png");
+	hdrIcon = TextureImporter::LoadTexture2D("Resources/Icons/ContentBrowser/HDRIcon.png");
 
     m_ThumbnailCache = std::make_shared<ThumbnailCache>();
 
@@ -387,8 +388,8 @@ void ContentBrowserPanel::DrawFileAssetBrowser(std::filesystem::directory_entry 
 	}
 
     if (path.extension() == ".prefab") icon = prefabIcon;
-
     if (path.extension() == ".cs") icon = cSharpIcon;
+    if (path.extension() == ".hdr") icon = hdrIcon;
 
 	ImGui::BeginGroup();
 	ImGui::PushID(filenameString.c_str());

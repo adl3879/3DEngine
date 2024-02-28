@@ -191,7 +191,19 @@ void SceneSerializer::SerializeEntity(YAML::Emitter &out, Entity entity)
         out << YAML::Key << "StaticMeshComponent";
         out << YAML::BeginMap; // MeshComponent
 
-        const auto &meshComponent = entity.GetComponent<MeshComponent>();
+        const auto &meshComponent = entity.GetComponent<StaticMeshComponent>();
+        out << YAML::Key << "Handle" << YAML::Value << meshComponent.Handle;
+        out << YAML::Key << "MaterialHandle" << YAML::Value << meshComponent.MaterialHandle;
+
+        out << YAML::EndMap; // MeshComponent
+    }
+	
+    if (entity.HasComponent<SkinnedMeshComponent>())
+    {
+        out << YAML::Key << "SkinnedMeshComponent";
+        out << YAML::BeginMap; // MeshComponent
+
+        const auto &meshComponent = entity.GetComponent<SkinnedMeshComponent>();
         out << YAML::Key << "Handle" << YAML::Value << meshComponent.Handle;
         out << YAML::Key << "MaterialHandle" << YAML::Value << meshComponent.MaterialHandle;
 
@@ -467,12 +479,22 @@ void SceneSerializer::DeserializeEntity(YAML::detail::iterator_value entity, Ent
         cc.Primary = cameraComponent["Primary"].as<bool>();
     }
 
-    if (auto modelComponent = entity["StaticMeshComponent"])
+    if (auto staticMeshComponent = entity["StaticMeshComponent"])
     {
-        auto handle = modelComponent["Handle"].as<uint64_t>();
-        auto materialHandle = modelComponent["MaterialHandle"].as<uint64_t>();
+        auto handle = staticMeshComponent["Handle"].as<uint64_t>();
+        auto materialHandle = staticMeshComponent["MaterialHandle"].as<uint64_t>();
 
         auto &mesh = deserializedEntity.AddComponent<StaticMeshComponent>();
+        mesh.Handle = handle;
+        mesh.MaterialHandle = materialHandle;
+    }
+
+	if (auto skinnedMeshComponent = entity["SkinnedMeshComponent"])
+    {
+        auto handle = skinnedMeshComponent["Handle"].as<uint64_t>();
+        auto materialHandle = skinnedMeshComponent["MaterialHandle"].as<uint64_t>();
+
+        auto &mesh = deserializedEntity.AddComponent<SkinnedMeshComponent>();
         mesh.Handle = handle;
         mesh.MaterialHandle = materialHandle;
     }

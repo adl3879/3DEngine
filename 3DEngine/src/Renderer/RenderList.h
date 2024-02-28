@@ -75,8 +75,7 @@ public:
 
                 const auto mat = i.first;
                 shader->SetUniform1i("hasAlbedoMap", mat->HasMaterialMap(ParameterType::ALBEDO));
-                shader->SetUniform1i("hasNormalMap",
-                                     mat->HasMaterialMap(ParameterType::NORMAL) && mat->GetUseNormalMap());
+                shader->SetUniform1i("hasNormalMap", mat->HasMaterialMap(ParameterType::NORMAL) & mat->GetUseNormalMap());
                 shader->SetUniform1i("hasMetallicMap", mat->HasMaterialMap(ParameterType::METALLIC));
                 shader->SetUniform1i("hasRoughnessMap", mat->HasMaterialMap(ParameterType::ROUGHNESS));
                 shader->SetUniform1i("hasAoMap", mat->HasMaterialMap(ParameterType::AO));
@@ -96,8 +95,7 @@ public:
 
 				const auto mat = i.first;
 				shader->SetUniform1i("hasAlbedoMap", mat->HasMaterialMap(ParameterType::ALBEDO));
-				shader->SetUniform1i("hasNormalMap",
-									mat->HasMaterialMap(ParameterType::NORMAL) && mat->GetUseNormalMap());
+				shader->SetUniform1i("hasNormalMap", mat->HasMaterialMap(ParameterType::NORMAL) & mat->GetUseNormalMap());
 				shader->SetUniform1i("hasMetallicMap", mat->HasMaterialMap(ParameterType::METALLIC));
 				shader->SetUniform1i("hasRoughnessMap", mat->HasMaterialMap(ParameterType::ROUGHNESS));
 				shader->SetUniform1i("hasAoMap", mat->HasMaterialMap(ParameterType::AO));

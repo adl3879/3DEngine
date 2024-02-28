@@ -35,6 +35,7 @@ void Animation::LoadAnimation(const std::filesystem::path &animationPath, Skinne
     auto animation = scene->mAnimations[index];
     m_Duration = animation->mDuration;
     m_TicksPerSecond = animation->mTicksPerSecond;
+	m_Name = animation->mName.data;
 
     ReadHierarchyData(m_RootNode, scene->mRootNode);
     ReadMissingBones(animation, *meshData);

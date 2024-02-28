@@ -28,12 +28,6 @@ namespace SandboxProject
 			// rotate the player
 			var mouseX = Input.GetAxis("Mouse X");
 			//var mouseY = Input.GetAxis("Mouse Y");
-
-			//transform.Rotate(new Vector3(0, 0, -mouseX * 100 * dt));
-			if (Input.IsActionPressed("jump"))
-			{
-				System.Console.WriteLine("jumping");
-			}
 		}
 
 		public override void OnFixedUpdate(float dt)

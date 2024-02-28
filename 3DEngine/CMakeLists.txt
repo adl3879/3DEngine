@@ -56,7 +56,7 @@ foreach (_headerFile ${HEADERS})
 endforeach()
 list (REMOVE_DUPLICATES INCLUDE_DIRS)
 
-add_library(${PROJECT_NAME} STATIC ${SOURCES} "src/Renderer/Mesh/Mesh.h")
+add_library(${PROJECT_NAME} STATIC ${SOURCES} "src/Renderer/Mesh/Mesh.h" "src/Renderer/ShadowFramebuffer.cpp" "src/Renderer/ShadowFramebuffer.h")
 
 target_include_directories(${PROJECT_NAME}
         PUBLIC

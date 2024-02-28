@@ -308,7 +308,6 @@ void SceneHierarchyPanel::DrawComponents(Entity entity)
                         if (asset.second.Type != AssetType::Mesh) continue;
 
                         auto assetName = AssetManager::GetAssetName(asset.first);
-
                         if (ImGui::Selectable(assetName.c_str(), asset.first == entityComponent->Handle))
                         {
                             entityComponent->Handle = asset.first;
@@ -334,6 +333,8 @@ void SceneHierarchyPanel::DrawComponents(Entity entity)
                     if (Utils::GetAssetTypeFromExtension(path) == AssetType::Mesh)
                     {
                         entityComponent->Handle = AssetManager::GetAssetHandleFromPath(path);
+						// change tag
+						entity.GetComponent<TagComponent>().Tag = AssetManager::GetAssetName(entityComponent->Handle);
                     }
                 }
                 ImGui::EndDragDropTarget();
@@ -407,11 +408,36 @@ void SceneHierarchyPanel::DrawComponents(Entity entity)
         }
     }
 
+	if (entity.HasComponent<AnimationControllerComponent>())
+	{
+		_collapsingHeaderStyle();
+		if (ImGui::CollapsingHeader("Animation Controller"))
+		{
+			auto &entityComponent = entity.GetComponent<AnimationControllerComponent>();
+			if (ImGui::BeginCombo(_labelPrefix("Animation"), entityComponent.CurrentAnimation.c_str()))
+			{
+				auto animations = entityComponent.Animations;
+				for (auto& animation : animations)
+				{
+					bool isSelected = entityComponent.CurrentAnimation == animation->GetName();
+					if (ImGui::Selectable(animation->GetName().c_str(), isSelected))
+					{
+						entityComponent.CurrentAnimation = animation->GetName();
+                        entityComponent.Animator->PlayAnimation(animation);
+					}
+					if (isSelected) ImGui::SetItemDefaultFocus();
+				}
+
+                ImGui::EndCombo();
+			}
+		}
+	}
+
     if (entity.HasComponent<DirectionalLightComponent>())
     {
         bool removeComponent = false;
         _collapsingHeaderStyle();
-        if (ImGui::CollapsingHeader("DirectionalLight"))\
+        if (ImGui::CollapsingHeader("DirectionalLight"))
         {
             REMOVABLE_COMPONENT
             auto &entityComponent = entity.GetComponent<DirectionalLightComponent>();
@@ -624,22 +650,10 @@ Entity SceneHierarchyPanel::CreateEntityPopup()
         if (ImGui::MenuItem(ICON_FA_CUBE "  Empty Mesh"))
         {
             entity = m_Context->CreateEntity("Mesh");
-            entity.AddComponent<MeshComponent>();
+            entity.AddComponent<StaticMeshComponent>();
             m_SelectionContext = entity;
             ImGui::EndPopup();
             return entity;
-        }
-        if (ImGui::MenuItem(ICON_FA_SQUARE "  Cube"))
-        {
-            ImGui::EndPopup();
-        }
-        if (ImGui::MenuItem(ICON_FA_CIRCLE "  Sphere"))
-        {
-            ImGui::EndPopup();
-        }
-        if (ImGui::MenuItem(ICON_FA_CAPSULES "  Capsule"))
-        {
-            ImGui::EndPopup();
         }
         ImGui::EndPopup();
     }
@@ -740,7 +754,7 @@ void SceneHierarchyPanel::OnImGuiRender()
             ADD_COMPONENT_MENU(BoxColliderComponent, ICON_FA_CUBE "   Box Collider");
             ADD_COMPONENT_MENU(SphereColliderComponent, ICON_FA_CIRCLE "   Sphere Collider");
             ADD_COMPONENT_MENU(CameraComponent, ICON_FA_VIDEO "   Camera");
-            ADD_COMPONENT_MENU(MeshComponent, ICON_FA_CUBE "   Mesh");
+            ADD_COMPONENT_MENU(MeshComponent, ICON_FA_CUBE "   Mesh oh");
             ADD_COMPONENT_MENU(DirectionalLightComponent, ICON_FA_SUN "   Directional Light");
             ADD_COMPONENT_MENU(PointLightComponent, ICON_FA_LIGHTBULB "   Point Light");
             ADD_COMPONENT_MENU(SpotLightComponent, ICON_FA_LIGHTBULB "   Spot Light");

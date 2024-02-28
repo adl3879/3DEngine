@@ -68,12 +68,7 @@ void AppLayer::OnUpdate(float dt)
     switch (m_SceneState)
     {
         case SceneState::Edit: m_ActiveScene->OnUpdateEditor(dt, m_EditorCamera); break;
-        case SceneState::Play:
-        {
-            m_ActiveScene->OnUpdate(dt);
-            m_ActiveScene->OnRuntimeUpdate(dt);
-        }
-        break;
+        case SceneState::Play: m_ActiveScene->OnRuntimeUpdate(dt); break;
         default: break;
     }
 
@@ -225,12 +220,14 @@ void AppLayer::OnImGuiRender()
 					{
 						auto &mesh = ent.AddComponent<StaticMeshComponent>();
 						mesh.Handle = handle;
+                        ent.GetComponent<TagComponent>().Tag = AssetManager::GetAssetName(handle);
 					}
 					else
 					{
 						LOG_CORE_INFO("Loading skinned mesh");
 						auto &mesh = ent.AddComponent<SkinnedMeshComponent>();
 						mesh.Handle = handle;
+						ent.GetComponent<TagComponent>().Tag = AssetManager::GetAssetName(handle);
 						auto &animationController = ent.AddComponent<AnimationControllerComponent>();
 						for (int i = 0; i < asset->SkinnedMeshData.NumAnimations; i++)
 						{
@@ -249,7 +246,7 @@ void AppLayer::OnImGuiRender()
                     auto handle = AssetManager::GetAssetHandleFromPath(path);
                     // get current hovered entity, add material
                     Entity ent = {m_ActiveScene->GetHoveredEntity(), m_ActiveScene.get()};
-                    auto &mesh = ent.GetComponent<MeshComponent>();
+                    auto &mesh = ent.GetComponent<StaticMeshComponent>();
                     mesh.MaterialHandle = handle;
                 }
                 break;
@@ -263,6 +260,12 @@ void AppLayer::OnImGuiRender()
                     prefab->AttachToScene(m_ActiveScene);
                 }
                 break;
+                case AssetType::SkyLight:
+				{
+                    auto environment = m_ActiveScene->GetEnvironment();
+                    environment->CurrentSkyType = SkyType::SkyboxHDR;
+                    environment->SkyboxHDR = AssetManager::GetAsset<SkyLight>(path);
+				}
                 case AssetType::None: LOG_CORE_ERROR("Unknown Asset type!"); break;
                 default: break;
             }
@@ -325,6 +328,7 @@ void AppLayer::OnImGuiRender()
     cameraView[0][1] = -cameraView[0][1];
     cameraView[1][1] = -cameraView[1][1];
     cameraView[2][1] = -cameraView[2][1];
+	cameraView[3][1] = -cameraView[3][1];
 
     ImGuizmo::SetOrthographic(false);
     ImGuizmo::SetDrawlist();

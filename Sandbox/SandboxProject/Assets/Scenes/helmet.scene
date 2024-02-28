@@ -1,0 +1,71 @@
+Scene: Untitled
+Environment:
+  SkyType: Skybox HDR
+  AmbientColor: [1, 1, 1, 1]
+  BloomEnabled: false
+  Exposure: 1.20000005
+  BloomIntensity: 0.0399999991
+  HDRIHandle: 6444620993718877029
+  SurfaceRadius: 6360000
+  AtmosphereRadius: 6380000
+  RayleighScattering: [5.80000005e-06, 1.35e-05, 3.3100001e-05]
+  MieScattering: [1.99999995e-05, 1.99999995e-05, 1.99999995e-05]
+  SunIntensity: 0.300000012
+  CenterPoint: [0, -6360000, 0]
+  SunDirection: [0.200000003, 0.959169984, 0.200000003]
+Entities:
+  - Entity: 12345568015291314866
+    TagComponent:
+      Tag: Box
+    ParentComponent:
+      Parent: 4569487209480230364
+      HasParent: false
+      Children:
+        []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [6.44949532, 0.261532009, 6.24367094]
+      LocalTranslation: [0, 0, 0]
+      LocalRotation: [0, 0, 0]
+      LocalScale: [1, 1, 1]
+    StaticMeshComponent:
+      Handle: 13417777238487702703
+      MaterialHandle: 17317577943920138267
+  - Entity: 11955605480966377436
+    TagComponent:
+      Tag: Directional Light
+    ParentComponent:
+      Parent: 4074732776629004631
+      HasParent: false
+      Children:
+        []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [-0.0358136371, -0.622329593, 0.106248163]
+      Scale: [0.999999881, 0.999999404, 1.00000012]
+      LocalTranslation: [0, 0, 0]
+      LocalRotation: [0, 0, 0]
+      LocalScale: [1, 1, 1]
+    DirectionalLightComponent:
+      Enabled: true
+      Color: [1, 1, 1]
+      AmbientIntensity: 6.19999981
+  - Entity: 14310200819345253424
+    TagComponent:
+      Tag: Mesh
+    ParentComponent:
+      Parent: 2452124779452757534
+      HasParent: false
+      Children:
+        []
+    TransformComponent:
+      Translation: [0, 1.70943892, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      LocalTranslation: [0, 0, 0]
+      LocalRotation: [0, 0, 0]
+      LocalScale: [1, 1, 1]
+    StaticMeshComponent:
+      Handle: 2574098532903271962
+      MaterialHandle: 7653853389280518481

@@ -147,7 +147,7 @@ float ShadowCalculation(vec4 fragPosLightSpace)
     // get depth of current fragment from light's perspective
     float currentDepth = projCoords.z;
     // check whether current frag pos is in shadow
-    float shadow = currentDepth > closestDepth  ? 1.0 : 0.0;
+    float shadow = currentDepth > closestDepth ? 1.0 : 0.0;
 
     return shadow;
 }
@@ -159,7 +159,7 @@ vec4 calculateFragColor(vec3 albedo, vec3 normal, float metallic, float roughnes
     vec3 R = reflect(-V, N);
 
     // calculate reflectance at normal incidence; if dia-electric (like plastic) use F0 
-    // of 0.04 and if it's a metal, use the albedo color as F0 (metallic workflow)    
+    // of 0.04 and if it's a metal, use the albedo color as F0 (metallic workflow)
     vec3 F0 = vec3(0.04); 
     F0 = mix(F0, albedo, metallic);
 
@@ -169,7 +169,9 @@ vec4 calculateFragColor(vec3 albedo, vec3 normal, float metallic, float roughnes
     // directional light reflection
     {
         vec3 L = normalize(-gDirectionalLight.Direction);
-        vec3 radiance = gDirectionalLight.Color * (1.0f - shadow);
+		shadow += ShadowCalculation(FragPosLightSpace);
+		vec3 ambient = gDirectionalLight.Color;
+        vec3 radiance = ambient * (1.0f - shadow);
         Lo += calcReflectanceEquation(L, V, N, albedo, metallic, roughness) * radiance;
     }
 
@@ -258,7 +260,9 @@ void main() {
 
     //custom_shader
 
-    FragColor = calculateFragColor(albedo, normal, metallic, roughness, ao);
+   FragColor = calculateFragColor(albedo, normal, metallic, roughness, ao);
+
+   //FragColor = texture(shadowMap, FragPosLightSpace.xy);
     
     EntityId = entityId;
 }

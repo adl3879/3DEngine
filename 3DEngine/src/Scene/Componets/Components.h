@@ -197,10 +197,13 @@ struct AnimationControllerComponent
 {
 	Animator *Animator = nullptr;
 	std::vector<Animation *> Animations;
+	std::string CurrentAnimation;
 
 	void AddAnimation(Animation* animation)
 	{
+		static std::string defaultAnimation = animation->GetName();
 		Animations.push_back(animation);
+		CurrentAnimation = defaultAnimation;
 	}
 
 	AnimationControllerComponent() = default;

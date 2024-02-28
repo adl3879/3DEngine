@@ -18,9 +18,6 @@ Texture2DRef cameraSprite = nullptr;
 
 void SceneRenderer::Init()
 {
-    glEnable(GL_DEBUG_OUTPUT);
-    glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
-    glEnable(GL_MULTISAMPLE);
     glEnable(GL_DEPTH_TEST);
     glDepthMask(GL_TRUE);
     glDepthFunc(GL_LEQUAL);
@@ -49,6 +46,7 @@ void SceneRenderer::Init()
     // shadow
     m_ShadowBuffer = std::make_shared<Framebuffer>(false, glm::vec2(2048, 2048));
     m_ShadowBuffer->SetTexture(std::make_shared<Texture2D>(ImageFormat::Depth), GL_DEPTH_ATTACHMENT);
+	m_ShadowBuffer->SetTexture(std::make_shared<Texture2D>(ImageFormat::RGB8), GL_COLOR_ATTACHMENT0);
 
     InfiniteGrid::Init();
     Renderer::Init();
@@ -60,8 +58,7 @@ void SceneRenderer::Cleanup()
 {
 }
 
-void SceneRenderer::BeginRenderScene(const glm::mat4 &projection, const glm::mat4 &view,
-                                     const glm::vec3 &cameraPosition)
+void SceneRenderer::BeginRenderScene(const glm::mat4 &projection, const glm::mat4 &view, const glm::vec3 &cameraPosition)
 {
     m_Projection = projection;
     m_View = view;
@@ -80,11 +77,9 @@ glm::mat4 lightSpaceMatrix = lightProjection * lightView;
 void SceneRenderer::RenderScene(Scene &scene, Framebuffer &framebuffer)
 {
     const auto environment = scene.GetEnvironment();
+	
+	ShadowPass(scene);
 
-    // ShadowPass(scene);
-
-    // shading
-    
     m_ShadingBuffer->Bind();
     m_ShadingBuffer->Clear();
 
@@ -96,6 +91,10 @@ void SceneRenderer::RenderScene(Scene &scene, Framebuffer &framebuffer)
     pbrShader->SetUniform3f("cameraPosition", m_CameraPosition);
     scene.GetLights()->SetLightUniforms(*pbrShader);
     pbrShader->SetUniformMatrix4fv("lightSpaceMatrix", lightSpaceMatrix);
+
+	//auto shadowMapShader = ShaderManager::GetShader("Resources/shaders/shadowMap");
+    pbrShader->SetUniform1i("gShadowMap", 8);
+    m_ShadowFBO.BindForReading(GL_TEXTURE8);
 
     if (environment->SkyboxHDR) environment->SkyboxHDR->BindMaps();
 
@@ -194,7 +193,7 @@ void SceneRenderer::RenderScene(Scene &scene, Framebuffer &framebuffer)
     m_ShadingBuffer->Unbind();
     
     Texture2DRef finalOutput = m_ShadingBuffer->GetTexture();
-    environment->Bloom->RenderBloomTexture(finalOutput->GetRendererID(), 0.005);
+    //environment->Bloom->RenderBloomTexture(finalOutput->GetRendererID(), 0.005);
 
     framebuffer.Bind();
     framebuffer.Clear();
@@ -220,16 +219,41 @@ void SceneRenderer::RenderScene(Scene &scene, Framebuffer &framebuffer)
     m_ShadingBuffer->QueueResize(framebuffer.GetSize());
     m_OutlineBuffer->QueueResize(framebuffer.GetSize());
     m_Edge->QueueResize(framebuffer.GetSize());
-    // m_ShadowBuffer->QueueResize(framebuffer.GetSize());
+	m_ShadowBuffer->QueueResize(framebuffer.GetSize());
 }
 
 void SceneRenderer::ShadowPass(Scene &scene)
 {
+	m_ShadowFBO.BindForWriting();
+    glClear(GL_DEPTH_BUFFER_BIT);
+
+	auto shadowMapShader = ShaderManager::GetShader("Resources/shaders/shadowMap");
+	shadowMapShader->Bind();
+	shadowMapShader->SetUniformMatrix4fv("lightSpaceMatrix", lightSpaceMatrix);
+
+	auto view = scene.GetRegistry().view<StaticMeshComponent, TransformComponent, VisibilityComponent>();
+	for (auto& e : view)
+	{
+		auto [mesh, transform, visibility] = view.get<StaticMeshComponent, TransformComponent, VisibilityComponent>(e);
+
+		if (!visibility.IsVisible) continue;
+		if (mesh.Handle == 0) continue;
+
+		const auto &asset = AssetManager::GetAsset<Mesh>(mesh.Handle);
+		for (const auto& m : asset->StaticMeshes)
+		{
+			auto trnsfrm = transform.GetTransform();
+			Renderer::SubmitMesh(std::make_shared<StaticMesh>(m), nullptr, trnsfrm, static_cast<int>(e));
+		}
+	}
+	Renderer::Flush(shadowMapShader, false);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 void SceneRenderer::EnvironmentPass(Scene &scene)
 {
-    auto environment = scene.GetEnvironment();
+    const auto& environment = scene.GetEnvironment();
 
     if (environment->CurrentSkyType == SkyType::ClearColor)
     {
@@ -238,7 +262,7 @@ void SceneRenderer::EnvironmentPass(Scene &scene)
     }
     else if (environment->CurrentSkyType == SkyType::ProceduralSky)
     {
-        environment->ProceduralSkybox->Draw(m_Projection, m_View);
+        //environment->ProceduralSkybox->Draw(m_Projection, m_View);
     }
     else if (environment->SkyboxHDR != nullptr)
     {
@@ -250,4 +274,6 @@ void SceneRenderer::EnvironmentPass(Scene &scene)
         else scene.GetEnvironment()->SkyboxHDR->Destroy();
     }
 }
+
+void SceneRenderer::LightingPass(Scene &scene) {}
 } // namespace Engine

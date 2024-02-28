@@ -11,6 +11,9 @@ AssetRegistry:
   - Handle: 725312146923659195
     FilePath: Models/Sponza/3371964815757888145.jpg
     Type: AssetType::Texture2D
+  - Handle: 811226993406210552
+    FilePath: Scenes/helmet.scene
+    Type: AssetType::Scene
   - Handle: 887968888611363110
     FilePath: Models/Sponza/14267839433702832875.jpg
     Type: AssetType::Texture2D
@@ -107,6 +110,9 @@ AssetRegistry:
   - Handle: 6087381225305174417
     FilePath: Models/Sponza/16885566240357350108.jpg
     Type: AssetType::Texture2D
+  - Handle: 6203301553567665145
+    FilePath: Textures/hdr/Stonewall_Ref.hdr
+    Type: AssetType::SkyLight
   - Handle: 6337894435733611648
     FilePath: Textures/rustediron2_metallic.png
     Type: AssetType::Texture2D
@@ -149,15 +155,15 @@ AssetRegistry:
   - Handle: 8825612763546943016
     FilePath: Models/Sponza/Sponza.gltf
     Type: AssetType::Mesh
+  - Handle: 9041106750046107101
+    FilePath: Scripts/Player.cs
+    Type: AssetType::NetScript
   - Handle: 9385591934404247738
     FilePath: Models/Sponza/6667038893015345571.jpg
     Type: AssetType::Texture2D
   - Handle: 9598465756211304655
     FilePath: Models/Sponza/4675343432951571524.jpg
     Type: AssetType::Texture2D
-  - Handle: 10038642935892783875
-    FilePath: Scenes/Sponza.scene
-    Type: AssetType::Scene
   - Handle: 10347450720273173581
     FilePath: Models/Sponza/white.png
     Type: AssetType::Texture2D
@@ -176,9 +182,6 @@ AssetRegistry:
   - Handle: 10822896964247100816
     FilePath: Models/SciFiHelmet_BaseColor.png
     Type: AssetType::Texture2D
-  - Handle: 11994427114307344156
-    FilePath: Scenes/sponza.scene
-    Type: AssetType::Scene
   - Handle: 12032699351146441806
     FilePath: Models/Animated/textures/Erika_Archer_Clothes_diffuse.png
     Type: AssetType::Texture2D
@@ -212,6 +215,9 @@ AssetRegistry:
   - Handle: 14066368724589909120
     FilePath: Models/Sponza/4601176305987539675.jpg
     Type: AssetType::Texture2D
+  - Handle: 14255255086594527687
+    FilePath: Textures/hdr/ballroom_4k.hdr
+    Type: AssetType::SkyLight
   - Handle: 14327912926568539798
     FilePath: Models/Sponza/11490520546946913238.jpg
     Type: AssetType::Texture2D

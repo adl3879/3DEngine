@@ -336,16 +336,16 @@ void Scene::OnRuntimeUpdate(float dt)
                 {
                     m_MainCamera = cameraComponent.Camera;
                     m_MainCamera->OnWindowResize(m_ViewportSize.x, m_ViewportSize.y);
+                    break;
                 }
             }
         }
-    }
-
-    if (m_MainCamera != nullptr)
-    {
-        m_SceneRenderer->BeginRenderScene(m_MainCamera->GetProjectionMatrix(), m_MainCamera->GetViewMatrix(),
-                                          m_MainCamera->GetPosition());
-        m_SceneRenderer->RenderScene(*this, *m_Framebuffer);
+		const auto projection = m_MainCamera ? m_MainCamera->GetProjectionMatrix() : glm::mat4(0.0f);
+		const auto view = m_MainCamera ? m_MainCamera->GetViewMatrix() : glm::mat4(0.0f);
+		const auto position = m_MainCamera ? m_MainCamera->GetPosition() : glm::vec3(0.0f);
+   
+		m_SceneRenderer->BeginRenderScene(projection, view, position);
+		m_SceneRenderer->RenderScene(*this, *m_Framebuffer);
     }
 }
 
@@ -357,6 +357,7 @@ void Scene::OnUpdateEditor(float dt, EditorCamera &camera)
     m_SceneRenderer->BeginRenderScene(projection, view, camera.GetPosition());
     m_SceneRenderer->RenderScene(*this, *m_Framebuffer);
 }
+
 void Scene::GenerateNETSolution() { ScriptingEngineNet::Get().GenerateSolution(); }
 
 void Scene::InitTextEditor(const std::filesystem::path &filepath)
