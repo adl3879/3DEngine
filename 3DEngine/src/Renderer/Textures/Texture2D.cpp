@@ -126,8 +126,6 @@ void Texture2D::SetData(Buffer data)
 
 void Texture2D::Bind(uint32_t slot) const
 {
-    // bind at slot
-	//glBindTextureUnit(slot, m_RendererID);
 	glActiveTexture(GL_TEXTURE0 + slot);
 	glBindTexture(GL_TEXTURE_2D, m_RendererID);
 }

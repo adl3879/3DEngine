@@ -23,11 +23,6 @@ void SceneRenderer::Init()
     glDepthFunc(GL_LEQUAL);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    auto pbrShader = ShaderManager::GetShader("Resources/shaders/PBR");
-    pbrShader->SetUniform1i("irradianceMap", 0);
-    pbrShader->SetUniform1i("prefilterMap", 1);
-    pbrShader->SetUniform1i("brdfLUT", 2);
-
     // hdr buffer
     m_ShadingBuffer = std::make_shared<Framebuffer>(false, glm::vec2(1280, 720));
     m_ShadingBuffer->SetTexture(std::make_shared<Texture2D>(ImageFormat::Depth), GL_DEPTH_ATTACHMENT);
@@ -43,10 +38,8 @@ void SceneRenderer::Init()
     m_Edge->SetTexture(std::make_shared<Texture2D>(ImageFormat::Depth), GL_DEPTH_ATTACHMENT);
     m_Edge->SetTexture(std::make_shared<Texture2D>(ImageFormat::RGBA8), GL_COLOR_ATTACHMENT0);
 
-    // shadow
-    m_ShadowBuffer = std::make_shared<Framebuffer>(false, glm::vec2(2048, 2048));
-    m_ShadowBuffer->SetTexture(std::make_shared<Texture2D>(ImageFormat::Depth), GL_DEPTH_ATTACHMENT);
-	m_ShadowBuffer->SetTexture(std::make_shared<Texture2D>(ImageFormat::RGB8), GL_COLOR_ATTACHMENT0);
+	m_ShadowBuffer = std::make_shared<Framebuffer>(false, glm::vec2(2048, 2048));
+	m_ShadowBuffer->SetTexture(std::make_shared<Texture2D>(ImageFormat::Depth), GL_DEPTH_ATTACHMENT);
 
     InfiniteGrid::Init();
     Renderer::Init();
@@ -92,10 +85,6 @@ void SceneRenderer::RenderScene(Scene &scene, Framebuffer &framebuffer)
     scene.GetLights()->SetLightUniforms(*pbrShader);
     pbrShader->SetUniformMatrix4fv("lightSpaceMatrix", lightSpaceMatrix);
 
-	//auto shadowMapShader = ShaderManager::GetShader("Resources/shaders/shadowMap");
-    pbrShader->SetUniform1i("gShadowMap", 8);
-    m_ShadowFBO.BindForReading(GL_TEXTURE8);
-
     if (environment->SkyboxHDR) environment->SkyboxHDR->BindMaps();
 
     auto view = scene.GetRegistry().view<StaticMeshComponent, TransformComponent, VisibilityComponent>();
@@ -121,7 +110,10 @@ void SceneRenderer::RenderScene(Scene &scene, Framebuffer &framebuffer)
             Renderer::SubmitMesh(std::make_shared<StaticMesh>(m), mat, trnsfrm, static_cast<int>(e));
         }
     }
-    Renderer::Flush(pbrShader, false);
+	pbrShader->SetUniform1i("shadowMap", 8);
+    //m_ShadowFBO.BindForReading(GL_TEXTURE8);
+    m_ShadowBuffer->GetTexture(GL_DEPTH_ATTACHMENT)->Bind(8);
+	Renderer::Flush(pbrShader, false);
 
 	// skinned meshes
 	auto skinnedShader = ShaderManager::GetShader("Resources/shaders/skinned");
@@ -193,7 +185,7 @@ void SceneRenderer::RenderScene(Scene &scene, Framebuffer &framebuffer)
     m_ShadingBuffer->Unbind();
     
     Texture2DRef finalOutput = m_ShadingBuffer->GetTexture();
-    //environment->Bloom->RenderBloomTexture(finalOutput->GetRendererID(), 0.005);
+    environment->Bloom->RenderBloomTexture(finalOutput->GetRendererID(), 0.005);
 
     framebuffer.Bind();
     framebuffer.Clear();
@@ -209,6 +201,7 @@ void SceneRenderer::RenderScene(Scene &scene, Framebuffer &framebuffer)
     quadShader->SetUniform1i("bloomEnabled", environment->BloomEnabled);
 
     finalOutput->Bind(0);
+	//m_ShadowFBO.BindForReading(GL_TEXTURE0);
     glBindTextureUnit(1, environment->Bloom->BloomTexture());
     m_Edge->GetTexture()->Bind(2);
 
@@ -224,8 +217,10 @@ void SceneRenderer::RenderScene(Scene &scene, Framebuffer &framebuffer)
 
 void SceneRenderer::ShadowPass(Scene &scene)
 {
-	m_ShadowFBO.BindForWriting();
-    glClear(GL_DEPTH_BUFFER_BIT);
+	//m_ShadowFBO.BindForWriting();
+    //glClear(GL_DEPTH_BUFFER_BIT);
+	m_ShadowBuffer->Bind();
+	m_ShadowBuffer->Clear();
 
 	auto shadowMapShader = ShaderManager::GetShader("Resources/shaders/shadowMap");
 	shadowMapShader->Bind();
@@ -243,12 +238,13 @@ void SceneRenderer::ShadowPass(Scene &scene)
 		for (const auto& m : asset->StaticMeshes)
 		{
 			auto trnsfrm = transform.GetTransform();
-			Renderer::SubmitMesh(std::make_shared<StaticMesh>(m), nullptr, trnsfrm, static_cast<int>(e));
+			auto mat = std::make_shared<Material>();
+            Renderer::SubmitMesh(std::make_shared<StaticMesh>(m), mat, trnsfrm);
 		}
 	}
 	Renderer::Flush(shadowMapShader, false);
 
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	m_ShadowBuffer->Unbind();
 }
 
 void SceneRenderer::EnvironmentPass(Scene &scene)

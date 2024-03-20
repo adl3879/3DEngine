@@ -18,8 +18,6 @@ uniform mat4 lightSpaceMatrix;
 
 void main()
 {
-    //custom_shader
-
     mat3 normalMatrix = mat3(transpose(inverse(model)));
     Normal = normalMatrix * aNormal;
 
@@ -29,10 +27,10 @@ void main()
     TBN = mat3(T, B, N);
 	
     vec3 currentPos = vec3(model * vec4(aPos, 1.0f));
-    gl_Position = projectionViewMatrix * vec4(currentPos, 1.0f);
 
     FragPosLightSpace = lightSpaceMatrix * vec4(currentPos, 1.0f);
-
     TexCoords = aUV;
-    WorldPosition = vec3(model * vec4(aPos, 1.0f));
+    WorldPosition = currentPos;
+
+    gl_Position = projectionViewMatrix * vec4(currentPos, 1.0f);
 }

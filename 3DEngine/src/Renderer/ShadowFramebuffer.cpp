@@ -54,7 +54,7 @@ void ShadowMapFBO::BindForWriting()
 
 void ShadowMapFBO::BindForReading(int textureUnit) 
 {
-	glActiveTexture(GL_TEXTURE0 + textureUnit);
+	glActiveTexture(textureUnit);
 	glBindTexture(GL_TEXTURE_2D, m_ShadowMap);
 }
 } // namespace Engine

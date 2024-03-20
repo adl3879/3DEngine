@@ -169,7 +169,7 @@ vec4 calculateFragColor(vec3 albedo, vec3 normal, float metallic, float roughnes
     // directional light reflection
     {
         vec3 L = normalize(-gDirectionalLight.Direction);
-		shadow += ShadowCalculation(FragPosLightSpace);
+		shadow = ShadowCalculation(FragPosLightSpace);
 		vec3 ambient = gDirectionalLight.Color;
         vec3 radiance = ambient * (1.0f - shadow);
         Lo += calcReflectanceEquation(L, V, N, albedo, metallic, roughness) * radiance;
@@ -258,11 +258,7 @@ void main() {
     normal = normal * 2.0 - 1.0;
     normal = TBN * normalize(normal); // add TBN
 
-    //custom_shader
-
-   FragColor = calculateFragColor(albedo, normal, metallic, roughness, ao);
-
-   //FragColor = texture(shadowMap, FragPosLightSpace.xy);
-    
-    EntityId = entityId;
+    FragColor = calculateFragColor(albedo, normal, metallic, roughness, ao);
+   
+   EntityId = entityId;
 }
