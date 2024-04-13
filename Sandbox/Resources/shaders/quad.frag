@@ -43,9 +43,6 @@ void main()
   
 	vec4 outlineColor = texture(outlineTexture, TexCoords);
 
-	//FragColor = mix(vec4(result, 1.0), outlineColor, outlineColor.a);
-	FragColor = texture(scene, TexCoords);
-
-//	float depthValue = texture(scene, TexCoords).r;
-//	FragColor = vec4(vec3(depthValue), 1.0);
+	FragColor = vec4(result, 1.0);
+	//FragColor = texture(scene, TexCoords);
 }

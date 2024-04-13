@@ -18,7 +18,12 @@ class Camera
     virtual glm::mat4 GetProjectionMatrix() = 0;
     virtual glm::mat4 GetViewMatrix() = 0;
 
-    virtual Texture2DRef GetPreviewTexture(Scene *scene) { return nullptr; }
+	virtual float GetNearClip() const = 0;
+	virtual float GetFarClip() const = 0;
+	virtual float GetFov() const = 0;
+	virtual float GetAspectRatio() const = 0;
+
+    virtual TextureRef GetPreviewTexture(Scene *scene) { return nullptr; }
 };
 using CameraRef = std::shared_ptr<Camera>;
 } // namespace Engine

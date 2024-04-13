@@ -14,58 +14,40 @@ Environment:
   CenterPoint: [0, -6360000, 0]
   SunDirection: [0.200000003, 0.959169984, 0.200000003]
 Entities:
-  - Entity: 12345568015291314866
-    TagComponent:
-      Tag: Box
-    ParentComponent:
-      Parent: 4569487209480230364
-      HasParent: false
-      Children:
-        []
-    TransformComponent:
-      Translation: [0, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [8.87083721, 0.0595312491, 8.08232594]
-      LocalTranslation: [0, 0, 0]
-      LocalRotation: [0, 0, 0]
-      LocalScale: [1, 1, 1]
-    StaticMeshComponent:
-      Handle: 13417777238487702703
-      MaterialHandle: 17317577943920138267
-  - Entity: 11955605480966377436
+  - Entity: 8154603718378809904
     TagComponent:
       Tag: Directional Light
     ParentComponent:
-      Parent: 4074732776629004631
+      Parent: 7300221409507084861
       HasParent: false
       Children:
         []
     TransformComponent:
       Translation: [0, 0, 0]
-      Rotation: [-0.0358136371, -0.622329593, 0.106248163]
-      Scale: [0.999999881, 0.999999404, 1.00000012]
+      Rotation: [0.964949429, -0.252250165, -3.84703647e-08]
+      Scale: [1, 1.00000107, 1.00000012]
       LocalTranslation: [0, 0, 0]
       LocalRotation: [0, 0, 0]
       LocalScale: [1, 1, 1]
     DirectionalLightComponent:
       Enabled: true
-      Color: [1, 1, 1]
-      AmbientIntensity: 17.7000008
-  - Entity: 14310200819345253424
+      Color: [0.988472641, 0.988472641, 0.988472641]
+      AmbientIntensity: 6.0999999
+  - Entity: 8416703305969476467
     TagComponent:
-      Tag: Mesh
+      Tag: Sponza
     ParentComponent:
-      Parent: 2452124779452757534
+      Parent: 17896495199887512811
       HasParent: false
       Children:
         []
     TransformComponent:
-      Translation: [0, 1.70943892, 0]
+      Translation: [0, 0, 0]
       Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
+      Scale: [0.00100000005, 0.00100000005, 0.00100000005]
       LocalTranslation: [0, 0, 0]
       LocalRotation: [0, 0, 0]
       LocalScale: [1, 1, 1]
     StaticMeshComponent:
-      Handle: 2574098532903271962
-      MaterialHandle: 7653853389280518481
+      Handle: 8825612763546943016
+      MaterialHandle: 1558328011788760352

@@ -18,7 +18,13 @@ class EditorCamera : public Camera
     glm::mat4 GetProjectionMatrix() override { return m_ProjectionMatrix; }
     glm::mat4 GetViewMatrix() override { return m_ViewMatrix; }
 
+	float GetNearClip() const override { return m_NearClip; }
+	float GetFarClip() const override { return m_FarClip; }
+	float GetFov() const override { return m_FOV; }
+	float GetAspectRatio() const override { return m_AspectRatio; }
+
     void OnUpdate(float ts);
+	void Reset(float fov, float aspectRatio, float nearClip, float farClip);
 
     inline float GetDistance() const { return m_Distance; }
     inline void SetDistance(float distance) { m_Distance = distance; }

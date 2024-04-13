@@ -1,11 +1,10 @@
 Scene: Untitled
 Environment:
-  SkyType: Skybox HDR
+  SkyType: Procedural Sky
   AmbientColor: [1, 1, 1, 1]
   BloomEnabled: false
   Exposure: 1.20000005
   BloomIntensity: 0.0399999991
-  HDRIHandle: 6444620993718877029
   SurfaceRadius: 6360000
   AtmosphereRadius: 6380000
   RayleighScattering: [5.80000005e-06, 1.35e-05, 3.3100001e-05]
@@ -14,58 +13,58 @@ Environment:
   CenterPoint: [0, -6360000, 0]
   SunDirection: [0.200000003, 0.959169984, 0.200000003]
 Entities:
-  - Entity: 12345568015291314866
+  - Entity: 10006436417126132612
     TagComponent:
       Tag: Box
     ParentComponent:
-      Parent: 4569487209480230364
+      Parent: 5095541543752323941
       HasParent: false
       Children:
         []
     TransformComponent:
-      Translation: [0, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [8.87083721, 0.0595312491, 8.08232594]
+      Translation: [0.638402462, 1.21249497, 0.336143821]
+      Rotation: [-3.14159226, 0.484654516, 3.14159226]
+      Scale: [0.999998987, 1, 0.999998987]
       LocalTranslation: [0, 0, 0]
       LocalRotation: [0, 0, 0]
       LocalScale: [1, 1, 1]
     StaticMeshComponent:
       Handle: 13417777238487702703
-      MaterialHandle: 17317577943920138267
-  - Entity: 11955605480966377436
+      MaterialHandle: 7518296766215964375
+  - Entity: 12756442649900175449
     TagComponent:
       Tag: Directional Light
     ParentComponent:
-      Parent: 4074732776629004631
+      Parent: 2117072397340974561
       HasParent: false
       Children:
         []
     TransformComponent:
       Translation: [0, 0, 0]
-      Rotation: [-0.0358136371, -0.622329593, 0.106248163]
-      Scale: [0.999999881, 0.999999404, 1.00000012]
+      Rotation: [-1.53861463, -1.00288105, -2.06091952]
+      Scale: [1.00000024, 1.00000191, 1.00000083]
       LocalTranslation: [0, 0, 0]
       LocalRotation: [0, 0, 0]
       LocalScale: [1, 1, 1]
     DirectionalLightComponent:
       Enabled: true
       Color: [1, 1, 1]
-      AmbientIntensity: 17.7000008
-  - Entity: 14310200819345253424
+      AmbientIntensity: 5.80000019
+  - Entity: 12798726833840140336
     TagComponent:
-      Tag: Mesh
+      Tag: Box
     ParentComponent:
-      Parent: 2452124779452757534
+      Parent: 3723180441450957517
       HasParent: false
       Children:
         []
     TransformComponent:
-      Translation: [0, 1.70943892, 0]
+      Translation: [0, 0, 0]
       Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
+      Scale: [7.45722008, 0.0690955669, 8.98151016]
       LocalTranslation: [0, 0, 0]
       LocalRotation: [0, 0, 0]
       LocalScale: [1, 1, 1]
     StaticMeshComponent:
-      Handle: 2574098532903271962
-      MaterialHandle: 7653853389280518481
+      Handle: 13417777238487702703
+      MaterialHandle: 5809825965166958063

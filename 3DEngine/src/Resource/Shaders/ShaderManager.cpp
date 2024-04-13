@@ -9,7 +9,10 @@ Shader *ShaderManager::GetShader(const std::string &path)
 {
     if (m_Shaders.find(path) == m_Shaders.end())
     {
-        m_Shaders[path] = std::make_unique<Shader>(path + ".vert", path + ".frag");
+        auto geometryShaderPath = path + ".geom";
+        m_Shaders[path] = std::filesystem::exists(geometryShaderPath)
+                              ? std::make_unique<Shader>(path + ".vert", path + ".frag", geometryShaderPath)
+                              : std::make_unique<Shader>(path + ".vert", path + ".frag");
     }
 
     return m_Shaders[path].get();

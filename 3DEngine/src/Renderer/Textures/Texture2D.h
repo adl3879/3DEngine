@@ -15,21 +15,21 @@ public:
     Texture2D(ImageFormat format, int with = 1, int height = 1);
     ~Texture2D();
 
-    virtual void SetData(Buffer data) override;
-    virtual void Bind(uint32_t slot = 0) const override;
-    virtual void Unbind() const override;
+    void SetData(Buffer data) override;
+    void Bind(uint32_t slot = 0) const override;
+    void Unbind() const override;
 
-    virtual glm::vec2 GetSize() const override { return glm::vec2(m_Specification.Width, m_Specification.Height); }
-    virtual uint32_t GetWidth() const override { return m_Specification.Width; }
-    virtual uint32_t GetHeight() const override { return m_Specification.Height; }
-    virtual uint32_t GetRendererID() const override { return m_RendererID; }
-    virtual const TextureSpecification &GetSpecification() const override { return m_Specification; }
+    glm::vec2 GetSize() const override { return glm::vec2(m_Specification.Width, m_Specification.Height); }
+    uint32_t GetWidth() const override { return m_Specification.Width; }
+    uint32_t GetHeight() const override { return m_Specification.Height; }
+    uint32_t GetRendererID() const override { return m_RendererID; }
+    const TextureSpecification &GetSpecification() const override { return m_Specification; }
 
     static AssetType GetStaticType() { return AssetType::Texture2D; }
-    virtual AssetType GetType() const override { return GetStaticType(); }
+    AssetType GetType() const override { return GetStaticType(); }
 
-    void Resize(glm::vec2 size);
-    void AttachToFramebuffer(uint32_t attachment);
+    void Resize(glm::vec2 size) override;
+    void AttachToFramebuffer(uint32_t attachment) override;
 
 private:
     TextureSpecification m_Specification;

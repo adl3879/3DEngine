@@ -11,10 +11,16 @@
 #include "PhysicsComponents.h"
 #include "PhysicsManager.h"
 #include "Mesh.h"
+#include "Texture2DArray.h"
 
 namespace Engine
 {
 Texture2DRef cameraSprite = nullptr;
+
+float cameraFarPlane = 500.0f;
+std::vector<float> shadowCascadeLevels{cameraFarPlane / 50.0f, cameraFarPlane / 25.0f, cameraFarPlane / 10.0f,
+                                       cameraFarPlane / 2.0f};
+unsigned int matricesUBO;
 
 void SceneRenderer::Init()
 {
@@ -38,37 +44,44 @@ void SceneRenderer::Init()
     m_Edge->SetTexture(std::make_shared<Texture2D>(ImageFormat::Depth), GL_DEPTH_ATTACHMENT);
     m_Edge->SetTexture(std::make_shared<Texture2D>(ImageFormat::RGBA8), GL_COLOR_ATTACHMENT0);
 
-	m_ShadowBuffer = std::make_shared<Framebuffer>(false, glm::vec2(2048, 2048));
-	m_ShadowBuffer->SetTexture(std::make_shared<Texture2D>(ImageFormat::Depth), GL_DEPTH_ATTACHMENT);
+	m_ShadowBuffer = std::make_shared<Framebuffer>(false, glm::vec2(4096, 4096));
+	m_ShadowBuffer->SetTexture(std::make_shared<Texture2DArray>(ImageFormat::Depth), GL_DEPTH_ATTACHMENT);
 
     InfiniteGrid::Init();
     Renderer::Init();
 
     cameraSprite = TextureImporter::LoadTexture2D("Resources/Textures/camera.png");
+
+	// configure UBO
+    // --------------------
+    glGenBuffers(1, &matricesUBO);
+    glBindBuffer(GL_UNIFORM_BUFFER, matricesUBO);
+    glBufferData(GL_UNIFORM_BUFFER, sizeof(glm::mat4x4) * 16, nullptr, GL_STATIC_DRAW);
+    glBindBufferBase(GL_UNIFORM_BUFFER, 0, matricesUBO);
+    glBindBuffer(GL_UNIFORM_BUFFER, 0);
 }
 
 void SceneRenderer::Cleanup()
 {
 }
 
-void SceneRenderer::BeginRenderScene(const glm::mat4 &projection, const glm::mat4 &view, const glm::vec3 &cameraPosition)
+void SceneRenderer::BeginRenderScene()
 {
-    m_Projection = projection;
-    m_View = view;
-    m_CameraPosition = cameraPosition;
-
     RenderCommand::SetClearColor({0.0f, 0.0f, 0.0f});
     RenderCommand::Clear();
 }
 
-float near_plane = 1.0f, far_plane = 7.5f;
-glm::mat4 lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, near_plane, far_plane);
-glm::mat4 lightView =
-    glm::lookAt(glm::vec3(-2.0f, 4.0f, -1.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-glm::mat4 lightSpaceMatrix = lightProjection * lightView;
-
 void SceneRenderer::RenderScene(Scene &scene, Framebuffer &framebuffer)
 {
+    // 0. UBO setup
+    const auto lightMatrices = scene.GetLights()->GetLightSpaceMatrices(scene.GetCamera());
+    glBindBuffer(GL_UNIFORM_BUFFER, matricesUBO);
+    for (size_t i = 0; i < lightMatrices.size(); ++i)
+    {
+        glBufferSubData(GL_UNIFORM_BUFFER, i * sizeof(glm::mat4x4), sizeof(glm::mat4x4), &lightMatrices[i]);
+    }
+    glBindBuffer(GL_UNIFORM_BUFFER, 0);
+
     const auto environment = scene.GetEnvironment();
 	
 	ShadowPass(scene);
@@ -80,10 +93,18 @@ void SceneRenderer::RenderScene(Scene &scene, Framebuffer &framebuffer)
 
     auto pbrShader = ShaderManager::GetShader("Resources/shaders/PBR");
     pbrShader->Bind();
-    pbrShader->SetUniformMatrix4fv("projectionViewMatrix", m_Projection * m_View);
-    pbrShader->SetUniform3f("cameraPosition", m_CameraPosition);
+    pbrShader->SetUniformMatrix4fv("projection", scene.GetCamera().GetProjectionMatrix());
+    pbrShader->SetUniformMatrix4fv("view", scene.GetCamera().GetViewMatrix());
+    pbrShader->SetUniform3f("cameraPosition", scene.GetCamera().GetPosition());
     scene.GetLights()->SetLightUniforms(*pbrShader);
-    pbrShader->SetUniformMatrix4fv("lightSpaceMatrix", lightSpaceMatrix);
+    //pbrShader->SetUniformMatrix4fv("lightSpaceMatrix", scene.GetLights()->CalcLightSpaceMatrix(m_Projection, m_View));
+    pbrShader->SetUniform1f("farPlane", cameraFarPlane);
+    pbrShader->SetUniform1i("cascadeCount", shadowCascadeLevels.size());
+	for (size_t i = 0; i < shadowCascadeLevels.size(); ++i)
+	{
+		pbrShader->SetUniform1f("cascadePlaneDistances[" + std::to_string(i) + "]", shadowCascadeLevels[i]);
+	}
+	
 
     if (environment->SkyboxHDR) environment->SkyboxHDR->BindMaps();
 
@@ -111,17 +132,16 @@ void SceneRenderer::RenderScene(Scene &scene, Framebuffer &framebuffer)
         }
     }
 	pbrShader->SetUniform1i("shadowMap", 8);
-    //m_ShadowFBO.BindForReading(GL_TEXTURE8);
     m_ShadowBuffer->GetTexture(GL_DEPTH_ATTACHMENT)->Bind(8);
 	Renderer::Flush(pbrShader, false);
 
 	// skinned meshes
 	auto skinnedShader = ShaderManager::GetShader("Resources/shaders/skinned");
     skinnedShader->Bind();
-    skinnedShader->SetUniformMatrix4fv("projectionViewMatrix", m_Projection * m_View);
-    skinnedShader->SetUniform3f("cameraPosition", m_CameraPosition);
+    skinnedShader->SetUniformMatrix4fv("projectionViewMatrix", scene.GetCamera().GetProjectionViewMatrix());
+    skinnedShader->SetUniform3f("cameraPosition", scene.GetCamera().GetPosition());
     scene.GetLights()->SetLightUniforms(*skinnedShader);
-    skinnedShader->SetUniformMatrix4fv("lightSpaceMatrix", lightSpaceMatrix);
+    //skinnedShader->SetUniformMatrix4fv("LightSpaceMatrix", scene.GetLights()->CalcLightSpaceMatrix(m_Projection, m_View));
 
     auto skinnedView = scene.GetRegistry().view<SkinnedMeshComponent, AnimationControllerComponent, TransformComponent, VisibilityComponent>();
 	for (auto& e : skinnedView)
@@ -160,7 +180,9 @@ void SceneRenderer::RenderScene(Scene &scene, Framebuffer &framebuffer)
         for (auto &e : camView)
         {
             auto [camera, transform] = camView.get<CameraComponent, TransformComponent>(e);
-            Renderer::DrawCameraFrustum(m_Projection, m_View, transform.GetTransform());
+            Renderer::DrawCameraFrustum(scene.GetCamera().GetProjectionMatrix(),
+                                        scene.GetCamera().GetViewMatrix(),
+                                        transform.GetTransform());
         }
 
         // physics debug
@@ -170,11 +192,14 @@ void SceneRenderer::RenderScene(Scene &scene, Framebuffer &framebuffer)
             for (const auto entity : physxView)
             {
                 const auto ent = Entity{entity, &scene};
-                PhysicsManager::Get().DrawDebug(m_Projection, m_View, ent);
+                PhysicsManager::Get().DrawDebug(scene.GetCamera().GetProjectionMatrix(),
+                                                scene.GetCamera().GetViewMatrix(), ent);
             }
         }
 
-        if (scene.IsGridEnabled()) InfiniteGrid::Draw(m_Projection, m_View, m_CameraPosition);
+        if (scene.IsGridEnabled())
+            InfiniteGrid::Draw(scene.GetCamera().GetProjectionMatrix(), scene.GetCamera().GetViewMatrix(),
+                               scene.GetCamera().GetPosition());
 
         // weird?
         const auto mouse = scene.GetViewportMousePos();
@@ -184,47 +209,54 @@ void SceneRenderer::RenderScene(Scene &scene, Framebuffer &framebuffer)
 
     m_ShadingBuffer->Unbind();
     
-    Texture2DRef finalOutput = m_ShadingBuffer->GetTexture();
+    auto finalOutput = m_ShadingBuffer->GetTexture();
     environment->Bloom->RenderBloomTexture(finalOutput->GetRendererID(), 0.005);
 
     framebuffer.Bind();
     framebuffer.Clear();
+	{
+        auto quadShader = ShaderManager::GetShader("Resources/shaders/quad");
+        quadShader->Bind();
+        quadShader->SetUniform1i("scene", 0);
+        quadShader->SetUniform1i("bloomBlur", 1);
+        quadShader->SetUniform1i("outlineTexture", 2);
 
-    auto quadShader = ShaderManager::GetShader("Resources/shaders/quad");
-    quadShader->Bind();
-    quadShader->SetUniform1i("scene", 0);
-    quadShader->SetUniform1i("bloomBlur", 1);
-    quadShader->SetUniform1i("outlineTexture", 2);
+        quadShader->SetUniform1f("bloomStrength", environment->BloomIntensity);
+        quadShader->SetUniform1f("exposure", environment->Exposure);
+        quadShader->SetUniform1i("bloomEnabled", environment->BloomEnabled);
 
-    quadShader->SetUniform1f("bloomStrength", environment->BloomIntensity);
-    quadShader->SetUniform1f("exposure", environment->Exposure);
-    quadShader->SetUniform1i("bloomEnabled", environment->BloomEnabled);
+        finalOutput->Bind(0);
+        glBindTextureUnit(1, environment->Bloom->BloomTexture());
+        m_Edge->GetTexture()->Bind(2);
 
-    finalOutput->Bind(0);
-	//m_ShadowFBO.BindForReading(GL_TEXTURE0);
-    glBindTextureUnit(1, environment->Bloom->BloomTexture());
-    m_Edge->GetTexture()->Bind(2);
+		/*auto debugQuadDepthShader = ShaderManager::GetShader("Resources/shaders/debugQuadDepth");
+		debugQuadDepthShader->Bind();
+		debugQuadDepthShader->SetUniform1i("depthMap", 0);
+		debugQuadDepthShader->SetUniform1f("near_plane", 1.0f);
+		debugQuadDepthShader->SetUniform1f("far_plane", cameraFarPlane);
+        debugQuadDepthShader->SetUniform1i("layer", 0);
+        m_ShadingBuffer->GetTexture(GL_DEPTH_ATTACHMENT)->Bind(0);*/
 
-    Renderer::DrawQuad();
-
+        Renderer::DrawQuad();
+    }
     framebuffer.Unbind();
 
     m_ShadingBuffer->QueueResize(framebuffer.GetSize());
     m_OutlineBuffer->QueueResize(framebuffer.GetSize());
     m_Edge->QueueResize(framebuffer.GetSize());
-	m_ShadowBuffer->QueueResize(framebuffer.GetSize());
+    m_ShadowBuffer->QueueResize({4096, 4096});
 }
 
 void SceneRenderer::ShadowPass(Scene &scene)
 {
-	//m_ShadowFBO.BindForWriting();
-    //glClear(GL_DEPTH_BUFFER_BIT);
 	m_ShadowBuffer->Bind();
+	glViewport(0, 0, 4096, 4096);
 	m_ShadowBuffer->Clear();
+	RenderCommand::CullFace(RendererEnum::FRONT);
 
 	auto shadowMapShader = ShaderManager::GetShader("Resources/shaders/shadowMap");
 	shadowMapShader->Bind();
-	shadowMapShader->SetUniformMatrix4fv("lightSpaceMatrix", lightSpaceMatrix);
+    //shadowMapShader->SetUniformMatrix4fv("lightSpaceMatrix", scene.GetLights()->CalcLightSpaceMatrix(m_Projection, m_View));
 
 	auto view = scene.GetRegistry().view<StaticMeshComponent, TransformComponent, VisibilityComponent>();
 	for (auto& e : view)
@@ -244,6 +276,7 @@ void SceneRenderer::ShadowPass(Scene &scene)
 	}
 	Renderer::Flush(shadowMapShader, false);
 
+	RenderCommand::CullFace(RendererEnum::BACK);
 	m_ShadowBuffer->Unbind();
 }
 
@@ -265,7 +298,7 @@ void SceneRenderer::EnvironmentPass(Scene &scene)
         if (environment->CurrentSkyType == SkyType::SkyboxHDR)
         {
             scene.GetEnvironment()->SkyboxHDR->BindMaps();
-            environment->SkyboxHDR->Render(m_Projection, m_View);
+            environment->SkyboxHDR->Render(scene.GetCamera().GetProjectionMatrix(), scene.GetCamera().GetViewMatrix());
         }
         else scene.GetEnvironment()->SkyboxHDR->Destroy();
     }

@@ -27,4 +27,8 @@ void TextureHDRI::Bind(uint32_t slot) const
     glBindTexture(GL_TEXTURE_2D, m_RendererID);
 }
 void TextureHDRI::Unbind() const {}
+
+void TextureHDRI::Resize(glm::vec2 size) {}
+
+void TextureHDRI::AttachToFramebuffer(uint32_t attachment) {}
 }

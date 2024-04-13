@@ -21,7 +21,7 @@ class SceneRenderer;
 
 class Scene : public Asset
 {
-  public:
+public:
     Scene();
     explicit Scene(const std::string &name);
     virtual ~Scene();
@@ -101,7 +101,10 @@ class Scene : public Asset
 
     static std::shared_ptr<Scene> Copy(std::shared_ptr<Scene> src);
 
-  private:
+	Camera &GetCamera();
+    auto GetEditorCamera() { return m_EditorCamera; }
+
+private:
     void New(const std::string &name);
 
     bool m_IsPlaying = false;
@@ -120,6 +123,7 @@ class Scene : public Asset
 
     std::shared_ptr<PerspectiveCamera> m_MainCamera;
     std::shared_ptr<EditorCamera> m_EditorCamera;
+
     std::shared_ptr<Light> m_Lights;
     std::unordered_map<std::filesystem::path, ImGuiTextEditorRef> m_TextEditors;
     bool m_IsDebugDraw = false;

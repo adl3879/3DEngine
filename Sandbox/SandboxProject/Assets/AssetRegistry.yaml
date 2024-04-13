@@ -128,6 +128,9 @@ AssetRegistry:
   - Handle: 6487625357323679528
     FilePath: Models/Sponza/6047387724914829168.jpg
     Type: AssetType::Texture2D
+  - Handle: 6678709244239839019
+    FilePath: Scenes/shadow2.scene
+    Type: AssetType::Scene
   - Handle: 7189177021635008695
     FilePath: Models/Suzanne_MetallicRoughness.png
     Type: AssetType::Texture2D
@@ -278,6 +281,9 @@ AssetRegistry:
   - Handle: 17317577943920138267
     FilePath: Materials/test.material
     Type: AssetType::Material
+  - Handle: 17472857312951438516
+    FilePath: Scenes/sponzaaa.scene
+    Type: AssetType::Scene
   - Handle: 17480581904617787709
     FilePath: Models/SciFiHelmet_AmbientOcclusion.png
     Type: AssetType::Texture2D

@@ -49,5 +49,10 @@ class Texture : public Asset
 
     virtual void Bind(uint32_t slot = 0) const = 0;
     virtual void Unbind() const = 0;
+
+	virtual void Resize(glm::vec2 size) = 0;
+    virtual void AttachToFramebuffer(uint32_t attachment) = 0;
 };
+
+using TextureRef = std::shared_ptr<Texture>;
 } // namespace Engine

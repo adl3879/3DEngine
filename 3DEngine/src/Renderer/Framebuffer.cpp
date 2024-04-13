@@ -7,7 +7,7 @@ namespace Engine
 {
 Framebuffer::Framebuffer(bool hasRenderBuffer, glm::vec2 size)
 {
-    m_Textures = std::map<int, Texture2DRef>();
+    m_Textures = std::map<int, TextureRef>();
     m_Size = size;
     m_HasRenderBuffer = hasRenderBuffer;
 
@@ -38,12 +38,12 @@ Framebuffer::~Framebuffer()
 {
 }
 
-Texture2DRef Framebuffer::GetTexture(unsigned int attachment)
+TextureRef Framebuffer::GetTexture(unsigned int attachment)
 {
     return m_Textures[attachment];
 }
 
-void Framebuffer::SetTexture(Texture2DRef texture, unsigned int attachment)
+void Framebuffer::SetTexture(TextureRef texture, unsigned int attachment)
 {
     m_Textures[attachment] = texture;
     // Attach texture to the framebuffer.
@@ -63,6 +63,11 @@ void Framebuffer::SetTexture(Texture2DRef texture, unsigned int attachment)
     }
 
     if (size > 0) glDrawBuffers(size, &keys[0]);
+	else
+	{
+        glDrawBuffer(GL_NONE);
+        glReadBuffer(GL_NONE);
+	}
 
     Unbind();
 }
@@ -105,8 +110,7 @@ void Framebuffer::UpdateSize(glm::vec2 size)
 
     // Delete frame buffer and render buffer.
     glDeleteFramebuffers(1, &m_FramebufferID);
-    if (m_HasRenderBuffer)
-        glDeleteRenderbuffers(1, &m_RenderBuffer);
+    if (m_HasRenderBuffer) glDeleteRenderbuffers(1, &m_RenderBuffer);
 
     // New FBO and RBO.
     glGenFramebuffers(1, &m_FramebufferID);

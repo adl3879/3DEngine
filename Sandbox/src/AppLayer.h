@@ -55,14 +55,14 @@ class AppLayer : public Layer
   private:
     std::shared_ptr<Framebuffer> m_Framebuffer;
 
-    EditorCamera m_EditorCamera;
-
     glm::vec2 m_ViewportSize;
     bool m_ViewportFocused, m_ViewportHovered = false;
     glm::vec2 m_ViewportBounds[2];
 
     // scene
     SceneRef m_ActiveScene, m_EditorScene;
+
+	EditorCamera m_EditorCamera;
 
     // panels
     SceneHierarchyPanel m_SceneHierarchyPanel;

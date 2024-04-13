@@ -26,6 +26,8 @@ enum class RendererEnum
     STREAM_DRAW,
 	BLEND,
 	CULL_FACE,
+	FRONT,
+	BACK
 };
 
 class RenderCommand
@@ -45,5 +47,7 @@ class RenderCommand
     static void DrawLines(int first, int count);
     static void DrawLineLoop(int first, int count);
     static void DrawLineStrip(int first, int count);
+
+	static void CullFace(const RendererEnum face);
 };
 } // namespace Engine

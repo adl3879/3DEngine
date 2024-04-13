@@ -14,7 +14,7 @@ PerspectiveCamera::PerspectiveCamera()
 {
     m_PerspectiveVerticalFOV = glm::radians(-45.0f);
     m_PerspectiveNearClip = 0.1f;
-    m_PerspectiveFarClip = 100.0f;
+    m_PerspectiveFarClip = 500.0f;
 
     m_Framebuffer = std::make_shared<Framebuffer>(true, glm::vec2{1280 / 2, 720 / 2});
     m_Framebuffer->SetTexture(std::make_shared<Texture2D>(ImageFormat::Depth), GL_DEPTH_ATTACHMENT);
@@ -66,9 +66,9 @@ glm::mat4 PerspectiveCamera::GetViewMatrix()
     return m_ViewMatrix;
 }
 
-Texture2DRef PerspectiveCamera::GetPreviewTexture(Scene *scene)
+TextureRef PerspectiveCamera::GetPreviewTexture(Scene *scene)
 {
-    m_SceneRenderer->BeginRenderScene(GetProjectionMatrix(), GetViewMatrix(), GetPosition());
+    m_SceneRenderer->BeginRenderScene();
     m_SceneRenderer->RenderScene(*scene, *m_Framebuffer);
 
     return m_Framebuffer->GetTexture();

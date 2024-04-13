@@ -42,7 +42,7 @@ struct SpotLight
 
 class Light
 {
-  public:
+public:
     Light() = default;
     virtual ~Light() = default;
 
@@ -60,7 +60,13 @@ class Light
     int GetNumPointLights() { return m_PointLightPropsMap.size(); }
     int GetNumSpotLights() { return m_SpotLightPropsMap.size(); }
 
-  public:
+    std::vector<glm::mat4> GetLightSpaceMatrices(Camera &camera);
+
+private:
+	std::vector<glm::vec4> GetFrustumCornersWorldSpace(const glm::mat4 &proj, const glm::mat4 &view);
+    glm::mat4 CalcLightSpaceMatrix(Camera &camera, const float nearPlane, const float farPlane);
+
+public:
     DirectionalLight *m_DirectionalLightProps = nullptr;
     std::map<int, PointLight *> m_PointLightPropsMap;
     std::map<int, SpotLight *> m_SpotLightPropsMap;

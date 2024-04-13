@@ -55,7 +55,7 @@ class Bloom
     inline unsigned int GetIteration() const { return m_Iteration; }
 
     void SetSource(Texture2DRef source);
-    Texture2DRef GetOutput() const { return m_FinalFB->GetTexture(); }
+    TextureRef GetOutput() const { return m_FinalFB->GetTexture(); }
 };
 
 using BloomRef = std::shared_ptr<Bloom>;

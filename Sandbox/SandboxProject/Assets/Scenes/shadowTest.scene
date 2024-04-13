@@ -14,7 +14,7 @@ Environment:
   CenterPoint: [0, -6360000, 0]
   SunDirection: [0.200000003, 0.959169984, 0.200000003]
 Entities:
-  - Entity: 2293074815378250908
+  - Entity: 13220350932358489537
     TagComponent:
       Tag: Box
     ParentComponent:
@@ -23,15 +23,130 @@ Entities:
       Children:
         []
     TransformComponent:
-      Translation: [-1.86264515e-09, 1.86264515e-09, 9.31322575e-10]
-      Rotation: [-3.14159203, -0.351783782, -3.1415925]
-      Scale: [8.54851723, 0.125188053, 8.71766853]
+      Translation: [0.428983569, 8.48272975e-07, 1.16873038]
+      Rotation: [-3.14159226, 0.00962748937, -3.14159179]
+      Scale: [8.54844189, 0.125188053, 8.7174902]
       LocalTranslation: [0, 0, 0]
       LocalRotation: [0, 0, 0]
       LocalScale: [1, 1, 1]
     StaticMeshComponent:
       Handle: 13417777238487702703
       MaterialHandle: 18131998603898879350
+    RigidBodyComponent:
+      Mass: 1
+      MotionType: Static
+      LinearDamping: 0.0500000007
+      AngularDamping: 0.0500000007
+      IsKinematic: false
+      UseGravity: true
+    BoxColliderComponent:
+      Size: [0.5, 0.5, 0.5]
+      IsTrigger: false
+  - Entity: 6589559459664619049
+    TagComponent:
+      Tag: Box
+    ParentComponent:
+      Parent: 17245402586165565992
+      HasParent: false
+      Children:
+        []
+    TransformComponent:
+      Translation: [-1.20196354, 3.07160473, 0.890244663]
+      Rotation: [-2.10840058, 0.0921933502, 1.61875713]
+      Scale: [0.999999166, 0.999999404, 0.999965549]
+      LocalTranslation: [0, 0, 0]
+      LocalRotation: [0, 0, 0]
+      LocalScale: [1, 1, 1]
+    StaticMeshComponent:
+      Handle: 13417777238487702703
+      MaterialHandle: 18131998603898879350
+    RigidBodyComponent:
+      Mass: 1
+      MotionType: Dynamic
+      LinearDamping: 0.0500000007
+      AngularDamping: 0.0500000007
+      IsKinematic: false
+      UseGravity: true
+    BoxColliderComponent:
+      Size: [0.5, 0.5, 0.5]
+      IsTrigger: false
+  - Entity: 9249574988986054936
+    TagComponent:
+      Tag: Box
+    ParentComponent:
+      Parent: 17245402586165565992
+      HasParent: false
+      Children:
+        []
+    TransformComponent:
+      Translation: [0.36478278, 4.19193657e-06, 9.89772129]
+      Rotation: [-3.14159226, 0.00962748937, -3.14159179]
+      Scale: [8.54844189, 0.125188053, 8.71749115]
+      LocalTranslation: [0, 0, 0]
+      LocalRotation: [0, 0, 0]
+      LocalScale: [1, 1, 1]
+    StaticMeshComponent:
+      Handle: 13417777238487702703
+      MaterialHandle: 18131998603898879350
+    RigidBodyComponent:
+      Mass: 1
+      MotionType: Static
+      LinearDamping: 0.0500000007
+      AngularDamping: 0.0500000007
+      IsKinematic: false
+      UseGravity: true
+    BoxColliderComponent:
+      Size: [0.5, 0.5, 0.5]
+      IsTrigger: false
+  - Entity: 16994566336272270243
+    TagComponent:
+      Tag: Camera
+    ParentComponent:
+      Parent: 18150712615279751045
+      HasParent: false
+      Children:
+        []
+    TransformComponent:
+      Translation: [1.68064988, 6.76969671, 11.889617]
+      Rotation: [-0.488616019, 0.103926718, -0.0550928898]
+      Scale: [0.999998271, 0.999999702, 0.999999464]
+      LocalTranslation: [0, 0, 0]
+      LocalRotation: [0, 0, 0]
+      LocalScale: [1, 1, 1]
+    CameraComponent:
+      Camera:
+        PerspectiveFOV: -0.785398185
+        PerspectiveNear: 0.100000001
+        PerspectiveFar: 100
+      Primary: true
+  - Entity: 10256726809623561238
+    TagComponent:
+      Tag: Box
+    ParentComponent:
+      Parent: 17245402586165565992
+      HasParent: false
+      Children:
+        []
+    TransformComponent:
+      Translation: [0.0869121924, 2.72850084, -0.516340792]
+      Rotation: [0.273957759, -1.38457108, -0.0171654411]
+      Scale: [0.999997973, 0.999998987, 0.999933064]
+      LocalTranslation: [0, 0, 0]
+      LocalRotation: [0, 0, 0]
+      LocalScale: [1, 1, 1]
+    StaticMeshComponent:
+      Handle: 13417777238487702703
+      MaterialHandle: 18131998603898879350
+    RigidBodyComponent:
+      Mass: 1
+      MotionType: Dynamic
+      LinearDamping: 0.0500000007
+      AngularDamping: 0.0500000007
+      IsKinematic: false
+      UseGravity: true
+    BoxColliderComponent:
+      Size: [0.5, 0.5, 0.5]
+      IsTrigger: false
   - Entity: 5172778119959375627
     TagComponent:
       Tag: Directional Light
@@ -42,16 +157,16 @@ Entities:
         []
     TransformComponent:
       Translation: [0, 0, 0]
-      Rotation: [-3.1415925, -1.38063312, 3.1415925]
-      Scale: [0.999999881, 1, 0.999999881]
+      Rotation: [-0.499161929, -1.20537841, 1.07667351]
+      Scale: [0.999999523, 1, 1]
       LocalTranslation: [0, 0, 0]
       LocalRotation: [0, 0, 0]
       LocalScale: [1, 1, 1]
     DirectionalLightComponent:
       Enabled: true
       Color: [1, 1, 1]
-      AmbientIntensity: 24.8999996
-  - Entity: 10256726809623561238
+      AmbientIntensity: 11.8999996
+  - Entity: 10137988785778729763
     TagComponent:
       Tag: Box
     ParentComponent:
@@ -60,12 +175,190 @@ Entities:
       Children:
         []
     TransformComponent:
-      Translation: [-0.211714596, 1.53533566, 0.481057018]
-      Rotation: [-3.14159203, -0.351783812, -3.1415925]
-      Scale: [0.999999464, 1, 0.999999464]
+      Translation: [0.848544002, 3.7722404, 1.7478466]
+      Rotation: [-2.10840058, 0.0921933502, 1.61875713]
+      Scale: [0.999999166, 0.999999404, 0.999965549]
       LocalTranslation: [0, 0, 0]
       LocalRotation: [0, 0, 0]
       LocalScale: [1, 1, 1]
     StaticMeshComponent:
       Handle: 13417777238487702703
       MaterialHandle: 18131998603898879350
+    RigidBodyComponent:
+      Mass: 1
+      MotionType: Dynamic
+      LinearDamping: 0.0500000007
+      AngularDamping: 0.0500000007
+      IsKinematic: false
+      UseGravity: true
+    BoxColliderComponent:
+      Size: [0.5, 0.5, 0.5]
+      IsTrigger: false
+  - Entity: 4067121958953563438
+    TagComponent:
+      Tag: Box
+    ParentComponent:
+      Parent: 17245402586165565992
+      HasParent: false
+      Children:
+        []
+    TransformComponent:
+      Translation: [0.00498558674, 6.07178402, 1.18206465]
+      Rotation: [-2.10840058, 0.0921933502, 1.61875713]
+      Scale: [0.999999166, 0.999999404, 0.999965549]
+      LocalTranslation: [0, 0, 0]
+      LocalRotation: [0, 0, 0]
+      LocalScale: [1, 1, 1]
+    StaticMeshComponent:
+      Handle: 13417777238487702703
+      MaterialHandle: 18131998603898879350
+    RigidBodyComponent:
+      Mass: 1
+      MotionType: Dynamic
+      LinearDamping: 0.0500000007
+      AngularDamping: 0.0500000007
+      IsKinematic: false
+      UseGravity: true
+    BoxColliderComponent:
+      Size: [0.5, 0.5, 0.5]
+      IsTrigger: false
+  - Entity: 8656555476435198103
+    TagComponent:
+      Tag: Box
+    ParentComponent:
+      Parent: 17245402586165565992
+      HasParent: false
+      Children:
+        []
+    TransformComponent:
+      Translation: [-0.0357973278, 4.27513933, -0.00781112537]
+      Rotation: [-2.10840058, 0.0921933874, 1.61875713]
+      Scale: [0.999999166, 0.999999285, 0.999965549]
+      LocalTranslation: [0, 0, 0]
+      LocalRotation: [0, 0, 0]
+      LocalScale: [1, 1, 1]
+    StaticMeshComponent:
+      Handle: 13417777238487702703
+      MaterialHandle: 18131998603898879350
+    RigidBodyComponent:
+      Mass: 1
+      MotionType: Dynamic
+      LinearDamping: 0.0500000007
+      AngularDamping: 0.0500000007
+      IsKinematic: false
+      UseGravity: true
+    BoxColliderComponent:
+      Size: [0.5, 0.5, 0.5]
+      IsTrigger: false
+  - Entity: 17672475634917131465
+    TagComponent:
+      Tag: Box
+    ParentComponent:
+      Parent: 17245402586165565992
+      HasParent: false
+      Children:
+        []
+    TransformComponent:
+      Translation: [-0.501903832, 3.04021597, 2.55748415]
+      Rotation: [-2.10840058, 0.0921933502, 1.61875713]
+      Scale: [0.999999166, 0.999999404, 0.999965549]
+      LocalTranslation: [0, 0, 0]
+      LocalRotation: [0, 0, 0]
+      LocalScale: [1, 1, 1]
+    StaticMeshComponent:
+      Handle: 13417777238487702703
+      MaterialHandle: 18131998603898879350
+    RigidBodyComponent:
+      Mass: 1
+      MotionType: Dynamic
+      LinearDamping: 0.0500000007
+      AngularDamping: 0.0500000007
+      IsKinematic: false
+      UseGravity: true
+    BoxColliderComponent:
+      Size: [0.5, 0.5, 0.5]
+      IsTrigger: false
+  - Entity: 3543325160655714746
+    TagComponent:
+      Tag: Box
+    ParentComponent:
+      Parent: 17245402586165565992
+      HasParent: false
+      Children:
+        []
+    TransformComponent:
+      Translation: [-0.896034479, 0.992639303, 1.09997749]
+      Rotation: [-2.10840058, 0.0921933502, 1.61875713]
+      Scale: [0.999999166, 0.999999404, 0.999965549]
+      LocalTranslation: [0, 0, 0]
+      LocalRotation: [0, 0, 0]
+      LocalScale: [1, 1, 1]
+    StaticMeshComponent:
+      Handle: 13417777238487702703
+      MaterialHandle: 18131998603898879350
+    RigidBodyComponent:
+      Mass: 1
+      MotionType: Dynamic
+      LinearDamping: 0.0500000007
+      AngularDamping: 0.0500000007
+      IsKinematic: false
+      UseGravity: true
+    BoxColliderComponent:
+      Size: [0.5, 0.5, 0.5]
+      IsTrigger: false
+  - Entity: 6182079888283902091
+    TagComponent:
+      Tag: Box
+    ParentComponent:
+      Parent: 17245402586165565992
+      HasParent: false
+      Children:
+        []
+    TransformComponent:
+      Translation: [0.908977389, 2.51314783, 1.86439049]
+      Rotation: [-2.10840058, 0.0921933502, 1.61875713]
+      Scale: [0.999999166, 0.999999404, 0.999965549]
+      LocalTranslation: [0, 0, 0]
+      LocalRotation: [0, 0, 0]
+      LocalScale: [1, 1, 1]
+    StaticMeshComponent:
+      Handle: 13417777238487702703
+      MaterialHandle: 18131998603898879350
+    RigidBodyComponent:
+      Mass: 1
+      MotionType: Dynamic
+      LinearDamping: 0.0500000007
+      AngularDamping: 0.0500000007
+      IsKinematic: false
+      UseGravity: true
+    BoxColliderComponent:
+      Size: [0.5, 0.5, 0.5]
+      IsTrigger: false
+  - Entity: 3245429469370376528
+    TagComponent:
+      Tag: Box
+    ParentComponent:
+      Parent: 17245402586165565992
+      HasParent: false
+      Children:
+        []
+    TransformComponent:
+      Translation: [-0.65073663, 6.14105368, 2.27046442]
+      Rotation: [-2.10840058, 0.0921933502, 1.61875713]
+      Scale: [0.999999166, 0.999999404, 0.999965549]
+      LocalTranslation: [0, 0, 0]
+      LocalRotation: [0, 0, 0]
+      LocalScale: [1, 1, 1]
+    StaticMeshComponent:
+      Handle: 13417777238487702703
+      MaterialHandle: 18131998603898879350
+    RigidBodyComponent:
+      Mass: 1
+      MotionType: Dynamic
+      LinearDamping: 0.0500000007
+      AngularDamping: 0.0500000007
+      IsKinematic: false
+      UseGravity: true
+    BoxColliderComponent:
+      Size: [0.5, 0.5, 0.5]
+      IsTrigger: false

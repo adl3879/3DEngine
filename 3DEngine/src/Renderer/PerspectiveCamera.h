@@ -32,7 +32,12 @@ class PerspectiveCamera : public Camera
     void SetPosition(const glm::vec3 &position) override { m_Position = position; }
     glm::mat4 GetProjectionMatrix() override;
     glm::mat4 GetViewMatrix() override;
-    Texture2DRef GetPreviewTexture(Scene *scene) override;
+    TextureRef GetPreviewTexture(Scene *scene) override;
+
+	float GetNearClip() const override { return m_PerspectiveNearClip; }
+	float GetFarClip() const override { return m_PerspectiveFarClip; }
+	float GetFov() const override { return m_PerspectiveVerticalFOV; }
+	float GetAspectRatio() const override { return m_AspectRatio; }
 
     void ResizeFramebuffer(const glm::vec2 &size) { m_Framebuffer->QueueResize(size); }
 

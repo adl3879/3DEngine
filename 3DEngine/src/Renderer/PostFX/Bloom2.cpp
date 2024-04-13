@@ -87,7 +87,7 @@ void Bloom::Draw()
 		
         shader->SetUniform1i("u_Stage", 1);
 
-        Texture2DRef downsampleTexture = i == 0 ? m_ThresholdFB->GetTexture() : m_DownSampleFB[i - 1]->GetTexture();
+        TextureRef downsampleTexture = i == 0 ? m_ThresholdFB->GetTexture() : m_DownSampleFB[i - 1]->GetTexture();
         shader->SetUniform1i("u_Source", 0);
 		downsampleTexture->Bind(0);
 
@@ -107,7 +107,7 @@ void Bloom::Draw()
         shader->SetUniform1i("u_Stage", 2);
         shader->SetUniform2f("u_BlurDirection", {0.0f, 1.0f});
 
-        Texture2DRef blurTexture = m_DownSampleFB[m_Iteration - i - 1]->GetTexture();
+        TextureRef blurTexture = m_DownSampleFB[m_Iteration - i - 1]->GetTexture();
         blurTexture->Bind(0);
         shader->SetUniform1i("u_Source", 0);
         shader->SetUniform2f("u_SourceSize", {(float)blurTexture->GetWidth(), (float)blurTexture->GetHeight()});

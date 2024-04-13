@@ -10,27 +10,30 @@
 
 namespace Engine
 {
-Shader::Shader(const std::filesystem::path &vertexSourcePath, const std::filesystem::path &fragmentSourcePath)
+Shader::Shader(const std::filesystem::path &vertexSourcePath, const std::filesystem::path &fragmentSourcePath,
+               const std::filesystem::path &geometrySource)
 {
     auto vertexShader = ParseShader(vertexSourcePath.string());
     auto fragmentShader = ParseShader(fragmentSourcePath.string());
-    Init(vertexShader, fragmentShader);
+    auto geometryShader = !geometrySource.empty() ? ParseShader(geometrySource.string()) : "";
+
+    Init(vertexShader, fragmentShader, geometryShader);
 }
 
-void Shader::Init(const std::string &vertexSource, const std::string &fragmentSource)
+void Shader::Init(const std::string &vertexSource, const std::string &fragmentSource, const std::string &geometrySource)
 {
     const GLchar *vs = vertexSource.c_str();
     const GLchar *fs = fragmentSource.c_str();
+	const GLchar *gs = geometrySource.c_str();
 
     // compile shaders
-    int vertex, fragment;
+    int vertex, fragment, geometry{};
     int success;
     char infoLog[512];
 
     vertex = glCreateShader(GL_VERTEX_SHADER);
     glShaderSource(vertex, 1, &vs, nullptr);
     glCompileShader(vertex);
-    // check for compile errors
     glGetShaderiv(vertex, GL_COMPILE_STATUS, &success);
     if (!success)
     {
@@ -48,9 +51,24 @@ void Shader::Init(const std::string &vertexSource, const std::string &fragmentSo
         LOG_CORE_ERROR("SHADER::FRAGMENT::COMPILATION_FAILED: {0}", infoLog);
     }
 
+	if (!geometrySource.empty())
+    {
+        geometry = glCreateShader(GL_GEOMETRY_SHADER);
+        glShaderSource(geometry, 1, &gs, nullptr);
+        glCompileShader(geometry);
+        glGetShaderiv(geometry, GL_COMPILE_STATUS, &success);
+        if (!success)
+        {
+            glGetShaderInfoLog(geometry, 512, nullptr, infoLog);
+            LOG_CORE_ERROR("SHADER::GEOMETRY::COMPILATION_FAILED: {0}", infoLog);
+        }
+    }
+
     m_Program = glCreateProgram();
     glAttachShader(m_Program, vertex);
     glAttachShader(m_Program, fragment);
+	if (!geometrySource.empty()) glAttachShader(m_Program, geometry);
+
     glLinkProgram(m_Program);
     glGetProgramiv(m_Program, GL_LINK_STATUS, &success);
     if (!success)
@@ -62,6 +80,7 @@ void Shader::Init(const std::string &vertexSource, const std::string &fragmentSo
     // can be deleted because they are already linked to program
     glDeleteShader(vertex);
     glDeleteShader(fragment);
+	glDeleteShader(geometry);
 
     Bind();
 }

@@ -21,7 +21,7 @@ Texture2DRef stepForwardIcon, playIcon, pauseIcon, stopIcon;
 
 WindowState windowState = InputManager::Get().GetWindowState();
 
-AppLayer::AppLayer() : m_EditorCamera(-45.0f, 1.778f, 0.01f, 100.0f) {}
+AppLayer::AppLayer() {}
 
 void AppLayer::OnAttach()
 {
@@ -58,8 +58,8 @@ void AppLayer::OnUpdate(float dt)
     m_IsControlPressed = false;
 
     // update
-    m_EditorCamera.OnUpdate(dt);
-    m_EditorCamera.SetViewportSize(m_ViewportSize.x, m_ViewportSize.y);
+    m_ActiveScene->GetEditorCamera()->OnUpdate(dt);
+    m_ActiveScene->GetEditorCamera()->SetViewportSize(m_ViewportSize.x, m_ViewportSize.y);
     m_ActiveScene->SetViewportSize(static_cast<int>(m_ViewportSize.x), static_cast<int>(m_ViewportSize.y));
     m_ActiveScene->SetFramebuffer(m_Framebuffer);
 
@@ -67,7 +67,7 @@ void AppLayer::OnUpdate(float dt)
 
     switch (m_SceneState)
     {
-        case SceneState::Edit: m_ActiveScene->OnUpdateEditor(dt, m_EditorCamera); break;
+        case SceneState::Edit: m_ActiveScene->OnUpdateEditor(dt, *m_ActiveScene->GetEditorCamera()); break;
         case SceneState::Play: m_ActiveScene->OnRuntimeUpdate(dt); break;
         default: break;
     }
@@ -322,8 +322,8 @@ void AppLayer::OnImGuiRender()
     // Gizmos
     auto selectedEntity = m_SceneHierarchyPanel.GetSelectedEntity();
 
-    glm::mat4 cameraView = m_EditorCamera.GetViewMatrix();
-    glm::mat4 projection = m_EditorCamera.GetProjectionMatrix();
+    glm::mat4 cameraView = m_ActiveScene->GetEditorCamera()->GetViewMatrix();
+    glm::mat4 projection = m_ActiveScene->GetEditorCamera()->GetProjectionMatrix();
 
     cameraView[0][1] = -cameraView[0][1];
     cameraView[1][1] = -cameraView[1][1];
@@ -421,7 +421,7 @@ void AppLayer::OnKeyPressed(InputKey key, bool isRepeat)
 
 void AppLayer::OnMouseScrolled(double xOffset, double yOffset)
 {
-    if (m_ViewportHovered) m_EditorCamera.OnMouseScrolled(xOffset, yOffset);
+    if (m_ViewportHovered) m_ActiveScene->GetEditorCamera()->OnMouseScrolled(xOffset, yOffset);
 }
 
 void AppLayer::OnMouseButtonPressed(MouseButton button)
@@ -507,7 +507,10 @@ void AppLayer::SaveScene()
     }
 }
 
-void AppLayer::ResetScene(const std::string &path) { m_EditorCamera = EditorCamera(-45.0f, 1.778f, 0.1f, 100.0f); }
+void AppLayer::ResetScene(const std::string &path) 
+{
+	//m_EditorCamera = EditorCamera(-45.0f, 1.778f, 0.1f, 100.0f); 
+}
 
 void AppLayer::DuplicateEntity()
 {

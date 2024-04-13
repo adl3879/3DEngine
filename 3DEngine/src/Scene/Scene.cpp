@@ -79,7 +79,9 @@ std::shared_ptr<Scene> Scene::Copy(std::shared_ptr<Scene> src)
     return dst;
 }
 
-Scene::Scene() { New("Untitled Scene"); }
+Scene::Scene() { 
+	New("Untitled Scene");
+}
 
 Scene::Scene(const std::string &name) { New(name); }
 
@@ -101,6 +103,7 @@ void Scene::New(const std::string &name)
 
     m_SceneRenderer = new SceneRenderer();
     m_SceneRenderer->Init();
+
 }
 
 Scene::~Scene() {}
@@ -340,11 +343,8 @@ void Scene::OnRuntimeUpdate(float dt)
                 }
             }
         }
-		const auto projection = m_MainCamera ? m_MainCamera->GetProjectionMatrix() : glm::mat4(0.0f);
-		const auto view = m_MainCamera ? m_MainCamera->GetViewMatrix() : glm::mat4(0.0f);
-		const auto position = m_MainCamera ? m_MainCamera->GetPosition() : glm::vec3(0.0f);
-   
-		m_SceneRenderer->BeginRenderScene(projection, view, position);
+
+		m_SceneRenderer->BeginRenderScene();
 		m_SceneRenderer->RenderScene(*this, *m_Framebuffer);
     }
 }
@@ -354,7 +354,7 @@ void Scene::OnUpdateEditor(float dt, EditorCamera &camera)
     const auto projection = camera.GetProjectionMatrix();
     const auto view = camera.GetViewMatrix();
 
-    m_SceneRenderer->BeginRenderScene(projection, view, camera.GetPosition());
+    m_SceneRenderer->BeginRenderScene();
     m_SceneRenderer->RenderScene(*this, *m_Framebuffer);
 }
 
@@ -379,5 +379,24 @@ bool Scene::IsTextEditorFocused()
     return std::any_of(m_TextEditors.begin(), m_TextEditors.end(),
                        [](const std::pair<std::filesystem::path, ImGuiTextEditorRef> &textEditor)
                        { return textEditor.second->IsWindowFocused(); });
+}
+
+Camera& Scene::GetCamera()
+{
+	if (m_IsPlaying)
+	{
+		if (m_MainCamera)
+		{
+			return *m_MainCamera;
+		}
+		else
+		{
+			return *m_EditorCamera;
+		}
+	}
+	else
+	{
+		return *m_EditorCamera;
+	}
 }
 } // namespace Engine

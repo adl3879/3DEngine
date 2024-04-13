@@ -30,8 +30,8 @@ public:
     Framebuffer(bool hasRenderBuffer, glm::vec2 size);
     ~Framebuffer();
 
-    Texture2DRef GetTexture(unsigned int attachment = 0x8CE0);
-    void SetTexture(Texture2DRef texture, unsigned int attachment = 0x8CE0);
+    TextureRef GetTexture(unsigned int attachment = 0x8CE0);
+    void SetTexture(TextureRef texture, unsigned int attachment = 0x8CE0);
 
     void Bind();
     void Unbind();
@@ -53,8 +53,8 @@ private:
     glm::vec2 m_Size;
     bool ResizeQueued = false;
 
-    std::map<int, Texture2DRef> m_Textures;
-    Texture2DRef m_Texture;
+    std::map<int, TextureRef> m_Textures;
+    TextureRef m_Texture;
     bool m_HasRenderBuffer = false;
 };
 

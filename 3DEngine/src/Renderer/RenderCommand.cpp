@@ -29,6 +29,8 @@ static GLenum GetType(const RendererEnum &bufferType)
         case RendererEnum::DEPTH_ATTACHMENT: return GL_DEPTH_ATTACHMENT;
         case RendererEnum::COLOR_ATTACHMENT0: return GL_COLOR_ATTACHMENT0;
         case RendererEnum::COLOR_ATTACHMENT1: return GL_COLOR_ATTACHMENT1;
+		case RendererEnum::FRONT: return GL_FRONT;
+		case RendererEnum::BACK: return GL_BACK;
     }
 
     return 0;
@@ -82,6 +84,11 @@ void RenderCommand::DrawLineLoop(int first, int count)
 
 void RenderCommand::DrawLineStrip(int first, int count)
 {
-    glDrawElements(GL_LINE_STRIP, count, GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_LINE_STRIP, count, GL_UNSIGNED_INT, 0); 
+}
+
+void RenderCommand::CullFace(const RendererEnum face) 
+{
+	glCullFace(GetType(face));
 }
 } // namespace Engine

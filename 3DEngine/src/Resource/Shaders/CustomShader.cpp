@@ -15,7 +15,7 @@ CustomShader::CustomShader(const std::filesystem::path &path)
     auto fs = GenerateFragmentShader(shaderData);
 
     m_Shader = std::make_shared<Shader>();
-    m_Shader->Init(vs, fs);
+    //m_Shader->Init(vs, fs);
 }
 
 ShaderData CustomShader::ParseShader(const std::filesystem::path &path)

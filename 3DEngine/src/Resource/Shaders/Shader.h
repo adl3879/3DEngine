@@ -17,9 +17,10 @@ class Shader
 {
   public:
     Shader() = default;
-    Shader(const std::filesystem::path &vertexSource, const std::filesystem::path &fragmentSource);
+    Shader(const std::filesystem::path &vertexSource, const std::filesystem::path &fragmentSource,
+           const std::filesystem::path &geometrySource = "");
 
-    void Init(const std::string &vertexSource, const std::string &fragmentSource);
+    void Init(const std::string &vertexSource, const std::string &fragmentSource, const std::string &geometrySource);
 
     void Bind() const;
     void Unbind() const;
