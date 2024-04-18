@@ -23,7 +23,7 @@ Entities:
       Children:
         []
     TransformComponent:
-      Translation: [0, 0, 0]
+      Translation: [-8.84980392, 0, 0]
       Rotation: [0, 0, 0]
       Scale: [8.87083721, 0.0595312491, 8.08232594]
       LocalTranslation: [0, 0, 0]
@@ -42,15 +42,15 @@ Entities:
         []
     TransformComponent:
       Translation: [0, 0, 0]
-      Rotation: [-0.0358136371, -0.622329593, 0.106248163]
-      Scale: [0.999999881, 0.999999404, 1.00000012]
+      Rotation: [-2.60300064, -0.749052882, -1.76530671]
+      Scale: [0.999999166, 1.00000036, 1.00000024]
       LocalTranslation: [0, 0, 0]
       LocalRotation: [0, 0, 0]
       LocalScale: [1, 1, 1]
     DirectionalLightComponent:
       Enabled: true
       Color: [1, 1, 1]
-      AmbientIntensity: 17.7000008
+      AmbientIntensity: 7.5999999
   - Entity: 14310200819345253424
     TagComponent:
       Tag: Mesh
@@ -60,7 +60,7 @@ Entities:
       Children:
         []
     TransformComponent:
-      Translation: [0, 1.70943892, 0]
+      Translation: [0, 1.38326311, 0]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
       LocalTranslation: [0, 0, 0]
@@ -69,3 +69,39 @@ Entities:
     StaticMeshComponent:
       Handle: 2574098532903271962
       MaterialHandle: 7653853389280518481
+  - Entity: 9630292775285953511
+    TagComponent:
+      Tag: Box
+    ParentComponent:
+      Parent: 7556261645773697164
+      HasParent: false
+      Children:
+        []
+    TransformComponent:
+      Translation: [-2.84305072, 0.529991746, 1.69398212]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      LocalTranslation: [0, 0, 0]
+      LocalRotation: [0, 0, 0]
+      LocalScale: [1, 1, 1]
+    StaticMeshComponent:
+      Handle: 13417777238487702703
+      MaterialHandle: 13566101253649096567
+  - Entity: 15008467670749278980
+    TagComponent:
+      Tag: Box
+    ParentComponent:
+      Parent: 4569487209480230364
+      HasParent: false
+      Children:
+        []
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [8.87083721, 0.0595312491, 8.08232594]
+      LocalTranslation: [0, 0, 0]
+      LocalRotation: [0, 0, 0]
+      LocalScale: [1, 1, 1]
+    StaticMeshComponent:
+      Handle: 13417777238487702703
+      MaterialHandle: 17317577943920138267

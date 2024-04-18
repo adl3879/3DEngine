@@ -93,7 +93,8 @@ void ThumbnailManager::GenerateMaterialThumbnail(MaterialRef mat, Texture2DRef t
         pbrShader->SetUniform3f("gDirectionalLight.Direction", glm::vec3(-0.6f, 0.6f, 1.0f));
 
         pbrShader->SetUniformMatrix4fv("model", model);
-        pbrShader->SetUniformMatrix4fv("projectionViewMatrix", (projection * view));
+        pbrShader->SetUniformMatrix4fv("projection", projection);
+		pbrShader->SetUniformMatrix4fv("view", view);
         pbrShader->SetUniform3f("cameraPosition", glm::vec3(0.0f));
 
         pbrShader->SetUniform1i("hasAlbedoMap", mat->HasMaterialMap(ParameterType::ALBEDO));

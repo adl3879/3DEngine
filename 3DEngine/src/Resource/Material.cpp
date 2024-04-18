@@ -57,10 +57,6 @@ void Material::Bind(Shader *shader) noexcept
 
     BindTextures();
 
-    shader->SetUniform1i("irradianceMap", 0);
-    shader->SetUniform1i("prefilterMap", 1);
-    shader->SetUniform1i("brdfLUT", 2);
-
     shader->SetUniform1i("albedoMap", 3);
     shader->SetUniform1i("normalMap", 4);
     shader->SetUniform1i("metallicMap", 5);

@@ -10,9 +10,8 @@ void Light::SetLightUniforms(Shader &shader)
     // directional
     if (m_DirectionalLightProps)
     {
-        shader.SetUniform3f("gDirectionalLight.Color",
-                            m_DirectionalLightProps->Color * m_DirectionalLightProps->Intensity);
-        shader.SetUniform3f("gDirectionalLight.Direction", m_DirectionalLightProps->Direction);
+        shader.SetUniform3f("gDirectionalLight.Color", m_DirectionalLightProps->Color * m_DirectionalLightProps->Intensity);
+        shader.SetUniform3f("gDirectionalLight.Direction", glm::normalize(m_DirectionalLightProps->Direction));
     }
     else
     {
@@ -110,8 +109,7 @@ glm::mat4 Light::CalcLightSpaceMatrix(Camera &camera, const float nearPlane, con
 
 	auto lightDir = m_DirectionalLightProps != nullptr ? 
 		-glm::normalize(m_DirectionalLightProps->Direction) : 
-		glm::vec3(-2.0f, 4.0f, -1.0f);
-    //lightDir = glm::normalize(glm::vec3(20.0f, 50, 20.0f));
+		glm::normalize(glm::vec3(20.0f, 50, 20.0f));
     
 	auto frustumCorners = GetFrustumCornersWorldSpace(proj, camera.GetViewMatrix());
 
@@ -188,8 +186,8 @@ std::vector<glm::vec4> Light::GetFrustumCornersWorldSpace(const glm::mat4 &proj,
 std::vector<glm::mat4> Light::GetLightSpaceMatrices(Camera& camera)
 {
     float cameraFarPlane = 500.0f;
-    std::vector<float> shadowCascadeLevels{cameraFarPlane / 50.0f, cameraFarPlane / 25.0f, cameraFarPlane / 10.0f,
-                                           cameraFarPlane / 2.0f};
+    std::vector<float> shadowCascadeLevels{cameraFarPlane / 50.0f, cameraFarPlane / 25.0f, cameraFarPlane / 10.0f, 
+		cameraFarPlane / 2.0f};
 
     std::vector<glm::mat4> ret;
     for (size_t i = 0; i < shadowCascadeLevels.size() + 1; ++i)

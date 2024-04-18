@@ -20,28 +20,27 @@ public:
     virtual ~SkyLight() = default;
 
     void Init(const std::size_t resolution);
-    void Destroy();
     void Render(const glm::mat4 &projection, const glm::mat4 &view);
 
 public:
-    unsigned int GetIrradianceMap() { return m_IrradianceMap; }
-    unsigned int GetPrefilterMap() { return m_PreFilterMap; }
-    unsigned int GetBrdfLUT() { return m_BrdfLUT; }
-    const std::unordered_map<std::string, ShaderRef> &GetShaders() { return m_Shaders; }
+    AssetHandle GetHandle() const { return Handle; }
 
-    [[nodiscard]] AssetHandle GetHandle() const { return Handle; }
+    void Bind(Shader *shader) const;
 
-    void BindMaps(int slot = 0) const;
-    void UnBindMaps() const;
-
-    [[nodiscard]] std::filesystem::path GetHdrPath() const { return m_HdrPath; }
+    std::filesystem::path GetHdrPath() const { return m_HdrPath; }
 
 public:
     static AssetType GetStaticType() { return AssetType::SkyLight; }
-    [[nodiscard]] AssetType GetType() const override { return GetStaticType(); }
+    AssetType GetType() const override { return GetStaticType(); }
 
 private:
     void RenderQuad();
+
+	void CreateHDRCubemap();
+    void CreateConvulatedCubemap();
+    void CreateSpecularCubemaps();
+
+    void CreateBRDLUT();
 
 private:
     unsigned int m_EnvCubemap = 0;

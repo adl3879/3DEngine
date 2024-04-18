@@ -97,16 +97,15 @@ void SceneRenderer::RenderScene(Scene &scene, Framebuffer &framebuffer)
     pbrShader->SetUniformMatrix4fv("view", scene.GetCamera().GetViewMatrix());
     pbrShader->SetUniform3f("cameraPosition", scene.GetCamera().GetPosition());
     scene.GetLights()->SetLightUniforms(*pbrShader);
-    //pbrShader->SetUniformMatrix4fv("lightSpaceMatrix", scene.GetLights()->CalcLightSpaceMatrix(m_Projection, m_View));
+
     pbrShader->SetUniform1f("farPlane", cameraFarPlane);
     pbrShader->SetUniform1i("cascadeCount", shadowCascadeLevels.size());
 	for (size_t i = 0; i < shadowCascadeLevels.size(); ++i)
 	{
 		pbrShader->SetUniform1f("cascadePlaneDistances[" + std::to_string(i) + "]", shadowCascadeLevels[i]);
 	}
-	
 
-    if (environment->SkyboxHDR) environment->SkyboxHDR->BindMaps();
+    if (environment->SkyboxHDR) environment->SkyboxHDR->Bind(pbrShader);
 
     auto view = scene.GetRegistry().view<StaticMeshComponent, TransformComponent, VisibilityComponent>();
 	// static meshes
@@ -141,7 +140,6 @@ void SceneRenderer::RenderScene(Scene &scene, Framebuffer &framebuffer)
     skinnedShader->SetUniformMatrix4fv("projectionViewMatrix", scene.GetCamera().GetProjectionViewMatrix());
     skinnedShader->SetUniform3f("cameraPosition", scene.GetCamera().GetPosition());
     scene.GetLights()->SetLightUniforms(*skinnedShader);
-    //skinnedShader->SetUniformMatrix4fv("LightSpaceMatrix", scene.GetLights()->CalcLightSpaceMatrix(m_Projection, m_View));
 
     auto skinnedView = scene.GetRegistry().view<SkinnedMeshComponent, AnimationControllerComponent, TransformComponent, VisibilityComponent>();
 	for (auto& e : skinnedView)
@@ -198,8 +196,10 @@ void SceneRenderer::RenderScene(Scene &scene, Framebuffer &framebuffer)
         }
 
         if (scene.IsGridEnabled())
+        {
             InfiniteGrid::Draw(scene.GetCamera().GetProjectionMatrix(), scene.GetCamera().GetViewMatrix(),
                                scene.GetCamera().GetPosition());
+        }
 
         // weird?
         const auto mouse = scene.GetViewportMousePos();
@@ -256,7 +256,6 @@ void SceneRenderer::ShadowPass(Scene &scene)
 
 	auto shadowMapShader = ShaderManager::GetShader("Resources/shaders/shadowMap");
 	shadowMapShader->Bind();
-    //shadowMapShader->SetUniformMatrix4fv("lightSpaceMatrix", scene.GetLights()->CalcLightSpaceMatrix(m_Projection, m_View));
 
 	auto view = scene.GetRegistry().view<StaticMeshComponent, TransformComponent, VisibilityComponent>();
 	for (auto& e : view)
@@ -297,10 +296,9 @@ void SceneRenderer::EnvironmentPass(Scene &scene)
     {
         if (environment->CurrentSkyType == SkyType::SkyboxHDR)
         {
-            scene.GetEnvironment()->SkyboxHDR->BindMaps();
             environment->SkyboxHDR->Render(scene.GetCamera().GetProjectionMatrix(), scene.GetCamera().GetViewMatrix());
         }
-        else scene.GetEnvironment()->SkyboxHDR->Destroy();
+        //else scene.GetEnvironment()->SkyboxHDR->Destroy();
     }
 }
 

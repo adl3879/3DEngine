@@ -13,24 +13,24 @@ Environment:
   CenterPoint: [0, -6360000, 0]
   SunDirection: [0.200000003, 0.959169984, 0.200000003]
 Entities:
-  - Entity: 10006436417126132612
+  - Entity: 12798726833840140336
     TagComponent:
       Tag: Box
     ParentComponent:
-      Parent: 5095541543752323941
+      Parent: 3723180441450957517
       HasParent: false
       Children:
         []
     TransformComponent:
-      Translation: [0.638402462, 1.21249497, 0.336143821]
-      Rotation: [-3.14159226, 0.484654516, 3.14159226]
-      Scale: [0.999998987, 1, 0.999998987]
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [7.45722008, 0.0690955669, 8.98151016]
       LocalTranslation: [0, 0, 0]
       LocalRotation: [0, 0, 0]
       LocalScale: [1, 1, 1]
     StaticMeshComponent:
       Handle: 13417777238487702703
-      MaterialHandle: 7518296766215964375
+      MaterialHandle: 5809825965166958063
   - Entity: 12756442649900175449
     TagComponent:
       Tag: Directional Light
@@ -50,21 +50,21 @@ Entities:
       Enabled: true
       Color: [1, 1, 1]
       AmbientIntensity: 5.80000019
-  - Entity: 12798726833840140336
+  - Entity: 10006436417126132612
     TagComponent:
       Tag: Box
     ParentComponent:
-      Parent: 3723180441450957517
+      Parent: 5095541543752323941
       HasParent: false
       Children:
         []
     TransformComponent:
-      Translation: [0, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [7.45722008, 0.0690955669, 8.98151016]
+      Translation: [0.638402164, 0.554890931, 0.33614403]
+      Rotation: [-3.14159226, 0.484654516, 3.14159226]
+      Scale: [0.999998987, 1, 0.999998987]
       LocalTranslation: [0, 0, 0]
       LocalRotation: [0, 0, 0]
       LocalScale: [1, 1, 1]
     StaticMeshComponent:
       Handle: 13417777238487702703
-      MaterialHandle: 5809825965166958063
+      MaterialHandle: 7518296766215964375

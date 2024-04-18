@@ -148,34 +148,6 @@ vec3 calcReflectanceEquation(vec3 L, vec3 V, vec3 N, vec3 albedo, float metallic
 
 float ShadowCalculation(vec4 fragPosWorldSpace, vec3 normal, vec3 lightDir)
 {
-//    // perform perspective divide
-//    vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
-//    // transform to [0,1] range
-//    projCoords = projCoords * 0.5 + 0.5;
-//    // get closest depth value from light's perspective (using [0,1] range fragPosLight as coords)
-//    float closestDepth = texture(shadowMap, projCoords.xy).r; 
-//    // get depth of current fragment from light's perspective
-//    float currentDepth = projCoords.z;
-//    // check whether current frag pos is in shadow
-//    float bias = max(0.05 * (1.0 - dot(normal, lightDir)), 0.005); 
-//
-//	float shadow = 0.0;
-//	vec2 texelSize = 1.0 / textureSize(shadowMap, 0);
-//	for(int x = -1; x <= 1; ++x)
-//	{
-//		for(int y = -1; y <= 1; ++y)
-//		{
-//			float pcfDepth = texture(shadowMap, projCoords.xy + vec2(x, y) * texelSize).r; 
-//			shadow += currentDepth - bias > pcfDepth ? 1.0 : 0.0;        
-//		}
-//	}
-//	shadow /= 9.0;
-//
-//	if(projCoords.z > 1.0)
-//        shadow = 0.0;
-//
-//    return shadow;
-
     // select cascade layer
     vec4 fragPosViewSpace = view * fragPosWorldSpace;
     float depthValue = abs(fragPosViewSpace.z);
@@ -211,7 +183,7 @@ float ShadowCalculation(vec4 fragPosWorldSpace, vec3 normal, vec3 lightDir)
     }
     // calculate bias (based on depth map resolution and slope)
     normal = normalize(normal);
-    float bias = max(0.05 * (1.0 - dot(normal, lightDir)), 0.005);
+    float bias = max(0.005 * (1.0 - dot(normal, lightDir)), 0.0005);
     const float biasModifier = 0.5f;
     if (layer == cascadeCount)
     {
