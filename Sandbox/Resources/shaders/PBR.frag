@@ -16,6 +16,7 @@ in mat3 TBN;
 struct DirectionalLight {
     vec3 Direction;
     vec3 Color;
+	bool CastShadow;
 };
 uniform DirectionalLight gDirectionalLight;
 
@@ -205,9 +206,8 @@ float ShadowCalculation(vec4 fragPosWorldSpace, vec3 normal, vec3 lightDir)
             shadow += (currentDepth - bias) > pcfDepth ? 1.0 : 0.0;        
         }    
     }
-    shadow /= 9.0;
-        
-    return shadow;
+
+    return shadow /= 9.0;
 }
 
 vec4 calculateFragColor(vec3 albedo, vec3 normal, float metallic, float roughness, float ao)
@@ -227,7 +227,7 @@ vec4 calculateFragColor(vec3 albedo, vec3 normal, float metallic, float roughnes
     // directional light reflection
     {
         vec3 L = normalize(-gDirectionalLight.Direction);
-		shadow = ShadowCalculation(vec4(WorldPosition, 1.0f), normal, gDirectionalLight.Direction);
+		if (gDirectionalLight.CastShadow) shadow = ShadowCalculation(vec4(WorldPosition, 1.0f), normal, gDirectionalLight.Direction);
 		vec3 ambient = gDirectionalLight.Color;
         vec3 radiance = ambient * (1.0f - shadow);
         Lo += calcReflectanceEquation(L, V, N, albedo, metallic, roughness) * radiance;

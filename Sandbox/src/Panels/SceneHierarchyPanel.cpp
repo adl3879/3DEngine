@@ -47,16 +47,11 @@ void SceneHierarchyPanel::DrawEntityNode(Entity entity)
     if (parentComponent.Children.size() <= 0) flags |= ImGuiTreeNodeFlags_Leaf;
 
     std::string icon;
-    if (entity.HasComponent<PointLightComponent>())
-        icon = ICON_FA_LIGHTBULB;
-    else if (entity.HasComponent<SpotLightComponent>())
-        icon = ICON_FA_LIGHTBULB;
-    else if (entity.HasComponent<DirectionalLightComponent>())
-        icon = ICON_FA_SUN;
-    else if (entity.HasComponent<CameraComponent>())
-        icon = ICON_FA_VIDEO;
-    else
-        icon = ICON_FA_CUBE;
+    if (entity.HasComponent<PointLightComponent>()) icon = ICON_FA_LIGHTBULB;
+    else if (entity.HasComponent<SpotLightComponent>()) icon = ICON_FA_LIGHTBULB;
+    else if (entity.HasComponent<DirectionalLightComponent>()) icon = ICON_FA_SUN;
+    else if (entity.HasComponent<CameraComponent>()) icon = ICON_FA_VIDEO;
+    else icon = ICON_FA_CUBE;
     icon.append("  ");
 
     ImVec4 textColor = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
@@ -106,7 +101,8 @@ void SceneHierarchyPanel::DrawEntityNode(Entity entity)
         ImGui::Separator();
         if (ImGui::MenuItem("Duplicate Entity"))
         {
-            auto newEntity = m_Context->DuplicateEntityRecursive(entity);
+			auto parent = m_Context->GetEntityByUUID(entity.GetComponent<ParentComponent>().Parent);
+            auto newEntity = m_Context->DuplicateEntityRecursive(entity, parent);
             m_SelectionContext = newEntity;
         }
 
@@ -162,7 +158,7 @@ void SceneHierarchyPanel::DrawEntityNode(Entity entity)
     if (open)
     {
         std::vector<UUID> children = parentComponent.Children;
-        for (auto &child : children)
+        for (const auto &child : children)
         {
             auto entity = m_Context->GetEntityByUUID(child);
             DrawEntityNode(entity);
@@ -173,7 +169,7 @@ void SceneHierarchyPanel::DrawEntityNode(Entity entity)
 
 void SceneHierarchyPanel::DrawComponents(Entity entity)
 {
-    if (m_SelectionContext.HasComponent<TagComponent>())
+    if (entity.HasComponent<TagComponent>())
     {
         auto &tag = m_SelectionContext.GetComponent<TagComponent>().Tag;
         char buffer[256];
@@ -344,7 +340,7 @@ void SceneHierarchyPanel::DrawComponents(Entity entity)
             ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.05f, 0.05f, 0.05f, 0.54f));
 
             auto asset = AssetManager::GetAsset<Mesh>(entityComponent->Handle);   
-            if (ImGui::TreeNodeEx((void *)typeid(MeshComponent).hash_code(), 0, "Material"))
+            /*if (ImGui::TreeNodeEx((void *)typeid(MeshComponent).hash_code(), 0, "Material"))
             {
                 for (const auto &mesh : asset->StaticMeshes)
                 {
@@ -391,7 +387,7 @@ void SceneHierarchyPanel::DrawComponents(Entity entity)
                 }
                 
                 ImGui::TreePop();
-			}
+			}*/
 
             if (removeComponent) entity.RemoveComponent<MeshComponent>();
             ImGui::PopStyleColor(2);
@@ -446,6 +442,7 @@ void SceneHierarchyPanel::DrawComponents(Entity entity)
             ImGui::Checkbox(_labelPrefix("Enabled"), &entityComponent.Enabled);
             ImGui::ColorEdit3(_labelPrefix("Color"), glm::value_ptr(entityComponent.Light.Color));
             ImGui::DragFloat(_labelPrefix("Intensity"), &entityComponent.Light.Intensity, 0.1f, 0.0f, 10000.0f);
+			ImGui::Checkbox(_labelPrefix("Cast Shadows"), &entityComponent.Light.CastShadow);
         }
         if (removeComponent) entity.RemoveComponent<DirectionalLightComponent>();
     }
@@ -698,10 +695,14 @@ void SceneHierarchyPanel::OnImGuiRender()
         ImGui::PushStyleColor(ImGuiCol_ChildBg, ImVec4(0.05f, 0.05f, 0.05f, 0.54f));
         ImGui::BeginChild("SceneHierarchy", ImVec2(0, 0), true);
 
-        // Right-click on blank space
+        // Right-click on blank space 
         if (ImGui::BeginPopupContextWindow())
         {
-            CreateEntityPopup();
+            auto childEntity = CreateEntityPopup();
+			if (childEntity)
+			{
+                m_Context->AddToRoot(childEntity);
+			}
             ImGui::EndPopup();
         }
 
@@ -747,7 +748,7 @@ void SceneHierarchyPanel::OnImGuiRender()
         ImGui::PopStyleVar();
         ImGui::PopStyleColor(2);
 
-        // TODO: refactor this so you dont have to manually list the components
+        // TODO: refactor this so you don't have to manually list the components
         if (ImGui::BeginPopup("AddComponent"))
         {
             ADD_COMPONENT_MENU(RigidBodyComponent, ICON_FA_CUBE "   Rigid Body");

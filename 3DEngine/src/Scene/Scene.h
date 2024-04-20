@@ -35,13 +35,13 @@ public:
     Entity CreateEntity(const std::string &name = std::string());
     Entity CreateEntityWithUUID(UUID uuid, const std::string &name = std::string());
     Entity *GetEntity(const std::string &name);
+	void AddToRoot(Entity entity);
 
     void DestroyEntity(Entity entity);
     void DestroyEntityRecursive(Entity entity);
 
     Entity DuplicateEntity(Entity entity);
-    Entity DuplicateEntityRecursive(Entity entity);
-    Entity DuplicateEntityRecursiveW(Entity originalEntity, std::unordered_map<UUID, Entity> &entityMap);
+    Entity DuplicateEntityRecursive(Entity entity, Entity parent);
     void Merge(std::shared_ptr<Scene> src);
 
     Entity GetEntityByUUID(UUID uuid);
@@ -114,12 +114,14 @@ private:
     entt::registry m_Registry;
     entt::entity m_SelectedEntity = entt::null;
     entt::entity m_HoveredEntity = entt::null;
+    UUID m_RootEntity;
 
     std::unordered_map<UUID, entt::entity> m_EntityMap;
 
     friend class Entity;
     friend class SceneHierarchyPanel;
     friend class SceneSerializer;
+	friend class PropertiesPanel;
 
     std::shared_ptr<PerspectiveCamera> m_MainCamera;
     std::shared_ptr<EditorCamera> m_EditorCamera;

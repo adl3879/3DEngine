@@ -12,6 +12,7 @@ void Light::SetLightUniforms(Shader &shader)
     {
         shader.SetUniform3f("gDirectionalLight.Color", m_DirectionalLightProps->Color * m_DirectionalLightProps->Intensity);
         shader.SetUniform3f("gDirectionalLight.Direction", glm::normalize(m_DirectionalLightProps->Direction));
+		shader.SetUniform1i("gDirectionalLight.CastShadow", m_DirectionalLightProps->CastShadow);
     }
     else
     {

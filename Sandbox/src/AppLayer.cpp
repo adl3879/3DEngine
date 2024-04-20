@@ -42,9 +42,7 @@ void AppLayer::OnAttach()
 
 	m_ContentBrowserPanel = std::make_unique<ContentBrowserPanel>();
 
-    m_SceneHierarchyPanel.SetContext(m_ActiveScene);
-    m_EnvironmentPanel.SetContext(m_ActiveScene);
-    m_ContentBrowserPanel->SetContext(m_ActiveScene);
+    SetPanelsContext();
     // attach scene
     m_ActiveScene->OnAttach();
 
@@ -237,6 +235,7 @@ void AppLayer::OnImGuiRender()
 						}
 						animationController.Animator = new Animator(animationController.Animations[0]);
 					}
+					m_ActiveScene->AddToRoot(ent);
                 }
                 break;
                 case AssetType::Material:
@@ -289,24 +288,19 @@ void AppLayer::OnImGuiRender()
     // color to show it is selected
     DrawControls(ICON_FA_MOUSE_POINTER, "Select", m_GizmoType == -1, [&]() { m_GizmoType = -1; });
     ImGui::SameLine();
-    DrawControls(ICON_FA_ARROWS_ALT, "Move", m_GizmoType == ImGuizmo::OPERATION::TRANSLATE,
-                 [&]() { m_GizmoType = ImGuizmo::OPERATION::TRANSLATE; });
+    DrawControls(ICON_FA_ARROWS_ALT, "Move", m_GizmoType == ImGuizmo::OPERATION::TRANSLATE, [&]() { m_GizmoType = ImGuizmo::OPERATION::TRANSLATE; });
     ImGui::SameLine();
-    DrawControls(ICON_FA_SYNC_ALT, "Rotate", m_GizmoType == ImGuizmo::OPERATION::ROTATE,
-                 [&]() { m_GizmoType = ImGuizmo::OPERATION::ROTATE; });
+    DrawControls(ICON_FA_SYNC_ALT, "Rotate", m_GizmoType == ImGuizmo::OPERATION::ROTATE, [&]() { m_GizmoType = ImGuizmo::OPERATION::ROTATE; });
     ImGui::SameLine();
-    DrawControls(ICON_FA_EXPAND_ARROWS_ALT, "Scale", m_GizmoType == ImGuizmo::OPERATION::SCALE,
-                 [&]() { m_GizmoType = ImGuizmo::OPERATION::SCALE; });
+    DrawControls(ICON_FA_EXPAND_ARROWS_ALT, "Scale", m_GizmoType == ImGuizmo::OPERATION::SCALE, [&]() { m_GizmoType = ImGuizmo::OPERATION::SCALE; });
     ImGui::SameLine();
 
     // draw to far right
     ImGui::SetCursorPosX(ImGui::GetWindowWidth() - (buttonSize * 2) - 10);
-    DrawControls(ICON_FA_BUG, "Show/Hide Physics Debug", m_ActiveScene->IsDebugDrawEnabled(),
-                 [&]() { m_ActiveScene->SetDebugDraw(!m_ActiveScene->IsDebugDrawEnabled()); });
+    DrawControls(ICON_FA_BUG, "Show/Hide Physics Debug", m_ActiveScene->IsDebugDrawEnabled(), [&]() { m_ActiveScene->SetDebugDraw(!m_ActiveScene->IsDebugDrawEnabled()); });
     ImGui::SameLine();
     // show/hide grid
-    DrawControls(ICON_FA_BORDER_ALL, "Show/Hide Grid", m_ActiveScene->IsGridEnabled(),
-                 [&]() { m_ActiveScene->SetGridEnabled(!m_ActiveScene->IsGridEnabled()); });
+    DrawControls(ICON_FA_BORDER_ALL, "Show/Hide Grid", m_ActiveScene->IsGridEnabled(), [&]() { m_ActiveScene->SetGridEnabled(!m_ActiveScene->IsGridEnabled()); });
 
     ImGui::PopStyleVar(2);
 
@@ -400,15 +394,9 @@ void AppLayer::OnKeyPressed(InputKey key, bool isRepeat)
         case InputKey::E: m_GizmoType = ImGuizmo::OPERATION::ROTATE; break;
         case InputKey::R: m_GizmoType = ImGuizmo::OPERATION::SCALE; break;
 
-        case InputKey::N:
-            if (ctrl) NewScene();
-            break;
-        case InputKey::O:
-            if (ctrl) OpenScene();
-            break;
-        case InputKey::D:
-            if (ctrl) DuplicateEntity();
-            break;
+        case InputKey::N: if (ctrl) NewScene(); break;
+        case InputKey::O: if (ctrl) OpenScene(); break;
+        case InputKey::D: if (ctrl) DuplicateEntity(); break;
         case InputKey::S:
             if (ctrl && shift)
                 SaveSceneAs();
@@ -434,7 +422,8 @@ void AppLayer::OnMouseButtonPressed(MouseButton button)
         {
             if (m_ViewportHovered)
             {
-                m_SceneHierarchyPanel.SetSelectedEntity({m_ActiveScene->GetHoveredEntity(), m_ActiveScene.get()});
+                Entity e = {m_ActiveScene->GetHoveredEntity(), m_ActiveScene.get()};
+                m_SceneHierarchyPanel.SetSelectedEntity(e);
             }
         }
     }
@@ -464,8 +453,7 @@ void AppLayer::NewScene()
     // TODO: create new scene file
     ResetScene("");
     m_ActiveScene = std::make_unique<Scene>();
-    m_SceneHierarchyPanel.SetContext(m_ActiveScene);
-    m_EnvironmentPanel.SetContext(m_ActiveScene);
+    SetPanelsContext();
 }
 
 void AppLayer::OpenScene()
@@ -516,8 +504,9 @@ void AppLayer::DuplicateEntity()
 {
     if (m_SceneState == SceneState::Edit)
     {
-        Entity selectedEntity = m_SceneHierarchyPanel.GetSelectedEntity();
-        if (selectedEntity) m_ActiveScene->DuplicateEntity(selectedEntity);
+        auto selectedEntity = m_SceneHierarchyPanel.GetSelectedEntity();
+		auto parent = m_ActiveScene->GetEntityByUUID(selectedEntity.GetComponent<ParentComponent>().Parent);
+        if (selectedEntity) m_ActiveScene->DuplicateEntityRecursive(selectedEntity, parent);
     }
 }
 
@@ -529,8 +518,7 @@ void AppLayer::OnScenePlay()
     m_ActiveScene->SetPlaying(true);
     m_ActiveScene->OnRuntimeStart();
 
-    m_SceneHierarchyPanel.SetContext(m_ActiveScene);
-    m_EnvironmentPanel.SetContext(m_ActiveScene);
+    SetPanelsContext();
 }
 
 void AppLayer::OnSceneStop()
@@ -542,24 +530,20 @@ void AppLayer::OnSceneStop()
     m_ActiveScene->SetPlaying(false);
     m_ActiveScene->OnRuntimeStop();
 
-    m_SceneHierarchyPanel.SetContext(m_ActiveScene);
-    m_EnvironmentPanel.SetContext(m_ActiveScene);
+	SetPanelsContext();
 }
 
 void AppLayer::UI_Toolbar()
 {
-    ImGui::Begin("##toolbar", nullptr,
-                 ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
+    ImGui::Begin("##toolbar", nullptr, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
     auto icon = m_SceneState == SceneState::Edit ? playIcon : stopIcon;
     auto size = ImGui::GetWindowHeight() - 6.0f;
     ImGui::SetCursorPosX((ImGui::GetWindowContentRegionMax().x * 0.5f) - (size * 0.5));
     ImGui::SetCursorPosY((ImGui::GetWindowContentRegionMax().y * 0.5f) - (size * 0.5));
     if (ImGui::ImageButton((void *)(intptr_t)icon->GetRendererID(), ImVec2{size, size}))
     {
-        if (m_SceneState == SceneState::Edit)
-            OnScenePlay();
-        else if (m_SceneState == SceneState::Play)
-            OnSceneStop();
+        if (m_SceneState == SceneState::Edit) OnScenePlay();
+        else if (m_SceneState == SceneState::Play) OnSceneStop();
     }
     ImGui::SameLine(0, 10.0f);
     // disabled pause button
@@ -574,14 +558,12 @@ void AppLayer::UI_Toolbar()
     }
     else
     {
-        if (!m_ActiveScene->IsPaused() &&
-            ImGui::ImageButton((void *)(intptr_t)pauseIcon->GetRendererID(), ImVec2{size, size}))
+        if (!m_ActiveScene->IsPaused() && ImGui::ImageButton((void *)(intptr_t)pauseIcon->GetRendererID(), ImVec2{size, size}))
         {
             m_ActiveScene->SetPaused(true);
             m_ActiveScene->OnRuntimeStop();
         }
-        else if (m_ActiveScene->IsPaused() &&
-             ImGui::ImageButton((void *)(intptr_t)playIcon->GetRendererID(), ImVec2{size, size}))
+        else if (m_ActiveScene->IsPaused() && ImGui::ImageButton((void *)(intptr_t)playIcon->GetRendererID(), ImVec2{size, size}))
         {
             m_ActiveScene->SetPaused(false);
             m_ActiveScene->OnRuntimeStart();
@@ -589,8 +571,8 @@ void AppLayer::UI_Toolbar()
         else
         {
             ImGui::SameLine(0, 10.0f);
-            if (ImGui::ImageButton((void *)(intptr_t)stepForwardIcon->GetRendererID(), ImVec2{size, size}))
-                m_ActiveScene->StepRuntimeFrame(10);
+            if (ImGui::ImageButton((void *)(intptr_t)stepForwardIcon->GetRendererID(), ImVec2{size, size})) 
+				m_ActiveScene->StepRuntimeFrame(10);
         }
     }
     ImGui::End();
@@ -636,5 +618,12 @@ void AppLayer::DrawControls(const char *icon, const char *tooltip, bool isActive
     }
 
     ImGui::PopStyleColor(2);
+}
+
+void AppLayer::SetPanelsContext() 
+{
+    m_SceneHierarchyPanel.SetContext(m_ActiveScene);
+    m_EnvironmentPanel.SetContext(m_ActiveScene);
+	m_ContentBrowserPanel->SetContext(m_ActiveScene);
 }
 } // namespace Engine

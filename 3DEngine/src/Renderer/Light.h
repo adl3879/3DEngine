@@ -21,6 +21,7 @@ struct DirectionalLight
     glm::vec3 Direction = {1.0f, 0.0f, 0.0f};
     glm::vec3 Color = {0.0f, 0.0f, 0.0f};
     float Intensity = 1.0f;
+	bool CastShadow = true;
 };
 
 struct PointLight

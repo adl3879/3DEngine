@@ -13,12 +13,11 @@ void Entity::AddChild(Entity &child)
 {
     auto &parentComponent = child.GetComponent<ParentComponent>();
     parentComponent.HasParent = true;
-    parentComponent.Parent = GetComponent<IDComponent>().ID;
+    parentComponent.Parent = this->GetComponent<IDComponent>().ID;
 
     const auto id = child.GetComponent<IDComponent>().ID;
-    GetComponent<ParentComponent>().Children.push_back(id);
-    GetComponent<ParentComponent>().ChildEntities.push_back(child);
+    this->GetComponent<ParentComponent>().Children.push_back(id);
 }
 
-UUID Entity::GetUUID() { return GetComponent<IDComponent>().ID; }
+UUID Entity::GetUUID() { return this->GetComponent<IDComponent>().ID; }
 } // namespace Engine

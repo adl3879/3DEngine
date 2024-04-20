@@ -51,6 +51,7 @@ class AppLayer : public Layer
   private:
     void DrawControls(const char *icon, const char *tooltip, bool isActive, std::function<void()> action);
     bool m_IsControlPressed = false;
+	void SetPanelsContext();
 
   private:
     std::shared_ptr<Framebuffer> m_Framebuffer;

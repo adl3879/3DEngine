@@ -31,6 +31,7 @@ struct TagComponent
 {
     std::string Tag;
     bool IsPrefab = false;
+	bool IsRoot = false;
 
     TagComponent() = default;
     TagComponent(const TagComponent &) = default;
@@ -42,9 +43,6 @@ struct ParentComponent
     UUID Parent;
     bool HasParent = false;
     std::vector<UUID> Children;
-
-    // stores entt entity handle
-    std::vector<Entity> ChildEntities;
 
     bool RemoveChild(UUID entityId)
     {

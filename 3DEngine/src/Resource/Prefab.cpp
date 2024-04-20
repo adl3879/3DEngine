@@ -22,7 +22,7 @@ void Prefab::EntityWalker(Entity entity)
 {
     m_Entities.push_back(entity);
 
-    for (const auto &e : entity.GetComponent<ParentComponent>().ChildEntities) EntityWalker(e);
+    //for (const auto &e : entity.GetComponent<ParentComponent>().ChildEntities) EntityWalker(e);
 }
 
 void Prefab::AttachToScene(SceneRef scene)

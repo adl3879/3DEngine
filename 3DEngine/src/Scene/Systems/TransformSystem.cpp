@@ -14,6 +14,7 @@ void TransformSystem::Update(float dt)
         Entity ent = Entity{entity, m_Scene};
         auto &transformComponent = ent.GetComponent<TransformComponent>();
         auto &parentComponent = ent.GetComponent<ParentComponent>();
+		auto tag = ent.GetComponent<TagComponent>().Tag;
 
         if (parentComponent.HasParent)
         {

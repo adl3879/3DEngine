@@ -8,9 +8,7 @@ file(GLOB_RECURSE SOURCES
         "src/*.cpp"
 )
 
-add_executable(${PROJECT_NAME} ${SOURCES}
-        src/Panels/InputMapPanel.h
-        src/Panels/InputMapPanel.h)
+add_executable(${PROJECT_NAME} ${SOURCES})
 # Set the output directory for the executable to the current binary directory (Sandbox)
 set_target_properties(${PROJECT_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}")
 

@@ -178,9 +178,7 @@ void SceneRenderer::RenderScene(Scene &scene, Framebuffer &framebuffer)
         for (auto &e : camView)
         {
             auto [camera, transform] = camView.get<CameraComponent, TransformComponent>(e);
-            Renderer::DrawCameraFrustum(scene.GetCamera().GetProjectionMatrix(),
-                                        scene.GetCamera().GetViewMatrix(),
-                                        transform.GetTransform());
+            Renderer::DrawCameraFrustum(scene.GetCamera().GetProjectionMatrix(), scene.GetCamera().GetViewMatrix(), transform.GetTransform());
         }
 
         // physics debug
@@ -190,15 +188,13 @@ void SceneRenderer::RenderScene(Scene &scene, Framebuffer &framebuffer)
             for (const auto entity : physxView)
             {
                 const auto ent = Entity{entity, &scene};
-                PhysicsManager::Get().DrawDebug(scene.GetCamera().GetProjectionMatrix(),
-                                                scene.GetCamera().GetViewMatrix(), ent);
+                PhysicsManager::Get().DrawDebug(scene.GetCamera().GetProjectionMatrix(), scene.GetCamera().GetViewMatrix(), ent);
             }
         }
 
         if (scene.IsGridEnabled())
         {
-            InfiniteGrid::Draw(scene.GetCamera().GetProjectionMatrix(), scene.GetCamera().GetViewMatrix(),
-                               scene.GetCamera().GetPosition());
+            InfiniteGrid::Draw(scene.GetCamera().GetProjectionMatrix(), scene.GetCamera().GetViewMatrix(), scene.GetCamera().GetPosition());
         }
 
         // weird?
@@ -298,7 +294,6 @@ void SceneRenderer::EnvironmentPass(Scene &scene)
         {
             environment->SkyboxHDR->Render(scene.GetCamera().GetProjectionMatrix(), scene.GetCamera().GetViewMatrix());
         }
-        //else scene.GetEnvironment()->SkyboxHDR->Destroy();
     }
 }
 

@@ -79,11 +79,15 @@ std::shared_ptr<Scene> Scene::Copy(std::shared_ptr<Scene> src)
     return dst;
 }
 
-Scene::Scene() { 
+Scene::Scene() 
+{ 
 	New("Untitled Scene");
 }
 
-Scene::Scene(const std::string &name) { New(name); }
+Scene::Scene(const std::string &name) 
+{
+	New(name);
+}
 
 void Scene::New(const std::string &name)
 {
@@ -104,6 +108,17 @@ void Scene::New(const std::string &name)
     m_SceneRenderer = new SceneRenderer();
     m_SceneRenderer->Init();
 
+	// Create root entity
+	auto e = CreateEntity(m_SceneName);
+	e.GetComponent<TagComponent>().IsRoot = true;
+	m_RootEntity = e.GetComponent<IDComponent>().ID;
+}
+
+void Scene::AddToRoot(Entity entity)
+{
+    auto root = m_RootEntity;
+    auto rootEntity = GetEntityByUUID(root);
+    rootEntity.AddChild(entity);
 }
 
 Scene::~Scene() {}
@@ -254,56 +269,32 @@ Entity Scene::DuplicateEntity(Entity entity)
     std::string tag = entity.GetComponent<TagComponent>().Tag;
 
     newEntity = CreateEntity(tag);
-    CopyComponentIfExists(AllComponentsExceptIDAndTag{}, newEntity, entity);
+    CopyComponentIfExists(AllComponentsExceptIDAndTagAndParent{}, newEntity, entity);
 
     return newEntity;
 }
 
-Entity Scene::DuplicateEntityRecursiveW(Entity originalEntity, std::unordered_map<UUID, Entity> &entityMap)
+Entity Scene::DuplicateEntityRecursive(Entity entity, Entity parent)
 {
-    if (!originalEntity)
+	// check if entity is valid
+	if (!entity) return {};
+    if (entity.GetComponent<TagComponent>().IsRoot) return {};
+
+	auto newEntity = DuplicateEntity(entity);
+	const auto &parentComponent = entity.GetComponent<ParentComponent>();
+	newEntity.GetComponent<TagComponent>().Tag += " (Copy)";
+
+	parent.AddChild(newEntity);
+
+    for (const auto &child : parentComponent.Children)
     {
-        // Return an invalid entity for invalid input
-        return {};
+		// has parent
+        DuplicateEntityRecursive(GetEntityByUUID(child), newEntity);
     }
-
-    // Check if the original entity has already been duplicated
-    if (entityMap.find(originalEntity.GetUUID()) != entityMap.end())
-    {
-        // Return the duplicated entity from the map
-        return entityMap[originalEntity.GetUUID()];
-    }
-
-    // Duplicate the original entity and generate a new UUID
-    Entity newEntity = DuplicateEntity(originalEntity);
-
-    // Process child entities
-    auto &parent = originalEntity.GetComponent<ParentComponent>();
-    for (const auto &e : parent.ChildEntities)
-    {
-        // Recursively duplicate child entities and link to the new parent entity
-        Entity newChildEntity = DuplicateEntityRecursiveW(e, entityMap);
-    }
-
-    // Return the duplicated entity
-    return newEntity;
-}
-
-Entity Scene::DuplicateEntityRecursive(Entity entity)
-{
-	Entity newEntity = DuplicateEntity(entity);
-
-	auto &parent = entity.GetComponent<ParentComponent>();
-    if (!parent.Children.empty())
-    {
-        for (const auto &child : parent.Children)
-        {
-            DuplicateEntityRecursive(GetEntityByUUID(child));
-        }
-    }
-    return newEntity;
-}
     
+    return newEntity;
+}
+
 void Scene::Merge(std::shared_ptr<Scene> src)
 {
     auto &srcSceneRegistry = src->m_Registry;
