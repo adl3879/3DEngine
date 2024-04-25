@@ -10,6 +10,7 @@
 #include "PhysicsComponents.h"
 #include "MeshImporter.h"
 #include "NetScript.h"
+#include "IMath.h"
 
 #include <IconsFontAwesome5.h>
 
@@ -55,7 +56,7 @@ void SceneHierarchyPanel::DrawEntityNode(Entity entity)
     icon.append("  ");
 
     ImVec4 textColor = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
-    if (entity.GetComponent<TagComponent>().IsPrefab)
+    if (entity.HasComponent<PrefabInstanceComponent>())
     {
         textColor = ImVec4(0.0f, 1.0f, 0.0f, 1.0f);
     }
@@ -199,9 +200,26 @@ void SceneHierarchyPanel::DrawComponents(Entity entity)
                 ImGui::EndPopup();
             }
 
-            _drawVec3Control("Position", transform.Translation, 0.0f);
-            _drawVec3Control("Rotation", transform.Rotation, 0.0f);
-            _drawVec3Control("Scale", transform.Scale, 1.0f);
+			{
+				auto position = transform.GetLocalPosition();
+				_drawVec3Control("Position", position, 0.0f);
+				if (position != transform.GetLocalPosition()) transform.SetLocalPosition(position);
+			}
+			{
+				glm::vec3 eulerAngles = glm::eulerAngles(transform.GetLocalRotation());
+				glm::vec3 eulerDegrees = glm::degrees(eulerAngles);
+				_drawVec3Control("Rotation", eulerDegrees, 0.0f);
+				if (eulerDegrees != glm::degrees(glm::eulerAngles(transform.GetLocalRotation())))
+				{
+					glm::vec3 radians = glm::radians(eulerDegrees);
+					transform.SetLocalRotation(glm::quat(radians));
+				}
+			}
+			{
+				glm::vec3 scale = transform.GetLocalScale();
+				_drawVec3Control("Scale", scale, 1.0f);
+				if (scale != transform.GetLocalScale()) transform.SetLocalScale(scale);
+			}
         }
     };
 
@@ -438,7 +456,7 @@ void SceneHierarchyPanel::DrawComponents(Entity entity)
             REMOVABLE_COMPONENT
             auto &entityComponent = entity.GetComponent<DirectionalLightComponent>();
             auto &transform = entity.GetComponent<TransformComponent>();
-            entityComponent.Light.Direction = transform.Rotation;
+            entityComponent.Light.Direction = Math::QuatToDirection(transform.Rotation);
             ImGui::Checkbox(_labelPrefix("Enabled"), &entityComponent.Enabled);
             ImGui::ColorEdit3(_labelPrefix("Color"), glm::value_ptr(entityComponent.Light.Color));
             ImGui::DragFloat(_labelPrefix("Intensity"), &entityComponent.Light.Intensity, 0.1f, 0.0f, 10000.0f);
@@ -501,7 +519,7 @@ void SceneHierarchyPanel::DrawComponents(Entity entity)
             auto &entityComponent = entity.GetComponent<SpotLightComponent>();
             auto &transform = entity.GetComponent<TransformComponent>();
             entityComponent.Light.Position = transform.Translation;
-            entityComponent.Light.Direction = transform.Rotation;
+            entityComponent.Light.Direction = Math::QuatToDirection(transform.Rotation);
             ImGui::Checkbox(_labelPrefix("Enabled"), &entityComponent.Enabled);
             ImGui::ColorEdit3(_labelPrefix("Color"), glm::value_ptr(entityComponent.Light.Color));
             ImGui::DragFloat(_labelPrefix("Cutoff"), &entityComponent.Light.Cutoff, 0.1f, 0.0f, 90.0f);

@@ -1,14 +1,13 @@
 #include "IMath.h"
 
-#define GLM_ENABLE_EXPERIMENTAL
-#include <glm/gtx/matrix_decompose.hpp>
+#include <glad/glad.h>
+#include "InputManager.h"
 
 namespace Engine
 {
 namespace Math
 {
-bool DecomposeTransform(const glm::mat4 &transform, glm::vec3 &outTranslation, glm::vec3 &outRotation,
-                        glm::vec3 &outScale)
+bool DecomposeTransform(const glm::mat4 &transform, glm::vec3 &outTranslation, glm::vec3 &outRotation, glm::vec3 &outScale)
 {
     // from glm::decompose in matrix_decompose.inl
 
@@ -62,5 +61,39 @@ bool DecomposeTransform(const glm::mat4 &transform, glm::vec3 &outTranslation, g
 
     return true;
 }
+
+glm::vec3 ScreenToWorld(const glm::vec2 &mouse, const glm::vec2 &screenSize, const glm::mat4 &projection, const glm::mat4 &view)
+{
+	// Normalized device space
+	glm::vec2 ndc;
+	ndc.x = (2.0f * mouse.x) / screenSize.x - 1.0f;
+	ndc.y = 1.0f - (2.0f * mouse.y) / screenSize.y;
+
+	// Homogeneous clip space
+	glm::vec4 clipSpace(ndc.x, ndc.y, -1.0f, 1.0f);
+
+	// Eye space
+	glm::vec4 eyeSpace = glm::inverse(projection) * clipSpace;
+	eyeSpace = glm::vec4(eyeSpace.x, eyeSpace.y, -1.0f, 0.0f);
+
+	// World space
+	glm::vec4 worldSpace = glm::inverse(view) * eyeSpace;
+	worldSpace = glm::normalize(worldSpace);
+
+	return glm::vec3(worldSpace);
+}
+
+glm::quat QuatFromEuler(float x, float y, float z)
+{
+    glm::quat pitchQuat = glm::angleAxis(glm::radians(x), glm::vec3(1.0f, 0.0f, 0.0f));
+    glm::quat yawQuat = glm::angleAxis(glm::radians(y), glm::vec3(0.0f, 1.0f, 0.0f));
+    glm::quat rollQuat = glm::angleAxis(glm::radians(z), glm::vec3(0.0f, 0.0f, -1.0f));
+    glm::quat orientation = yawQuat * pitchQuat * rollQuat;
+
+    return glm::normalize(orientation);
+}
+
+glm::vec3 QuatToDirection(const glm::quat &quat) { return glm::normalize(quat * glm::vec3(0, 0, -1)); }
+
 } // namespace Math
 } // namespace Engine

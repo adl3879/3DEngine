@@ -7,6 +7,7 @@
 #include "Light.h"
 #include "Log.h"
 #include "Entity.h"
+#include "IMath.h"
 #include "MaterialSerializer.h"
 
 namespace YAML
@@ -49,6 +50,30 @@ template <> struct convert<glm::vec3>
         rhs.x = node[0].as<float>();
         rhs.y = node[1].as<float>();
         rhs.z = node[2].as<float>();
+        return true;
+    }
+};
+
+template <> struct convert<glm::quat>
+{
+    static Node encode(const glm::quat &rhs)
+    {
+        Node node;
+        node.push_back(rhs.x);
+        node.push_back(rhs.y);
+        node.push_back(rhs.z);
+        node.push_back(rhs.w);
+        return node;
+    }
+
+    static bool decode(const Node &node, glm::quat &rhs)
+    {
+        if (!node.IsSequence() || node.size() != 4) return false;
+
+        rhs.x = node[0].as<float>();
+        rhs.y = node[1].as<float>();
+        rhs.z = node[2].as<float>();
+        rhs.w = node[3].as<float>();
         return true;
     }
 };
@@ -117,6 +142,13 @@ YAML::Emitter &operator<<(YAML::Emitter &out, const glm::vec4 &v)
     return out;
 }
 
+YAML::Emitter &operator<<(YAML::Emitter &out, const glm::quat &v)
+{
+	out << YAML::Flow;
+	out << YAML::BeginSeq << v.x << v.y << v.z << v.w << YAML::EndSeq;
+	return out;
+}
+
 void SceneSerializer::SerializeEntity(YAML::Emitter &out, Entity entity)
 {
     out << YAML::BeginMap; // Entity
@@ -130,6 +162,7 @@ void SceneSerializer::SerializeEntity(YAML::Emitter &out, Entity entity)
 
         const auto &tag = entity.GetComponent<TagComponent>();
         out << YAML::Key << "Tag" << YAML::Value << tag.Tag;
+        out << YAML::Key << "IsPrefabRoot" << YAML::Value << tag.IsPrefabRoot;
 
         out << YAML::EndMap; // TagComponent
     }
@@ -156,13 +189,13 @@ void SceneSerializer::SerializeEntity(YAML::Emitter &out, Entity entity)
         out << YAML::BeginMap; // TransformComponent
 
         const auto &tc = entity.GetComponent<TransformComponent>();
+        out << YAML::Key << "GlobalTranslation" << YAML::Value << tc.GlobalTranslation;
+        out << YAML::Key << "GlobalRotation" << YAML::Value << tc.GlobalRotation;
+        out << YAML::Key << "GlobalScale" << YAML::Value << tc.GlobalScale;
+
         out << YAML::Key << "Translation" << YAML::Value << tc.Translation;
         out << YAML::Key << "Rotation" << YAML::Value << tc.Rotation;
         out << YAML::Key << "Scale" << YAML::Value << tc.Scale;
-
-        out << YAML::Key << "LocalTranslation" << YAML::Value << tc.LocalTranslation;
-        out << YAML::Key << "LocalRotation" << YAML::Value << tc.LocalRotation;
-        out << YAML::Key << "LocalScale" << YAML::Value << tc.LocalScale;
 
         out << YAML::EndMap; // TransformComponent
     }
@@ -458,13 +491,13 @@ void SceneSerializer::DeserializeEntity(YAML::detail::iterator_value entity, Ent
     if (auto transformComponent = entity["TransformComponent"])
     {
         auto &tc = deserializedEntity.GetComponent<TransformComponent>();
-        tc.Translation = transformComponent["Translation"].as<glm::vec3>();
-        tc.Rotation = transformComponent["Rotation"].as<glm::vec3>();
-        tc.Scale = transformComponent["Scale"].as<glm::vec3>();
+        tc.GlobalTranslation = transformComponent["GlobalTranslation"].as<glm::vec3>();
+        tc.GlobalRotation = transformComponent["GlobalRotation"].as<glm::quat>();
+        tc.GlobalScale = transformComponent["GlobalScale"].as<glm::vec3>();
 
-        tc.LocalTranslation = transformComponent["LocalTranslation"].as<glm::vec3>();
-        tc.LocalRotation = transformComponent["LocalRotation"].as<glm::vec3>();
-        tc.LocalScale = transformComponent["LocalScale"].as<glm::vec3>();
+        tc.Translation = transformComponent["Translation"].as<glm::vec3>();
+        tc.Rotation = transformComponent["Rotation"].as<glm::quat>();
+        tc.Scale = transformComponent["Scale"].as<glm::vec3>();
     }
 
     if (auto cameraComponent = entity["CameraComponent"])
@@ -503,7 +536,7 @@ void SceneSerializer::DeserializeEntity(YAML::detail::iterator_value entity, Ent
     {
         auto &tc = deserializedEntity.GetComponent<TransformComponent>();
         auto &dlc = deserializedEntity.AddComponent<DirectionalLightComponent>();
-        dlc.Light.Direction = tc.Rotation;
+        dlc.Light.Direction = Math::QuatToDirection(tc.Rotation);
         dlc.Light.Color = directionalLightComponent["Color"].as<glm::vec3>();
         dlc.Light.Intensity = directionalLightComponent["AmbientIntensity"].as<float>();
     }
@@ -531,7 +564,7 @@ void SceneSerializer::DeserializeEntity(YAML::detail::iterator_value entity, Ent
         slc.Index = count;
         slc.Light.Color = spotLightComponent["Color"].as<glm::vec3>();
         slc.Light.Position = tc.Translation;
-        slc.Light.Direction = tc.Rotation;
+        slc.Light.Direction = Math::QuatToDirection(tc.Rotation);
         slc.Light.Intensity = spotLightComponent["AmbientIntensity"].as<float>();
         slc.Light.Cutoff = spotLightComponent["Cutoff"].as<float>();
         slc.Light.OuterCutoff = spotLightComponent["OuterCutoff"].as<float>();

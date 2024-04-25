@@ -325,10 +325,8 @@ void ContentBrowserPanel::OpenCreateFilePopup(AssetType type)
 
 		if (type == AssetType::Prefab)
 		{
-			auto prefab = std::make_shared<Prefab>();
-			prefab->CreateFromEntity(m_PrefabDraggedEntity);
-			PrefabSerializer serializer(prefab);
-			serializer.Serialize(m_CurrentDirectory / defaultName);
+            PrefabSerializer serializer(m_Context);
+			serializer.Serialize(m_CurrentDirectory / defaultName, m_PrefabDraggedEntity);
 		}
 	}
 }

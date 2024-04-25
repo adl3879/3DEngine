@@ -12,7 +12,6 @@
 #include "MaterialSerializer.h"
 #include "Entity.h"
 #include "Components.h"
-#include "Prefab.h"
 #include "PrefabSerializer.h"
 
 #include <filesystem>

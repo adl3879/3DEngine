@@ -64,7 +64,7 @@ static void SetRotation(int entityID, float x, float y, float z)
 {
     Entity entity(static_cast<entt::entity>(entityID), ScriptingEngineNet::Get().GetCurrentScene());
     auto &transform = entity.GetComponent<TransformComponent>();
-    transform.Rotation = {x, y, z};
+    //transform.Rotation = {x, y, z};
 }
 
 static Coral::NativeArray<float> GetRotation(int entityID)

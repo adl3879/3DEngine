@@ -251,12 +251,19 @@ void AppLayer::OnImGuiRender()
                 break;
                 case AssetType::Prefab:
                 {
-                    //auto prefab = AssetManager::GetAsset<Prefab>(path);
-                    auto prefab = std::make_shared<Prefab>();
-                    PrefabSerializer serializer(prefab);
-                    serializer.Deserialize(Project::GetAssetDirectory() / path);
+					auto asset = AssetManager::GetAsset<Prefab>(path);
+                    PrefabSerializer serializer(m_ActiveScene);
+					auto entity = serializer.Deserialize(Project::GetAssetDirectory() / AssetManager::GetRegistry()[asset->Handle].FilePath);
+					auto &tc = entity.GetComponent<TransformComponent>();
 
-                    prefab->AttachToScene(m_ActiveScene);
+					auto mouse = InputManager::Get().GetMouseMovedPosition();
+                    auto sw = Math::ScreenToWorld({mouse.X, mouse.Y}, m_ViewportSize,
+                                m_ActiveScene->GetEditorCamera()->GetProjectionMatrix(),
+                                m_ActiveScene->GetEditorCamera()->GetViewMatrix());
+
+					glm::mat4 modelMatrix = glm::mat4(1.0f); // Start with identity matrix
+                    modelMatrix = glm::translate(modelMatrix, sw);
+					tc.LocalTransform = modelMatrix;
                 }
                 break;
                 case AssetType::SkyLight:
@@ -336,7 +343,7 @@ void AppLayer::OnImGuiRender()
             auto &tc = selectedEntity.GetComponent<TransformComponent>();
             auto parentComponent = selectedEntity.GetComponent<ParentComponent>();
 
-            glm::mat4 transform = tc.GetTransform();
+            glm::mat4 transform = tc.GetGlobalTransform();
 
             // Snapping
             bool snap = InputManager::Get().IsKeyPressed(InputKey::LeftControl);
@@ -349,24 +356,46 @@ void AppLayer::OnImGuiRender()
 
             if (ImGuizmo::IsUsing())
             {
-                glm::vec3 translation, rotation, scale;
-                Math::DecomposeTransform(transform, translation, rotation, scale);
-                glm::vec3 deltaRotation = rotation - tc.Rotation;
-
-                tc.Translation = translation;
-                tc.Rotation += deltaRotation;
-                tc.Scale = scale;
-
-                if (parentComponent.HasParent)
+                // Since imguizmo returns a transform in global space and we want the local transform,
+                // we need to multiply by the inverse of the parent's global transform in order to revert
+                // the changes from the parent transform.
+                glm::mat4 localTransform = glm::mat4(transform);
+                ParentComponent &parent = selectedEntity.GetComponent<ParentComponent>();
+                if (parent.HasParent)
                 {
-                    // get local transform from global transform
-                    auto parentEntity = m_ActiveScene->GetEntityByUUID(parentComponent.Parent);
-                    const auto &parentTransform = parentEntity.GetComponent<TransformComponent>();
-                    glm::mat4 parentTransformMat = parentTransform.GetTransform();
-                    glm::mat4 localTransform = glm::inverse(parentTransformMat) * tc.GetTransform();
-
-                    tc.SetLocalTransform(localTransform);
+                    const auto &parentTransformComponent = m_ActiveScene->GetEntityByUUID(parent.Parent).GetComponent<TransformComponent>();
+                    const glm::mat4 &parentTransform = parentTransformComponent.GetGlobalTransform();
+                    localTransform = glm::inverse(parentTransform) * localTransform;
                 }
+
+                // Decompose local transform
+                float decomposedPosition[3];
+                float decomposedEuler[3];
+                float decomposedScale[3];
+                ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(localTransform), decomposedPosition,
+                                                      decomposedEuler, decomposedScale);
+
+                const auto &localPosition = glm::vec3(decomposedPosition[0], decomposedPosition[1], decomposedPosition[2]);
+                const auto &localScale = glm::vec3(decomposedScale[0], decomposedScale[1], decomposedScale[2]);
+
+                localTransform[0] /= localScale.x;
+                localTransform[1] /= localScale.y;
+                localTransform[2] /= localScale.z;
+                const auto &rotationMatrix = glm::mat3(localTransform);
+                const glm::quat &localRotation = glm::normalize(glm::quat(rotationMatrix));
+
+                const glm::mat4 &rotationMatrix4 = glm::mat4_cast(localRotation);
+                const glm::mat4 &scaleMatrix = glm::scale(glm::mat4(1.0f), localScale);
+                const glm::mat4 &translationMatrix = glm::translate(glm::mat4(1.0f), localPosition);
+                const glm::mat4 &newLocalTransform = translationMatrix * rotationMatrix4 * scaleMatrix;
+
+                tc.Translation = localPosition;
+
+                if (m_GizmoType != ImGuizmo::SCALE) tc.Rotation = localRotation;
+
+                tc.Scale = localScale;
+                tc.LocalTransform = newLocalTransform;
+                tc.Dirty = true;
             }
         }
     }

@@ -22,6 +22,8 @@ class EditorCamera : public Camera
 	float GetFarClip() const override { return m_FarClip; }
 	float GetFov() const override { return m_FOV; }
 	float GetAspectRatio() const override { return m_AspectRatio; }
+	//?
+    void SetTransform(const glm::mat4 &transform) override { m_ViewMatrix = transform; }
 
     void OnUpdate(float ts);
 	void Reset(float fov, float aspectRatio, float nearClip, float farClip);

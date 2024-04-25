@@ -17,16 +17,17 @@ using AllComponents =
     ComponentGroup<IDComponent, TagComponent, VisibilityComponent, TransformComponent, StaticMeshComponent, SkinnedMeshComponent, CameraComponent,
                    PointLightComponent, DirectionalLightComponent, SpotLightComponent,
                    RigidBodyComponent, BoxColliderComponent, SphereColliderComponent, ParentComponent,
-                   NetScriptComponent, AnimationControllerComponent>;
+                   NetScriptComponent, AnimationControllerComponent, PrefabInstanceComponent>;
 
 using AllComponentsExceptIDAndTag =
     ComponentExceptIDAndTagGroup<VisibilityComponent, TransformComponent, StaticMeshComponent, SkinnedMeshComponent, CameraComponent,
                                  PointLightComponent, DirectionalLightComponent, SpotLightComponent,
                                  RigidBodyComponent, BoxColliderComponent, SphereColliderComponent, ParentComponent,
-                                 NetScriptComponent, AnimationControllerComponent>;
+                                 NetScriptComponent, AnimationControllerComponent, PrefabInstanceComponent>;
 
 using AllComponentsExceptIDAndTagAndParent =
     ComponentExceptIDAndTagGroup<VisibilityComponent, TransformComponent, StaticMeshComponent, SkinnedMeshComponent, CameraComponent,
                                  PointLightComponent, DirectionalLightComponent, SpotLightComponent,
-                                 RigidBodyComponent, BoxColliderComponent, SphereColliderComponent, NetScriptComponent, AnimationControllerComponent>;
+                                 RigidBodyComponent, BoxColliderComponent, SphereColliderComponent, NetScriptComponent, AnimationControllerComponent,
+								 PrefabInstanceComponent>;
 } // namespace Engine

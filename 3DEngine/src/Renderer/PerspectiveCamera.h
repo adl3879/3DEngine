@@ -38,6 +38,8 @@ class PerspectiveCamera : public Camera
 	float GetFarClip() const override { return m_PerspectiveFarClip; }
 	float GetFov() const override { return m_PerspectiveVerticalFOV; }
 	float GetAspectRatio() const override { return m_AspectRatio; }
+	//?
+    void SetTransform(const glm::mat4 &transform) override { m_ViewMatrix = transform; }
 
     void ResizeFramebuffer(const glm::vec2 &size) { m_Framebuffer->QueueResize(size); }
 

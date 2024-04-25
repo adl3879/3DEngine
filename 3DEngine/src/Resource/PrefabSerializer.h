@@ -3,19 +3,22 @@
 #include <filesystem>
 
 #include "Entity.h"
-#include "Prefab.h"
+#include "Scene.h"
 
 namespace Engine
 {
 class PrefabSerializer
 {
   public:
-    PrefabSerializer(PrefabRef &prefab): m_Prefab(prefab) {}
+    PrefabSerializer(SceneRef scene) : m_Scene(scene) {}
 
-    void Serialize(const std::filesystem::path &path);
-    bool Deserialize(const std::filesystem::path &path);
+    void Serialize(const std::filesystem::path &path, Entity e);
+    Entity Deserialize(const std::filesystem::path &path);
 
   private:
-    PrefabRef m_Prefab;
+	std::vector<Entity> FlattenEntity(Entity entity);
+
+  private:
+	SceneRef m_Scene;
 };
 } // namespace Engine

@@ -17,6 +17,7 @@ class Camera
     virtual void SetPosition(const glm::vec3 &position) = 0;
     virtual glm::mat4 GetProjectionMatrix() = 0;
     virtual glm::mat4 GetViewMatrix() = 0;
+	virtual void SetTransform(const glm::mat4 &transform) = 0;
 
 	virtual float GetNearClip() const = 0;
 	virtual float GetFarClip() const = 0;

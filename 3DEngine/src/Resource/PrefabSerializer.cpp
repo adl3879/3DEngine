@@ -9,46 +9,60 @@
 
 namespace Engine
 {
-void PrefabSerializer::Serialize(const std::filesystem::path &path)
+std::vector<Entity> PrefabSerializer::FlattenEntity(Entity entity)
+{
+	std::vector<Entity> entities;
+	entities.push_back(entity);
+
+	auto &parent = entity.GetComponent<ParentComponent>();
+	for (auto& child : parent.Children)
+	{
+		auto childEntity = Entity{m_Scene->GetEntityByUUID(child), m_Scene.get()};
+		auto children = FlattenEntity(childEntity);
+
+		entities.insert(entities.end(), children.begin(), children.end());
+	}
+
+	return entities;
+}
+
+void PrefabSerializer::Serialize(const std::filesystem::path &path, Entity e)
 {
     YAML::Emitter out;
     out << YAML::BeginMap;
-    out << YAML::Key << "Prefab" << YAML::Value << "Untitled";
+    out << YAML::Key << "Prefab" << YAML::Value << path.stem().string();
     out << YAML::Key << "Entities" << YAML::Value << YAML::BeginSeq;
-    auto i = m_Prefab->GetScene();
-  
-	for (auto entity : m_Prefab->GetEntities())
+
+	e.GetComponent<TagComponent>().IsPrefabRoot = true;
+
+	for (const auto& entity : FlattenEntity(e))
 	{
-        if (!entity) return;
-
-        SceneSerializer::SerializeEntity(out, entity);
+		SceneSerializer::SerializeEntity(out, entity);
 	}
-
+    
     out << YAML::EndSeq;
-    out << YAML::EndMap;
 
-    std::ofstream fout(path);
-    fout << out.c_str();
+    std::ofstream f_out(path);
+    f_out << out.c_str();
 }
 
-bool PrefabSerializer::Deserialize(const std::filesystem::path &path)
+Entity PrefabSerializer::Deserialize(const std::filesystem::path &path)
 {
     std::ifstream stream(path);
     std::stringstream strStream;
     strStream << stream.rdbuf();
 
     YAML::Node data = YAML::Load(strStream.str());
-    if (!data["Prefab"]) return false;
+    if (!data["Prefab"]) return {};
 
 	std::map<UUID, UUID> oldToNewUUIDMap = {};
+    Entity rootPrefab;
 
     auto entities = data["Entities"];
     if (entities)
     {
         for (auto entity : entities)
         {
-            SceneRef scene = m_Prefab->GetScene();
-
 			// change uuid
             auto uuid = entity["Entity"].as<uint64_t>();
 			// not finding in old means it has not been changed
@@ -60,19 +74,16 @@ bool PrefabSerializer::Deserialize(const std::filesystem::path &path)
             if (tagComponent) name = tagComponent["Tag"].as<std::string>();
 
             LOG_CORE_TRACE("Deserialized entity with ID = {0}, name = {1}", uuid, name);
-            Entity deserializedEntity = scene->CreateEntityWithUUID(newUUID, name);
+            Entity deserializedEntity = m_Scene->CreateEntityWithUUID(newUUID, name);
             SceneSerializer::DeserializeEntity(entity, deserializedEntity);
-
-			auto &tag = deserializedEntity.GetComponent<TagComponent>();
-            tag.IsPrefab = true;
 
 			// change parent
 			auto &parent = deserializedEntity.GetComponent<ParentComponent>();
             if (parent.HasParent)
             {
                 auto newParentUUID = oldToNewUUIDMap.find(parent.Parent) != oldToNewUUIDMap.end()
-                                         ? oldToNewUUIDMap[parent.Parent]
-                                         : UUID();
+					? oldToNewUUIDMap[parent.Parent]
+                    : UUID();
                 oldToNewUUIDMap[parent.Parent] = newParentUUID;
                 parent.Parent = newParentUUID;
             }
@@ -80,13 +91,23 @@ bool PrefabSerializer::Deserialize(const std::filesystem::path &path)
 			// change children
 			for (auto &id : parent.Children)
 			{
-				auto newChildUUID =
-					oldToNewUUIDMap.find(id) != oldToNewUUIDMap.end() ? oldToNewUUIDMap[id] : UUID();
+				auto newChildUUID = oldToNewUUIDMap.find(id) != oldToNewUUIDMap.end() ? oldToNewUUIDMap[id] : UUID();
 				oldToNewUUIDMap[id] = newChildUUID;
 				id = newChildUUID;
 			}
+
+			// add prefab instance component
+			deserializedEntity.AddComponent<PrefabInstanceComponent>();
+
+			// add root prefab to scene root
+            if (tagComponent["IsPrefabRoot"] && tagComponent["IsPrefabRoot"].as<bool>())
+            {
+				m_Scene->AddToRoot(deserializedEntity);
+				rootPrefab = deserializedEntity;
+            }
         }
     }
-    return true;
+
+    return rootPrefab;
 }
 } // namespace Engine

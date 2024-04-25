@@ -119,7 +119,7 @@ void SceneRenderer::RenderScene(Scene &scene, Framebuffer &framebuffer)
         const auto &asset = AssetManager::GetAsset<Mesh>(mesh.Handle);
         for (const auto &m : asset->StaticMeshes)
         {
-            auto trnsfrm = transform.GetTransform();
+            auto trnsfrm = transform.GetGlobalTransform();
             MaterialRef mat = AssetManager::GetAsset<Material>(mesh.MaterialHandle);
             if (mat == nullptr)
             {
@@ -153,7 +153,7 @@ void SceneRenderer::RenderScene(Scene &scene, Framebuffer &framebuffer)
 		const auto& asset = AssetManager::GetAsset<Mesh>(skinnedMesh.Handle);
 		for (auto& m : asset->SkinnedMeshData.SkinnedMeshes)
 		{
-            auto trnsfrm = transform.GetTransform();
+            auto trnsfrm = transform.GetGlobalTransform();
             MaterialRef mat = AssetManager::GetAsset<Material>(skinnedMesh.MaterialHandle);
             if (mat == nullptr)
             {
@@ -178,7 +178,7 @@ void SceneRenderer::RenderScene(Scene &scene, Framebuffer &framebuffer)
         for (auto &e : camView)
         {
             auto [camera, transform] = camView.get<CameraComponent, TransformComponent>(e);
-            Renderer::DrawCameraFrustum(scene.GetCamera().GetProjectionMatrix(), scene.GetCamera().GetViewMatrix(), transform.GetTransform());
+            Renderer::DrawCameraFrustum(scene.GetCamera().GetProjectionMatrix(), scene.GetCamera().GetViewMatrix(), transform.GetGlobalTransform());
         }
 
         // physics debug
@@ -264,7 +264,7 @@ void SceneRenderer::ShadowPass(Scene &scene)
 		const auto &asset = AssetManager::GetAsset<Mesh>(mesh.Handle);
 		for (const auto& m : asset->StaticMeshes)
 		{
-			auto trnsfrm = transform.GetTransform();
+			auto trnsfrm = transform.GetGlobalTransform();
 			auto mat = std::make_shared<Material>();
             Renderer::SubmitMesh(std::make_shared<StaticMesh>(m), mat, trnsfrm);
 		}

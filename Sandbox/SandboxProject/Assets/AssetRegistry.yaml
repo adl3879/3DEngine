@@ -167,6 +167,9 @@ AssetRegistry:
   - Handle: 9385591934404247738
     FilePath: Models/Sponza/6667038893015345571.jpg
     Type: AssetType::Texture2D
+  - Handle: 9468939711007547027
+    FilePath: Prefabs/box.prefab
+    Type: AssetType::Prefab
   - Handle: 9542652822035349884
     FilePath: Models/Mini Arena/Textures/colormap.png
     Type: AssetType::Texture2D

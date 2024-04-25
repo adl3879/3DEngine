@@ -42,7 +42,6 @@ public:
 
     Entity DuplicateEntity(Entity entity);
     Entity DuplicateEntityRecursive(Entity entity, Entity parent);
-    void Merge(std::shared_ptr<Scene> src);
 
     Entity GetEntityByUUID(UUID uuid);
     Entity FindEntityByName(std::string_view name);

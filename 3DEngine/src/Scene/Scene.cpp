@@ -295,25 +295,6 @@ Entity Scene::DuplicateEntityRecursive(Entity entity, Entity parent)
     return newEntity;
 }
 
-void Scene::Merge(std::shared_ptr<Scene> src)
-{
-    auto &srcSceneRegistry = src->m_Registry;
-    std::unordered_map<UUID, entt::entity> enttMap;
-
-    auto idView = srcSceneRegistry.view<IDComponent>();
-    for (auto entity : idView)
-    {
-        UUID uuid = srcSceneRegistry.get<IDComponent>(entity).ID;
-        const auto &name = srcSceneRegistry.get<TagComponent>(entity).Tag;
-        Entity newEntity = CreateEntityWithUUID(uuid, name);
-        newEntity.GetComponent<TagComponent>().IsPrefab = true;
-        enttMap[uuid] = (entt::entity)newEntity;
-    }
-
-    // copy components
-    CopyComponent(AllComponentsExceptIDAndTag{}, m_Registry, srcSceneRegistry, enttMap);
-}
-
 void Scene::OnRuntimeUpdate(float dt)
 {
     if (!m_IsPaused)

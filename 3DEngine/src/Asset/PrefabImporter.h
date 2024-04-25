@@ -16,8 +16,7 @@ class PrefabImporter
     static PrefabRef ImportPrefab(AssetHandle handle, const AssetMetadata &metadata)
     {
         auto prefab = std::make_shared<Prefab>();
-        PrefabSerializer serializer(prefab);
-        serializer.Deserialize(Project::GetAssetDirectory() / metadata.FilePath);
+        prefab->Handle = handle;
 
         return prefab;
     }

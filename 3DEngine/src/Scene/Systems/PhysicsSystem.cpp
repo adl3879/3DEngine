@@ -80,7 +80,7 @@ void PhysicsSystem::InitializeRigidbodies()
             auto &boxComponent = ent.GetComponent<BoxColliderComponent>();
             Physics::BoxRef boxShape = std::make_shared<Physics::Box>(boxComponent.Size * transform.Scale);
             rigidBody = std::make_shared<Physics::RigidBody>(mass, transform.Translation, transform.Rotation,
-                                                             transform.GetTransform(), boxShape, ent);
+                                                             transform.GetGlobalTransform(), boxShape, ent);
         }
 
         if (ent.HasComponent<SphereColliderComponent>())
@@ -89,7 +89,7 @@ void PhysicsSystem::InitializeRigidbodies()
             auto &sphereComponent = ent.GetComponent<SphereColliderComponent>();
             Physics::SphereRef sphereShape = std::make_shared<Physics::Sphere>(sphereComponent.Radius * transform.Scale.x);
             rigidBody = std::make_shared<Physics::RigidBody>(mass, transform.Translation, transform.Rotation,
-                                                             transform.GetTransform(), sphereShape, ent);
+                                                             transform.GetGlobalTransform(), sphereShape, ent);
         }
 
         if (ent.HasComponent<CapsuleColliderComponent>())
@@ -99,7 +99,7 @@ void PhysicsSystem::InitializeRigidbodies()
             Physics::CapsuleRef capsuleShape =
                 std::make_shared<Physics::Capsule>(capsuleComponent.Radius, capsuleComponent.Height);
             rigidBody = std::make_shared<Physics::RigidBody>(mass, transform.Translation, transform.Rotation,
-                                                             transform.GetTransform(), capsuleShape, ent);
+                                                             transform.GetGlobalTransform(), capsuleShape, ent);
 
         }
 

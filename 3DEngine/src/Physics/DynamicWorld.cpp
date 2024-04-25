@@ -397,7 +397,7 @@ void DynamicWorld::SyncEntitiesTransforms()
         // transformComponent.Rotation = glm::vec3(rotation.x, rotation.y, rotation.z);
 
         auto oldScale = transformComponent.Scale;
-        transformComponent.SetTransform(transform);
+        transformComponent.SetGlobalTransform(transform);
         transformComponent.Scale = oldScale;
     }
 }
@@ -484,7 +484,7 @@ void DynamicWorld::DrawDebug(const glm::mat4 &projection, const glm::mat4 &view,
         auto boxCollider = entity.GetComponent<BoxColliderComponent>();
         auto transform = entity.GetComponent<TransformComponent>();
         transform.Scale = transform.Scale * boxCollider.Size;
-        Renderer::DrawBoxCollider(projection, view, transform.GetTransform());
+        Renderer::DrawBoxCollider(projection, view, transform.GetGlobalTransform());
     }
 
     if (entity.HasComponent<SphereColliderComponent>())
@@ -493,7 +493,7 @@ void DynamicWorld::DrawDebug(const glm::mat4 &projection, const glm::mat4 &view,
         auto transform = entity.GetComponent<TransformComponent>();
         transform.Scale = transform.Scale * sphereCollider.Radius;
         transform.Scale = transform.Scale * glm::vec3(2.0f);
-        Renderer::DrawSphereCollider(projection, view, transform.GetTransform());
+        Renderer::DrawSphereCollider(projection, view, transform.GetGlobalTransform());
     }
 }
 } // namespace Physics
