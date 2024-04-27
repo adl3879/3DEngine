@@ -92,7 +92,7 @@ void ContentBrowserPanel::OnImGuiRender()
 
     ImGui::PushStyleColor(ImGuiCol_ChildBg, ImVec4(0.05f, 0.05f, 0.05f, 0.54f));
     ImGui::BeginChild("Directory Tree", {0.0f, 0.f}, ImGuiChildFlags_ResizeX);
-    if (ImGui::TreeNodeEx(ICON_FA_HOME "  Root Directory", ImGuiTreeNodeFlags_DefaultOpen))
+    if (ImGui::TreeNodeEx(ICON_FA_HOME "  Root Directory", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_OpenOnArrow))
     {
         if (ImGui::IsItemClicked())
         {
@@ -160,7 +160,7 @@ void ContentBrowserPanel::OnImGuiRender()
     ImGui::SetCursorPosX(ImGui::GetWindowWidth() - 150);
 
     ImGui::PushItemWidth(150);
-	ImGui::SliderFloat("##Thumbnail_Size", &dragRatio, 1.0f, 5.0f);
+    ImGui::SliderFloat("##Thumbnail_Size", &dragRatio, 1.0f, 5.0f);
 	ImGui::PopItemWidth();
 
 	ImGui::EndChild();
@@ -273,7 +273,8 @@ void ContentBrowserPanel::DisplayFileHierarchy(const std::filesystem::path &dire
             // ImGui::PopStyleColor(3);
 
             // if treenode is selected
-            if (ImGui::IsItemClicked()) m_CurrentDirectory = entryPath;
+            bool clickedOnArrow = (ImGui::GetMousePos().x - ImGui::GetItemRectMin().x) < ImGui::GetTreeNodeToLabelSpacing();
+            if (ImGui::IsItemClicked() && !clickedOnArrow) m_CurrentDirectory = entryPath;
 
             if (treeNodeOpen)
             {
