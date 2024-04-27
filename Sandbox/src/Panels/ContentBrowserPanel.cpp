@@ -28,6 +28,7 @@ static char searchStr[128] = "";
 Texture2DRef sceneIcon, backIcon, forwardIcon, prefabIcon, cSharpIcon, modelIcon, hdrIcon;
 
 glm::vec2 thumbnailSize = {100.0f, 100.0f};
+float dragRatio = 1.0f;
 
 namespace Utils
 {
@@ -84,11 +85,13 @@ void ContentBrowserPanel::OnImGuiRender()
     static float padding = 80.0f;
     const float cellSize = thumbnailSize.x + padding;
 
+	thumbnailSize = glm::vec2{100.0f, 100.0f} * dragRatio;
+
     int columnCount = static_cast<int>(panelWidth / cellSize);
     if (columnCount < 1) columnCount = 1;
 
     ImGui::PushStyleColor(ImGuiCol_ChildBg, ImVec4(0.05f, 0.05f, 0.05f, 0.54f));
-    ImGui::BeginChild("Directory Tree", ImVec2(dirTreeWidth, 0), true, ImGuiWindowFlags_HorizontalScrollbar);
+    ImGui::BeginChild("Directory Tree", {0.0f, 0.f}, ImGuiChildFlags_ResizeX);
     if (ImGui::TreeNodeEx(ICON_FA_HOME "  Root Directory", ImGuiTreeNodeFlags_DefaultOpen))
     {
         if (ImGui::IsItemClicked())
@@ -105,26 +108,11 @@ void ContentBrowserPanel::OnImGuiRender()
 
     ImGui::SameLine();
 
-    ImGui::BeginChild("Content Region", ImVec2(panelWidth - dirTreeWidth, 0), false);
+    ImGui::BeginChild("Content Region", {0.f, 0.f}, false);
+	ImGui::BeginChild("ContentHeader", {0.f, 45.f}, false, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
 
-    ImGui::Begin("##content_browser_toolbar", nullptr,
-                 ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoScrollbar);
-
-    ImGui::Text("Content Browser");
-    ImGui::SameLine();
-    ImGui::TextColored({0.5f, 0.5f, 0.5f, 1.0f}, "%s", m_CurrentDirectory.string().c_str());
-
-    ImGui::SameLine();
-
-    // volume slider to control thumbnail size
-    // float to right
-    ImGui::SetCursorPosX(ImGui::GetWindowWidth() - 150);
-
-    ImGui::SliderFloat("##thumbnail_size", &thumbnailSize.x, 100, 512);
-    ImGui::End();
-
-    ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 10);
-    if (ImGui::ImageButton((void *)(intptr_t)backIcon->GetRendererID(), {28, 22}, {0, 1}, {1, 0}))
+    ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 5);
+    if (ImGui::ImageButton((void *)(intptr_t)backIcon->GetRendererID(), {28, 24}, {0, 1}, {1, 0}))
     {
         if (m_CurrentDirectory != m_BaseDirectory)
         {
@@ -134,7 +122,7 @@ void ContentBrowserPanel::OnImGuiRender()
     }
     ImGui::SameLine();
 
-    if (ImGui::ImageButton((void *)(intptr_t)forwardIcon->GetRendererID(), {28, 22}, {0, 1}, {1, 0}))
+    if (ImGui::ImageButton((void *)(intptr_t)forwardIcon->GetRendererID(), {28, 24}, {0, 1}, {1, 0}))
     {
         if (!m_DirectoryStack.empty())
         {
@@ -162,19 +150,22 @@ void ContentBrowserPanel::OnImGuiRender()
 
     ImGui::PopItemWidth();
 
+	ImGui::SameLine();
+    ImGui::SetCursorPosY(0);
+	auto filepaths = std::filesystem::relative(m_CurrentDirectory, Project::GetAssetDirectory()).string();
+    filepaths = filepaths == "." ? "Assets" : ("Assets\\" + filepaths);
+    ImGui::TextColored({0.5f, 0.5f, 0.5f, 1.0f}, "%s", filepaths.c_str());
+
     ImGui::SameLine();
-    ImGui::SetCursorPosX(ImGui::GetWindowWidth() - 30);
+    ImGui::SetCursorPosX(ImGui::GetWindowWidth() - 150);
 
-    ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
-    ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.2, 0.2, 0.2, 0.2));
-    if (ImGui::Button(ICON_FA_COG))
-    {
-    }
-    ImGui::PopStyleColor(2);
+    ImGui::PushItemWidth(150);
+	ImGui::SliderFloat("##Thumbnail_Size", &dragRatio, 1.0f, 5.0f);
+	ImGui::PopItemWidth();
 
-    ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 10);
-    ImGui::Separator();
-    ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 10);
+	ImGui::EndChild();
+
+	ImGui::BeginChild("Content", {0.f, 0.f}, false);
 
     ImGui::Columns(columnCount, nullptr, false);
 
@@ -208,19 +199,15 @@ void ContentBrowserPanel::OnImGuiRender()
         }
         if (ImGui::MenuItem(ICON_FA_FOLDER_OPEN "   Open in File Browser"))
         {
+			//?
         }
         ImGui::EndPopup();
     }
 
     if (m_CurrentDirectoryEntries.empty())
-    {
-        for (auto &directoryEntry : std::filesystem::directory_iterator(m_CurrentDirectory))
-            DrawFileAssetBrowser(directoryEntry);
-    }
+        for (auto &directoryEntry : std::filesystem::directory_iterator(m_CurrentDirectory)) DrawFileAssetBrowser(directoryEntry);
     else
-    {
         for (const auto &directoryEntry : m_CurrentDirectoryEntries) DrawFileAssetBrowser(directoryEntry);
-    }
 
     ImGui::Columns(1);
     ImGui::EndChild();
@@ -236,6 +223,7 @@ void ContentBrowserPanel::OnImGuiRender()
     }
 
     // TODO: status bar
+    ImGui::EndChild();
     ImGui::End();
 
     m_Context->RenderTextEditors();
@@ -280,9 +268,7 @@ void ContentBrowserPanel::DisplayFileHierarchy(const std::filesystem::path &dire
             }
             if (isLeaf) flags |= ImGuiTreeNodeFlags_Leaf;
 
-            const bool treeNodeOpen =
-                ImGui::TreeNodeEx(path.c_str(), flags,
-                                  !isOpen || isLeaf ? ICON_FA_FOLDER "  %s" : ICON_FA_FOLDER_OPEN "  %s", path.c_str());
+            const bool treeNodeOpen = ImGui::TreeNodeEx(path.c_str(), flags, !isOpen || isLeaf ? ICON_FA_FOLDER "  %s" : ICON_FA_FOLDER_OPEN "  %s", path.c_str());
 
             // ImGui::PopStyleColor(3);
 
@@ -312,11 +298,11 @@ void ContentBrowserPanel::OpenCreateFilePopup(AssetType type)
 	else
 	{
 		std::string defaultName = type == AssetType::Scene		? "Scene.scene"
-					   : type == AssetType::Material	? "New Material.material"
-					   : type == AssetType::Shader		? "New Shader.shader"
-					   : type == AssetType::NetScript	? "New Script.cs"
-                       : type == AssetType::Prefab		? "New Prefab.prefab"
-														: "New File.txt";
+					   : type == AssetType::Material			? "New Material.material"
+					   : type == AssetType::Shader				? "New Shader.shader"
+					   : type == AssetType::NetScript			? "New Script.cs"
+                       : type == AssetType::Prefab				? "New Prefab.prefab"
+																: "New File.txt";
 
 		std::ofstream file(m_CurrentDirectory / defaultName);
 		file.close();
@@ -404,6 +390,7 @@ void ContentBrowserPanel::DrawFileAssetBrowser(std::filesystem::directory_entry 
 	// change button color
     ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
 	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.2, 0.2, 0.2, 0.2));
+	
 	ImGui::ImageButton((void *)(intptr_t)icon->GetRendererID(), {thumbnailSize.x, thumbnailSize.y}, {0, 1}, {1, 0}, thumbnailPadding);
 	ImGui::PopStyleColor(2);
 

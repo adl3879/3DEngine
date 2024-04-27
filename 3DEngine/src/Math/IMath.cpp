@@ -83,16 +83,6 @@ glm::vec3 ScreenToWorld(const glm::vec2 &mouse, const glm::vec2 &screenSize, con
 	return glm::vec3(worldSpace);
 }
 
-glm::quat QuatFromEuler(float x, float y, float z)
-{
-    glm::quat pitchQuat = glm::angleAxis(glm::radians(x), glm::vec3(1.0f, 0.0f, 0.0f));
-    glm::quat yawQuat = glm::angleAxis(glm::radians(y), glm::vec3(0.0f, 1.0f, 0.0f));
-    glm::quat rollQuat = glm::angleAxis(glm::radians(z), glm::vec3(0.0f, 0.0f, -1.0f));
-    glm::quat orientation = yawQuat * pitchQuat * rollQuat;
-
-    return glm::normalize(orientation);
-}
-
 glm::vec3 QuatToDirection(const glm::quat &quat) { return glm::normalize(quat * glm::vec3(0, 0, -1)); }
 
 } // namespace Math

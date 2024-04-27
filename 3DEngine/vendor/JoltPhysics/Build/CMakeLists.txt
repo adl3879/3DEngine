@@ -74,7 +74,7 @@ if (("${CMAKE_SYSTEM_NAME}" STREQUAL "Windows" OR "${CMAKE_SYSTEM_NAME}" STREQUA
 
 	# Enable warnings
 	if (ENABLE_ALL_WARNINGS)
-		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Wall /WX")
+		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Wall")
 	endif()
 
 	# Optionally generate debug symbols

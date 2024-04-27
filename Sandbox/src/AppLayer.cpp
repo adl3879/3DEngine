@@ -256,14 +256,15 @@ void AppLayer::OnImGuiRender()
 					auto entity = serializer.Deserialize(Project::GetAssetDirectory() / AssetManager::GetRegistry()[asset->Handle].FilePath);
 					auto &tc = entity.GetComponent<TransformComponent>();
 
-					auto mouse = InputManager::Get().GetMouseMovedPosition();
-                    auto sw = Math::ScreenToWorld({mouse.X, mouse.Y}, m_ViewportSize,
-                                m_ActiveScene->GetEditorCamera()->GetProjectionMatrix(),
-                                m_ActiveScene->GetEditorCamera()->GetViewMatrix());
+					/*auto projection = m_ActiveScene->GetEditorCamera()->GetProjectionMatrix();
+					auto view = m_ActiveScene->GetEditorCamera()->GetViewMatrix();
 
-					glm::mat4 modelMatrix = glm::mat4(1.0f); // Start with identity matrix
-                    modelMatrix = glm::translate(modelMatrix, sw);
-					tc.LocalTransform = modelMatrix;
+					auto mouse = InputManager::Get().GetMouseMovedPosition();
+                    auto rayDirection = Math::ScreenToWorld({mouse.X, mouse.Y}, m_ViewportSize, projection, view);
+					auto rayStartPos = m_ActiveScene->GetEditorCamera()->GetPosition();
+                    auto rayEndPos = rayStartPos + rayDirection * 2.0f;
+
+					tc.Translation = rayEndPos;*/
                 }
                 break;
                 case AssetType::SkyLight:
