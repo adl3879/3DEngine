@@ -1,85 +1,67 @@
-#version 460 core
+#version 410 core
 
-layout (location=0) in vec2 uv;
-layout (location=1) in vec2 camPos;
-layout (location=0) out vec4 out_FragColor;
+in vec3 WorldPos;
 
-// extents of grid in world coordinates
-float gridSize = 70.0;
+out vec4 FragColor;
 
-// size of one cell
-float gridCellSize = 2;
+uniform vec3 CameraPos;
 
-// color of thin lines
-vec4 gridColorThin = vec4(0.1, 0.1, 0.1, 1.0);
-
-// color of thick lines (every tenth line)
-vec4 gridColorThick = vec4(0.1, 0.1, 0.1, 1.0);
-
-// minimum number of pixels between cell lines before LOD switch should occur. 
-const float gridMinPixelsBetweenCells = 2.0;
-
-float log10(float x)
-{
-    return log(x) / log(10.0);
-}
-
-float satf(float x)
-{
-    return clamp(x, 0.0, 1.0);
-}
-
-vec2 satv(vec2 x)
-{
-    return clamp(x, vec2(0.0), vec2(1.0));
-}
-
-float max2(vec2 v)
-{
-    return max(v.x, v.y);
-}
-
-vec4 gridColor(vec2 uv, vec2 camPos)
-{
-    vec2 dudv = vec2(
-    length(vec2(dFdx(uv.x), dFdy(uv.x))),
-    length(vec2(dFdx(uv.y), dFdy(uv.y)))
-    );
-
-    float lodLevel = max(0.0, log10((length(dudv) * gridMinPixelsBetweenCells) / gridCellSize) + 1.0);
-    float lodFade = fract(lodLevel);
-
-    // cell sizes for lod0, lod1 and lod2
-    float lod0 = gridCellSize * pow(10.0, floor(lodLevel));
-    float lod1 = lod0 * 10.0;
-    float lod2 = lod1 * 10.0;
-
-    // each anti-aliased line covers up to 4 pixels
-    dudv *= 2.0;
-
-    // Update grid coordinates for subsequent alpha calculations (centers each anti-aliased line)
-    uv += dudv / 2.0F;
-
-    // calculate absolute distances to cell line centers for each lod and pick max X/Y to get coverage alpha value
-    float lod0a = max2(vec2(1.0) - abs(satv(mod(uv, lod0) / dudv) * 2.0 - vec2(1.0)));
-    float lod1a = max2(vec2(1.0) - abs(satv(mod(uv, lod1) / dudv) * 2.0 - vec2(1.0)));
-    float lod2a = max2(vec2(1.0) - abs(satv(mod(uv, lod2) / dudv) * 2.0 - vec2(1.0)));
-
-    uv -= camPos;
-
-    // blend between falloff colors to handle LOD transition
-    vec4 c = lod2a > 0.0 ? gridColorThick : lod1a > 0.0 ? mix(gridColorThick, gridColorThin, lodFade) : gridColorThin;
-
-    // calculate opacity falloff based on distance to grid extents
-    float opacityFalloff = (1.0 - satf(length(uv) / gridSize));
-
-    // blend between LOD level alphas and scale with opacity falloff
-    c.a *= (lod2a > 0.0 ? lod2a : lod1a > 0.0 ? lod1a : (lod0a * (1.0-lodFade))) * opacityFalloff;
-
-    return c;
-}
+// Grid shader heavily influenced by Ben Golus implementation
+// https://bgolus.medium.com/the-best-darn-grid-shader-yet-727f9278b9d8
 
 void main()
 {
-    out_FragColor = gridColor(uv, camPos);
+    const float thicknessNorm = 0.50f; // grid line size (in pixels)
+    const float thicknessBold = 2.0 * thicknessNorm;
+    const float frequencyBold = 10.0;
+    const float maxCameraDist = 100.0;
+    const vec3 colorDefault   = vec3(0.10, 0.10, 0.10);
+    const vec3 colorBold      = vec3(0.85, 0.85, 0.85);
+    const vec3 colorAxisX     = vec3(0.85, 0.40, 0.30);
+    const vec3 colorAxisZ     = vec3(0.40, 0.50, 0.85);
+    
+    // Grid Test Normal
+    vec2 derivative = fwidth(WorldPos.xz);
+    vec2 gridAA     = derivative * 1.5;
+    vec2 gridUV     = 1.0 - abs(fract(WorldPos.xz) * 2.0 - 1.0);
+    vec2 lineWidth  = thicknessNorm * derivative;
+    vec2 drawWidth  = clamp(lineWidth, derivative, vec2(0.5));
+    vec2 gridTest   = 1.0 - smoothstep(drawWidth - gridAA, drawWidth + gridAA, gridUV);
+    gridTest       *= clamp(lineWidth / drawWidth, 0.0, 1.0);
+    
+    float gridNorm = mix(gridTest.x, 1.0, gridTest.y);
+    float alphaGridNorm = clamp(gridNorm, 0.0, 0.8);
+    
+    // Grid Test Bold
+    derivative = fwidth(WorldPos.xz / frequencyBold);
+    gridAA     = derivative * 1.5;
+    gridUV     = 1.0 - abs(fract(WorldPos.xz / frequencyBold) * 2.0 - 1.0);
+    lineWidth  = thicknessBold * derivative;
+    drawWidth  = clamp(lineWidth, derivative, vec2(0.5));
+    gridTest   = 1.0 - smoothstep(drawWidth - gridAA, drawWidth + gridAA, gridUV);
+    gridTest  *= clamp(lineWidth / drawWidth, 0.0, 1.0);
+    
+    float gridBold = mix(gridTest.x, 1.0, gridTest.y);
+    float alphaGridBold = clamp(gridBold, 0.0, 0.9);
+    
+    // Final grid alpha
+    float alphaGrid = max(alphaGridNorm, alphaGridBold);
+    
+    // Color Test
+    vec3 colorOutput = mix(colorDefault, colorBold, gridBold);
+    
+    float alignAxisX = step(abs(WorldPos.z), gridTest.y);
+    float alignAxisZ = step(abs(WorldPos.x), gridTest.x);
+    float sum = clamp(alignAxisX + alignAxisZ, 0.0, 1.0);
+    
+    colorOutput = mix(colorOutput, colorAxisZ, alignAxisZ);
+    colorOutput = mix(colorOutput, colorAxisX, alignAxisX);
+    
+    // Camera distance test
+    float cameraDist = length(CameraPos.xz - WorldPos.xz);
+    float alphaDist = 1.0 - smoothstep(0.0, maxCameraDist, cameraDist);
+    
+    float alpha = min(alphaDist, alphaGrid);
+    
+    FragColor = vec4(colorOutput, alpha);
 }

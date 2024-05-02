@@ -1,14 +1,14 @@
 Prefab: New Prefab
 Entities:
-  - Entity: 17328925946825262147
+  - Entity: 2134088460772530107
     TagComponent:
       Tag: Empty Entity
       IsPrefabRoot: true
     ParentComponent:
-      Parent: 2873012671203284512
+      Parent: 13686646413281321159
       HasParent: true
       Children:
-        - 592101698133312562
+        - 17685055198828059404
     TransformComponent:
       GlobalTranslation: [0, 0, 0]
       GlobalRotation: [0, 0, 0, 1]
@@ -16,12 +16,12 @@ Entities:
       Translation: [0, 0, 0]
       Rotation: [0, 0, 0, 1]
       Scale: [1, 1, 1]
-  - Entity: 592101698133312562
+  - Entity: 17685055198828059404
     TagComponent:
       Tag: Box
       IsPrefabRoot: false
     ParentComponent:
-      Parent: 17328925946825262147
+      Parent: 2134088460772530107
       HasParent: true
       Children:
         []
@@ -34,4 +34,4 @@ Entities:
       Scale: [1, 1, 1]
     StaticMeshComponent:
       Handle: 13417777238487702703
-      MaterialHandle: 11507230284983245437
+      MaterialHandle: 18059903640271811848

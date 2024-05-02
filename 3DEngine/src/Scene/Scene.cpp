@@ -16,8 +16,7 @@
 namespace Engine
 {
 template <typename... Component>
-static void CopyComponent(entt::registry &dst, entt::registry &src,
-                          const std::unordered_map<UUID, entt::entity> &enttMap)
+static void CopyComponent(entt::registry &dst, entt::registry &src, const std::unordered_map<UUID, entt::entity> &enttMap)
 {
     ([&]()
     {
@@ -33,8 +32,7 @@ static void CopyComponent(entt::registry &dst, entt::registry &src,
 }
 
 template <typename... Component>
-static void CopyComponent(ComponentExceptIDAndTagGroup<Component...>, entt::registry &dst, entt::registry &src,
-                          const std::unordered_map<UUID, entt::entity> &enttMap)
+static void CopyComponent(ComponentExceptIDAndTagGroup<Component...>, entt::registry &dst, entt::registry &src, const std::unordered_map<UUID, entt::entity> &enttMap)
 {
     CopyComponent<Component...>(dst, src, enttMap);
 }
@@ -295,6 +293,11 @@ Entity Scene::DuplicateEntityRecursive(Entity entity, Entity parent)
     return newEntity;
 }
 
+void Scene::ReplaceEntity(Entity oldEntity, Entity newEntity)
+{
+	CopyComponentIfExists(AllComponentsExceptIDAndTagAndParent{}, oldEntity, newEntity);
+}
+
 void Scene::OnRuntimeUpdate(float dt)
 {
     if (!m_IsPaused)
@@ -357,18 +360,9 @@ Camera& Scene::GetCamera()
 {
 	if (m_IsPlaying)
 	{
-		if (m_MainCamera)
-		{
-			return *m_MainCamera;
-		}
-		else
-		{
-			return *m_EditorCamera;
-		}
+		if (m_MainCamera) return *m_MainCamera;
+		else return *m_EditorCamera;
 	}
-	else
-	{
-		return *m_EditorCamera;
-	}
+	else return *m_EditorCamera;
 }
 } // namespace Engine

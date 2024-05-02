@@ -30,8 +30,8 @@ public:
     Framebuffer(bool hasRenderBuffer, glm::vec2 size);
     ~Framebuffer();
 
-    TextureRef GetTexture(unsigned int attachment = 0x8CE0);
-    void SetTexture(TextureRef texture, unsigned int attachment = 0x8CE0);
+    TextureRef GetTexture(unsigned int attachment = GL_COLOR_ATTACHMENT0);
+    void SetTexture(TextureRef texture, unsigned int attachment = GL_COLOR_ATTACHMENT0);
 
     void Bind();
     void Unbind();

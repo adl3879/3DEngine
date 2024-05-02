@@ -11,6 +11,7 @@
 #include "MeshImporter.h"
 #include "NetScript.h"
 #include "IMath.h"
+#include "Prefab.h"
 
 #include <IconsFontAwesome5.h>
 
@@ -180,6 +181,38 @@ void SceneHierarchyPanel::DrawComponents(Entity entity)
         if (ImGui::InputText(_labelPrefix("Tag"), buffer, sizeof(buffer)))
         {
             tag = std::string(buffer);
+        }
+    }
+
+	if (entity.HasComponent<PrefabInstanceComponent>())
+    {
+        _collapsingHeaderStyle();
+        if (ImGui::CollapsingHeader("Prefab"))
+        {
+            auto &prefabComponent = entity.GetComponent<PrefabInstanceComponent>();
+            auto prefab = AssetManager::GetAsset<Prefab>(prefabComponent.PrefabID);
+            if (prefab)
+            {
+                float buttonWidth = ImGui::GetWindowContentRegionMax().x / 2.0f - 8;
+                //ImGui::SetCursorPosX((ImGui::GetContentRegionMax().x / 4.0f + buttonWidth / 4.0f) - buttonWidth * 2);
+
+                ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.2f, 0.2f, 0.2f, 0.5f));
+                ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.3f, 0.3f, 0.3f, 0.6f));
+                ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, ImVec2(0, 5.0f));
+
+				const auto &prefab = AssetManager::GetAsset<Prefab>(prefabComponent.PrefabID);
+				if (ImGui::Button("Revert", ImVec2(buttonWidth, 0)))
+				{
+					prefab->Revert(m_Context, entity);
+				}
+				ImGui::SameLine();
+				if (ImGui::Button("Apply", ImVec2(buttonWidth, 0)))
+				{
+					prefab->Apply(m_Context, entity);
+				}
+                ImGui::PopStyleVar();
+                ImGui::PopStyleColor(2);
+            }
         }
     }
 

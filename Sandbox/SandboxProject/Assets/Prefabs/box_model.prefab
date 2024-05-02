@@ -1,0 +1,21 @@
+Prefab: box_model
+Entities:
+  - Entity: 14555808289478872514
+    TagComponent:
+      Tag: Box
+      IsPrefabRoot: true
+    ParentComponent:
+      Parent: 11145081422477918003
+      HasParent: true
+      Children:
+        []
+    TransformComponent:
+      GlobalTranslation: [-1.21640301, 0, 0]
+      GlobalRotation: [0, 0, 0, 1]
+      GlobalScale: [1, 1, 1]
+      Translation: [-1.21640301, 0, 0]
+      Rotation: [0, 0, 0, 1]
+      Scale: [1, 1, 1]
+    StaticMeshComponent:
+      Handle: 13417777238487702703
+      MaterialHandle: 13737356534608757952

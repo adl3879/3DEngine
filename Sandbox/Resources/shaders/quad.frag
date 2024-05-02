@@ -44,5 +44,6 @@ void main()
 	vec4 outlineColor = texture(outlineTexture, TexCoords);
 
 	FragColor = vec4(result, 1.0);
-	//FragColor = texture(scene, TexCoords);
+
+	//FragColor = outlineColor;
 }

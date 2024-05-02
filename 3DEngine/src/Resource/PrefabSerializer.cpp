@@ -97,13 +97,16 @@ Entity PrefabSerializer::Deserialize(const std::filesystem::path &path)
 			}
 
 			// add prefab instance component
-			deserializedEntity.AddComponent<PrefabInstanceComponent>();
+			auto &prefab = deserializedEntity.AddComponent<PrefabInstanceComponent>();
+			prefab.PrefabID = AssetManager::GetAssetHandleFromPath(std::filesystem::relative(path, Project::GetAssetDirectory()));
+			auto &prefabTag = deserializedEntity.GetComponent<TagComponent>();
 
 			// add root prefab to scene root
             if (tagComponent["IsPrefabRoot"] && tagComponent["IsPrefabRoot"].as<bool>())
             {
 				m_Scene->AddToRoot(deserializedEntity);
 				rootPrefab = deserializedEntity;
+				prefabTag.IsPrefabRoot = true;
             }
         }
     }

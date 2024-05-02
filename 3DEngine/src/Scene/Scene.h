@@ -39,11 +39,11 @@ public:
 
     void DestroyEntity(Entity entity);
     void DestroyEntityRecursive(Entity entity);
-
     Entity DuplicateEntity(Entity entity);
     Entity DuplicateEntityRecursive(Entity entity, Entity parent);
-
-    Entity GetEntityByUUID(UUID uuid);
+	void ReplaceEntity(Entity oldEntity, Entity newEntity);
+    
+	Entity GetEntityByUUID(UUID uuid);
     Entity FindEntityByName(std::string_view name);
 
     void OnRuntimeStart();

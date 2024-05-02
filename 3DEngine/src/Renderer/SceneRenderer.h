@@ -25,6 +25,7 @@ private:
     void ShadowPass(Scene &scene);
     void EnvironmentPass(Scene &scene);
     void LightingPass(Scene &scene);
+	void OutlinePass(Scene &scene);
 
 private:
     FramebufferRef m_HDRBuffer;

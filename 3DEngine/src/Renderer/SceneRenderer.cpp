@@ -18,8 +18,7 @@ namespace Engine
 Texture2DRef cameraSprite = nullptr;
 
 float cameraFarPlane = 500.0f;
-std::vector<float> shadowCascadeLevels{cameraFarPlane / 50.0f, cameraFarPlane / 25.0f, cameraFarPlane / 10.0f,
-                                       cameraFarPlane / 2.0f};
+std::vector<float> shadowCascadeLevels{cameraFarPlane / 50.0f, cameraFarPlane / 25.0f, cameraFarPlane / 10.0f, cameraFarPlane / 2.0f};
 unsigned int matricesUBO;
 
 void SceneRenderer::Init()
@@ -35,17 +34,11 @@ void SceneRenderer::Init()
     m_ShadingBuffer->SetTexture(std::make_shared<Texture2D>(ImageFormat::RGB16), GL_COLOR_ATTACHMENT0);
     m_ShadingBuffer->SetTexture(std::make_shared<Texture2D>(ImageFormat::RED_INTEGER), GL_COLOR_ATTACHMENT1);
 
-    // outline
-    m_OutlineBuffer = std::make_shared<Framebuffer>(false, glm::vec2(1280, 720));
-    m_OutlineBuffer->SetTexture(std::make_shared<Texture2D>(ImageFormat::Depth), GL_DEPTH_ATTACHMENT);
-    m_OutlineBuffer->SetTexture(std::make_shared<Texture2D>(ImageFormat::RGBA8), GL_COLOR_ATTACHMENT0);
-
-    m_Edge = std::make_shared<Framebuffer>(false, glm::vec2(1280, 720));
-    m_Edge->SetTexture(std::make_shared<Texture2D>(ImageFormat::Depth), GL_DEPTH_ATTACHMENT);
-    m_Edge->SetTexture(std::make_shared<Texture2D>(ImageFormat::RGBA8), GL_COLOR_ATTACHMENT0);
-
 	m_ShadowBuffer = std::make_shared<Framebuffer>(false, glm::vec2(4096, 4096));
 	m_ShadowBuffer->SetTexture(std::make_shared<Texture2DArray>(ImageFormat::Depth), GL_DEPTH_ATTACHMENT);
+
+	m_OutlineBuffer = std::make_shared<Framebuffer>(false, glm::vec2(1280, 720));
+	m_OutlineBuffer->SetTexture(std::make_shared<Texture2D>(ImageFormat::RGB16), GL_COLOR_ATTACHMENT0);
 
     InfiniteGrid::Init();
     Renderer::Init();
@@ -204,6 +197,8 @@ void SceneRenderer::RenderScene(Scene &scene, Framebuffer &framebuffer)
     }
 
     m_ShadingBuffer->Unbind();
+
+	OutlinePass(scene);
     
     auto finalOutput = m_ShadingBuffer->GetTexture();
     environment->Bloom->RenderBloomTexture(finalOutput->GetRendererID(), 0.005);
@@ -223,24 +218,15 @@ void SceneRenderer::RenderScene(Scene &scene, Framebuffer &framebuffer)
 
         finalOutput->Bind(0);
         glBindTextureUnit(1, environment->Bloom->BloomTexture());
-        m_Edge->GetTexture()->Bind(2);
-
-		/*auto debugQuadDepthShader = ShaderManager::GetShader("Resources/shaders/debugQuadDepth");
-		debugQuadDepthShader->Bind();
-		debugQuadDepthShader->SetUniform1i("depthMap", 0);
-		debugQuadDepthShader->SetUniform1f("near_plane", 1.0f);
-		debugQuadDepthShader->SetUniform1f("far_plane", cameraFarPlane);
-        debugQuadDepthShader->SetUniform1i("layer", 0);
-        m_ShadingBuffer->GetTexture(GL_DEPTH_ATTACHMENT)->Bind(0);*/
+        m_OutlineBuffer->GetTexture()->Bind(2);
 
         Renderer::DrawQuad();
     }
     framebuffer.Unbind();
 
     m_ShadingBuffer->QueueResize(framebuffer.GetSize());
-    m_OutlineBuffer->QueueResize(framebuffer.GetSize());
-    m_Edge->QueueResize(framebuffer.GetSize());
     m_ShadowBuffer->QueueResize({4096, 4096});
+	m_OutlineBuffer->QueueResize(framebuffer.GetSize());
 }
 
 void SceneRenderer::ShadowPass(Scene &scene)
@@ -298,4 +284,22 @@ void SceneRenderer::EnvironmentPass(Scene &scene)
 }
 
 void SceneRenderer::LightingPass(Scene &scene) {}
+
+void SceneRenderer::OutlinePass(Scene &scene) 
+{
+	m_OutlineBuffer->Bind();
+	m_OutlineBuffer->Clear();
+
+	auto outlineShader = ShaderManager::GetShader("Resources/shaders/outline");
+	outlineShader->Bind();
+    outlineShader->SetUniform1i("entityID", static_cast<int>(scene.GetSelectedEntity()));
+    outlineShader->SetUniform1i("entityTexture", 0);
+    outlineShader->SetUniform4f("outlineColor", {1.0f, 1.0f, 0.0f, 1.0f});
+
+	m_ShadingBuffer->GetTexture(GL_COLOR_ATTACHMENT1)->Bind(0);
+
+	Renderer::DrawQuad();
+
+	m_OutlineBuffer->Unbind();
+}
 } // namespace Engine
