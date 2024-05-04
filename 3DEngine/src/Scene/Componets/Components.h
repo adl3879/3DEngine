@@ -30,6 +30,7 @@ struct TagComponent
     std::string Tag;
     bool IsPrefabRoot = false;
     bool IsRoot = false;
+	bool IsFirstChild = false;
 
     TagComponent() = default;
     TagComponent(const TagComponent &) = default;
@@ -71,6 +72,9 @@ struct MeshComponent
 {
     AssetHandle Handle = 0;
     AssetHandle MaterialHandle;
+
+	MeshComponent() = default;
+    MeshComponent(const MeshComponent &) = default;
 };
 
 struct StaticMeshComponent : public MeshComponent

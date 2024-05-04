@@ -254,7 +254,10 @@ void AppLayer::OnImGuiRender()
 					auto asset = AssetManager::GetAsset<Prefab>(path);
                     PrefabSerializer serializer(m_ActiveScene);
 					auto entity = serializer.Deserialize(Project::GetAssetDirectory() / AssetManager::GetRegistry()[asset->Handle].FilePath);
+                    entity.GetComponent<TagComponent>().Tag = AssetManager::GetAssetName(asset->Handle);
 					auto &tc = entity.GetComponent<TransformComponent>();
+                    tc.Translation = {0, 0, 0};
+                    tc.Rotation = {0, 0, 0, 0};
 
 					/*auto projection = m_ActiveScene->GetEditorCamera()->GetProjectionMatrix();
 					auto view = m_ActiveScene->GetEditorCamera()->GetViewMatrix();

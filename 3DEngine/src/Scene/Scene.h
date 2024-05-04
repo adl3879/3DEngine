@@ -35,13 +35,14 @@ public:
     Entity CreateEntity(const std::string &name = std::string());
     Entity CreateEntityWithUUID(UUID uuid, const std::string &name = std::string());
     Entity *GetEntity(const std::string &name);
-	void AddToRoot(Entity entity);
+	void AddToRoot(Entity &entity);
 
     void DestroyEntity(Entity entity);
     void DestroyEntityRecursive(Entity entity);
     Entity DuplicateEntity(Entity entity);
     Entity DuplicateEntityRecursive(Entity entity, Entity parent);
 	void ReplaceEntity(Entity oldEntity, Entity newEntity);
+	Entity GetPrefabRoot(Entity entity);
     
 	Entity GetEntityByUUID(UUID uuid);
     Entity FindEntityByName(std::string_view name);

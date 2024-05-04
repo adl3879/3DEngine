@@ -34,11 +34,9 @@ void PrefabSerializer::Serialize(const std::filesystem::path &path, Entity e)
     out << YAML::Key << "Entities" << YAML::Value << YAML::BeginSeq;
 
 	e.GetComponent<TagComponent>().IsPrefabRoot = true;
+    e.GetComponent<TagComponent>().IsFirstChild = true;
 
-	for (const auto& entity : FlattenEntity(e))
-	{
-		SceneSerializer::SerializeEntity(out, entity);
-	}
+	for (const auto& entity : FlattenEntity(e)) SceneSerializer::SerializeEntity(out, entity);
     
     out << YAML::EndSeq;
 
@@ -81,9 +79,7 @@ Entity PrefabSerializer::Deserialize(const std::filesystem::path &path)
 			auto &parent = deserializedEntity.GetComponent<ParentComponent>();
             if (parent.HasParent)
             {
-                auto newParentUUID = oldToNewUUIDMap.find(parent.Parent) != oldToNewUUIDMap.end()
-					? oldToNewUUIDMap[parent.Parent]
-                    : UUID();
+                auto newParentUUID = oldToNewUUIDMap.find(parent.Parent) != oldToNewUUIDMap.end() ? oldToNewUUIDMap[parent.Parent] : UUID();
                 oldToNewUUIDMap[parent.Parent] = newParentUUID;
                 parent.Parent = newParentUUID;
             }
@@ -97,7 +93,7 @@ Entity PrefabSerializer::Deserialize(const std::filesystem::path &path)
 			}
 
 			// add prefab instance component
-			auto &prefab = deserializedEntity.AddComponent<PrefabInstanceComponent>();
+			auto &prefab = deserializedEntity.AddOrReplaceComponent<PrefabInstanceComponent>();
 			prefab.PrefabID = AssetManager::GetAssetHandleFromPath(std::filesystem::relative(path, Project::GetAssetDirectory()));
 			auto &prefabTag = deserializedEntity.GetComponent<TagComponent>();
 

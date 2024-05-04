@@ -112,10 +112,11 @@ void Scene::New(const std::string &name)
 	m_RootEntity = e.GetComponent<IDComponent>().ID;
 }
 
-void Scene::AddToRoot(Entity entity)
+void Scene::AddToRoot(Entity &entity)
 {
     auto root = m_RootEntity;
     auto rootEntity = GetEntityByUUID(root);
+    entity.GetComponent<TagComponent>().IsFirstChild = true;
     rootEntity.AddChild(entity);
 }
 
@@ -280,9 +281,9 @@ Entity Scene::DuplicateEntityRecursive(Entity entity, Entity parent)
 
 	auto newEntity = DuplicateEntity(entity);
 	const auto &parentComponent = entity.GetComponent<ParentComponent>();
-	newEntity.GetComponent<TagComponent>().Tag += " (Copy)";
+	//newEntity.GetComponent<TagComponent>().Tag += " (Copy)";
 
-	parent.AddChild(newEntity);
+	if (parent) parent.AddChild(newEntity);
 
     for (const auto &child : parentComponent.Children)
     {
@@ -295,7 +296,23 @@ Entity Scene::DuplicateEntityRecursive(Entity entity, Entity parent)
 
 void Scene::ReplaceEntity(Entity oldEntity, Entity newEntity)
 {
-	CopyComponentIfExists(AllComponentsExceptIDAndTagAndParent{}, oldEntity, newEntity);
+    if (oldEntity.GetComponent<TagComponent>().IsPrefabRoot)
+		CopyComponentIfExists(AllComponentsExceptIDAndTagAndParentAndTransform{}, oldEntity, newEntity);
+    else
+        CopyComponentIfExists(AllComponentsExceptIDAndTagAndParent{}, oldEntity, newEntity);
+}
+
+Entity Scene::GetPrefabRoot(Entity entity)
+{
+    if (entity.GetComponent<TagComponent>().IsPrefabRoot) return entity;
+
+	auto parent = entity.GetComponent<ParentComponent>();
+	if (parent.HasParent)
+	{
+		auto parentEntity = GetEntityByUUID(parent.Parent);
+		return GetPrefabRoot(parentEntity);
+	}
+	return {};
 }
 
 void Scene::OnRuntimeUpdate(float dt)

@@ -16,9 +16,8 @@ public:
     static SceneRef ImportScene(AssetHandle handle, const AssetMetadata &metadata)
     {
         // takes filepath and loads it into the scene
-        SceneRef scene = std::make_shared<Scene>();
+        SceneRef scene = std::make_shared<Scene>(metadata.FilePath.stem().string());
         SceneSerializer serializer(scene);
-        scene->SetSceneName(metadata.FilePath.stem().string());
         scene->SetSceneFilePath((Project::GetAssetDirectory() / metadata.FilePath).string());
         serializer.Deserialize((Project::GetAssetDirectory() / metadata.FilePath).string());
 

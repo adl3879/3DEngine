@@ -29,6 +29,9 @@ AssetRegistry:
   - Handle: 1808001990105426965
     FilePath: Models/Sponza/10381718147657362067.jpg
     Type: AssetType::Texture2D
+  - Handle: 1904483051196228730
+    FilePath: Prefabs/cv.prefab
+    Type: AssetType::Prefab
   - Handle: 2078963645426818611
     FilePath: Models/Sponza/8750083169368950601.jpg
     Type: AssetType::Texture2D
@@ -53,9 +56,6 @@ AssetRegistry:
   - Handle: 2734003011981004792
     FilePath: Models/Sponza/4975155472559461469.jpg
     Type: AssetType::Texture2D
-  - Handle: 3087782052131023248
-    FilePath: Prefabs/box_model.prefab
-    Type: AssetType::Prefab
   - Handle: 3132952141230544374
     FilePath: Models/Sponza/11474523244911310074.jpg
     Type: AssetType::Texture2D
@@ -167,9 +167,6 @@ AssetRegistry:
   - Handle: 9598465756211304655
     FilePath: Models/Sponza/4675343432951571524.jpg
     Type: AssetType::Texture2D
-  - Handle: 9885504626499538079
-    FilePath: Prefabs/test_box.prefab
-    Type: AssetType::Prefab
   - Handle: 10347450720273173581
     FilePath: Models/Sponza/white.png
     Type: AssetType::Texture2D
@@ -188,6 +185,9 @@ AssetRegistry:
   - Handle: 10822896964247100816
     FilePath: Models/SciFiHelmet_BaseColor.png
     Type: AssetType::Texture2D
+  - Handle: 11871466846056647908
+    FilePath: Scenes/bx.scene
+    Type: AssetType::Scene
   - Handle: 12032699351146441806
     FilePath: Models/Animated/textures/Erika_Archer_Clothes_diffuse.png
     Type: AssetType::Texture2D
@@ -296,6 +296,9 @@ AssetRegistry:
   - Handle: 17317577943920138267
     FilePath: Materials/test.material
     Type: AssetType::Material
+  - Handle: 17342438593297011482
+    FilePath: Scenes/test.scene
+    Type: AssetType::Scene
   - Handle: 17480581904617787709
     FilePath: Models/SciFiHelmet_AmbientOcclusion.png
     Type: AssetType::Texture2D

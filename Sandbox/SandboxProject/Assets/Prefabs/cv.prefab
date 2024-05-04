@@ -1,0 +1,43 @@
+Prefab: cv
+Entities:
+  - Entity: 9414094849035763972
+    TagComponent:
+      Tag: cv
+      IsPrefabRoot: true
+      IsFirstChild: true
+    ParentComponent:
+      Parent: 12700662589667782041
+      HasParent: true
+      Children:
+        - 70529329583352824
+    PrefabInstanceComponent:
+      PrefabID: 1904483051196228730
+    TransformComponent:
+      GlobalTranslation: [-2.75489855, 0.0986455083, 0]
+      GlobalRotation: [0, 0, 0, 1]
+      GlobalScale: [3.19144106, 3.19144106, 3.19144106]
+      Translation: [-2.75489855, 0.0986455083, 0]
+      Rotation: [0, 0, 0, 1]
+      Scale: [3.19144106, 3.19144106, 3.19144106]
+  - Entity: 70529329583352824
+    TagComponent:
+      Tag: Box
+      IsPrefabRoot: false
+      IsFirstChild: false
+    ParentComponent:
+      Parent: 9414094849035763972
+      HasParent: true
+      Children:
+        []
+    PrefabInstanceComponent:
+      PrefabID: 1904483051196228730
+    TransformComponent:
+      GlobalTranslation: [-2.75488257, 0.0986455083, 0]
+      GlobalRotation: [0, 0, 0, 1]
+      GlobalScale: [1.18686783, 1.18686783, 1.18686783]
+      Translation: [1.60336494e-05, 0, 0]
+      Rotation: [0, 0, 0, 1]
+      Scale: [0.371890873, 0.371890873, 0.371890873]
+    StaticMeshComponent:
+      Handle: 13417777238487702703
+      MaterialHandle: 7507808750028310646

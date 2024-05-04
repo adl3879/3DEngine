@@ -59,7 +59,7 @@ void SceneHierarchyPanel::DrawEntityNode(Entity entity)
     ImVec4 textColor = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
     if (entity.HasComponent<PrefabInstanceComponent>())
     {
-        textColor = ImVec4(0.0f, 1.0f, 0.0f, 1.0f);
+        textColor = ImVec4(0.5059f, 0.7059f, 1.0f, 1.0f);
     }
 
     ImGui::PushStyleColor(ImGuiCol_Text, textColor);
@@ -200,17 +200,17 @@ void SceneHierarchyPanel::DrawComponents(Entity entity)
                 ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.3f, 0.3f, 0.3f, 0.6f));
                 ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, ImVec2(0, 5.0f));
 
-				const auto &prefab = AssetManager::GetAsset<Prefab>(prefabComponent.PrefabID);
 				if (ImGui::Button("Revert", ImVec2(buttonWidth, 0)))
-				{
-					prefab->Revert(m_Context, entity);
-				}
+                {
+                };
 				ImGui::SameLine();
-				if (ImGui::Button("Apply", ImVec2(buttonWidth, 0)))
+				if (ImGui::Button("Apply", ImVec2(buttonWidth, 0))) 
 				{
-					prefab->Apply(m_Context, entity);
+					auto prefabRootEntity = m_Context->GetPrefabRoot(entity);
+					prefab->Apply(m_Context, prefabRootEntity);
 				}
-                ImGui::PopStyleVar();
+                
+				ImGui::PopStyleVar();
                 ImGui::PopStyleColor(2);
             }
         }
@@ -753,6 +753,8 @@ void SceneHierarchyPanel::OnImGuiRender()
 			if (childEntity)
 			{
                 m_Context->AddToRoot(childEntity);
+                //childEntity.GetComponent<TagComponent>().IsFirstChild = true;
+                if (childEntity.GetComponent<TagComponent>().IsFirstChild) LOG_CORE_INFO("is first child");
 			}
             ImGui::EndPopup();
         }

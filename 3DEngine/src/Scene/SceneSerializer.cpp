@@ -163,6 +163,7 @@ void SceneSerializer::SerializeEntity(YAML::Emitter &out, Entity entity)
         const auto &tag = entity.GetComponent<TagComponent>();
         out << YAML::Key << "Tag" << YAML::Value << tag.Tag;
         out << YAML::Key << "IsPrefabRoot" << YAML::Value << tag.IsPrefabRoot;
+		out << YAML::Key << "IsFirstChild" << YAML::Value << tag.IsFirstChild;
 
         out << YAML::EndMap; // TagComponent
     }
@@ -182,6 +183,17 @@ void SceneSerializer::SerializeEntity(YAML::Emitter &out, Entity entity)
 
         out << YAML::EndMap; // ParentComponent
     }
+
+	if (entity.HasComponent<PrefabInstanceComponent>())
+	{
+		out << YAML::Key << "PrefabInstanceComponent";
+        out << YAML::BeginMap; // PrefabInstanceComponent
+
+		const auto &prefab = entity.GetComponent<PrefabInstanceComponent>();
+        out << YAML::Key << "PrefabID" << YAML::Value << prefab.PrefabID;
+
+        out << YAML::EndMap; // PrefabInstanceComponent
+	}
 
     if (entity.HasComponent<TransformComponent>())
     {
@@ -376,6 +388,7 @@ void SceneSerializer::Serialize(const std::string &filepath)
         {
             Entity entity{entityId, m_Scene.get()};
             if (!entity) return;
+            if (entity.GetComponent<TagComponent>().IsRoot) return;
 
             SceneSerializer::SerializeEntity(out, entity);
         });
@@ -427,18 +440,11 @@ bool SceneSerializer::Deserialize(const std::string &filepath)
         m_Scene->GetEnvironment()->CurrentSkyType = SkyTypeFromString(skyType);
         m_Scene->GetEnvironment()->AmbientColor = ambientColor;
 
-        if (environment["BloomEnabled"])
-            m_Scene->GetEnvironment()->BloomEnabled = environment["BloomEnabled"].as<
-                bool>();
+        if (environment["BloomEnabled"]) m_Scene->GetEnvironment()->BloomEnabled = environment["BloomEnabled"].as<bool>();
         if (environment["Exposure"]) m_Scene->GetEnvironment()->Exposure = environment["Exposure"].as<float>();
-        if (environment["BloomIntensity"])
-            m_Scene->GetEnvironment()->BloomIntensity = environment["BloomIntensity"].as<
-                float>();
+        if (environment["BloomIntensity"]) m_Scene->GetEnvironment()->BloomIntensity = environment["BloomIntensity"].as<float>();
 
-        if (SkyTypeFromString(skyType) == SkyType::SkyboxHDR)
-        {
-            m_Scene->GetEnvironment()->SkyboxHDR = AssetManager::GetAsset<SkyLight>(hdriHandle);
-        }
+        if (SkyTypeFromString(skyType) == SkyType::SkyboxHDR) m_Scene->GetEnvironment()->SkyboxHDR = AssetManager::GetAsset<SkyLight>(hdriHandle);
 
         if (SkyTypeFromString(skyType) == SkyType::ProceduralSky)
         {
@@ -456,7 +462,7 @@ bool SceneSerializer::Deserialize(const std::string &filepath)
     auto entities = data["Entities"];
     if (entities)
     {
-        for (auto entity : entities)
+        for (const auto &entity : entities)
         {
             auto uuid = entity["Entity"].as<uint64_t>();
 
@@ -468,6 +474,8 @@ bool SceneSerializer::Deserialize(const std::string &filepath)
             Entity deserializedEntity = m_Scene->CreateEntityWithUUID(uuid, name);
 
             SceneSerializer::DeserializeEntity(entity, deserializedEntity);
+
+			if (deserializedEntity.GetComponent<TagComponent>().IsFirstChild) m_Scene->AddToRoot(deserializedEntity);
         }
     }
     return true;
@@ -475,6 +483,13 @@ bool SceneSerializer::Deserialize(const std::string &filepath)
 
 void SceneSerializer::DeserializeEntity(YAML::detail::iterator_value entity, Entity deserializedEntity)
 {
+    if (auto tagComponent = entity["TagComponent"])
+    {
+        auto &tc = deserializedEntity.GetComponent<TagComponent>();
+        if (tagComponent["IsPrefabRoot"]) tc.IsPrefabRoot = tagComponent["IsPrefabRoot"].as<bool>();
+        if (tagComponent["IsFirstChild"]) tc.IsFirstChild = tagComponent["IsFirstChild"].as<bool>();
+    }
+
     if (auto parentComponent = entity["ParentComponent"])
     {
         auto &pc = deserializedEntity.GetComponent<ParentComponent>();
@@ -487,6 +502,12 @@ void SceneSerializer::DeserializeEntity(YAML::detail::iterator_value entity, Ent
             pc.Children.emplace_back(id);
         }
     }
+
+	if (auto prefabInstanceComponent = entity["PrefabInstanceComponent"])
+	{
+		auto &pic = deserializedEntity.AddComponent<PrefabInstanceComponent>();
+        pic.PrefabID = prefabInstanceComponent["PrefabID"].as<uint64_t>();
+	}
 
     if (auto transformComponent = entity["TransformComponent"])
     {

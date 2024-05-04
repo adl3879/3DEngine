@@ -30,4 +30,10 @@ using AllComponentsExceptIDAndTagAndParent =
                                  PointLightComponent, DirectionalLightComponent, SpotLightComponent,
                                  RigidBodyComponent, BoxColliderComponent, SphereColliderComponent, NetScriptComponent, AnimationControllerComponent,
 								 PrefabInstanceComponent>;
+
+using AllComponentsExceptIDAndTagAndParentAndTransform =
+    ComponentExceptIDAndTagGroup<VisibilityComponent, StaticMeshComponent, SkinnedMeshComponent,
+                                 CameraComponent, PointLightComponent, DirectionalLightComponent, SpotLightComponent,
+                                 RigidBodyComponent, BoxColliderComponent, SphereColliderComponent, NetScriptComponent,
+                                 AnimationControllerComponent, PrefabInstanceComponent>;
 } // namespace Engine

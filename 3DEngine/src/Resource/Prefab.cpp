@@ -10,35 +10,41 @@ namespace Engine
 {
 static void ReplaceRecursive(const SceneRef &scene, Entity &oldEntity, Entity& newEntity)
 {
-	auto transform = oldEntity.GetComponent<TransformComponent>();
 	scene->ReplaceEntity(oldEntity, newEntity);
-	// translation is not copied over
-	oldEntity.GetComponent<TransformComponent>().Translation = transform.Translation;
+    oldEntity.GetComponent<TransformComponent>().Scale = newEntity.GetComponent<TransformComponent>().Scale;
 
-	const auto &oldParent = oldEntity.GetComponent<ParentComponent>();
 	const auto &newParent = newEntity.GetComponent<ParentComponent>();
+	const auto &oldParent = oldEntity.GetComponent<ParentComponent>();
 
-	for (size_t i = 0; i < oldParent.Children.size(); i++)
+	for (size_t i = 0; i < newParent.Children.size(); i++)
 	{
-		auto oldChild = scene->GetEntityByUUID(oldParent.Children[i]);
 		auto newChild = scene->GetEntityByUUID(newParent.Children[i]);
-		ReplaceRecursive(scene, oldChild, newChild);
+		
+		if (i >= oldParent.Children.size())
+		{
+            auto duplicateChildEntity = scene->DuplicateEntityRecursive(newChild, {});
+			oldEntity.AddChild(duplicateChildEntity);
+
+            auto &dcp = duplicateChildEntity.AddComponent<PrefabInstanceComponent>();
+			dcp.PrefabID = newEntity.GetComponent<PrefabInstanceComponent>().PrefabID;
+			auto &ncp = newChild.AddComponent<PrefabInstanceComponent>();
+			ncp.PrefabID = newEntity.GetComponent<PrefabInstanceComponent>().PrefabID;
+        }
+        else
+        {
+			auto oldChild = scene->GetEntityByUUID(oldParent.Children[i]);
+			ReplaceRecursive(scene, oldChild, newChild);
+        }
 	}
 }
 
 void Prefab::Apply(const SceneRef &scene, Entity &newEntity)
 {
-	// Serialize the prefab with the new entity
-   /* auto path = Project::GetAssetDirectory() / AssetManager::GetRegistry()[Handle].FilePath;
-    PrefabSerializer serializer(scene);
-    serializer.Serialize(path, newEntity);*/
-
 	// Replace all prefabs with the new entity
-    auto prefabView = scene->GetRegistry().view<PrefabInstanceComponent, IDComponent, TagComponent>();
+    auto prefabView = scene->GetRegistry().view<PrefabInstanceComponent, TagComponent>();
 	for (auto e : prefabView)
 	{
 		const auto &prefab = prefabView.get<PrefabInstanceComponent>(e);
-		const auto &id = prefabView.get<IDComponent>(e);
 		const auto &tag = prefabView.get<TagComponent>(e);
 
 		if (prefab.PrefabID == Handle && tag.IsPrefabRoot)
@@ -47,27 +53,21 @@ void Prefab::Apply(const SceneRef &scene, Entity &newEntity)
 			ReplaceRecursive(scene, ent, newEntity);
 		}
 	}
+
+	// Serialize the prefab with the new entity
+    auto path = Project::GetAssetDirectory() / AssetManager::GetRegistry()[Handle].FilePath;
+    PrefabSerializer serializer(scene);
+    serializer.Serialize(path, newEntity);
 }
 
 void Prefab::Revert(const SceneRef &scene, Entity &entity) const
 {
-    auto path = Project::GetAssetDirectory() / AssetManager::GetRegistry()[Handle].FilePath;
-    PrefabSerializer serializer(scene);
+    /*auto path = Project::GetAssetDirectory() / AssetManager::GetRegistry()[Handle].FilePath;
+
+	auto sc = std::make_shared<Scene>();
+    PrefabSerializer serializer(sc);
     auto prefabEntity = serializer.Deserialize(path);
 
-	//auto entities = FlattenEntity(scene, entity);
-	//auto prefabEntities = FlattenEntity(scene, prefabEntity);
-
-	//for (auto &[id, ent] : entities)
-	//{
-	//	auto prefabIt = prefabEntities.find(id);
-	//	if (prefabIt != prefabEntities.end())
-	//	{
-	//		auto &transform = ent.GetComponent<TransformComponent>();
-	//		scene->ReplaceEntity(ent, prefabIt->second);
-	//		// translation is not copied over
-	//		entity.GetComponent<TransformComponent>().Translation = transform.Translation;
-	//	}
-	//}
+	scene->ReplaceEntity(entity, prefabEntity);*/
 }
 }
