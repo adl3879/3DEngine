@@ -251,7 +251,14 @@ void Scene::DestroyEntity(Entity entity)
 
 void Scene::DestroyEntityRecursive(Entity entity)
 {
-    auto &parent = entity.GetComponent<ParentComponent>();
+    // remove from parent, if it is a child component
+    auto parent = entity.GetComponent<ParentComponent>();
+    if (parent.HasParent)
+    {
+        auto &pc = GetEntityByUUID(parent.Parent).GetComponent<ParentComponent>();
+        pc.RemoveChild(entity.GetComponent<IDComponent>().ID);
+    }
+
     if (!parent.Children.empty())
     {
         for (const auto &child : parent.Children)

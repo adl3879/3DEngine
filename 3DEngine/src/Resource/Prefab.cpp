@@ -16,6 +16,12 @@ static void ReplaceRecursive(const SceneRef &scene, Entity &oldEntity, Entity& n
 	const auto &newParent = newEntity.GetComponent<ParentComponent>();
 	const auto &oldParent = oldEntity.GetComponent<ParentComponent>();
 
+	for (size_t i = newParent.Children.size(); i < oldParent.Children.size(); i++)
+    {
+        auto child = scene->GetEntityByUUID(oldParent.Children[i]);
+        scene->DestroyEntityRecursive(child);
+    }
+
 	for (size_t i = 0; i < newParent.Children.size(); i++)
 	{
 		auto newChild = scene->GetEntityByUUID(newParent.Children[i]);
@@ -47,6 +53,7 @@ void Prefab::Apply(const SceneRef &scene, Entity &newEntity)
 		const auto &prefab = prefabView.get<PrefabInstanceComponent>(e);
 		const auto &tag = prefabView.get<TagComponent>(e);
 
+		// Make sure that the entity being replaced is a prefab root
 		if (prefab.PrefabID == Handle && tag.IsPrefabRoot)
 		{
 			auto ent = Entity{e, scene.get()};
@@ -62,12 +69,14 @@ void Prefab::Apply(const SceneRef &scene, Entity &newEntity)
 
 void Prefab::Revert(const SceneRef &scene, Entity &entity) const
 {
-    /*auto path = Project::GetAssetDirectory() / AssetManager::GetRegistry()[Handle].FilePath;
+    auto path = Project::GetAssetDirectory() / AssetManager::GetRegistry()[Handle].FilePath;
 
 	auto sc = std::make_shared<Scene>();
     PrefabSerializer serializer(sc);
     auto prefabEntity = serializer.Deserialize(path);
 
-	scene->ReplaceEntity(entity, prefabEntity);*/
+	ReplaceRecursive(sc, entity, prefabEntity);
+
+	//scene->DestroyEntityRecursive(prefabEntity);
 }
 }

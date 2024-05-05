@@ -1,40 +1,40 @@
 Prefab: cv
 Entities:
-  - Entity: 9414094849035763972
+  - Entity: 7201192758367005289
     TagComponent:
       Tag: cv
       IsPrefabRoot: true
       IsFirstChild: true
     ParentComponent:
-      Parent: 12700662589667782041
+      Parent: 1851027781230757136
       HasParent: true
       Children:
-        - 70529329583352824
+        - 1919610619820811966
     PrefabInstanceComponent:
       PrefabID: 1904483051196228730
     TransformComponent:
-      GlobalTranslation: [-2.75489855, 0.0986455083, 0]
-      GlobalRotation: [0, 0, 0, 1]
-      GlobalScale: [3.19144106, 3.19144106, 3.19144106]
-      Translation: [-2.75489855, 0.0986455083, 0]
-      Rotation: [0, 0, 0, 1]
-      Scale: [3.19144106, 3.19144106, 3.19144106]
-  - Entity: 70529329583352824
+      GlobalTranslation: [0, 0, 0]
+      GlobalRotation: [0, 0, 0, 0]
+      GlobalScale: [4.39565849, 4.39565849, 4.39565849]
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0, 0]
+      Scale: [4.39565849, 4.39565849, 4.39565849]
+  - Entity: 1919610619820811966
     TagComponent:
       Tag: Box
       IsPrefabRoot: false
       IsFirstChild: false
     ParentComponent:
-      Parent: 9414094849035763972
+      Parent: 7201192758367005289
       HasParent: true
       Children:
         []
     PrefabInstanceComponent:
       PrefabID: 1904483051196228730
     TransformComponent:
-      GlobalTranslation: [-2.75488257, 0.0986455083, 0]
-      GlobalRotation: [0, 0, 0, 1]
-      GlobalScale: [1.18686783, 1.18686783, 1.18686783]
+      GlobalTranslation: [1.60336494e-05, 0, 0]
+      GlobalRotation: [0, 0, 0, 0]
+      GlobalScale: [1.63470531, 1.63470531, 1.63470531]
       Translation: [1.60336494e-05, 0, 0]
       Rotation: [0, 0, 0, 1]
       Scale: [0.371890873, 0.371890873, 0.371890873]

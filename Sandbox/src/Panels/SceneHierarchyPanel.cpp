@@ -144,14 +144,6 @@ void SceneHierarchyPanel::DrawEntityNode(Entity entity)
             m_Context->GetLights()->RemoveSpotLight(spotLight.Index);
         }
 
-        // remove from parent, if it is a child component
-        auto parent = entity.GetComponent<ParentComponent>();
-        if (parent.HasParent)
-        {
-            auto &pc = m_Context->GetEntityByUUID(parent.Parent).GetComponent<ParentComponent>();
-            pc.RemoveChild(entity.GetComponent<IDComponent>().ID);
-        }
-
         if (m_SelectionContext == entity) m_SelectionContext = {};
         // delete entity recursively
         m_Context->DestroyEntityRecursive(entity);
@@ -202,6 +194,8 @@ void SceneHierarchyPanel::DrawComponents(Entity entity)
 
 				if (ImGui::Button("Revert", ImVec2(buttonWidth, 0)))
                 {
+                    auto prefabRootEntity = m_Context->GetPrefabRoot(entity);
+                    prefab->Revert(m_Context, prefabRootEntity);
                 };
 				ImGui::SameLine();
 				if (ImGui::Button("Apply", ImVec2(buttonWidth, 0))) 
@@ -753,8 +747,6 @@ void SceneHierarchyPanel::OnImGuiRender()
 			if (childEntity)
 			{
                 m_Context->AddToRoot(childEntity);
-                //childEntity.GetComponent<TagComponent>().IsFirstChild = true;
-                if (childEntity.GetComponent<TagComponent>().IsFirstChild) LOG_CORE_INFO("is first child");
 			}
             ImGui::EndPopup();
         }
