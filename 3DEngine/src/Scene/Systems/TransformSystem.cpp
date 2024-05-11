@@ -106,8 +106,8 @@ void TransformSystem::UpdateTransform()
     {
         auto [transform, camera] = camView.get<TransformComponent, CameraComponent>(e);
 
-        camera.Camera->SetPosition(transform.GlobalTranslation);
-		//camera.Camera->SetRotation(transform.GlobalRotation);
+        camera.Camera->SetPosition(transform.Translation);
+		camera.Camera->SetRotation(transform.Rotation);
 
         const glm::quat &globalRotation = transform.GetGlobalRotation();
         const glm::mat4 &translationMatrix = glm::translate(glm::mat4(1.0f), transform.GetGlobalPosition());
@@ -120,7 +120,7 @@ void TransformSystem::UpdateTransform()
         camera.CameraInstance->Direction = globalForward;
         camera.CameraInstance->Right = globalRight;*/
         
-        camera.Camera->SetTransform(glm::inverse(translationMatrix * rotationMatrix));
+        //camera.Camera->SetTransform(glm::inverse(translationMatrix * rotationMatrix));
     }
 }
 
@@ -144,8 +144,7 @@ void TransformSystem::CalculateGlobalTransform(Entity &entity)
     auto &transformComponent = entity.GetComponent<TransformComponent>();
     auto &parentTransformComponent = m_Scene->GetEntityByUUID(parentComponent.Parent).GetComponent<TransformComponent>();
 
-    glm::vec3 globalPosition =
-        parentTransformComponent.GetGlobalPosition() + glm::vec3(transformComponent.GetLocalPosition());
+    glm::vec3 globalPosition = parentTransformComponent.GetGlobalPosition() + glm::vec3(transformComponent.GetLocalPosition());
     glm::quat globalRotation = parentTransformComponent.GetGlobalRotation() * transformComponent.GetLocalRotation();
     glm::vec3 globalScale = parentTransformComponent.GetGlobalScale() * transformComponent.GetGlobalScale();
     auto globalTransform = transformComponent.GetGlobalTransform() * parentTransformComponent.GetGlobalTransform();

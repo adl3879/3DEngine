@@ -12,7 +12,7 @@ namespace Engine
 {
 class SceneImporter
 {
-public:
+  public:
     static SceneRef ImportScene(AssetHandle handle, const AssetMetadata &metadata)
     {
         // takes filepath and loads it into the scene

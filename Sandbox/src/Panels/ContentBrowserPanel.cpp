@@ -14,6 +14,7 @@
 #include "MeshImporter.h"
 #include "Prefab.h"
 #include "PrefabSerializer.h"
+#include "SceneManager.h"
 
 #include <iostream>
 #include <fstream>
@@ -27,7 +28,7 @@ static char searchStr[128] = "";
 
 Texture2DRef sceneIcon, backIcon, forwardIcon, prefabIcon, cSharpIcon, modelIcon, hdrIcon;
 
-glm::vec2 thumbnailSize = {100.0f, 100.0f};
+glm::vec2 thumbnailSize, defaultThumbnailSize = {120.0f, 120.0f};
 float dragRatio = 1.0f;
 
 namespace Utils
@@ -43,6 +44,8 @@ ContentBrowserData *s_Data = new ContentBrowserData();
 
 ContentBrowserPanel::ContentBrowserPanel()
 {
+	m_Context = SceneManager::Get().GetActiveScene();
+
     m_DirectoryIcon = TextureImporter::LoadTexture2D("Resources/Icons/ContentBrowser/DirectoryIcon.png");
     m_FileIcon = TextureImporter::LoadTexture2D("Resources/Icons/ContentBrowser/FileIcon.png");
     sceneIcon = TextureImporter::LoadTexture2D("Resources/Icons/ContentBrowser/SceneIcon.png");
@@ -85,7 +88,7 @@ void ContentBrowserPanel::OnImGuiRender()
     static float padding = 80.0f;
     const float cellSize = thumbnailSize.x + padding;
 
-	thumbnailSize = glm::vec2{100.0f, 100.0f} * dragRatio;
+	thumbnailSize = defaultThumbnailSize * dragRatio;
 
     int columnCount = static_cast<int>(panelWidth / cellSize);
     if (columnCount < 1) columnCount = 1;
@@ -526,5 +529,4 @@ void ContentBrowserPanel::SetContext(const SceneRef &context)
     m_CurrentDirectory = m_BaseDirectory;
     RefreshAssetTree();
 }
-
 } // namespace Engine

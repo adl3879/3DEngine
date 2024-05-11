@@ -55,8 +55,7 @@ void ThumbnailManager::OnUpdate()
             case AssetType::Material:
             {
                 auto material = AssetManager::GetAsset<Material>(path);
-                Texture2DRef thumbnail =
-                    std::make_shared<Texture2D>(ImageFormat::RGB16, m_ThumbnailSize.x, m_ThumbnailSize.y);
+                Texture2DRef thumbnail = std::make_shared<Texture2D>(ImageFormat::RGB16, m_ThumbnailSize.x, m_ThumbnailSize.y);
                 GenerateMaterialThumbnail(material, thumbnail);
                 m_Thumbnails[path] = thumbnail;
             }
@@ -91,6 +90,7 @@ void ThumbnailManager::GenerateMaterialThumbnail(MaterialRef mat, Texture2DRef t
         // light
         pbrShader->SetUniform3f("gDirectionalLight.Color", glm::vec3(40.0f, 40.0f, 40.0f));
         pbrShader->SetUniform3f("gDirectionalLight.Direction", glm::vec3(-0.6f, 0.6f, 1.0f));
+        pbrShader->SetUniform1i("gDirectionalLight.CastShadow", false);
 
         pbrShader->SetUniformMatrix4fv("model", model);
         pbrShader->SetUniformMatrix4fv("projection", projection);

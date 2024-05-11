@@ -19,11 +19,20 @@ class Entity;
 class Camera;
 class SceneRenderer;
 
+enum class SceneType
+{
+	None = 0,
+	Scene2D,
+	Scene3D,
+	Prefab2D,
+	Prefab3D,
+};
+
 class Scene : public Asset
 {
 public:
-    Scene();
-    explicit Scene(const std::string &name);
+    Scene(SceneType sceneType = SceneType::Scene3D);
+	explicit Scene(const std::string &name, SceneType sceneType = SceneType::Scene3D);
     virtual ~Scene();
 
     void OnAttach();
@@ -35,7 +44,10 @@ public:
     Entity CreateEntity(const std::string &name = std::string());
     Entity CreateEntityWithUUID(UUID uuid, const std::string &name = std::string());
     Entity *GetEntity(const std::string &name);
-	void AddToRoot(Entity &entity);
+	void AddToRootEntity(Entity &entity);
+	void DestroyRootEntity();
+	void SetRootEntity(Entity entity);
+	UUID GetRootEntityUUID() const { return m_RootEntity; }
 
     void DestroyEntity(Entity entity);
     void DestroyEntityRecursive(Entity entity);
@@ -101,8 +113,15 @@ public:
 
     static std::shared_ptr<Scene> Copy(std::shared_ptr<Scene> src);
 
+	void UseCustomCamera(PerspectiveCamera *camera) { m_TempCamera = camera; }
+    void UnuseCustomCamera() { m_TempCamera = nullptr; }
 	Camera &GetCamera();
     auto GetEditorCamera() { return m_EditorCamera; }
+
+	SceneType GetSceneType() const { return m_SceneType; }
+    void SetSceneType(SceneType type) { m_SceneType = type; }
+	void SetCurrentPrefabScene(UUID uuid) { m_CurrentPrefabScene = uuid; }
+    UUID GetCurrentPrefabScene() const {return m_CurrentPrefabScene; }
 
 private:
     void New(const std::string &name);
@@ -125,6 +144,7 @@ private:
 
     std::shared_ptr<PerspectiveCamera> m_MainCamera;
     std::shared_ptr<EditorCamera> m_EditorCamera;
+    PerspectiveCamera *m_TempCamera = nullptr;
 
     std::shared_ptr<Light> m_Lights;
     std::unordered_map<std::filesystem::path, ImGuiTextEditorRef> m_TextEditors;
@@ -141,6 +161,9 @@ private:
 
     glm::vec2 m_ViewportSize = glm::vec2(0.0f);
     glm::ivec2 m_ViewportMousePos;
+
+	SceneType m_SceneType = SceneType::Scene3D;
+    UUID m_CurrentPrefabScene;
 };
 
 using SceneRef = std::shared_ptr<Scene>;

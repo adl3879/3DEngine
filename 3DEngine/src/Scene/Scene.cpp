@@ -77,12 +77,14 @@ std::shared_ptr<Scene> Scene::Copy(std::shared_ptr<Scene> src)
     return dst;
 }
 
-Scene::Scene() 
+Scene::Scene(SceneType sceneType) 
+	:m_SceneType(sceneType)
 { 
 	New("Untitled Scene");
 }
 
-Scene::Scene(const std::string &name) 
+Scene::Scene(const std::string &name, SceneType sceneType)
+	: m_SceneType(sceneType)
 {
 	New(name);
 }
@@ -112,12 +114,22 @@ void Scene::New(const std::string &name)
 	m_RootEntity = e.GetComponent<IDComponent>().ID;
 }
 
-void Scene::AddToRoot(Entity &entity)
+void Scene::AddToRootEntity(Entity &entity)
 {
     auto root = m_RootEntity;
     auto rootEntity = GetEntityByUUID(root);
     entity.GetComponent<TagComponent>().IsFirstChild = true;
     rootEntity.AddChild(entity);
+}
+
+void Scene::DestroyRootEntity()
+{
+	DestroyEntity(GetEntityByUUID(m_RootEntity));
+}
+
+void Scene::SetRootEntity(Entity entity)
+{
+	m_RootEntity = entity.GetComponent<IDComponent>().ID;
 }
 
 Scene::~Scene() {}
@@ -382,7 +394,8 @@ bool Scene::IsTextEditorFocused()
 
 Camera& Scene::GetCamera()
 {
-	if (m_IsPlaying)
+    if (m_TempCamera != nullptr) return *m_TempCamera;
+	else if (m_IsPlaying)
 	{
 		if (m_MainCamera) return *m_MainCamera;
 		else return *m_EditorCamera;

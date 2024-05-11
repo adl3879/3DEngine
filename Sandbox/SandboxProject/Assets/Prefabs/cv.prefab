@@ -1,43 +1,43 @@
 Prefab: cv
 Entities:
-  - Entity: 7201192758367005289
+  - Entity: 14401205467842275746
     TagComponent:
       Tag: cv
       IsPrefabRoot: true
       IsFirstChild: true
     ParentComponent:
-      Parent: 1851027781230757136
+      Parent: 2605345462383613066
       HasParent: true
       Children:
-        - 1919610619820811966
+        - 16543638728909240830
     PrefabInstanceComponent:
       PrefabID: 1904483051196228730
     TransformComponent:
-      GlobalTranslation: [0, 0, 0]
-      GlobalRotation: [0, 0, 0, 0]
-      GlobalScale: [4.39565849, 4.39565849, 4.39565849]
-      Translation: [0, 0, 0]
-      Rotation: [0, 0, 0, 0]
-      Scale: [4.39565849, 4.39565849, 4.39565849]
-  - Entity: 1919610619820811966
+      GlobalTranslation: [0, 1.0593847, 0.364700556]
+      GlobalRotation: [0, 0, 0, 1]
+      GlobalScale: [1.83036888, 2.84496117, 1.83093572]
+      Translation: [0, 1.0593847, 0.364700556]
+      Rotation: [0, 0, 0, 1]
+      Scale: [1.83036888, 2.84496117, 1.83093572]
+  - Entity: 16543638728909240830
     TagComponent:
       Tag: Box
       IsPrefabRoot: false
       IsFirstChild: false
     ParentComponent:
-      Parent: 7201192758367005289
+      Parent: 14401205467842275746
       HasParent: true
       Children:
         []
     PrefabInstanceComponent:
       PrefabID: 1904483051196228730
     TransformComponent:
-      GlobalTranslation: [1.60336494e-05, 0, 0]
-      GlobalRotation: [0, 0, 0, 0]
-      GlobalScale: [1.63470531, 1.63470531, 1.63470531]
-      Translation: [1.60336494e-05, 0, 0]
+      GlobalTranslation: [1.59144402e-05, 1.05938482, 0.364684552]
+      GlobalRotation: [0, 0, 0, 1]
+      GlobalScale: [0.48291257, 0.623482168, 0.571531594]
+      Translation: [1.59144402e-05, 5.96046448e-08, -1.60038471e-05]
       Rotation: [0, 0, 0, 1]
-      Scale: [0.371890873, 0.371890873, 0.371890873]
+      Scale: [0.263833463, 0.219153136, 0.312152743]
     StaticMeshComponent:
       Handle: 13417777238487702703
       MaterialHandle: 7507808750028310646

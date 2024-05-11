@@ -9,7 +9,6 @@ namespace Engine
 {
 struct TransformComponent
 {
-
     glm::vec3 Translation = glm::vec3(0, 0, 0);
     glm::quat Rotation = glm::quat(1, 0, 0, 0);
     glm::vec3 Scale = glm::vec3(1, 1, 1);
@@ -63,5 +62,12 @@ struct TransformComponent
 
     void SetGlobalScale(const glm::vec3 &scale) { GlobalScale = scale; }
     glm::vec3 GetGlobalScale() const { return GlobalScale; }
+};
+
+struct PrevTransformComponent
+{
+    glm::vec3 Translation = glm::vec3(0, 0, 0);
+    glm::quat Rotation = glm::quat(1, 0, 0, 0);
+    glm::vec3 Scale = glm::vec3(1, 1, 1);
 };
 } // namespace Engine

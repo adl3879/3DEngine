@@ -27,12 +27,12 @@ Entities:
     PrefabInstanceComponent:
       PrefabID: 1904483051196228730
     TransformComponent:
-      GlobalTranslation: [-2.75488257, 1.101861, -1.97633624]
+      GlobalTranslation: [2.80145121, 1.12572455, 2.77263927]
       GlobalRotation: [0, 0, 0, 1]
-      GlobalScale: [1.35066152, 1.35066152, 1.35066152]
-      Translation: [1.60336494e-05, 0, 0]
+      GlobalScale: [1.54978371, 2.00090575, 1.83418357]
+      Translation: [1.59144402e-05, 5.96046448e-08, -1.60038471e-05]
       Rotation: [0, 0, 0, 1]
-      Scale: [0.371890873, 0.371890873, 0.371890873]
+      Scale: [0.263833463, 0.219153136, 0.312152743]
     StaticMeshComponent:
       Handle: 13417777238487702703
       MaterialHandle: 7507808750028310646
@@ -42,7 +42,7 @@ Entities:
       IsPrefabRoot: true
       IsFirstChild: true
     ParentComponent:
-      Parent: 8998396197118524740
+      Parent: 3570262602515709520
       HasParent: true
       Children:
         - 70529329583352824
@@ -51,10 +51,10 @@ Entities:
     TransformComponent:
       GlobalTranslation: [-2.75489855, 1.101861, -1.97633624]
       GlobalRotation: [0, 0, 0, 1]
-      GlobalScale: [3.63187599, 3.63187599, 3.63187599]
+      GlobalScale: [5.8740983, 9.13017178, 5.87591696]
       Translation: [-2.75489855, 1.101861, -1.97633624]
       Rotation: [0, 0, 0, 1]
-      Scale: [3.63187599, 3.63187599, 3.63187599]
+      Scale: [5.8740983, 9.13017178, 5.87591696]
   - Entity: 16543638728909240830
     TagComponent:
       Tag: Box
@@ -68,12 +68,12 @@ Entities:
     PrefabInstanceComponent:
       PrefabID: 1904483051196228730
     TransformComponent:
-      GlobalTranslation: [1.60336494e-05, 1.0593847, 0.364700556]
+      GlobalTranslation: [2.80145121, 1.12572455, 2.77263927]
       GlobalRotation: [0, 0, 0, 1]
-      GlobalScale: [1.35066152, 1.35066152, 1.35066152]
-      Translation: [1.60336494e-05, 0, 0]
+      GlobalScale: [1.54978371, 2.00090575, 1.83418357]
+      Translation: [1.59144402e-05, 5.96046448e-08, -1.60038471e-05]
       Rotation: [0, 0, 0, 1]
-      Scale: [0.371890873, 0.371890873, 0.371890873]
+      Scale: [0.263833463, 0.219153136, 0.312152743]
     StaticMeshComponent:
       Handle: 13417777238487702703
       MaterialHandle: 7507808750028310646
@@ -83,7 +83,7 @@ Entities:
       IsPrefabRoot: true
       IsFirstChild: true
     ParentComponent:
-      Parent: 8998396197118524740
+      Parent: 3570262602515709520
       HasParent: true
       Children:
         - 16543638728909240830
@@ -92,17 +92,17 @@ Entities:
     TransformComponent:
       GlobalTranslation: [0, 1.0593847, 0.364700556]
       GlobalRotation: [0, 0, 0, 1]
-      GlobalScale: [3.63187599, 3.63187599, 3.63187599]
+      GlobalScale: [5.8740983, 9.13017178, 5.87591696]
       Translation: [0, 1.0593847, 0.364700556]
       Rotation: [0, 0, 0, 1]
-      Scale: [3.63187599, 3.63187599, 3.63187599]
+      Scale: [5.8740983, 9.13017178, 5.87591696]
   - Entity: 736365133583071517
     TagComponent:
       Tag: cv
       IsPrefabRoot: true
       IsFirstChild: true
     ParentComponent:
-      Parent: 8998396197118524740
+      Parent: 3570262602515709520
       HasParent: true
       Children:
         - 15623455989724286395
@@ -111,10 +111,10 @@ Entities:
     TransformComponent:
       GlobalTranslation: [2.80143523, 1.12572455, 2.77265525]
       GlobalRotation: [0, 0, 0, 1]
-      GlobalScale: [3.63187599, 3.63187599, 3.63187599]
+      GlobalScale: [5.8740983, 9.13017178, 5.87591696]
       Translation: [2.80143523, 1.12572455, 2.77265525]
       Rotation: [0, 0, 0, 1]
-      Scale: [3.63187599, 3.63187599, 3.63187599]
+      Scale: [5.8740983, 9.13017178, 5.87591696]
   - Entity: 15623455989724286395
     TagComponent:
       Tag: Box
@@ -128,12 +128,12 @@ Entities:
     PrefabInstanceComponent:
       PrefabID: 1904483051196228730
     TransformComponent:
-      GlobalTranslation: [2.80145121, 1.12572455, 2.77265525]
+      GlobalTranslation: [2.80145121, 1.12572455, 2.77263927]
       GlobalRotation: [0, 0, 0, 1]
-      GlobalScale: [1.35066152, 1.35066152, 1.35066152]
-      Translation: [1.60336494e-05, 0, 0]
+      GlobalScale: [1.54978371, 2.00090575, 1.83418357]
+      Translation: [1.59144402e-05, 5.96046448e-08, -1.60038471e-05]
       Rotation: [0, 0, 0, 1]
-      Scale: [0.371890873, 0.371890873, 0.371890873]
+      Scale: [0.263833463, 0.219153136, 0.312152743]
     StaticMeshComponent:
       Handle: 13417777238487702703
       MaterialHandle: 7507808750028310646
@@ -143,7 +143,7 @@ Entities:
       IsPrefabRoot: false
       IsFirstChild: true
     ParentComponent:
-      Parent: 8998396197118524740
+      Parent: 3570262602515709520
       HasParent: true
       Children:
         []
@@ -163,7 +163,7 @@ Entities:
       IsPrefabRoot: false
       IsFirstChild: true
     ParentComponent:
-      Parent: 8998396197118524740
+      Parent: 3570262602515709520
       HasParent: true
       Children:
         []
@@ -184,17 +184,17 @@ Entities:
       IsPrefabRoot: false
       IsFirstChild: true
     ParentComponent:
-      Parent: 8998396197118524740
+      Parent: 3570262602515709520
       HasParent: true
       Children:
         []
     TransformComponent:
-      GlobalTranslation: [0, 2.82443929, -7.45635653]
-      GlobalRotation: [0.995023787, 0, 0, -0.0996377096]
-      GlobalScale: [1, 1.0000025, 1.0000025]
-      Translation: [0, 2.82443929, -7.45635653]
-      Rotation: [0.995023787, 0, 0, -0.0996377096]
-      Scale: [1, 1.0000025, 1.0000025]
+      GlobalTranslation: [-1.69127917, 5.85640144, 12.5198011]
+      GlobalRotation: [-0.00187701185, 0.204826772, 0.978720307, -0.0122077009]
+      GlobalScale: [0.999992192, 1.00001729, 1.00008535]
+      Translation: [-1.69127917, 5.85640144, 12.5198011]
+      Rotation: [-0.00187701185, 0.204826772, 0.978720307, -0.0122077009]
+      Scale: [0.999992192, 1.00001729, 1.00008535]
     CameraComponent:
       Camera:
         PerspectiveFOV: -0.785398185

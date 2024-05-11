@@ -27,7 +27,7 @@ PerspectiveCamera::PerspectiveCamera()
 
 void PerspectiveCamera::RecalculateProjectionMatrix()
 {
-    auto orientation = glm::quat(m_Rotation);
+    auto orientation = m_Rotation;
 
     glm::vec3 front = glm::vec3();
     // calculate the front vector from the Camera's (updated) Euler Angles
@@ -68,8 +68,12 @@ glm::mat4 PerspectiveCamera::GetViewMatrix()
 
 TextureRef PerspectiveCamera::GetPreviewTexture(Scene *scene)
 {
+    scene->UseCustomCamera(this);
+
     m_SceneRenderer->BeginRenderScene();
     m_SceneRenderer->RenderScene(*scene, *m_Framebuffer);
+
+	scene->UnuseCustomCamera();
 
     return m_Framebuffer->GetTexture();
 }

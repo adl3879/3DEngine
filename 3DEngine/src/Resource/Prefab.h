@@ -14,6 +14,7 @@ class Prefab : public Asset
 
 	void Apply(const SceneRef &scene, Entity &entity);
 	void Revert(const SceneRef &scene, Entity &entity) const;
+	void OpenInIsolation(Entity &entity);
 
 	[[nodiscard]] AssetType GetType() const override { return AssetType::Prefab; }
 };

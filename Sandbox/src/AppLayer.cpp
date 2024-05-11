@@ -12,6 +12,7 @@
 #include "Prefab.h"
 #include "PrefabSerializer.h"
 #include "Mesh.h"
+#include "SceneManager.h"
 
 #include <IconsFontAwesome5.h>
 
@@ -37,14 +38,11 @@ void AppLayer::OnAttach()
     pauseIcon = TextureImporter::LoadTexture2D("Resources/Textures/Pause.png");
     stopIcon = TextureImporter::LoadTexture2D("Resources/Textures/Stop.png");
 
-    m_EditorScene = std::make_shared<Scene>();
-    m_ActiveScene = m_EditorScene;
-
 	m_ContentBrowserPanel = std::make_unique<ContentBrowserPanel>();
 
     SetPanelsContext();
     // attach scene
-    m_ActiveScene->OnAttach();
+	SceneManager::Get().GetActiveScene()->OnAttach();
 
     LOG_INFO("AppLayer Attached");
 }
@@ -56,17 +54,21 @@ void AppLayer::OnUpdate(float dt)
     m_IsControlPressed = false;
 
     // update
-    m_ActiveScene->GetEditorCamera()->OnUpdate(dt);
-    m_ActiveScene->GetEditorCamera()->SetViewportSize(m_ViewportSize.x, m_ViewportSize.y);
-    m_ActiveScene->SetViewportSize(static_cast<int>(m_ViewportSize.x), static_cast<int>(m_ViewportSize.y));
-    m_ActiveScene->SetFramebuffer(m_Framebuffer);
+    SceneManager::Get().GetActiveScene()->GetEditorCamera()->OnUpdate(dt);
+    SceneManager::Get().GetActiveScene()->GetEditorCamera()->SetViewportSize(m_ViewportSize.x, m_ViewportSize.y);
+    SceneManager::Get().GetActiveScene()->SetViewportSize(static_cast<int>(m_ViewportSize.x), static_cast<int>(m_ViewportSize.y));
+    SceneManager::Get().GetActiveScene()->SetFramebuffer(m_Framebuffer);
 
-    m_ActiveScene->OnUpdate(dt);
+    SceneManager::Get().GetActiveScene()->OnUpdate(dt);
 
-    switch (m_SceneState)
+    switch (SceneManager::Get().GetSceneState())
     {
-        case SceneState::Edit: m_ActiveScene->OnUpdateEditor(dt, *m_ActiveScene->GetEditorCamera()); break;
-        case SceneState::Play: m_ActiveScene->OnRuntimeUpdate(dt); break;
+        case SceneState::Edit:
+			SceneManager::Get().GetActiveScene()->OnUpdateEditor(dt, *SceneManager::Get().GetActiveScene()->GetEditorCamera());
+            break;
+        case SceneState::Play:
+			SceneManager::Get().GetActiveScene()->OnRuntimeUpdate(dt); 
+			break;
         default: break;
     }
 
@@ -78,22 +80,17 @@ void AppLayer::OnUpdate(float dt)
     const int mouseX = static_cast<int>(mx);
     const int mouseY = static_cast<int>(my);
 
-    if (mouseX >= 0 && mouseY >= 0 && mouseX < static_cast<int>(viewportSize.x) &&
-        mouseY < static_cast<int>(viewportSize.y))
-        m_ActiveScene->SetViewportMousePos(mouseX, mouseY);
-    else
-        m_ActiveScene->SetViewportMousePos(-1, -1);
+    if (mouseX >= 0 && mouseY >= 0 && mouseX < static_cast<int>(viewportSize.x) && mouseY < static_cast<int>(viewportSize.y))
+        SceneManager::Get().GetActiveScene()->SetViewportMousePos(mouseX, mouseY);
+    else SceneManager::Get().GetActiveScene()->SetViewportMousePos(-1, -1);
 
-    if (InputManager::Get().IsKeyPressed(InputKey::Escape)) OnSceneStop();
+    if (InputManager::Get().IsKeyPressed(InputKey::Escape)) SceneManager::Get().OnSceneStop();
 }
 
 void AppLayer::OnFixedUpdate(float dt)
 {
-    // physic
-    if (m_SceneState == SceneState::Play)
-    {
-        m_ActiveScene->OnFixedUpdate(dt);
-    }
+    // physics
+    if (SceneManager::Get().GetSceneState() == SceneState::Play) SceneManager::Get().GetActiveScene()->OnFixedUpdate(dt);
 }
 
 void AppLayer::OnImGuiRender()
@@ -114,8 +111,7 @@ void AppLayer::OnImGuiRender()
         ImGui::SetNextWindowViewport(viewport->ID);
         ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
         ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
-        window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize |
-                        ImGuiWindowFlags_NoMove;
+        window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
         window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
     }
     else
@@ -143,14 +139,22 @@ void AppLayer::OnImGuiRender()
     {
         if (ImGui::BeginMenu("File"))
         {
-            if (ImGui::MenuItem("New", "Ctrl+N")) NewScene();
-            if (ImGui::MenuItem("Open...", "Ctrl+O")) OpenScene();
+            if (ImGui::MenuItem("New", "Ctrl+N"))
+            {
+                SceneManager::Get().NewScene();
+				SetPanelsContext();
+            }
+            if (ImGui::MenuItem("Open...", "Ctrl+O"))
+            {
+                SceneManager::Get().OpenScene();
+				SetPanelsContext();
+            }
             ImGui::Separator();
             if (ImGui::MenuItem("New Project", "Ctrl+Shift+N")) NewProject();
             if (ImGui::MenuItem("Open Project", "Ctrl+Shift+O")) OpenProject();
             ImGui::Separator();
-            if (ImGui::MenuItem("Save...", "Ctrl+S")) SaveScene();
-            if (ImGui::MenuItem("Save As...", "Ctrl+Shift+S")) SaveSceneAs();
+            if (ImGui::MenuItem("Save...", "Ctrl+S")) SceneManager::Get().SaveScene();
+            if (ImGui::MenuItem("Save As...", "Ctrl+Shift+S")) SceneManager::Get().SaveSceneAs();
             ImGui::Separator();
             if (ImGui::MenuItem("Exit", "")) Application::Close();
 
@@ -163,7 +167,7 @@ void AppLayer::OnImGuiRender()
         }
         if (ImGui::BeginMenu(".NET"))
         {
-            if (ImGui::MenuItem("Generate Solution")) m_ActiveScene->GenerateNETSolution();
+            if (ImGui::MenuItem("Generate Solution")) SceneManager::Get().GetActiveScene()->GenerateNETSolution();
             ImGui::EndMenu();
         }
         ImGui::EndMenuBar();
@@ -187,8 +191,7 @@ void AppLayer::OnImGuiRender()
         m_Framebuffer->QueueResize(glm::vec2(viewportPanelSize.x, viewportPanelSize.y));
         m_ViewportSize = {viewportPanelSize.x, viewportPanelSize.y};
     }
-    ImGui::Image((void *)(intptr_t)m_Framebuffer->GetTexture(GL_COLOR_ATTACHMENT0)->GetRendererID(),
-                 ImVec2{m_ViewportSize.x, m_ViewportSize.y});
+    ImGui::Image((void *)(intptr_t)m_Framebuffer->GetTexture(GL_COLOR_ATTACHMENT0)->GetRendererID(), ImVec2{m_ViewportSize.x, m_ViewportSize.y});
 
     if (ImGui::BeginDragDropTarget())
     {
@@ -201,17 +204,17 @@ void AppLayer::OnImGuiRender()
             {
                 case AssetType::Scene:
                 {
-                    ResetScene("");
-                    m_EditorScene = AssetManager::GetAsset<Scene>(path);
-                    m_SceneHierarchyPanel.SetContext(m_EditorScene);
-                    m_EnvironmentPanel.SetContext(m_EditorScene);
+                    auto editorScene = AssetManager::GetAsset<Scene>(path);
+					SceneManager::Get().SetEditorScene(editorScene);
+                    SceneManager::Get().SetActiveScene(editorScene);
 
-                    m_ActiveScene = m_EditorScene;
+                    m_SceneHierarchyPanel.SetContext(SceneManager::Get().GetActiveScene());
+                    m_EnvironmentPanel.SetContext(SceneManager::Get().GetActiveScene());
                 }
                 break;
                 case AssetType::Mesh:
                 {
-                    auto ent = m_ActiveScene->CreateEntity("Mesh");
+                    auto ent = SceneManager::Get().GetActiveScene()->CreateEntity("Mesh");
                     const auto handle = AssetManager::GetAssetHandleFromPath(path);
 					const auto &asset = AssetManager::GetAsset<Mesh>(path);
 					if (!asset->HasAnimations())
@@ -235,16 +238,16 @@ void AppLayer::OnImGuiRender()
 						}
 						animationController.Animator = new Animator(animationController.Animations[0]);
 					}
-					m_ActiveScene->AddToRoot(ent);
+					SceneManager::Get().GetActiveScene()->AddToRootEntity(ent);
                 }
                 break;
                 case AssetType::Material:
                 {
-                    if (m_ActiveScene->GetHoveredEntity() == (entt::entity)-1) break;
+                    if (SceneManager::Get().GetActiveScene()->GetHoveredEntity() == (entt::entity)-1) break;
 
                     auto handle = AssetManager::GetAssetHandleFromPath(path);
                     // get current hovered entity, add material
-                    Entity ent = {m_ActiveScene->GetHoveredEntity(), m_ActiveScene.get()};
+                    Entity ent = {SceneManager::Get().GetActiveScene()->GetHoveredEntity(), SceneManager::Get().GetActiveScene().get()};
                     auto &mesh = ent.GetComponent<StaticMeshComponent>();
                     mesh.MaterialHandle = handle;
                 }
@@ -252,19 +255,19 @@ void AppLayer::OnImGuiRender()
                 case AssetType::Prefab:
                 {
 					auto asset = AssetManager::GetAsset<Prefab>(path);
-                    PrefabSerializer serializer(m_ActiveScene);
+                    PrefabSerializer serializer(SceneManager::Get().GetActiveScene());
 					auto entity = serializer.Deserialize(Project::GetAssetDirectory() / AssetManager::GetRegistry()[asset->Handle].FilePath);
                     entity.GetComponent<TagComponent>().Tag = AssetManager::GetAssetName(asset->Handle);
 					auto &tc = entity.GetComponent<TransformComponent>();
                     tc.Translation = {0, 0, 0};
                     tc.Rotation = {0, 0, 0, 0};
 
-					/*auto projection = m_ActiveScene->GetEditorCamera()->GetProjectionMatrix();
-					auto view = m_ActiveScene->GetEditorCamera()->GetViewMatrix();
+					/*auto projection = SceneManager::Get().GetActiveScene()->GetEditorCamera()->GetProjectionMatrix();
+					auto view = SceneManager::Get().GetActiveScene()->GetEditorCamera()->GetViewMatrix();
 
 					auto mouse = InputManager::Get().GetMouseMovedPosition();
                     auto rayDirection = Math::ScreenToWorld({mouse.X, mouse.Y}, m_ViewportSize, projection, view);
-					auto rayStartPos = m_ActiveScene->GetEditorCamera()->GetPosition();
+					auto rayStartPos = SceneManager::Get().GetActiveScene()->GetEditorCamera()->GetPosition();
                     auto rayEndPos = rayStartPos + rayDirection * 2.0f;
 
 					tc.Translation = rayEndPos;*/
@@ -272,7 +275,7 @@ void AppLayer::OnImGuiRender()
                 break;
                 case AssetType::SkyLight:
 				{
-                    auto environment = m_ActiveScene->GetEnvironment();
+                    auto environment = SceneManager::Get().GetActiveScene()->GetEnvironment();
                     environment->CurrentSkyType = SkyType::SkyboxHDR;
                     environment->SkyboxHDR = AssetManager::GetAsset<SkyLight>(path);
 				}
@@ -308,10 +311,12 @@ void AppLayer::OnImGuiRender()
 
     // draw to far right
     ImGui::SetCursorPosX(ImGui::GetWindowWidth() - (buttonSize * 2) - 10);
-    DrawControls(ICON_FA_BUG, "Show/Hide Physics Debug", m_ActiveScene->IsDebugDrawEnabled(), [&]() { m_ActiveScene->SetDebugDraw(!m_ActiveScene->IsDebugDrawEnabled()); });
+    DrawControls(ICON_FA_BUG, "Show/Hide Physics Debug", SceneManager::Get().GetActiveScene()->IsDebugDrawEnabled(), 
+		[&]() { SceneManager::Get().GetActiveScene()->SetDebugDraw(!SceneManager::Get().GetActiveScene()->IsDebugDrawEnabled()); });
     ImGui::SameLine();
     // show/hide grid
-    DrawControls(ICON_FA_BORDER_ALL, "Show/Hide Grid", m_ActiveScene->IsGridEnabled(), [&]() { m_ActiveScene->SetGridEnabled(!m_ActiveScene->IsGridEnabled()); });
+    DrawControls(ICON_FA_BORDER_ALL, "Show/Hide Grid", SceneManager::Get().GetActiveScene()->IsGridEnabled(), 
+		[&]() { SceneManager::Get().GetActiveScene()->SetGridEnabled(!SceneManager::Get().GetActiveScene()->IsGridEnabled()); });
 
     ImGui::PopStyleVar(2);
 
@@ -327,8 +332,8 @@ void AppLayer::OnImGuiRender()
     // Gizmos
     auto selectedEntity = m_SceneHierarchyPanel.GetSelectedEntity();
 
-    glm::mat4 cameraView = m_ActiveScene->GetEditorCamera()->GetViewMatrix();
-    glm::mat4 projection = m_ActiveScene->GetEditorCamera()->GetProjectionMatrix();
+    glm::mat4 cameraView = SceneManager::Get().GetActiveScene()->GetEditorCamera()->GetViewMatrix();
+    glm::mat4 projection = SceneManager::Get().GetActiveScene()->GetEditorCamera()->GetProjectionMatrix();
 
     cameraView[0][1] = -cameraView[0][1];
     cameraView[1][1] = -cameraView[1][1];
@@ -339,7 +344,7 @@ void AppLayer::OnImGuiRender()
     ImGuizmo::SetDrawlist();
     ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, m_ViewportSize.x, m_ViewportSize.y);
 
-    if (selectedEntity && m_GizmoType != -1 && m_SceneState == SceneState::Edit)
+    if (selectedEntity && m_GizmoType != -1 && SceneManager::Get().GetSceneState() == SceneState::Edit)
     {
         // Entity Transform
         if (selectedEntity.HasComponent<TransformComponent>())
@@ -367,7 +372,7 @@ void AppLayer::OnImGuiRender()
                 ParentComponent &parent = selectedEntity.GetComponent<ParentComponent>();
                 if (parent.HasParent)
                 {
-                    const auto &parentTransformComponent = m_ActiveScene->GetEntityByUUID(parent.Parent).GetComponent<TransformComponent>();
+                    const auto &parentTransformComponent = SceneManager::Get().GetActiveScene()->GetEntityByUUID(parent.Parent).GetComponent<TransformComponent>();
                     const glm::mat4 &parentTransform = parentTransformComponent.GetGlobalTransform();
                     localTransform = glm::inverse(parentTransform) * localTransform;
                 }
@@ -376,8 +381,7 @@ void AppLayer::OnImGuiRender()
                 float decomposedPosition[3];
                 float decomposedEuler[3];
                 float decomposedScale[3];
-                ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(localTransform), decomposedPosition,
-                                                      decomposedEuler, decomposedScale);
+                ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(localTransform), decomposedPosition, decomposedEuler, decomposedScale);
 
                 const auto &localPosition = glm::vec3(decomposedPosition[0], decomposedPosition[1], decomposedPosition[2]);
                 const auto &localScale = glm::vec3(decomposedScale[0], decomposedScale[1], decomposedScale[2]);
@@ -427,22 +431,27 @@ void AppLayer::OnKeyPressed(InputKey key, bool isRepeat)
         case InputKey::E: m_GizmoType = ImGuizmo::OPERATION::ROTATE; break;
         case InputKey::R: m_GizmoType = ImGuizmo::OPERATION::SCALE; break;
 
-        case InputKey::N: if (ctrl) NewScene(); break;
-        case InputKey::O: if (ctrl) OpenScene(); break;
+        case InputKey::N: if (ctrl) SceneManager::Get().NewScene(); break;
+        case InputKey::O: if (ctrl) SceneManager::Get().OpenScene(); break;
         case InputKey::D: if (ctrl) DuplicateEntity(); break;
         case InputKey::S:
+        {
             if (ctrl && shift)
-                SaveSceneAs();
+                SceneManager::Get().SaveSceneAs();
             else if (ctrl)
-                SaveScene();
-            break;
+            {
+                SceneManager::Get().SaveScene();
+            }
+			break;
+        }
         default: break;
     }
 }
 
 void AppLayer::OnMouseScrolled(double xOffset, double yOffset)
 {
-    if (m_ViewportHovered) m_ActiveScene->GetEditorCamera()->OnMouseScrolled(xOffset, yOffset);
+    if (m_ViewportHovered) 
+		SceneManager::Get().GetActiveScene()->GetEditorCamera()->OnMouseScrolled(xOffset, yOffset);
 }
 
 void AppLayer::OnMouseButtonPressed(MouseButton button)
@@ -455,7 +464,7 @@ void AppLayer::OnMouseButtonPressed(MouseButton button)
         {
             if (m_ViewportHovered)
             {
-                Entity e = {m_ActiveScene->GetHoveredEntity(), m_ActiveScene.get()};
+                Entity e = {SceneManager::Get().GetActiveScene()->GetHoveredEntity(), SceneManager::Get().GetActiveScene().get()};
                 m_SceneHierarchyPanel.SetSelectedEntity(e);
             }
         }
@@ -481,106 +490,48 @@ void AppLayer::OpenProject()
     }
 }
 
-void AppLayer::NewScene()
-{
-    // TODO: create new scene file
-    ResetScene("");
-    m_ActiveScene = std::make_unique<Scene>();
-    SetPanelsContext();
-}
-
-void AppLayer::OpenScene()
-{
-    // Fix later
-    auto path = FileDialogs::OpenFile("3D Engine Scene (*.scene)\0*.scene\0");
-    if (!path.empty())
-    {
-        ResetScene("");
-
-        auto handle = AssetManager::ImportAsset(path);
-        m_EditorScene = AssetManager::GetAsset<Scene>(handle);
-        m_SceneHierarchyPanel.SetContext(m_EditorScene);
-        m_EnvironmentPanel.SetContext(m_EditorScene);
-
-        m_ActiveScene = m_EditorScene;
-    }
-}
-
-void AppLayer::SaveSceneAs()
-{
-    auto path = FileDialogs::SaveFile("3D Engine Scene (*.scene)\0*.scene\0");
-    if (!path.empty())
-    {
-        m_ActiveScene->SetSceneFilePath(path);
-        SceneSerializer serializer(m_ActiveScene);
-        serializer.Serialize(path);
-    }
-}
-
-void AppLayer::SaveScene()
-{
-    if (m_ActiveScene->GetSceneFilePath().empty())
-        SaveSceneAs();
-    else
-    {
-        SceneSerializer serializer(m_ActiveScene);
-        serializer.Serialize(m_ActiveScene->GetSceneFilePath());
-    }
-}
-
-void AppLayer::ResetScene(const std::string &path) 
-{
-	//m_EditorCamera = EditorCamera(-45.0f, 1.778f, 0.1f, 100.0f); 
+void AppLayer::ResetScene(const std::string& path) 
+{ 
+	SetPanelsContext();
 }
 
 void AppLayer::DuplicateEntity()
 {
-    if (m_SceneState == SceneState::Edit)
+    if (SceneManager::Get().GetSceneState() == SceneState::Edit)
     {
-        auto selectedEntity = m_SceneHierarchyPanel.GetSelectedEntity();
-		auto parent = m_ActiveScene->GetEntityByUUID(selectedEntity.GetComponent<ParentComponent>().Parent);
-        if (selectedEntity) m_ActiveScene->DuplicateEntityRecursive(selectedEntity, parent);
+        if (SceneManager::Get().GetActiveScene()->GetSceneType() == SceneType::Scene3D)
+        {
+            auto selectedEntity = m_SceneHierarchyPanel.GetSelectedEntity();
+            auto parent = SceneManager::Get().GetActiveScene()->GetEntityByUUID(selectedEntity.GetComponent<ParentComponent>().Parent);
+            if (selectedEntity) SceneManager::Get().GetActiveScene()->DuplicateEntityRecursive(selectedEntity, parent);
+        } 
+		else if (SceneManager::Get().GetActiveScene()->GetSceneType() == SceneType::Prefab3D)
+		{
+			// spawn new prefab
+			auto selectedEntity = m_SceneHierarchyPanel.GetSelectedEntity();
+            auto asset = AssetManager::GetAsset<Prefab>(selectedEntity.GetComponent<PrefabInstanceComponent>().PrefabID);
+            PrefabSerializer serializer(SceneManager::Get().GetActiveScene());
+            auto entity = serializer.Deserialize(Project::GetAssetDirectory() / AssetManager::GetRegistry()[asset->Handle].FilePath);
+            entity.GetComponent<TagComponent>().Tag = AssetManager::GetAssetName(asset->Handle);
+		}
     }
-}
-
-void AppLayer::OnScenePlay()
-{
-    m_SceneState = SceneState::Play;
-    m_ActiveScene = Scene::Copy(m_EditorScene);
-
-    m_ActiveScene->SetPlaying(true);
-    m_ActiveScene->OnRuntimeStart();
-
-    SetPanelsContext();
-}
-
-void AppLayer::OnSceneStop()
-{
-    // TODO: fix screen jittering when stopping
-    m_SceneState = SceneState::Edit;
-    m_ActiveScene = m_EditorScene;
-
-    m_ActiveScene->SetPlaying(false);
-    m_ActiveScene->OnRuntimeStop();
-
-	SetPanelsContext();
 }
 
 void AppLayer::UI_Toolbar()
 {
     ImGui::Begin("##toolbar", nullptr, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
-    auto icon = m_SceneState == SceneState::Edit ? playIcon : stopIcon;
+    auto icon = SceneManager::Get().GetSceneState() == SceneState::Edit ? playIcon : stopIcon;
     auto size = ImGui::GetWindowHeight() - 6.0f;
     ImGui::SetCursorPosX((ImGui::GetWindowContentRegionMax().x * 0.5f) - (size * 0.5));
     ImGui::SetCursorPosY((ImGui::GetWindowContentRegionMax().y * 0.5f) - (size * 0.5));
     if (ImGui::ImageButton((void *)(intptr_t)icon->GetRendererID(), ImVec2{size, size}))
     {
-        if (m_SceneState == SceneState::Edit) OnScenePlay();
-        else if (m_SceneState == SceneState::Play) OnSceneStop();
+        if (SceneManager::Get().GetSceneState() == SceneState::Edit) SceneManager::Get().OnScenePlay();
+        else if (SceneManager::Get().GetSceneState() == SceneState::Play) SceneManager::Get().OnSceneStop();
     }
     ImGui::SameLine(0, 10.0f);
     // disabled pause button
-    if (!m_ActiveScene->IsPlaying())
+    if (!SceneManager::Get().GetActiveScene()->IsPlaying())
     {
         ImGui::PushStyleVar(ImGuiStyleVar_Alpha, ImGui::GetStyle().Alpha * 0.5f);
         ImGui::ImageButton((void *)(intptr_t)pauseIcon->GetRendererID(), ImVec2{size, size});
@@ -591,21 +542,21 @@ void AppLayer::UI_Toolbar()
     }
     else
     {
-        if (!m_ActiveScene->IsPaused() && ImGui::ImageButton((void *)(intptr_t)pauseIcon->GetRendererID(), ImVec2{size, size}))
+        if (!SceneManager::Get().GetActiveScene()->IsPaused() && ImGui::ImageButton((void *)(intptr_t)pauseIcon->GetRendererID(), ImVec2{size, size}))
         {
-            m_ActiveScene->SetPaused(true);
-            m_ActiveScene->OnRuntimeStop();
+            SceneManager::Get().GetActiveScene()->SetPaused(true);
+            SceneManager::Get().GetActiveScene()->OnRuntimeStop();
         }
-        else if (m_ActiveScene->IsPaused() && ImGui::ImageButton((void *)(intptr_t)playIcon->GetRendererID(), ImVec2{size, size}))
+        else if (SceneManager::Get().GetActiveScene()->IsPaused() && ImGui::ImageButton((void *)(intptr_t)playIcon->GetRendererID(), ImVec2{size, size}))
         {
-            m_ActiveScene->SetPaused(false);
-            m_ActiveScene->OnRuntimeStart();
+            SceneManager::Get().GetActiveScene()->SetPaused(false);
+            SceneManager::Get().GetActiveScene()->OnRuntimeStart();
         }
         else
         {
             ImGui::SameLine(0, 10.0f);
             if (ImGui::ImageButton((void *)(intptr_t)stepForwardIcon->GetRendererID(), ImVec2{size, size})) 
-				m_ActiveScene->StepRuntimeFrame(10);
+				SceneManager::Get().GetActiveScene()->StepRuntimeFrame(10);
         }
     }
     ImGui::End();
@@ -655,8 +606,8 @@ void AppLayer::DrawControls(const char *icon, const char *tooltip, bool isActive
 
 void AppLayer::SetPanelsContext() 
 {
-    m_SceneHierarchyPanel.SetContext(m_ActiveScene);
-    m_EnvironmentPanel.SetContext(m_ActiveScene);
-	m_ContentBrowserPanel->SetContext(m_ActiveScene);
+    m_SceneHierarchyPanel.SetContext(SceneManager::Get().GetActiveScene());
+    m_EnvironmentPanel.SetContext(SceneManager::Get().GetActiveScene());
+	m_ContentBrowserPanel->SetContext(SceneManager::Get().GetActiveScene());
 }
 } // namespace Engine

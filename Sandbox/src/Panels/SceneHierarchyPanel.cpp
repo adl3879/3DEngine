@@ -12,6 +12,7 @@
 #include "NetScript.h"
 #include "IMath.h"
 #include "Prefab.h"
+#include "SceneManager.h"
 
 #include <IconsFontAwesome5.h>
 
@@ -87,6 +88,7 @@ void SceneHierarchyPanel::DrawEntityNode(Entity entity)
     }
 
     bool entityDeleted = false;
+
     if (ImGui::BeginPopupContextItem())
     {
         if (ImGui::BeginMenu(ICON_FA_PLUS "  Add Child"))
@@ -101,7 +103,7 @@ void SceneHierarchyPanel::DrawEntityNode(Entity entity)
             ImGui::EndPopup();
         }
         ImGui::Separator();
-        if (ImGui::MenuItem("Duplicate Entity"))
+        if (ImGui::MenuItem("Duplicate entity"))
         {
 			auto parent = m_Context->GetEntityByUUID(entity.GetComponent<ParentComponent>().Parent);
             auto newEntity = m_Context->DuplicateEntityRecursive(entity, parent);
@@ -117,11 +119,19 @@ void SceneHierarchyPanel::DrawEntityNode(Entity entity)
                 parentComponent.HasParent = false;
             }
         }
-        if (ImGui::MenuItem("Delete Entity"))
+        if (ImGui::MenuItem("Delete entity"))
         {
             m_SelectionContext = entity;
             entityDeleted = true;
         }
+        ImGui::Separator();
+		if (entity.HasComponent<PrefabInstanceComponent>() && ImGui::MenuItem("Open prefab in isolation"))
+		{
+			const auto &prefab = entity.GetComponent<PrefabInstanceComponent>();
+			const auto &prefabAsset = AssetManager::GetAsset<Prefab>(prefab.PrefabID);
+			auto prefabRootEntity = m_Context->GetPrefabRoot(entity);
+			prefabAsset->OpenInIsolation(prefabRootEntity);
+		}
         ImGui::EndPopup();
     }
 
@@ -159,7 +169,7 @@ void SceneHierarchyPanel::DrawEntityNode(Entity entity)
         }
         ImGui::TreePop();
     };
-}
+ }
 
 void SceneHierarchyPanel::DrawComponents(Entity entity)
 {
@@ -272,16 +282,13 @@ void SceneHierarchyPanel::DrawComponents(Entity entity)
             }
 
             float perspectiveVerticalFOV = glm::degrees(camera->GetPerspectiveVerticalFOV());
-            if (ImGui::DragFloat(_labelPrefix("Vertical FOV"), &perspectiveVerticalFOV))
-                camera->SetPerspectiveVerticalFOV(glm::radians(perspectiveVerticalFOV));
+            if (ImGui::DragFloat(_labelPrefix("Vertical FOV"), &perspectiveVerticalFOV)) camera->SetPerspectiveVerticalFOV(glm::radians(perspectiveVerticalFOV));
 
             float perspectiveNearClip = camera->GetPerspectiveNearClip();
-            if (ImGui::DragFloat(_labelPrefix("Near Clip"), &perspectiveNearClip))
-                camera->SetPerspectiveNearClip(perspectiveNearClip);
+            if (ImGui::DragFloat(_labelPrefix("Near Clip"), &perspectiveNearClip)) camera->SetPerspectiveNearClip(perspectiveNearClip);
 
             float perspectiveFarClip = camera->GetPerspectiveFarClip();
-            if (ImGui::DragFloat(_labelPrefix("Far Clip"), &perspectiveFarClip))
-                camera->SetPerspectiveFarClip(perspectiveFarClip);
+            if (ImGui::DragFloat(_labelPrefix("Far Clip"), &perspectiveFarClip)) camera->SetPerspectiveFarClip(perspectiveFarClip);
 
             // preview camera
             if (ImGui::TreeNode("Preview", "Preview"))
@@ -567,8 +574,7 @@ void SceneHierarchyPanel::DrawComponents(Entity entity)
             // drop down menu for motion type
             auto &entityComponent = entity.GetComponent<RigidBodyComponent>();
             auto &transform = entity.GetComponent<TransformComponent>();
-            if (ImGui::BeginCombo(_labelPrefix("Motion Type"),
-                                  Physics::MotionTypeToString(entityComponent.MotionType).c_str()))
+            if (ImGui::BeginCombo(_labelPrefix("Motion Type"), Physics::MotionTypeToString(entityComponent.MotionType).c_str()))
             {
                 for (int i = 0; i < 2; i++)
                 {
@@ -590,8 +596,7 @@ void SceneHierarchyPanel::DrawComponents(Entity entity)
                 ImGui::Checkbox(_labelPrefix("Use Gravity"), &entityComponent.UseGravity);
                 ImGui::Checkbox(_labelPrefix("Is Kinematic"), &entityComponent.IsKinematic);
                 // constraints tree node
-                if (ImGui::TreeNodeEx((void *)typeid(RigidBodyComponent).hash_code(), ImGuiTreeNodeFlags_DefaultOpen,
-                                      "Constraints"))
+                if (ImGui::TreeNodeEx((void *)typeid(RigidBodyComponent).hash_code(), ImGuiTreeNodeFlags_DefaultOpen, "Constraints"))
                 {
                     ImGui::TreePop();
                 }
@@ -703,9 +708,9 @@ Entity SceneHierarchyPanel::CreateEntityPopup()
     return Entity{entt::null, m_Context.get()};
 }
 
-void SceneHierarchyPanel::SetContext(const std::shared_ptr<Scene> &context)
+void SceneHierarchyPanel::SetContext(const std::shared_ptr<Scene> &context) 
 {
-    m_Context = context;
+	m_Context = context;
     m_SelectionContext = {};
 }
 
@@ -717,7 +722,6 @@ void SceneHierarchyPanel::SetSelectedEntity(Entity entity)
 
 void SceneHierarchyPanel::OnImGuiRender()
 {
-
     ImGui::Begin("Scene Hierarchy");
     if (m_Context)
     {
@@ -737,6 +741,11 @@ void SceneHierarchyPanel::OnImGuiRender()
         ImGui::PopStyleVar(2);
         ImGui::PopItemWidth();
 
+		if (m_Context->GetSceneType() == SceneType::Prefab3D && ImGui::Button(ICON_FA_ARROW_LEFT " Back to main scene"))
+		{
+			SceneManager::Get().ShowMainScene();
+		}
+
         ImGui::PushStyleColor(ImGuiCol_ChildBg, ImVec4(0.05f, 0.05f, 0.05f, 0.54f));
         ImGui::BeginChild("SceneHierarchy", ImVec2(0, 0), true);
 
@@ -746,7 +755,7 @@ void SceneHierarchyPanel::OnImGuiRender()
             auto childEntity = CreateEntityPopup();
 			if (childEntity)
 			{
-                m_Context->AddToRoot(childEntity);
+                m_Context->AddToRootEntity(childEntity);
 			}
             ImGui::EndPopup();
         }
@@ -758,15 +767,22 @@ void SceneHierarchyPanel::OnImGuiRender()
         }
 
         ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 10);
-        // ImGui::Separator();
-        // ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 10);
 
         // Add padding around the list
         m_Context->m_Registry.each(
             [this](auto entityId)
             {
                 Entity entity{entityId, m_Context.get()};
-                if (!entity.GetComponent<ParentComponent>().HasParent) DrawEntityNode(entity);
+                if (m_Context->GetSceneType() == SceneType::Prefab3D)
+				{
+					if (m_Context->GetCurrentPrefabScene() == entity.GetComponent<IDComponent>().ID)
+						DrawEntityNode(entity);
+                }
+                else
+                {
+                    if (!entity.GetComponent<ParentComponent>().HasParent)
+                        DrawEntityNode(entity);
+                }
             });
 
         ImGui::EndChild();

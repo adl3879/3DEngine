@@ -100,7 +100,7 @@ Entity PrefabSerializer::Deserialize(const std::filesystem::path &path)
 			// add root prefab to scene root
             if (tagComponent["IsPrefabRoot"] && tagComponent["IsPrefabRoot"].as<bool>())
             {
-				m_Scene->AddToRoot(deserializedEntity);
+				m_Scene->AddToRootEntity(deserializedEntity);
 				rootPrefab = deserializedEntity;
 				prefabTag.IsPrefabRoot = true;
             }

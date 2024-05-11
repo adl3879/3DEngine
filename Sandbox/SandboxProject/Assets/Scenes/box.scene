@@ -13,13 +13,13 @@ Environment:
   CenterPoint: [0, -6360000, 0]
   SunDirection: [0.200000003, 0.959169984, 0.200000003]
 Entities:
-  - Entity: 14578738974550480468
+  - Entity: 10679809123863125519
     TagComponent:
       Tag: Box
       IsPrefabRoot: false
-      IsFirstChild: false
+      IsFirstChild: true
     ParentComponent:
-      Parent: 2439975881317480534
+      Parent: 12135862832085720101
       HasParent: true
       Children:
         []
@@ -32,21 +32,4 @@ Entities:
       Scale: [1, 1, 1]
     StaticMeshComponent:
       Handle: 13417777238487702703
-      MaterialHandle: 12969177304592682092
-  - Entity: 10957953204154379262
-    TagComponent:
-      Tag: Empty Entity
-      IsPrefabRoot: false
-      IsFirstChild: false
-    ParentComponent:
-      Parent: 2439975881317480534
-      HasParent: true
-      Children:
-        []
-    TransformComponent:
-      GlobalTranslation: [0, 0, 0]
-      GlobalRotation: [0, 0, 0, 1]
-      GlobalScale: [1, 1, 1]
-      Translation: [0, 0, 0]
-      Rotation: [0, 0, 0, 1]
-      Scale: [1, 1, 1]
+      MaterialHandle: 16138889579334976143

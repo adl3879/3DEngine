@@ -74,17 +74,13 @@ void Application::RegisterLayerEventCallbacks(Layer *layer)
 {
     static InputManager &Input = InputManager::Get();
 
-    Input.RegisterKeyboardCallback(
-        std::bind(&Layer::OnKeyPressed, layer, std::placeholders::_1, std::placeholders::_2));
+    Input.RegisterKeyboardCallback(std::bind(&Layer::OnKeyPressed, layer, std::placeholders::_1, std::placeholders::_2));
     Input.RegisterKeyReleasedCallback(std::bind(&Layer::OnKeyReleased, layer, std::placeholders::_1));
     Input.RegisterMousePressedCallback(std::bind(&Layer::OnMouseButtonPressed, layer, std::placeholders::_1));
     Input.RegisterMouseReleasedCallback(std::bind(&Layer::OnMouseButtonReleased, layer, std::placeholders::_1));
-    Input.RegisterWindowResizeCallback(
-        std::bind(&Layer::OnWindowResize, layer, std::placeholders::_1, std::placeholders::_2));
-    Input.RegisterMouseScrollCallback(
-        std::bind(&Layer::OnMouseScrolled, layer, std::placeholders::_1, std::placeholders::_2));
-    Input.RegisterMouseMovedCallback(std::bind(&Layer::OnMouseMoved, layer, std::placeholders::_1,
-                                               std::placeholders::_2, std::placeholders::_3, std::placeholders::_4));
+    Input.RegisterWindowResizeCallback(std::bind(&Layer::OnWindowResize, layer, std::placeholders::_1, std::placeholders::_2));
+    Input.RegisterMouseScrollCallback(std::bind(&Layer::OnMouseScrolled, layer, std::placeholders::_1, std::placeholders::_2));
+    Input.RegisterMouseMovedCallback(std::bind(&Layer::OnMouseMoved, layer, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4));
 }
 
 void Application::ExecuteMainThreadQueue()

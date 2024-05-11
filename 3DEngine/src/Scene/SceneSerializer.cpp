@@ -424,40 +424,48 @@ bool SceneSerializer::Deserialize(const std::string &filepath)
     strStream << stream.rdbuf();
 
     YAML::Node data = YAML::Load(strStream.str());
-    if (!data["Scene"]) return false;
-
-    std::string sceneName = data["Scene"].as<std::string>();
-    LOG_CORE_TRACE("Deserializing scene from file: {0}", sceneName);
-
-    auto environment = data["Environment"];
-    if (environment)
+    if (data["Scene"])
     {
-        auto skyType = environment["SkyType"].as<std::string>();
-        auto ambientColor = environment["AmbientColor"].as<glm::vec4>();
-        AssetHandle hdriHandle;
-        if (environment["HDRIHandle"]) hdriHandle = environment["HDRIHandle"].as<uint64_t>();
+        std::string sceneName = data["Scene"].as<std::string>();
+        LOG_CORE_TRACE("Deserializing scene from file: {0}", sceneName);
 
-        m_Scene->GetEnvironment()->CurrentSkyType = SkyTypeFromString(skyType);
-        m_Scene->GetEnvironment()->AmbientColor = ambientColor;
-
-        if (environment["BloomEnabled"]) m_Scene->GetEnvironment()->BloomEnabled = environment["BloomEnabled"].as<bool>();
-        if (environment["Exposure"]) m_Scene->GetEnvironment()->Exposure = environment["Exposure"].as<float>();
-        if (environment["BloomIntensity"]) m_Scene->GetEnvironment()->BloomIntensity = environment["BloomIntensity"].as<float>();
-
-        if (SkyTypeFromString(skyType) == SkyType::SkyboxHDR) m_Scene->GetEnvironment()->SkyboxHDR = AssetManager::GetAsset<SkyLight>(hdriHandle);
-
-        if (SkyTypeFromString(skyType) == SkyType::ProceduralSky)
+        auto environment = data["Environment"];
+        if (environment)
         {
-            auto &proceduralSkybox = m_Scene->GetEnvironment()->ProceduralSkybox;
-            proceduralSkybox->SurfaceRadius = environment["SurfaceRadius"].as<float>();
-            proceduralSkybox->AtmosphereRadius = environment["AtmosphereRadius"].as<float>();
-            proceduralSkybox->RayleighScattering = environment["RayleighScattering"].as<glm::vec3>();
-            proceduralSkybox->MieScattering = environment["MieScattering"].as<glm::vec3>();
-            proceduralSkybox->SunIntensity = environment["SunIntensity"].as<float>();
-            proceduralSkybox->CenterPoint = environment["CenterPoint"].as<glm::vec3>();
-            proceduralSkybox->SunDirection = environment["SunDirection"].as<glm::vec3>();
+            auto skyType = environment["SkyType"].as<std::string>();
+            auto ambientColor = environment["AmbientColor"].as<glm::vec4>();
+            AssetHandle hdriHandle;
+            if (environment["HDRIHandle"]) hdriHandle = environment["HDRIHandle"].as<uint64_t>();
+
+            m_Scene->GetEnvironment()->CurrentSkyType = SkyTypeFromString(skyType);
+            m_Scene->GetEnvironment()->AmbientColor = ambientColor;
+
+            if (environment["BloomEnabled"])
+                m_Scene->GetEnvironment()->BloomEnabled = environment["BloomEnabled"].as<bool>();
+            if (environment["Exposure"]) m_Scene->GetEnvironment()->Exposure = environment["Exposure"].as<float>();
+            if (environment["BloomIntensity"])
+                m_Scene->GetEnvironment()->BloomIntensity = environment["BloomIntensity"].as<float>();
+
+            if (SkyTypeFromString(skyType) == SkyType::SkyboxHDR)
+                m_Scene->GetEnvironment()->SkyboxHDR = AssetManager::GetAsset<SkyLight>(hdriHandle);
+
+            if (SkyTypeFromString(skyType) == SkyType::ProceduralSky)
+            {
+                auto &proceduralSkybox = m_Scene->GetEnvironment()->ProceduralSkybox;
+                proceduralSkybox->SurfaceRadius = environment["SurfaceRadius"].as<float>();
+                proceduralSkybox->AtmosphereRadius = environment["AtmosphereRadius"].as<float>();
+                proceduralSkybox->RayleighScattering = environment["RayleighScattering"].as<glm::vec3>();
+                proceduralSkybox->MieScattering = environment["MieScattering"].as<glm::vec3>();
+                proceduralSkybox->SunIntensity = environment["SunIntensity"].as<float>();
+                proceduralSkybox->CenterPoint = environment["CenterPoint"].as<glm::vec3>();
+                proceduralSkybox->SunDirection = environment["SunDirection"].as<glm::vec3>();
+            }
         }
     }
+	else if (data["Prefab"])
+	{
+		LOG_CORE_INFO("Deserializing prefab scene file");
+	}
 
     auto entities = data["Entities"];
     if (entities)
@@ -475,7 +483,8 @@ bool SceneSerializer::Deserialize(const std::string &filepath)
 
             SceneSerializer::DeserializeEntity(entity, deserializedEntity);
 
-			if (deserializedEntity.GetComponent<TagComponent>().IsFirstChild) m_Scene->AddToRoot(deserializedEntity);
+			if (deserializedEntity.GetComponent<TagComponent>().IsFirstChild) 
+				m_Scene->AddToRootEntity(deserializedEntity);
         }
     }
     return true;

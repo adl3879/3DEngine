@@ -13,7 +13,6 @@ class EnvironmentPanel
     virtual ~EnvironmentPanel() = default;
 
     void SetContext(const SceneRef &context) { m_Context = context; }
-
     void OnImGuiRender();
 
   private:

@@ -44,8 +44,8 @@ class PerspectiveCamera : public Camera
     void ResizeFramebuffer(const glm::vec2 &size) { m_Framebuffer->QueueResize(size); }
 
   public:
-    inline void SetRotation(const glm::vec3 &rotation) { m_Rotation = rotation; }
-    [[nodiscard]] const glm::vec3 &GetRotation() const { return m_Rotation; }
+    inline void SetRotation(const glm::quat &rotation) { m_Rotation = rotation; }
+    [[nodiscard]] const auto &GetRotation() const { return m_Rotation; }
 
   public:
     [[nodiscard]] float GetPerspectiveVerticalFOV() const { return m_PerspectiveVerticalFOV; }
@@ -57,7 +57,7 @@ class PerspectiveCamera : public Camera
 
   private:
     glm::vec3 m_Position, m_Front, m_Up, m_Right, m_WorldUp;
-    glm::vec3 m_Rotation;
+    glm::quat m_Rotation;
     float m_Yaw, m_Pitch;
 
     glm::mat4 m_ProjectionMatrix;

@@ -33,35 +33,23 @@ class AppLayer : public Layer
     void NewProject();
     void OpenProject();
 
-    // New
-    void NewScene();
-    void OpenScene();
-    void SaveSceneAs();
-    void SaveScene();
     void ResetScene(const std::string &path);
-
     void DuplicateEntity();
-
-    void OnScenePlay();
-    void OnSceneStop();
 
     // UI Panels
     void UI_Toolbar();
 
   private:
     void DrawControls(const char *icon, const char *tooltip, bool isActive, std::function<void()> action);
-    bool m_IsControlPressed = false;
 	void SetPanelsContext();
 
   private:
+    bool m_IsControlPressed = false;
     std::shared_ptr<Framebuffer> m_Framebuffer;
 
     glm::vec2 m_ViewportSize;
     bool m_ViewportFocused, m_ViewportHovered = false;
     glm::vec2 m_ViewportBounds[2];
-
-    // scene
-    SceneRef m_ActiveScene, m_EditorScene;
 
 	EditorCamera m_EditorCamera;
 
@@ -74,14 +62,6 @@ class AppLayer : public Layer
 
   private:
     int m_GizmoType = -1;
-
-    enum class SceneState
-    {
-        Edit = 0,
-        Play,
-    };
-
-    SceneState m_SceneState = SceneState::Edit;
 
     Texture2DRef m_IconPlay, m_IconStop, m_IconPause, m_IconSimulate;
 };
