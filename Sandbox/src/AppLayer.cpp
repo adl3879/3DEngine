@@ -178,6 +178,7 @@ void AppLayer::OnImGuiRender()
     m_MaterialEditorPanel.OnImGuiRender();
     m_ContentBrowserPanel->OnImGuiRender();
     m_InputMapPanel.OnImGuiRender();
+	m_ConsolePanel.OnImGuiRender();
 
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{0, 0});
     ImGui::Begin("Viewport");
@@ -205,7 +206,7 @@ void AppLayer::OnImGuiRender()
                 case AssetType::Scene:
                 {
                     auto editorScene = AssetManager::GetAsset<Scene>(path);
-					SceneManager::Get().SetEditorScene(editorScene);
+                    SceneManager::Get().SetEditorScene(editorScene);
                     SceneManager::Get().SetActiveScene(editorScene);
 
                     m_SceneHierarchyPanel.SetContext(SceneManager::Get().GetActiveScene());
@@ -214,17 +215,18 @@ void AppLayer::OnImGuiRender()
                 break;
                 case AssetType::Mesh:
                 {
-                    auto ent = SceneManager::Get().GetActiveScene()->CreateEntity("Mesh");
                     const auto handle = AssetManager::GetAssetHandleFromPath(path);
 					const auto &asset = AssetManager::GetAsset<Mesh>(path);
 					if (!asset->HasAnimations())
 					{
-						auto &mesh = ent.AddComponent<StaticMeshComponent>();
-						mesh.Handle = handle;
-                        ent.GetComponent<TagComponent>().Tag = AssetManager::GetAssetName(handle);
+						// make prefab from asset
+                        auto prefabAsset = AssetManager::GetAsset<Prefab>(path);
+                        PrefabSerializer serializer(SceneManager::Get().GetActiveScene());
+                        serializer.Deserialize(asset->StaticMeshes, handle, prefabAsset->Handle);
 					}
 					else
 					{
+						auto ent = SceneManager::Get().GetActiveScene()->CreateEntity("Mesh");
 						LOG_CORE_INFO("Loading skinned mesh");
 						auto &mesh = ent.AddComponent<SkinnedMeshComponent>();
 						mesh.Handle = handle;
@@ -237,8 +239,8 @@ void AppLayer::OnImGuiRender()
 							animationController.AddAnimation(animation);
 						}
 						animationController.Animator = new Animator(animationController.Animations[0]);
+						SceneManager::Get().GetActiveScene()->AddToRootEntity(ent);
 					}
-					SceneManager::Get().GetActiveScene()->AddToRootEntity(ent);
                 }
                 break;
                 case AssetType::Material:
@@ -261,16 +263,6 @@ void AppLayer::OnImGuiRender()
 					auto &tc = entity.GetComponent<TransformComponent>();
                     tc.Translation = {0, 0, 0};
                     tc.Rotation = {0, 0, 0, 0};
-
-					/*auto projection = SceneManager::Get().GetActiveScene()->GetEditorCamera()->GetProjectionMatrix();
-					auto view = SceneManager::Get().GetActiveScene()->GetEditorCamera()->GetViewMatrix();
-
-					auto mouse = InputManager::Get().GetMouseMovedPosition();
-                    auto rayDirection = Math::ScreenToWorld({mouse.X, mouse.Y}, m_ViewportSize, projection, view);
-					auto rayStartPos = SceneManager::Get().GetActiveScene()->GetEditorCamera()->GetPosition();
-                    auto rayEndPos = rayStartPos + rayDirection * 2.0f;
-
-					tc.Translation = rayEndPos;*/
                 }
                 break;
                 case AssetType::SkyLight:
@@ -436,12 +428,8 @@ void AppLayer::OnKeyPressed(InputKey key, bool isRepeat)
         case InputKey::D: if (ctrl) DuplicateEntity(); break;
         case InputKey::S:
         {
-            if (ctrl && shift)
-                SceneManager::Get().SaveSceneAs();
-            else if (ctrl)
-            {
-                SceneManager::Get().SaveScene();
-            }
+            if (ctrl && shift) SceneManager::Get().SaveSceneAs();
+            else if (ctrl) SceneManager::Get().SaveScene();
 			break;
         }
         default: break;
@@ -450,8 +438,7 @@ void AppLayer::OnKeyPressed(InputKey key, bool isRepeat)
 
 void AppLayer::OnMouseScrolled(double xOffset, double yOffset)
 {
-    if (m_ViewportHovered) 
-		SceneManager::Get().GetActiveScene()->GetEditorCamera()->OnMouseScrolled(xOffset, yOffset);
+    if (m_ViewportHovered) SceneManager::Get().GetActiveScene()->GetEditorCamera()->OnMouseScrolled(xOffset, yOffset);
 }
 
 void AppLayer::OnMouseButtonPressed(MouseButton button)
@@ -585,10 +572,8 @@ void AppLayer::DrawControls(const char *icon, const char *tooltip, bool isActive
     ImGui::PopFont();
     ImGui::GetFont()->Scale /= 1.2;
 
-    if (ImGui::IsItemHovered())
-    {
-        m_IsControlPressed = true;
-    }
+    if (ImGui::IsItemHovered()) m_IsControlPressed = true;
+    
     // tooltip
     if (ImGui::IsItemHovered())
     {

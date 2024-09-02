@@ -14,25 +14,25 @@ template <typename... Component> struct ComponentExceptIDAndTagGroup
 };
 
 using AllComponents =
-    ComponentGroup<IDComponent, TagComponent, VisibilityComponent, TransformComponent, StaticMeshComponent, SkinnedMeshComponent, CameraComponent,
+    ComponentGroup<IDComponent, TagComponent, TransformComponent, StaticMeshComponent, SkinnedMeshComponent, CameraComponent,
                    PointLightComponent, DirectionalLightComponent, SpotLightComponent,
                    RigidBodyComponent, BoxColliderComponent, SphereColliderComponent, ParentComponent,
                    NetScriptComponent, AnimationControllerComponent, PrefabInstanceComponent>;
 
 using AllComponentsExceptIDAndTag =
-    ComponentExceptIDAndTagGroup<VisibilityComponent, TransformComponent, StaticMeshComponent, SkinnedMeshComponent, CameraComponent,
+    ComponentExceptIDAndTagGroup<TransformComponent, StaticMeshComponent, SkinnedMeshComponent, CameraComponent,
                                  PointLightComponent, DirectionalLightComponent, SpotLightComponent,
                                  RigidBodyComponent, BoxColliderComponent, SphereColliderComponent, ParentComponent,
                                  NetScriptComponent, AnimationControllerComponent, PrefabInstanceComponent>;
 
 using AllComponentsExceptIDAndTagAndParent =
-    ComponentExceptIDAndTagGroup<VisibilityComponent, TransformComponent, StaticMeshComponent, SkinnedMeshComponent, CameraComponent,
+    ComponentExceptIDAndTagGroup<TransformComponent, StaticMeshComponent, SkinnedMeshComponent, CameraComponent,
                                  PointLightComponent, DirectionalLightComponent, SpotLightComponent,
                                  RigidBodyComponent, BoxColliderComponent, SphereColliderComponent, NetScriptComponent, AnimationControllerComponent,
 								 PrefabInstanceComponent>;
 
 using AllComponentsExceptIDAndTagAndParentAndTransform =
-    ComponentExceptIDAndTagGroup<VisibilityComponent, StaticMeshComponent, SkinnedMeshComponent,
+    ComponentExceptIDAndTagGroup<StaticMeshComponent, SkinnedMeshComponent,
                                  CameraComponent, PointLightComponent, DirectionalLightComponent, SpotLightComponent,
                                  RigidBodyComponent, BoxColliderComponent, SphereColliderComponent, NetScriptComponent,
                                  AnimationControllerComponent, PrefabInstanceComponent>;

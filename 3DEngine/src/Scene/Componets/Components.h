@@ -79,6 +79,8 @@ struct MeshComponent
 
 struct StaticMeshComponent : public MeshComponent
 {
+    StaticMeshRef Resource;
+
     StaticMeshComponent() = default;
     StaticMeshComponent(const StaticMeshComponent &) = default;
 };

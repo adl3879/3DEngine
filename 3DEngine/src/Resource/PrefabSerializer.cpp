@@ -109,4 +109,36 @@ Entity PrefabSerializer::Deserialize(const std::filesystem::path &path)
 
     return rootPrefab;
 }
+
+Entity PrefabSerializer::Deserialize(const std::vector<StaticMesh> &staticMeshes, AssetHandle handle, AssetHandle prefabID)
+{ 
+	auto name = AssetManager::GetAssetName(handle);
+	Entity rootPrefab = m_Scene->CreateEntity(name);
+    rootPrefab.AddOrReplaceComponent<PrefabInstanceComponent>();
+    m_Scene->AddToRootEntity(rootPrefab);
+
+	if (staticMeshes.size() == 1)
+    {
+         auto &staticMesh = rootPrefab.AddComponent<StaticMeshComponent>();
+		 staticMesh.Resource = std::make_shared<StaticMesh>(staticMeshes[0]);
+         staticMesh.Handle = handle;
+	} 
+	else
+    {
+        for (const auto &mesh : staticMeshes)
+        {
+            auto entity = m_Scene->CreateEntity(mesh.Name);
+            auto &staticMesh = entity.AddComponent<StaticMeshComponent>();
+			staticMesh.Resource = std::make_shared<StaticMesh>(mesh);
+            staticMesh.Handle = handle;
+            rootPrefab.AddChild(entity);
+
+            auto &prefab = entity.AddOrReplaceComponent<PrefabInstanceComponent>();
+            prefab.PrefabID = prefabID;
+            auto &prefabTag = entity.GetComponent<TagComponent>();
+        }
+    }
+
+	return rootPrefab;
+}
 } // namespace Engine

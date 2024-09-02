@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ScriptCore")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+de5e491c078e9306d912be2b70fcd135c2bbde77")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+85e4da48ac4e1373b25d9188b416ec06546ada5c")]
 [assembly: System.Reflection.AssemblyProductAttribute("ScriptCore")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ScriptCore")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

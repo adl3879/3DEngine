@@ -26,7 +26,7 @@ void PhysicsManager::DrawDebug(const glm::mat4 &projection, const glm::mat4 &vie
 void PhysicsManager::Init(Scene *scene)
 {
     m_World = new Physics::DynamicWorld(scene);
-    m_World->SetGravity(glm::vec3(0, -9.8, 0));
+    //m_World->SetGravity(glm::vec3(0, -9.8, 0));
 
     m_IsRunning = false;
 }

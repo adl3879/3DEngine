@@ -5,6 +5,7 @@
 #include "Panels/MaterialEditorPanel.h"
 #include "Panels/EnvironmentPanel.h"
 #include "Panels/InputMapPanel.h"
+#include "Panels/ConsolePanel.h"
 #include "Framebuffer.h"
 
 #include <memory>
@@ -57,6 +58,8 @@ class AppLayer : public Layer
     SceneHierarchyPanel m_SceneHierarchyPanel;
     MaterialEditorPanel m_MaterialEditorPanel;
     EnvironmentPanel m_EnvironmentPanel;
+	ConsolePanel m_ConsolePanel;
+
     std::unique_ptr<ContentBrowserPanel> m_ContentBrowserPanel;
     InputMapPanel m_InputMapPanel;
 

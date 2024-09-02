@@ -374,7 +374,7 @@ void DynamicWorld::SyncEntitiesTransforms()
         JPH::Mat44 joltTransform = bodyInterface.GetWorldTransform(bodyId);
         const auto bodyRotation = bodyInterface.GetRotation(bodyId);
 
-        glm::mat4 transform =
+        auto transform =
             glm::mat4(joltTransform(0, 0), joltTransform(1, 0), joltTransform(2, 0), joltTransform(3, 0),
                       joltTransform(0, 1), joltTransform(1, 1), joltTransform(2, 1), joltTransform(3, 1),
                       joltTransform(0, 2), joltTransform(1, 2), joltTransform(2, 2), joltTransform(3, 2),
@@ -393,12 +393,9 @@ void DynamicWorld::SyncEntitiesTransforms()
         auto &transformComponent = entity.GetComponent<TransformComponent>();
 
         // update transform
-        // transformComponent.Translation = pos;
-        // transformComponent.Rotation = glm::vec3(rotation.x, rotation.y, rotation.z);
-
-        auto oldScale = transformComponent.Scale;
-        transformComponent.SetGlobalTransform(transform);
-        transformComponent.Scale = oldScale;
+        transformComponent.Translation = pos;
+        transformComponent.Rotation = rotation;
+		transformComponent.Scale = scale;
     }
 }
 
@@ -483,7 +480,7 @@ void DynamicWorld::DrawDebug(const glm::mat4 &projection, const glm::mat4 &view,
     {
         auto boxCollider = entity.GetComponent<BoxColliderComponent>();
         auto transform = entity.GetComponent<TransformComponent>();
-        transform.Scale = transform.Scale * boxCollider.Size;
+        transform.Scale = transform.Scale;
         Renderer::DrawBoxCollider(projection, view, transform.GetGlobalTransform());
     }
 

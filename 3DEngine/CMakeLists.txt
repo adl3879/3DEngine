@@ -56,7 +56,7 @@ foreach (_headerFile ${HEADERS})
 endforeach()
 list (REMOVE_DUPLICATES INCLUDE_DIRS)
 
-add_library(${PROJECT_NAME} STATIC ${SOURCES})
+add_library(${PROJECT_NAME} STATIC ${SOURCES} "src/Imgui/ImGuiSpdLogAdaptor.cpp")
 
 target_include_directories(${PROJECT_NAME}
         PUBLIC

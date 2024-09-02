@@ -202,17 +202,21 @@ void SceneHierarchyPanel::DrawComponents(Entity entity)
                 ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.3f, 0.3f, 0.3f, 0.6f));
                 ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, ImVec2(0, 5.0f));
 
-				if (ImGui::Button("Revert", ImVec2(buttonWidth, 0)))
+				if (m_Context->GetSceneType() != SceneType::Prefab3D)
                 {
-                    auto prefabRootEntity = m_Context->GetPrefabRoot(entity);
-                    prefab->Revert(m_Context, prefabRootEntity);
-                };
-				ImGui::SameLine();
-				if (ImGui::Button("Apply", ImVec2(buttonWidth, 0))) 
-				{
-					auto prefabRootEntity = m_Context->GetPrefabRoot(entity);
-					prefab->Apply(m_Context, prefabRootEntity);
-				}
+
+                    if (ImGui::Button("Revert", ImVec2(buttonWidth, 0)))
+                    {
+                        auto prefabRootEntity = m_Context->GetPrefabRoot(entity);
+                        prefab->Revert(m_Context, prefabRootEntity);
+                    };
+                    ImGui::SameLine();
+                    if (ImGui::Button("Apply", ImVec2(buttonWidth, 0)))
+                    {
+                        auto prefabRootEntity = m_Context->GetPrefabRoot(entity);
+                        prefab->Apply(m_Context, prefabRootEntity);
+                    }
+                }
                 
 				ImGui::PopStyleVar();
                 ImGui::PopStyleColor(2);
@@ -351,18 +355,19 @@ void SceneHierarchyPanel::DrawComponents(Entity entity)
                 ImGui::BeginChild("MeshList", ImVec2(ImGui::GetContentRegionAvail().x, 300), true);
                 {
                     auto assets = AssetManager::GetRegistry();
-                    for (auto &asset : assets)
+                    for (const auto &asset : assets)
                     {
                         if (asset.second.Type != AssetType::Mesh) continue;
 
-                        auto assetName = AssetManager::GetAssetName(asset.first);
-                        if (ImGui::Selectable(assetName.c_str(), asset.first == entityComponent->Handle))
-                        {
-                            entityComponent->Handle = asset.first;
-                            entityComponent->MaterialHandle = 0;
-                            // close popup
-                            ImGui::CloseCurrentPopup();
-                        }
+						const auto &meshAsset = AssetManager::GetAsset<Mesh>(asset.second.FilePath);
+						
+						for (const auto& staticMesh : meshAsset->StaticMeshes)
+						{
+							if (ImGui::Selectable(staticMesh.Name.c_str()))
+							{
+								// TODO: Finish implementation
+							}
+						}
                     }
                     ImGui::EndChild();
                 }
@@ -816,7 +821,7 @@ void SceneHierarchyPanel::OnImGuiRender()
             ADD_COMPONENT_MENU(BoxColliderComponent, ICON_FA_CUBE "   Box Collider");
             ADD_COMPONENT_MENU(SphereColliderComponent, ICON_FA_CIRCLE "   Sphere Collider");
             ADD_COMPONENT_MENU(CameraComponent, ICON_FA_VIDEO "   Camera");
-            ADD_COMPONENT_MENU(MeshComponent, ICON_FA_CUBE "   Mesh oh");
+            ADD_COMPONENT_MENU(MeshComponent, ICON_FA_CUBE "   Mesh");
             ADD_COMPONENT_MENU(DirectionalLightComponent, ICON_FA_SUN "   Directional Light");
             ADD_COMPONENT_MENU(PointLightComponent, ICON_FA_LIGHTBULB "   Point Light");
             ADD_COMPONENT_MENU(SpotLightComponent, ICON_FA_LIGHTBULB "   Spot Light");

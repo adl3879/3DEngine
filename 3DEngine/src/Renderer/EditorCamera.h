@@ -51,6 +51,8 @@ class EditorCamera : public Camera
 
     void OnMouseScrolled(double xOffset, double yOffset);
 
+	void Reset();
+
   private:
     void UpdateProjection();
     void UpdateView();

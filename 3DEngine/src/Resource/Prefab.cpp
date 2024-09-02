@@ -69,6 +69,7 @@ void Prefab::Apply(const SceneRef &scene, Entity &newEntity)
         serializer.Serialize(path, newEntity);
     }
 
+	if (scene->GetSceneType() == SceneType::Scene3D) 
 	{
         // save scene
         SceneSerializer serializer(scene);
@@ -109,12 +110,15 @@ void Prefab::OpenInIsolation(Entity &prefabEntity)
 
 	// add previous transform component
 	auto &transform = prefabEntity.GetComponent<TransformComponent>();
-	auto &prevTransform = prefabEntity.AddOrReplaceComponent<PrevTransformComponent>();
+	auto &prevTransform = prefabEntity.AddComponent<PrevTransformComponent>();
 	prevTransform.Translation = transform.Translation;
 	prevTransform.Rotation = transform.Rotation;
 	prevTransform.Scale = transform.Scale;
 
 	transform .Translation = glm::vec3(0.0f);
 	transform.Rotation = glm::quat(1, 0, 0, 0);
+
+	// reset editor camera
+	scene->GetEditorCamera()->Reset();
 }
 }

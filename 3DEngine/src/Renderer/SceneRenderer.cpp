@@ -107,21 +107,17 @@ void SceneRenderer::RenderScene(Scene &scene, Framebuffer &framebuffer)
         auto [mesh, transform, visibility] = view.get<StaticMeshComponent, TransformComponent, VisibilityComponent>(e);
 
         if (!visibility.IsVisible) continue;
-        if (mesh.Handle == 0) continue;
+        if (mesh.Handle == 0 && mesh.Resource == nullptr) continue;
 
-        const auto &asset = AssetManager::GetAsset<Mesh>(mesh.Handle);
-        for (const auto &m : asset->StaticMeshes)
+        auto trnsfrm = transform.GetGlobalTransform();
+        MaterialRef mat = AssetManager::GetAsset<Material>(mesh.MaterialHandle);
+        if (mat == nullptr)
         {
-            auto trnsfrm = transform.GetGlobalTransform();
-            MaterialRef mat = AssetManager::GetAsset<Material>(mesh.MaterialHandle);
-            if (mat == nullptr)
-            {
-                mat = m.DefaultMaterial;
-                mat->SetTextureFindPath(AssetManager::GetRegistry()[mesh.Handle].FilePath);
-            }
-
-            Renderer::SubmitMesh(std::make_shared<StaticMesh>(m), mat, trnsfrm, static_cast<int>(e));
+            mat = mesh.Resource->DefaultMaterial;
+            mat->SetTextureFindPath(AssetManager::GetRegistry()[mesh.Handle].FilePath);
         }
+
+        Renderer::SubmitMesh(mesh.Resource, mat, trnsfrm, static_cast<int>(e));
     }
 	pbrShader->SetUniform1i("shadowMap", 8);
     m_ShadowBuffer->GetTexture(GL_DEPTH_ATTACHMENT)->Bind(8);
@@ -245,15 +241,10 @@ void SceneRenderer::ShadowPass(Scene &scene)
 		auto [mesh, transform, visibility] = view.get<StaticMeshComponent, TransformComponent, VisibilityComponent>(e);
 
 		if (!visibility.IsVisible) continue;
-		if (mesh.Handle == 0) continue;
+        if (mesh.Handle == 0 && mesh.Resource == nullptr) continue;
 
-		const auto &asset = AssetManager::GetAsset<Mesh>(mesh.Handle);
-		for (const auto& m : asset->StaticMeshes)
-		{
-			auto trnsfrm = transform.GetGlobalTransform();
-			auto mat = std::make_shared<Material>();
-            Renderer::SubmitMesh(std::make_shared<StaticMesh>(m), mat, trnsfrm);
-		}
+        auto trnsfrm = transform.GetGlobalTransform();
+        Renderer::SubmitMesh(mesh.Resource, std::make_shared<Material>(), trnsfrm);
 	}
 	Renderer::Flush(shadowMapShader, false);
 

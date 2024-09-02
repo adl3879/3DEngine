@@ -4,6 +4,7 @@
 #include "FileDialogs.h"
 #include "AssetManager.h"
 #include "Components.h"
+#include "Prefab.h"
 
 namespace Engine
 {
@@ -100,6 +101,16 @@ void SceneManager::ShowMainScene()
         transform.Translation = prevTransform.Translation;
         transform.Rotation = prevTransform.Rotation;
         entity.RemoveComponent<PrevTransformComponent>();
+    }
+
+	{
+		auto prefabEntity = m_ActiveScene->GetEntityByUUID(m_ActiveScene->GetCurrentPrefabScene());
+		auto asset = AssetManager::GetAsset<Prefab>(prefabEntity.GetComponent<PrefabInstanceComponent>().PrefabID);
+		asset->Apply(m_ActiveScene, prefabEntity);
+
+        // save scene
+        SceneSerializer serializer(m_ActiveScene);
+        serializer.Serialize(m_ActiveScene->GetSceneFilePath());
     }
 }
 } // namespace Engine

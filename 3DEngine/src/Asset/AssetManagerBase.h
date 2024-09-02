@@ -47,7 +47,7 @@ static AssetType GetAssetTypeFromExtension(const std::filesystem::path &path)
     if (extension == sceneExtension) return AssetType::Scene;
     if (extension == materialExtension) return AssetType::Material;
     if (extension == skyLightExtension) return AssetType::SkyLight;
-    if (extension == prefabExtension) return AssetType::Prefab;
+    if (extension == prefabExtension || IsInVector(meshExtensions, extension)) return AssetType::Prefab;
     if (extension == shaderExtension) return AssetType::Shader;
     if (extension == luaScriptExtension) return AssetType::LuaScript;
     if (extension == netScriptExtension) return AssetType::NetScript;

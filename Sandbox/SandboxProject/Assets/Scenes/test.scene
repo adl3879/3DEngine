@@ -5,7 +5,7 @@ Environment:
   BloomEnabled: false
   Exposure: 1.20000005
   BloomIntensity: 0.0399999991
-  HDRIHandle: 6444620993718877029
+  HDRIHandle: 2239547297823339828
   SurfaceRadius: 6360000
   AtmosphereRadius: 6380000
   RayleighScattering: [5.80000005e-06, 1.35e-05, 3.3100001e-05]
@@ -14,190 +14,68 @@ Environment:
   CenterPoint: [0, -6360000, 0]
   SunDirection: [0.200000003, 0.959169984, 0.200000003]
 Entities:
-  - Entity: 70529329583352824
+  - Entity: 14075088921609594506
     TagComponent:
-      Tag: Box
+      Tag: SciFiHelmet
       IsPrefabRoot: false
-      IsFirstChild: false
+      IsFirstChild: true
     ParentComponent:
-      Parent: 9414094849035763972
+      Parent: 11958630786004707882
       HasParent: true
       Children:
         []
     PrefabInstanceComponent:
-      PrefabID: 1904483051196228730
+      PrefabID: 0
     TransformComponent:
-      GlobalTranslation: [2.80145121, 1.12572455, 2.77263927]
+      GlobalTranslation: [0, 1.67358661, 0]
       GlobalRotation: [0, 0, 0, 1]
-      GlobalScale: [1.54978371, 2.00090575, 1.83418357]
-      Translation: [1.59144402e-05, 5.96046448e-08, -1.60038471e-05]
+      GlobalScale: [1, 1, 1]
+      Translation: [0, 1.67358661, 0]
       Rotation: [0, 0, 0, 1]
-      Scale: [0.263833463, 0.219153136, 0.312152743]
+      Scale: [1, 1, 1]
     StaticMeshComponent:
-      Handle: 13417777238487702703
-      MaterialHandle: 7507808750028310646
-  - Entity: 9414094849035763972
-    TagComponent:
-      Tag: cv
-      IsPrefabRoot: true
-      IsFirstChild: true
-    ParentComponent:
-      Parent: 3570262602515709520
-      HasParent: true
-      Children:
-        - 70529329583352824
-    PrefabInstanceComponent:
-      PrefabID: 1904483051196228730
-    TransformComponent:
-      GlobalTranslation: [-2.75489855, 1.101861, -1.97633624]
-      GlobalRotation: [0, 0, 0, 1]
-      GlobalScale: [5.8740983, 9.13017178, 5.87591696]
-      Translation: [-2.75489855, 1.101861, -1.97633624]
-      Rotation: [0, 0, 0, 1]
-      Scale: [5.8740983, 9.13017178, 5.87591696]
-  - Entity: 16543638728909240830
-    TagComponent:
-      Tag: Box
-      IsPrefabRoot: false
-      IsFirstChild: false
-    ParentComponent:
-      Parent: 14401205467842275746
-      HasParent: true
-      Children:
-        []
-    PrefabInstanceComponent:
-      PrefabID: 1904483051196228730
-    TransformComponent:
-      GlobalTranslation: [2.80145121, 1.12572455, 2.77263927]
-      GlobalRotation: [0, 0, 0, 1]
-      GlobalScale: [1.54978371, 2.00090575, 1.83418357]
-      Translation: [1.59144402e-05, 5.96046448e-08, -1.60038471e-05]
-      Rotation: [0, 0, 0, 1]
-      Scale: [0.263833463, 0.219153136, 0.312152743]
-    StaticMeshComponent:
-      Handle: 13417777238487702703
-      MaterialHandle: 7507808750028310646
-  - Entity: 14401205467842275746
-    TagComponent:
-      Tag: cv
-      IsPrefabRoot: true
-      IsFirstChild: true
-    ParentComponent:
-      Parent: 3570262602515709520
-      HasParent: true
-      Children:
-        - 16543638728909240830
-    PrefabInstanceComponent:
-      PrefabID: 1904483051196228730
-    TransformComponent:
-      GlobalTranslation: [0, 1.0593847, 0.364700556]
-      GlobalRotation: [0, 0, 0, 1]
-      GlobalScale: [5.8740983, 9.13017178, 5.87591696]
-      Translation: [0, 1.0593847, 0.364700556]
-      Rotation: [0, 0, 0, 1]
-      Scale: [5.8740983, 9.13017178, 5.87591696]
-  - Entity: 736365133583071517
-    TagComponent:
-      Tag: cv
-      IsPrefabRoot: true
-      IsFirstChild: true
-    ParentComponent:
-      Parent: 3570262602515709520
-      HasParent: true
-      Children:
-        - 15623455989724286395
-    PrefabInstanceComponent:
-      PrefabID: 1904483051196228730
-    TransformComponent:
-      GlobalTranslation: [2.80143523, 1.12572455, 2.77265525]
-      GlobalRotation: [0, 0, 0, 1]
-      GlobalScale: [5.8740983, 9.13017178, 5.87591696]
-      Translation: [2.80143523, 1.12572455, 2.77265525]
-      Rotation: [0, 0, 0, 1]
-      Scale: [5.8740983, 9.13017178, 5.87591696]
-  - Entity: 15623455989724286395
-    TagComponent:
-      Tag: Box
-      IsPrefabRoot: false
-      IsFirstChild: false
-    ParentComponent:
-      Parent: 736365133583071517
-      HasParent: true
-      Children:
-        []
-    PrefabInstanceComponent:
-      PrefabID: 1904483051196228730
-    TransformComponent:
-      GlobalTranslation: [2.80145121, 1.12572455, 2.77263927]
-      GlobalRotation: [0, 0, 0, 1]
-      GlobalScale: [1.54978371, 2.00090575, 1.83418357]
-      Translation: [1.59144402e-05, 5.96046448e-08, -1.60038471e-05]
-      Rotation: [0, 0, 0, 1]
-      Scale: [0.263833463, 0.219153136, 0.312152743]
-    StaticMeshComponent:
-      Handle: 13417777238487702703
-      MaterialHandle: 7507808750028310646
-  - Entity: 4588480531714200171
-    TagComponent:
-      Tag: Box
-      IsPrefabRoot: false
-      IsFirstChild: true
-    ParentComponent:
-      Parent: 3570262602515709520
-      HasParent: true
-      Children:
-        []
-    TransformComponent:
-      GlobalTranslation: [0, 0.00874358416, 0]
-      GlobalRotation: [0, 0, 0, 1]
-      GlobalScale: [12.3005362, 0.148744166, 13.7268381]
-      Translation: [0, 0.00874358416, 0]
-      Rotation: [0, 0, 0, 1]
-      Scale: [12.3005362, 0.148744166, 13.7268381]
-    StaticMeshComponent:
-      Handle: 13417777238487702703
-      MaterialHandle: 14660474087798156377
-  - Entity: 6721476084273814125
+      Handle: 5180335624714388612
+      MaterialHandle: 1536552764056497325
+  - Entity: 8050375732282007001
     TagComponent:
       Tag: Directional Light
       IsPrefabRoot: false
       IsFirstChild: true
     ParentComponent:
-      Parent: 3570262602515709520
+      Parent: 11958630786004707882
       HasParent: true
       Children:
         []
     TransformComponent:
       GlobalTranslation: [0, 0, 0]
-      GlobalRotation: [-0.337302923, -1.09162421e-07, 3.04669243e-07, 0.941396177]
-      GlobalScale: [1.00000036, 0.999999881, 0.999999881]
+      GlobalRotation: [0.912406862, 0.0622968562, -0.0275551546, -0.403575897]
+      GlobalScale: [1, 0.999999881, 0.999997854]
       Translation: [0, 0, 0]
-      Rotation: [-0.337302923, -1.09162421e-07, 3.04669243e-07, 0.941396177]
-      Scale: [1.00000036, 0.999999881, 0.999999881]
+      Rotation: [0.912406862, 0.0622968562, -0.0275551546, -0.403575897]
+      Scale: [1, 0.999999881, 0.999997854]
     DirectionalLightComponent:
       Enabled: true
       Color: [1, 1, 1]
-      AmbientIntensity: 6.19999981
-  - Entity: 15802832888049372579
+      AmbientIntensity: 7.5999999
+  - Entity: 8352083642092958222
     TagComponent:
-      Tag: Camera
+      Tag: Box
       IsPrefabRoot: false
       IsFirstChild: true
     ParentComponent:
-      Parent: 3570262602515709520
+      Parent: 11958630786004707882
       HasParent: true
       Children:
         []
+    PrefabInstanceComponent:
+      PrefabID: 0
     TransformComponent:
-      GlobalTranslation: [-1.69127917, 5.85640144, 12.5198011]
-      GlobalRotation: [-0.00187701185, 0.204826772, 0.978720307, -0.0122077009]
-      GlobalScale: [0.999992192, 1.00001729, 1.00008535]
-      Translation: [-1.69127917, 5.85640144, 12.5198011]
-      Rotation: [-0.00187701185, 0.204826772, 0.978720307, -0.0122077009]
-      Scale: [0.999992192, 1.00001729, 1.00008535]
-    CameraComponent:
-      Camera:
-        PerspectiveFOV: -0.785398185
-        PerspectiveNear: 0.100000001
-        PerspectiveFar: 500
-      Primary: false
+      GlobalTranslation: [0, -0.0411521792, -1.12643707]
+      GlobalRotation: [0, 0, 0, 1]
+      GlobalScale: [17.6909866, 0.15492551, 28.8190327]
+      Translation: [0, -0.0411521792, -1.12643707]
+      Rotation: [0, 0, 0, 1]
+      Scale: [17.6909866, 0.15492551, 28.8190327]
+    StaticMeshComponent:
+      Handle: 13855096447105949168
+      MaterialHandle: 14007424979695282588

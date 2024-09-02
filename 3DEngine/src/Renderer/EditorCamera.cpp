@@ -119,4 +119,14 @@ glm::vec3 EditorCamera::GetForwardDirection() const
 glm::vec3 EditorCamera::CalculatePosition() const { return m_FocalPoint - GetForwardDirection() * m_Distance; }
 
 glm::quat EditorCamera::GetOrientation() const { return glm::quat(glm::vec3(-m_Pitch, -m_Yaw, 0.0f)); }
+
+void EditorCamera::Reset()
+{
+    m_Pitch = 0.2613f;
+    m_Yaw = 0.0f;
+    m_Distance = 10.0f;
+    m_FocalPoint = {0.0f, 0.0f, 0.0f};
+    UpdateView();
+}
+
 } // namespace Engine

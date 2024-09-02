@@ -28,6 +28,10 @@ bool MeshFileManager::WriteMeshFile(const std::filesystem::path& path, const Mod
 	file.write(reinterpret_cast<char*>(&nameLength), sizeof(uint32_t));
 	file.write(name.c_str(), nameLength);
 
+	// Size
+    uint16_t size = model->GetMeshes().size();
+	file.write(reinterpret_cast<char *>(&size), sizeof(uint16_t));
+
 	// iterate through meshes
 	for (auto &mesh : model->GetMeshes())
 	{
@@ -150,9 +154,13 @@ std::vector<StaticMesh> MeshFileManager::ReadMeshFile(const std::filesystem::pat
 	std::string name(nameLength, '\0');
 	file.read(name.data(), nameLength);
 
+	// Size
+	uint16_t size;
+	file.read(reinterpret_cast<char*>(&size), sizeof(uint16_t));
+
 	// iterate through meshes
 	std::vector<StaticMesh> meshes;
-	while (!file.eof())
+	for (uint16_t i = 0; i < size; i++)
 	{
 		// Name
 		uint32_t nameLength;
@@ -172,8 +180,7 @@ std::vector<StaticMesh> MeshFileManager::ReadMeshFile(const std::filesystem::pat
 		std::vector<uint32_t> indices(indexCount);
 		file.read(reinterpret_cast<char*>(indices.data()), sizeof(uint32_t) * indexCount);
 
-		// Material data
-		// Material name
+		// Material data // Material name
 		uint32_t materialNameLength;
 		file.read(reinterpret_cast<char*>(&materialNameLength), sizeof(uint32_t));
 		std::string materialName(materialNameLength, '\0');

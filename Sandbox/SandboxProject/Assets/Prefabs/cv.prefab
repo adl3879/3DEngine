@@ -6,19 +6,20 @@ Entities:
       IsPrefabRoot: true
       IsFirstChild: true
     ParentComponent:
-      Parent: 2605345462383613066
+      Parent: 7745113109902433195
       HasParent: true
       Children:
         - 16543638728909240830
+        - 17076556677564826867
     PrefabInstanceComponent:
       PrefabID: 1904483051196228730
     TransformComponent:
-      GlobalTranslation: [0, 1.0593847, 0.364700556]
+      GlobalTranslation: [0, 0, 0]
       GlobalRotation: [0, 0, 0, 1]
-      GlobalScale: [1.83036888, 2.84496117, 1.83093572]
-      Translation: [0, 1.0593847, 0.364700556]
-      Rotation: [0, 0, 0, 1]
-      Scale: [1.83036888, 2.84496117, 1.83093572]
+      GlobalScale: [13.4011002, 2.95578122, 3.11482859]
+      Translation: [-0.4626109, 2.37088776, 0.53704071]
+      Rotation: [0, 0.728712618, 0, 0.684819639]
+      Scale: [13.4011002, 2.95578122, 3.11482859]
   - Entity: 16543638728909240830
     TagComponent:
       Tag: Box
@@ -32,12 +33,34 @@ Entities:
     PrefabInstanceComponent:
       PrefabID: 1904483051196228730
     TransformComponent:
-      GlobalTranslation: [1.59144402e-05, 1.05938482, 0.364684552]
+      GlobalTranslation: [1.58548446e-05, 0.072349757, -1.40070952e-05]
       GlobalRotation: [0, 0, 0, 1]
-      GlobalScale: [0.48291257, 0.623482168, 0.571531594]
-      Translation: [1.59144402e-05, 5.96046448e-08, -1.60038471e-05]
+      GlobalScale: [1.984267, 1.74945426, 1.69413972]
+      Translation: [1.58548446e-05, 0.072349757, -1.40070952e-05]
       Rotation: [0, 0, 0, 1]
-      Scale: [0.263833463, 0.219153136, 0.312152743]
+      Scale: [0.148067474, 0.591875434, 0.543895006]
     StaticMeshComponent:
       Handle: 13417777238487702703
-      MaterialHandle: 7507808750028310646
+      MaterialHandle: 16926174883206334327
+  - Entity: 17076556677564826867
+    TagComponent:
+      Tag: Box
+      IsPrefabRoot: false
+      IsFirstChild: false
+    ParentComponent:
+      Parent: 14401205467842275746
+      HasParent: true
+      Children:
+        []
+    PrefabInstanceComponent:
+      PrefabID: 1904483051196228730
+    TransformComponent:
+      GlobalTranslation: [0, 0, 0]
+      GlobalRotation: [0, 0, 0, 1]
+      GlobalScale: [0.789917529, 0.964265525, 6.22965717]
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0, 1]
+      Scale: [0.058944229, 0.326230347, 2]
+    StaticMeshComponent:
+      Handle: 13417777238487702703
+      MaterialHandle: 17317577943920138267
